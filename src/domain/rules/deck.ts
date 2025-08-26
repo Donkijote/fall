@@ -1,12 +1,10 @@
-import { RANKS_40, RANKS_48, SUITS } from "../entities/Card";
-import type { Card } from "../entities/GameState";
+import type { Card, Rank, Suit } from "../entities/Card";
 
-export function buildDeck(use48: boolean): Card[] {
-  const ranks = use48 ? RANKS_48 : RANKS_40;
-  let i = 0;
-  return SUITS.flatMap((suit) =>
-    ranks.map((rank) => ({ id: `${suit}-${rank}-${i++}`, suit, rank })),
-  );
+export const suits: Suit[] = ["golds", "cups", "blades", "clubs"];
+export const ranks: Rank[] = [1, 2, 3, 4, 5, 6, 7, 10, 11, 12];
+
+export function createDeck(): Card[] {
+  return suits.flatMap((suit) => ranks.map((rank) => ({ suit, rank })));
 }
 
 export function shuffle<T>(arr: T[], rng = Math.random): T[] {

@@ -1,0 +1,45 @@
+import { create } from "zustand";
+
+import type { GameState } from "@/domain/entities/GameState";
+
+import { createGameService } from "../GameService";
+
+const initialState: GameState = {
+  players: [],
+  table: [],
+  deck: [],
+  phase: "deal",
+  dealer: "",
+  currentPlayer: "",
+  scores: { type: "individual", values: {} },
+  config: {
+    allowOptional: true,
+    threeOfAKindWinsGame: false,
+    dealOrder: "playersThenTable",
+    tablePattern: "inc",
+    handSize: 3,
+    targetPoints: 24,
+  },
+};
+
+export type GameStore = {
+  state: GameState;
+  service: ReturnType<typeof createGameService>;
+};
+
+export const useGameStore = create<GameStore>((set, get) => {
+  const setState = (s: GameState) => set({ state: s });
+  const service = createGameService(() => get().state as GameState, setState);
+
+  return {
+    state: initialState,
+    service,
+  };
+});
+
+export function useGameService() {
+  return useGameStore((s) => s.service);
+}
+export function useGameState() {
+  return useGameStore((s) => s.state);
+}
