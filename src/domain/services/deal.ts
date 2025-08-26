@@ -1,5 +1,9 @@
 import type { Card } from "@/domain/entities/Card";
-import { awardPoints, awardPointsToTeam, checkGameOver } from "@/domain/services/scoring";
+import {
+  awardPoints,
+  awardPointsToTeam,
+  checkGameOver,
+} from "@/domain/services/scoring";
 
 import type { DealOrder, GameState, TablePattern } from "../entities/GameState";
 import { createDeck, shuffle } from "../rules/deck";
@@ -11,7 +15,8 @@ export function chooseDealer(state: GameState): GameState {
 
   const electionCards: Record<string, Card> = {};
   for (const p of state.players) {
-    electionCards[p.id] = deck.shift()!;
+    const randomCardIndex = Math.floor(Math.random() * deck.length);
+    electionCards[p.id] = deck[randomCardIndex];
   }
 
   // find the highest rank (ties broken by order in players array)
