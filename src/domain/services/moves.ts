@@ -26,8 +26,20 @@ export function playCard(
       : p,
   );
 
-  // place on table
-  const newTable = [...state.table, card];
+  // place on table or collect
+  const newTable = [] as Array<Card>;
+
+  if (state.table.find((c) => c === card)) {
+    newTable.concat(state.table.filter((c) => c !== card));
+    newPlayers.map((p) => {
+      if (p.id === playerId) {
+        p.collected.push(card);
+      }
+      return p;
+    });
+  } else {
+    newTable.push(...state.table, card);
+  }
 
   let next: GameState = { ...state, players: newPlayers, table: newTable };
 
