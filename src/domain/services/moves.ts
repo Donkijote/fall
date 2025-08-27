@@ -32,10 +32,13 @@ export function playCard(
   const newTable = [] as Array<Card>;
 
   if (state.table.find((c) => c.rank === card.rank)) {
-    newTable.concat(state.table.filter((c) => c.rank !== card.rank));
+    newTable.push(...state.table.filter((c) => c.rank !== card.rank));
+    const collectedCards = state.table
+      .filter((c) => c.rank === card.rank)
+      .concat([card]);
     newPlayers.map((p) => {
       if (p.id === playerId) {
-        p.collected.push(card);
+        p.collected.push(...collectedCards);
       }
       return p;
     });
