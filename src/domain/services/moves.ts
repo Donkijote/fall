@@ -11,7 +11,9 @@ export function playCard(
   playerId: string,
   card: Card,
 ): GameState {
-  const player = state.players.find((p) => p.id === playerId);
+  const player = state.players.find(
+    (p) => p.id === playerId && p.id === state.currentPlayer,
+  );
   if (!player) return state;
 
   // remove card from hand
@@ -29,8 +31,8 @@ export function playCard(
   // place on table or collect
   const newTable = [] as Array<Card>;
 
-  if (state.table.find((c) => c === card)) {
-    newTable.concat(state.table.filter((c) => c !== card));
+  if (state.table.find((c) => c.rank === card.rank)) {
+    newTable.concat(state.table.filter((c) => c.rank !== card.rank));
     newPlayers.map((p) => {
       if (p.id === playerId) {
         p.collected.push(card);
@@ -41,18 +43,31 @@ export function playCard(
     newTable.push(...state.table, card);
   }
 
-  let next: GameState = { ...state, players: newPlayers, table: newTable };
+  // Rotate to next player (to the right)
+  const playerCount = state.players.length;
+  const currentIndex = state.players.findIndex(
+    (p) => p.id === state.currentPlayer,
+  );
+  const nextIndex = (currentIndex + 1) % playerCount; // right = next in array order
+  const nextPlayerId = state.players[nextIndex].id;
+
+  let nextState: GameState = {
+    ...state,
+    players: newPlayers,
+    table: newTable,
+    currentPlayer: nextPlayerId,
+  };
 
   const lastCard = state.table[state.table.length - 1];
   const isFall = !!lastCard && lastCard.rank === card.rank;
 
   if (isFall) {
     const pts = fallPoints(card.rank);
-    next = awardPoints(next, playerId, pts);
-    next = checkGameOver(next);
+    nextState = awardPoints(nextState, playerId, pts);
+    nextState = checkGameOver(nextState);
   }
 
-  return next;
+  return nextState;
 }
 
 function fallPoints(rank: number): number {
