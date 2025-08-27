@@ -5,7 +5,22 @@ import type { GameState } from "@/domain/entities/GameState";
 import { createGameService } from "../GameService";
 
 const initialState: GameState = {
-  players: [],
+  players: [
+    {
+      id: "1",
+      hand: [],
+      collected: [],
+      score: 0,
+      team: 1,
+    },
+    {
+      id: "2",
+      hand: [],
+      collected: [],
+      score: 0,
+      team: 2,
+    },
+  ],
   table: [],
   deck: [],
   phase: "deal",
