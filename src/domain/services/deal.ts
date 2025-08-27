@@ -39,7 +39,7 @@ export function dealRound(
   state: GameState,
   options?: { dealOrder?: DealOrder; tablePattern?: TablePattern },
 ): GameState {
-  const deck = state.deck.length ? state.deck : shuffle(createDeck());
+  let deck = state.deck.length ? [...state.deck] : shuffle(createDeck());
 
   const players = state.players.map((p) => ({ ...p, hand: [] as Array<Card> }));
 
@@ -47,26 +47,27 @@ export function dealRound(
   const dealOrder = options?.dealOrder ?? state.config.dealOrder;
   const tablePattern = options?.tablePattern ?? state.config.tablePattern;
 
-  let idx = 0;
-  let tableCards: Card[] = [];
+  let tableCards: Card[];
 
   if (dealOrder === "playersThenTable") {
+    // 1) players
     for (const p of players) {
-      p.hand = deck.slice(idx, idx + handSize);
-      idx += handSize;
+      p.hand = deck.splice(0, handSize);
     }
-    tableCards = deck.slice(idx, idx + 4);
-    idx += 4;
+    // 2) table (unique cards)
+    const result = drawUniqueTableCards(deck, 4);
+    tableCards = result.table;
+    deck = result.deck;
   } else {
-    tableCards = deck.slice(idx, idx + 4);
-    idx += 4;
+    // 1) table (unique cards)
+    const result = drawUniqueTableCards(deck, 4);
+    tableCards = result.table;
+    deck = result.deck;
+    // 2) players
     for (const p of players) {
-      p.hand = deck.slice(idx, idx + handSize);
-      idx += handSize;
+      p.hand = deck.splice(0, handSize);
     }
   }
-
-  const remainingDeck = deck.slice(idx);
 
   const currentPlayerToDealersRightAfterDeal = orderFromDealerRight(state)[0];
 
@@ -74,7 +75,7 @@ export function dealRound(
     ...state,
     players,
     table: tableCards,
-    deck: remainingDeck,
+    deck,
     phase: "announceSings",
     currentPlayer: currentPlayerToDealersRightAfterDeal,
     config: { ...state.config, dealOrder, tablePattern },
@@ -109,4 +110,28 @@ function applyTablePatternBonus(
     state = checkGameOver(state, state.config.targetPoints);
   }
   return state;
+}
+
+// ensure unique card in the 4 table cards
+function drawUniqueTableCards(
+  deck: Card[],
+  count = 4,
+): { table: Card[]; deck: Card[] } {
+  const table: Card[] = [];
+  const pool = [...deck];
+
+  while (table.length < count && pool.length > 0) {
+    const card = pool.shift()!;
+    const alreadyHasRank = table.some((c) => c.rank === card.rank);
+
+    if (alreadyHasRank) {
+      // put back in random position
+      const pos = Math.floor(Math.random() * pool.length);
+      pool.splice(pos, 0, card);
+    } else {
+      table.push(card);
+    }
+  }
+
+  return { table, deck: pool };
 }
