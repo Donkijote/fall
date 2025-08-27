@@ -80,7 +80,6 @@ export function playCard(
   // If all hands empty but deck still has cards → redeal
   const allHandsEmpty = nextState.players.every((p) => p.hand.length === 0);
   if (allHandsEmpty && nextState.deck.length > 0) {
-    console.log("Redealing...");
     nextState = dealRound(nextState, {
       isDealerFirstDeal: false, // after first round, never deal the table again
     });
