@@ -94,12 +94,12 @@ export function applyCountingRule(state: GameState): GameState {
   const playerCount = state.players.length;
   const dealerIndex = state.players.findIndex((p) => p.id === state.dealer);
 
-  let next = { ...state };
+  let nextState = { ...state };
 
   if (state.scores.type === "team") {
     // 2v2: aggregate by team
     const teams = new Map<number, number>(); // teamId -> total cards
-    for (const p of next.players) {
+    for (const p of nextState.players) {
       if (p.team === undefined || p.team === null) continue;
       teams.set(p.team, (teams.get(p.team) ?? 0) + p.collected.length);
     }
@@ -107,31 +107,34 @@ export function applyCountingRule(state: GameState): GameState {
     for (const [teamId, total] of teams.entries()) {
       const extra = Math.max(0, total - 20);
       if (extra > 0) {
-        next = awardPointsToTeam(next, teamId, extra);
+        nextState = awardPointsToTeam(nextState, teamId, extra);
       }
     }
   } else {
     // Individual: 1v1 or 1v1v1
     if (playerCount === 2) {
       // 1v1
-      for (const p of next.players) {
+      for (const p of nextState.players) {
         const extra = Math.max(0, p.collected.length - 20);
         if (extra > 0) {
-          next = awardPoints(next, p.id, extra);
+          nextState = awardPoints(nextState, p.id, extra);
         }
       }
     } else if (playerCount === 3) {
       // 1v1v1
-      next.players.forEach((p, idx) => {
+      nextState.players.forEach((p, idx) => {
         const limit = idx === dealerIndex ? 13 : 12;
         const extra = Math.max(0, p.collected.length - limit);
         if (extra > 0) {
-          next = awardPoints(next, p.id, extra);
+          nextState = awardPoints(nextState, p.id, extra);
         }
       });
     }
   }
 
+  // Clean players' collected cards for next round
+  nextState.players.forEach((p) => (p.collected = []));
+
   // After applying extras, check for winner
-  return checkGameOver(next);
+  return checkGameOver(nextState);
 }
