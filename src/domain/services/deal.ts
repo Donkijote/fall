@@ -1,9 +1,6 @@
 import type { Card } from "@/domain/entities/Card";
-import {
-  awardPoints,
-  awardPointsToTeam,
-  checkGameOver,
-} from "@/domain/services/scoring";
+import { orderFromDealerRight } from "@/domain/services/resolveHands";
+import { awardPoints, awardPointsToTeam, checkGameOver } from "@/domain/services/scoring";
 
 import type { DealOrder, GameState, TablePattern } from "../entities/GameState";
 import { createDeck, shuffle } from "../rules/deck";
@@ -71,12 +68,15 @@ export function dealRound(
 
   const remainingDeck = deck.slice(idx);
 
+  const currentPlayerToDealersRightAfterDeal = orderFromDealerRight(state)[0];
+
   let next: GameState = {
     ...state,
     players,
     table: tableCards,
     deck: remainingDeck,
     phase: "announceSings",
+    currentPlayer: currentPlayerToDealersRightAfterDeal,
     config: { ...state.config, dealOrder, tablePattern },
   };
 

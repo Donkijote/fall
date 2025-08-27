@@ -34,7 +34,7 @@ function bestHand(hand: Card[]) {
 /**
  * Seating order starting from dealer's right (counter-clockwise).
  */
-function orderFromDealerRight(state: GameState): string[] {
+export function orderFromDealerRight(state: GameState): string[] {
   const dealerIdx = state.players.findIndex((p) => p.id === state.dealer);
   const arr = [
     ...state.players.slice(dealerIdx + 1),
