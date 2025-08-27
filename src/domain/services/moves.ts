@@ -1,5 +1,6 @@
 import type { Card } from "../entities/Card";
 import type { GameState } from "../entities/GameState";
+import { dealRound } from "./deal";
 import { awardPoints, checkGameOver } from "./scoring";
 
 /**
@@ -15,6 +16,12 @@ export function playCard(
     (p) => p.id === playerId && p.id === state.currentPlayer,
   );
   if (!player) return state;
+
+  // Ensure the card exists in hand
+  const cardIndex = player.hand.findIndex(
+    (c) => c.suit === card.suit && c.rank === card.rank,
+  );
+  if (cardIndex === -1) return state;
 
   // remove card from hand
   const newPlayers = state.players.map((p) =>
@@ -68,6 +75,21 @@ export function playCard(
     const pts = fallPoints(card.rank);
     nextState = awardPoints(nextState, playerId, pts);
     nextState = checkGameOver(nextState);
+  }
+
+  // If all hands empty but deck still has cards → redeal
+  const allHandsEmpty = nextState.players.every((p) => p.hand.length === 0);
+  if (allHandsEmpty && nextState.deck.length > 0) {
+    console.log("Redealing...");
+    nextState = dealRound(nextState, {
+      isDealerFirstDeal: false, // after first round, never deal the table again
+    });
+    // reset currentPlayer to right of dealer (first to act)
+    const dealerIndex = nextState.players.findIndex(
+      (p) => p.id === nextState.dealer,
+    );
+    const firstToPlay = (dealerIndex - 1 + playerCount) % playerCount;
+    nextState.currentPlayer = nextState.players[firstToPlay].id;
   }
 
   return nextState;

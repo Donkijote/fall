@@ -23,7 +23,11 @@ export function createGameService(
     ) => {
       const state = getState();
       if (state.phase !== "dealerChoice") return;
-      const nextState = dealRound(state, { dealOrder, tablePattern });
+      const nextState = dealRound(state, {
+        dealOrder,
+        tablePattern,
+        isDealerFirstDeal: true,
+      });
       setState(nextState);
     },
 

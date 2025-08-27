@@ -37,33 +37,47 @@ export function chooseDealer(state: GameState): GameState {
 
 export function dealRound(
   state: GameState,
-  options?: { dealOrder?: DealOrder; tablePattern?: TablePattern },
+  options?: {
+    dealOrder?: DealOrder;
+    tablePattern?: TablePattern;
+    isDealerFirstDeal?: boolean;
+  },
 ): GameState {
   let deck = state.deck.length ? [...state.deck] : shuffle(createDeck());
 
-  const players = state.players.map((p) => ({ ...p, hand: [] as Array<Card> }));
+  const players = [
+    ...state.players.map((p) => ({ ...p, hand: [] as Array<Card> })),
+  ];
 
   const handSize = state.config.handSize ?? 3;
   const dealOrder = options?.dealOrder ?? state.config.dealOrder;
   const tablePattern = options?.tablePattern ?? state.config.tablePattern;
 
-  let tableCards: Card[];
+  let tableCards: Card[] = [...state.table];
 
-  if (dealOrder === "playersThenTable") {
-    // 1) players
-    for (const p of players) {
-      p.hand = deck.splice(0, handSize);
+  // Dealer options (only first deal of each dealer)
+  if (options?.isDealerFirstDeal) {
+    if (dealOrder === "playersThenTable") {
+      // 1) players
+      for (const p of players) {
+        p.hand = deck.splice(0, handSize);
+      }
+      // 2) table (unique cards)
+      const result = drawUniqueTableCards(deck, 4);
+      tableCards = result.table;
+      deck = result.deck;
+    } else {
+      // 1) table (unique cards)
+      const result = drawUniqueTableCards(deck, 4);
+      tableCards = result.table;
+      deck = result.deck;
+      // 2) players
+      for (const p of players) {
+        p.hand = deck.splice(0, handSize);
+      }
     }
-    // 2) table (unique cards)
-    const result = drawUniqueTableCards(deck, 4);
-    tableCards = result.table;
-    deck = result.deck;
   } else {
-    // 1) table (unique cards)
-    const result = drawUniqueTableCards(deck, 4);
-    tableCards = result.table;
-    deck = result.deck;
-    // 2) players
+    // Normal deal: only 3 cards to each player, no table cards
     for (const p of players) {
       p.hand = deck.splice(0, handSize);
     }
