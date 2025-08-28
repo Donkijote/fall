@@ -1,4 +1,4 @@
-import type { Card } from "../entities/Card";
+import { type Card, RANK_ORDER } from "../entities/Card";
 import type { GameState } from "../entities/GameState";
 import { dealRound } from "./deal";
 import { awardPoints, checkGameOver } from "./scoring";
@@ -34,23 +34,35 @@ export function playCard(
         }
       : p,
   );
+  // --- Normal capture check ---
+  const matchIndex = state.table.findIndex((c) => c.rank === card.rank);
 
   // place on table or collect
-  const newTable = [] as Array<Card>;
+  const newTable = [...state.table] as Array<Card>;
 
-  if (state.table.find((c) => c.rank === card.rank)) {
-    newTable.push(...state.table.filter((c) => c.rank !== card.rank));
-    const collectedCards = state.table
-      .filter((c) => c.rank === card.rank)
-      .concat([card]);
+  if (matchIndex !== -1) {
+    const capturedCards: Card[] = [];
+    const baseCard = newTable.splice(matchIndex, 1)[0];
+    capturedCards.push(baseCard, card);
+
+    // --- Cascade capture ---
+    let next = nextRank(baseCard.rank);
+    while (next !== null) {
+      const idx = newTable.findIndex((c) => c.rank === next);
+      if (idx === -1) break;
+      capturedCards.push(newTable.splice(idx, 1)[0]);
+      next = nextRank(next);
+    }
+
+    // Add captured cards to player's pile
     newPlayers.map((p) => {
       if (p.id === playerId) {
-        p.collected.push(...collectedCards);
+        p.collected.push(...capturedCards);
       }
       return p;
     });
   } else {
-    newTable.push(...state.table, card);
+    newTable.push(card);
   }
 
   // Rotate to next player (to the right)
@@ -100,4 +112,10 @@ function fallPoints(rank: number): number {
   if (rank === 11) return 3;
   if (rank === 12) return 4;
   return 0;
+}
+
+function nextRank(rank: number): number | null {
+  const idx = RANK_ORDER.indexOf(rank);
+  if (idx === -1 || idx === RANK_ORDER.length - 1) return null;
+  return RANK_ORDER[idx + 1];
 }
