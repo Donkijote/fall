@@ -1,6 +1,6 @@
 import type { Card } from "@/domain/entities/Card";
 import { orderFromDealerRight } from "@/domain/services/resolveHands";
-import { awardPoints, awardPointsToTeam, checkGameOver } from "@/domain/services/scoring";
+import { awardPoints, checkGameOver } from "@/domain/services/scoring";
 
 import type { DealOrder, GameState, TablePattern } from "../entities/GameState";
 import { createDeck, shuffle } from "../rules/deck";
@@ -115,12 +115,7 @@ function applyTablePatternBonus(
   }
   if (total > 0) {
     const dealerId = state.dealer;
-    const dealerPlayer = state.players.find((p) => p.id === dealerId)!;
-    if (state.scores.type === "team") {
-      state = awardPointsToTeam(state, dealerPlayer.team ?? 0, total);
-    } else {
-      state = awardPoints(state, dealerId, total);
-    }
+    state = awardPoints(state, dealerId, total);
     state = checkGameOver(state, state.config.targetPoints);
   }
   return state;

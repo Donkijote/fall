@@ -40,29 +40,6 @@ export function awardPoints(
 }
 
 /**
- * Add points directly to a team (for end-round counting in 2v2).
- */
-export function awardPointsToTeam(
-  state: GameState,
-  teamId: number,
-  pts: number,
-): GameState {
-  if (pts <= 0) return state;
-
-  const key = String(teamId);
-  return {
-    ...state,
-    scores: {
-      ...state.scores,
-      values: {
-        ...state.scores.values,
-        [key]: (state.scores.values[key] ?? 0) + pts,
-      },
-    },
-  };
-}
-
-/**
  * If any side reaches TARGET_SCORE, flip phase to 'gameOver' and set winner.
  */
 export function checkGameOver(
@@ -98,16 +75,17 @@ export function applyCountingRule(state: GameState): GameState {
 
   if (state.scores.type === "team") {
     // 2v2: aggregate by team
-    const teams = new Map<number, number>(); // teamId -> total cards
+    const teams = new Map<number, { id: string; total: number }>(); // teamId -> total cards
     for (const p of nextState.players) {
       if (p.team === undefined || p.team === null) continue;
-      teams.set(p.team, (teams.get(p.team) ?? 0) + p.collected.length);
+      const total = (teams.get(p.team)?.total ?? 0) + p.collected.length;
+      teams.set(p.team, { id: p.id, total });
     }
 
-    for (const [teamId, total] of teams.entries()) {
+    for (const [, { id, total }] of teams.entries()) {
       const extra = Math.max(0, total - 20);
       if (extra > 0) {
-        nextState = awardPointsToTeam(nextState, teamId, extra);
+        nextState = awardPoints(nextState, id, extra);
       }
     }
   } else {
