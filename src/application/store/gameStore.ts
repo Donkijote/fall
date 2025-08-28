@@ -51,10 +51,3 @@ export const useGameStore = create<GameStore>((set, get) => {
     service,
   };
 });
-
-export function useGameService() {
-  return useGameStore((s) => s.service);
-}
-export function useGameState() {
-  return useGameStore((s) => s.state);
-}
