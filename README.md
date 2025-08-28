@@ -53,12 +53,13 @@ The first **player or team to reach 24 points** wins.
 ---
 
 ## ✋ Captures
-- A played card may capture **exactly one matching rank** from the table.
+- A card can capture a **same-rank card** from the table.
+- **Cascade Rule:**  
+  If the captured card can form a sequential chain (e.g., captured `2` → also take `3,4,5…`),  
+  the capturing player takes the entire sequence.
 - Captured card(s) + the played card go into the player’s **capture pile**.
 
----
-
-## ⚡ Special Rule — Fall
+**⚡ Special Rule — Fall**
 - If a player **throws** a card onto the table…
 - …and the **next player immediately captures it** with a card of the same rank → **Fall!**
 - Fall points:
@@ -66,6 +67,9 @@ The first **player or team to reach 24 points** wins.
     - Rank **10** → +2 points
     - Rank **11** → +3 points
     - Rank **12** → +4 points
+
+**Clean Table:**  
+- If after a capture (single or cascade) the table is completely empty, the capturing player/team earns **+4 points**.
 
 ---
 
@@ -89,7 +93,8 @@ Cantos are **special 3-card patterns** scored only when a player has all 3 cards
 
 ## 🔚 Round End & Counting
 When all cards have been dealt and played:
-- If no player/team has reached 24 points → **count captured cards**.
+- Count captured cards
+- If no player/team has reached 24 points → see **New Dealer** section
 
 **Extra card rules:**
 - **1v1:** Each counts to **20**. Extra cards beyond 20 → +1 point each.
@@ -111,7 +116,7 @@ When all cards have been dealt and played:
 ---
 
 ## 📌 Rule Variations (Pre-Game Agreements)
-- **Big House / Small House** → decide if optional cantos are used.
+- **Big House / Small House** → decide if optional hands (sings) are used.
 - **Three of a kind** → decide if it equals 5 points or instant win.
 - **Dealing style** → dealer chooses each round (players first vs table first).
 
