@@ -80,6 +80,11 @@ export function playCard(
     currentPlayer: nextPlayerId,
   };
 
+  // Clean table points
+  if (nextState.table.length === 0) {
+    nextState = awardPoints(nextState, playerId, 4);
+  }
+
   const lastCard = state.table[state.table.length - 1];
   const isFall = !!lastCard && lastCard.rank === card.rank;
 
