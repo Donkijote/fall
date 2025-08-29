@@ -1,6 +1,9 @@
-import { initialState } from "@/application/store/gameStore";
+import { expect } from "vitest";
 
-import { chooseDealer, dealRound } from "./deal";
+import { initialState } from "@/application/store/gameStore";
+import { createDeck } from "@/domain/rules/deck";
+
+import { applyTablePatternBonus, chooseDealer, dealRound } from "./deal";
 
 describe("Deal", () => {
   it("should choose dealer", () => {
@@ -42,5 +45,24 @@ describe("Deal", () => {
     for (const p of result.players) {
       expect(p.hand.length).toBe(3);
     }
+  });
+  it("should apply table bonus", () => {
+    const deck = createDeck();
+    const state = applyTablePatternBonus(
+      { ...initialState, dealer: initialState.players[0].id },
+      [deck[0], deck[1], deck[2], deck[3]],
+      "inc",
+    );
+
+    expect(state).toStrictEqual({
+      ...initialState,
+      dealer: initialState.players[0].id,
+      scores: {
+        type: "individual",
+        values: {
+          [initialState.players[0].id]: 10,
+        },
+      },
+    });
   });
 });

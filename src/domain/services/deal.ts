@@ -103,7 +103,7 @@ export function dealRound(
   return next;
 }
 
-function applyTablePatternBonus(
+export function applyTablePatternBonus(
   state: GameState,
   table: Card[],
   pattern: TablePattern,
