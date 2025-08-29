@@ -63,6 +63,7 @@ export function playCard(
     });
   } else {
     newTable.push(card);
+    state.lastPlayedCard = card;
   }
 
   // Rotate to next player (to the right)
@@ -85,7 +86,7 @@ export function playCard(
     nextState = awardPoints(nextState, playerId, 4);
   }
 
-  const lastCard = state.table[state.table.length - 1];
+  const lastCard = state.lastPlayedCard;
   const isFall = !!lastCard && lastCard.rank === card.rank;
 
   if (isFall) {
