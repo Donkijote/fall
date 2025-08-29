@@ -4,7 +4,7 @@ import type { GameState } from "@/domain/entities/GameState";
 
 import { createGameService } from "../GameService";
 
-const initialState: GameState = {
+export const initialState: GameState = {
   players: [
     {
       id: "1",
