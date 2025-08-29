@@ -18,11 +18,6 @@ function bestHand(hand: Card[]) {
   const matches = HANDS.filter((c) => c.pattern(hand));
   if (matches.length === 0) return null;
 
-  // Best = highest points, then highest rankStrength
-  matches.sort(
-    (a, b) =>
-      b.points - a.points || b.rankStrength(hand) - a.rankStrength(hand),
-  );
   const chosen = matches[0];
   return {
     name: chosen.name,
