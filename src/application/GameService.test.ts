@@ -59,6 +59,7 @@ describe("Game Service", () => {
       ]),
       table: expect.any(Array),
       currentPlayer: expect.any(String),
+      scores: expect.any(Object),
       phase: "announceSings",
     });
   });
