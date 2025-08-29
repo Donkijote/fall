@@ -113,11 +113,10 @@ export function playCard(
 }
 
 function fallPoints(rank: number): number {
-  if (rank >= 1 && rank <= 7) return 1;
   if (rank === 10) return 2;
   if (rank === 11) return 3;
   if (rank === 12) return 4;
-  return 0;
+  return 1;
 }
 
 function nextRank(rank: number): number | null {
