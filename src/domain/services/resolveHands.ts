@@ -6,7 +6,7 @@ import { awardPoints, checkGameOver } from "./scoring";
 
 type Match = {
   playerId: string;
-  cantoName: string;
+  handName: string;
   points: number;
   strength: number;
 };
@@ -54,7 +54,7 @@ export function resolveHands(state: GameState): GameState {
     if (best) {
       matches.push({
         playerId: p.id,
-        cantoName: best.name,
+        handName: best.name,
         points: best.points,
         strength: best.strength,
       });
@@ -68,7 +68,7 @@ export function resolveHands(state: GameState): GameState {
   let top = matches.filter((m) => m.points === maxPts);
 
   // Step 2: if same hand name among top, compare strength
-  const handNames = new Set(top.map((t) => t.cantoName));
+  const handNames = new Set(top.map((t) => t.handName));
   if (handNames.size === 1 && top.length > 1) {
     const maxStr = Math.max(...top.map((t) => t.strength));
     top = top.filter((t) => t.strength === maxStr);
