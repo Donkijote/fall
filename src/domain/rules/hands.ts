@@ -80,12 +80,6 @@ export const HANDS: Hand[] = [
         .map((c) => RANK_ORDER.indexOf(c.rank))
         .sort((a, b) => a - b);
 
-      console.log(
-        "patrol",
-        indexes,
-        indexes[1] === indexes[0] + 1 && indexes[2] === indexes[1] + 1,
-      );
-
       return indexes[1] === indexes[0] + 1 && indexes[2] === indexes[1] + 1;
     },
     rankStrength: (c) => Math.max(...c.map((x) => x.rank)),

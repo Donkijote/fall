@@ -63,6 +63,7 @@ export function playCard(
     });
   } else {
     newTable.push(card);
+    state.lastPlayedCard = card;
   }
 
   // Rotate to next player (to the right)
@@ -85,7 +86,7 @@ export function playCard(
     nextState = awardPoints(nextState, playerId, 4);
   }
 
-  const lastCard = state.table[state.table.length - 1];
+  const lastCard = state.lastPlayedCard;
   const isFall = !!lastCard && lastCard.rank === card.rank;
 
   if (isFall) {
@@ -112,11 +113,10 @@ export function playCard(
 }
 
 function fallPoints(rank: number): number {
-  if (rank >= 1 && rank <= 7) return 1;
   if (rank === 10) return 2;
   if (rank === 11) return 3;
   if (rank === 12) return 4;
-  return 0;
+  return 1;
 }
 
 function nextRank(rank: number): number | null {

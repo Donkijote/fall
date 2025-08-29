@@ -35,6 +35,7 @@ export interface GameState {
   players: Player[];
   table: Card[];
   deck: Card[];
+  lastPlayedCard?: Card;
   phase: Phase;
   dealer: PlayerId;
   currentPlayer: PlayerId;
