@@ -2,6 +2,7 @@ import { clsx } from "clsx";
 import { useEffect } from "react";
 
 import { useGameStore } from "@/application/store/gameStore";
+import { Card } from "@/components/card/Card";
 
 import "./App.css";
 
@@ -92,6 +93,20 @@ function App() {
             </div>
           </div>
         ))}
+      </div>
+      <div className={"pt-4"}>
+        <Card rank={1} suit="golds" size={"sm"} />
+        <Card rank={1} suit="golds" />
+        <Card rank={1} suit="golds" size={"lg"} />
+        <Card rank={2} suit="golds" size={"sm"} />
+        <Card rank={2} suit="golds" />
+        <Card rank={2} suit="golds" size={"lg"} />
+        <Card rank={3} suit="golds" size={"sm"} />
+        <Card rank={3} suit="golds" />
+        <Card rank={3} suit="golds" size={"lg"} />
+        <Card rank={4} suit="golds" size={"sm"} />
+        <Card rank={4} suit="golds" />
+        <Card rank={4} suit="golds" size={"lg"} />
       </div>
       <div className={"pt-4"}>
         <pre>{JSON.stringify(state, null, 2)}</pre>
