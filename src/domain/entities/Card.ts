@@ -16,5 +16,5 @@ export const SUIT_COLOR: Record<Suit, string> = {
   golds: "#D4AF37",
   cups: "#E23D3D",
   blades: "#2B2B2B",
-  clubs: "#8B5E34",
+  clubs: "#3B920F",
 };
