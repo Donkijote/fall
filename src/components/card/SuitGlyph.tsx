@@ -17,30 +17,14 @@ const LAYOUT: Record<
   Record<Suit, FC<PropsWithChildren<{ color: string; size: string }>>>
 > = {
   1: {
-    golds: ({ color }) => (
-      <div
-        className={"flex h-full w-full flex-row items-center justify-center"}
-      >
-        <GoldGlyph fill={color} />
-      </div>
-    ),
+    golds: ({ color }) => <GoldGlyph fill={color} />,
     clubs: ({ children }) => <div>{children}</div>,
     blades: ({ children }) => <div>{children}</div>,
-    cups: ({ color }) => (
-      <div
-        className={"flex h-full w-full flex-row items-center justify-center"}
-      >
-        <CupGlyph fill={color} />
-      </div>
-    ),
+    cups: ({ color }) => <CupGlyph fill={color} />,
   },
   2: {
     golds: ({ color, size }) => (
-      <div
-        className={
-          "relative flex h-full w-full flex-col items-center justify-center"
-        }
-      >
+      <>
         <GoldGlyph
           fill={color}
           className={clsx("absolute", {
@@ -57,19 +41,34 @@ const LAYOUT: Record<
             "h-24 w-24 -bottom-6 -right-1": size === "lg",
           })}
         />
-      </div>
+      </>
     ),
     clubs: ({ children }) => <div>{children}</div>,
     blades: ({ children }) => <div>{children}</div>,
-    cups: ({ children }) => <div>{children}</div>,
+    cups: ({ color, size }) => (
+      <>
+        <CupGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "top-2 left-4 h-[48px] w-[48px]": size === "sm",
+            "top-2 left-5 h-[70px] w-[70px]": size === "md",
+            "top-3 left-6 h-[86px] w-[86px]": size === "lg",
+          })}
+        />
+        <CupGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "bottom-2 left-4 h-[48px] w-[48px]": size === "sm",
+            "bottom-2 left-5 h-[70px] w-[70px]": size === "md",
+            "bottom-3 left-6 h-[86px] w-[86px]": size === "lg",
+          })}
+        />
+      </>
+    ),
   },
   3: {
     golds: ({ color, size }) => (
-      <div
-        className={
-          "relative flex h-full w-full flex-col items-center justify-center"
-        }
-      >
+      <>
         <GoldGlyph
           fill={color}
           className={clsx("absolute", {
@@ -94,15 +93,42 @@ const LAYOUT: Record<
             "h-20 w-20 -bottom-6 -left-1": size === "lg",
           })}
         />
-      </div>
+      </>
     ),
     clubs: ({ children }) => <div>{children}</div>,
     blades: ({ children }) => <div>{children}</div>,
-    cups: ({ children }) => <div>{children}</div>,
+    cups: ({ color, size }) => (
+      <>
+        <CupGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "-top-1 -left-1 h-[42px] w-[42px]": size === "sm",
+            "-top-3 -left-1 h-[62px] w-[62px]": size === "md",
+            "h-20 w-20 -top-5 -left-1": size === "lg",
+          })}
+        />
+        <CupGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "bottom-4 -right-1 h-[42px] w-[42px]": size === "sm",
+            "bottom-4 -right-1 h-[62px] w-[62px]": size === "md",
+            "h-20 w-20 bottom-6 -right-1": size === "lg",
+          })}
+        />
+        <CupGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "-bottom-2 -left-1 h-[42px] w-[42px]": size === "sm",
+            "-bottom-5 -left-1 h-[62px] w-[62px]": size === "md",
+            "h-20 w-20 -bottom-6 -left-1": size === "lg",
+          })}
+        />
+      </>
+    ),
   },
   4: {
     golds: ({ color, size }) => (
-      <div className={"relative flex h-full w-full"}>
+      <>
         <GoldGlyph
           fill={color}
           className={clsx("absolute", {
@@ -135,15 +161,50 @@ const LAYOUT: Record<
             "-bottom-2 -right-1 h-18 w-18": size === "lg",
           })}
         />
-      </div>
+      </>
     ),
     clubs: ({ children }) => <div>{children}</div>,
     blades: ({ children }) => <div>{children}</div>,
-    cups: ({ children }) => <div>{children}</div>,
+    cups: ({ color, size }) => (
+      <>
+        <CupGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "-top-1 -left-1 h-[38px] w-[38px]": size === "sm",
+            "-top-3 -left-1 h-14 w-14": size === "md",
+            "-top-3 -left-1 h-18 w-18": size === "lg",
+          })}
+        />
+        <CupGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "-top-1 -right-1 h-[38px] w-[38px]": size === "sm",
+            "-top-3 -right-1 h-14 w-14": size === "md",
+            "-top-3 -right-1 h-18 w-18": size === "lg",
+          })}
+        />
+        <CupGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "-bottom-0 -left-1 h-[38px] w-[38px]": size === "sm",
+            "-bottom-2 -left-1 h-14 w-14": size === "md",
+            "-bottom-2 -left-1 h-18 w-18": size === "lg",
+          })}
+        />
+        <CupGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "-bottom-0 -right-1 h-[38px] w-[38px]": size === "sm",
+            "-bottom-2 -right-1 h-14 w-14": size === "md",
+            "-bottom-2 -right-1 h-18 w-18": size === "lg",
+          })}
+        />
+      </>
+    ),
   },
   5: {
     golds: ({ color, size }) => (
-      <div className={"relative flex h-full w-full"}>
+      <>
         <GoldGlyph
           fill={color}
           className={clsx("absolute", {
@@ -184,15 +245,58 @@ const LAYOUT: Record<
             "-bottom-4 right-1 h-14 w-14": size === "lg",
           })}
         />
-      </div>
+      </>
     ),
     clubs: ({ children }) => <div>{children}</div>,
     blades: ({ children }) => <div>{children}</div>,
-    cups: ({ children }) => <div>{children}</div>,
+    cups: ({ color, size }) => (
+      <>
+        <CupGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "-top-2 left-1 h-7 w-7": size === "sm",
+            "-top-4 left-1 h-10 w-10": size === "md",
+            "-top-6 left-1 h-14 w-14 mt-0.5": size === "lg",
+          })}
+        />
+        <CupGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "-top-2 right-1 h-7 w-7": size === "sm",
+            "-top-4 right-1 h-10 w-10": size === "md",
+            "-top-6 right-1 h-14 w-14 mt-0.5": size === "lg",
+          })}
+        />
+        <CupGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "bottom-4 mb-0.5 left-3 h-10 w-10": size === "sm",
+            "bottom-4 left-4 mb-0.5 h-16 w-16": size === "md",
+            "bottom-6 left-6 h-20 w-20": size === "lg",
+          })}
+        />
+        <CupGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "-bottom-2 left-1 h-7 w-7": size === "sm",
+            "-bottom-4 left-1 h-10 w-10": size === "md",
+            "-bottom-6 left-1 h-14 w-14 mb-0.5": size === "lg",
+          })}
+        />
+        <CupGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "-bottom-2 right-1 h-7 w-7": size === "sm",
+            "-bottom-4 right-1 h-10 w-10": size === "md",
+            "-bottom-6 right-1 h-14 w-14 mb-0.5": size === "lg",
+          })}
+        />
+      </>
+    ),
   },
   6: {
     golds: ({ color, size }) => (
-      <div className={"relative flex h-full w-full"}>
+      <>
         <GoldGlyph
           fill={color}
           className={clsx("absolute", {
@@ -241,21 +345,72 @@ const LAYOUT: Record<
             "-bottom-4 right-1 h-14 w-14": size === "lg",
           })}
         />
-      </div>
+      </>
     ),
     clubs: ({ children }) => <div>{children}</div>,
     blades: ({ children }) => <div>{children}</div>,
-    cups: ({ children }) => <div>{children}</div>,
+    cups: ({ color, size }) => (
+      <>
+        <CupGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "-top-2 left-1 h-7 w-7": size === "sm",
+            "-top-4 left-1 h-10 w-10": size === "md",
+            "-top-6 left-1 h-14 w-14 mt-0.5": size === "lg",
+          })}
+        />
+        <CupGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "-top-2 right-1 h-7 w-7": size === "sm",
+            "-top-4 right-1 h-10 w-10": size === "md",
+            "-top-6 right-1 h-14 w-14 mt-0.5": size === "lg",
+          })}
+        />
+        <CupGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "bottom-6 left-1 h-7 w-7": size === "sm",
+            "bottom-7 left-1 h-10 w-10 mb-0.5": size === "md",
+            "bottom-9 left-1 h-14 w-14": size === "lg",
+          })}
+        />
+        <CupGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "bottom-6 right-1 h-7 w-7": size === "sm",
+            "bottom-7 right-1 h-10 w-10 mb-0.5": size === "md",
+            "bottom-9 right-1 h-14 w-14": size === "lg",
+          })}
+        />
+        <CupGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "-bottom-2 left-1 h-7 w-7": size === "sm",
+            "-bottom-4 left-1 h-10 w-10": size === "md",
+            "-bottom-6 left-1 h-14 w-14 mb-0.5": size === "lg",
+          })}
+        />
+        <CupGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "-bottom-2 right-1 h-7 w-7": size === "sm",
+            "-bottom-4 right-1 h-10 w-10": size === "md",
+            "-bottom-6 right-1 h-14 w-14 mb-0.5": size === "lg",
+          })}
+        />
+      </>
+    ),
   },
   7: {
     golds: ({ color, size }) => (
-      <div className={"relative flex h-full w-full"}>
+      <>
         <GoldGlyph
           fill={color}
           className={clsx("absolute", {
             "-top-2 left-1 h-7 w-7": size === "sm",
             "-top-3 left-1 h-10 w-10": size === "md",
-            "-top-4 left-1 h-14 w-14": size === "lg",
+            "-top-6 left-1 h-14 w-14": size === "lg",
           })}
         />
         <GoldGlyph
@@ -263,7 +418,7 @@ const LAYOUT: Record<
           className={clsx("absolute", {
             "-top-2 right-1 h-7 w-7": size === "sm",
             "-top-3 right-1 h-10 w-10": size === "md",
-            "-top-4 right-1 h-14 w-14": size === "lg",
+            "-top-6 right-1 h-14 w-14": size === "lg",
           })}
         />
         <GoldGlyph
@@ -271,7 +426,7 @@ const LAYOUT: Record<
           className={clsx("absolute", {
             "top-3 left-4 ml-0.5 h-7 w-7": size === "sm",
             "top-3 left-7 h-10 w-10 mt-0.5": size === "md",
-            "-top-4 right-1 h-14 w-14": size === "lg",
+            "top-3 left-9 h-14 w-14": size === "lg",
           })}
         />
         <GoldGlyph
@@ -279,7 +434,7 @@ const LAYOUT: Record<
           className={clsx("absolute", {
             "bottom-4 left-1 h-7 w-7": size === "sm",
             "bottom-4 left-1 h-10 w-10 mb-0.5": size === "md",
-            "bottom-9 left-1 h-14 w-14": size === "lg",
+            "bottom-6 left-1 h-14 w-14": size === "lg",
           })}
         />
         <GoldGlyph
@@ -287,7 +442,7 @@ const LAYOUT: Record<
           className={clsx("absolute", {
             "bottom-4 right-1 h-7 w-7": size === "sm",
             "bottom-4 right-1 h-10 w-10 mb-0.5": size === "md",
-            "bottom-9 right-1 h-14 w-14": size === "lg",
+            "bottom-6 right-1 h-14 w-14": size === "lg",
           })}
         />
         <GoldGlyph
@@ -295,7 +450,7 @@ const LAYOUT: Record<
           className={clsx("absolute", {
             "-bottom-2 left-1 h-7 w-7": size === "sm",
             "-bottom-4 left-1 h-10 w-10": size === "md",
-            "-bottom-4 left-1 h-14 w-14": size === "lg",
+            "-bottom-6 left-1 h-14 w-14": size === "lg",
           })}
         />
         <GoldGlyph
@@ -303,19 +458,86 @@ const LAYOUT: Record<
           className={clsx("absolute", {
             "-bottom-2 right-1 h-7 w-7": size === "sm",
             "-bottom-4 right-1 h-10 w-10": size === "md",
-            "-bottom-4 right-1 h-14 w-14": size === "lg",
+            "-bottom-6 right-1 h-14 w-14": size === "lg",
           })}
         />
-      </div>
+      </>
     ),
     clubs: ({ children }) => <div>{children}</div>,
     blades: ({ children }) => <div>{children}</div>,
-    cups: ({ children }) => <div>{children}</div>,
+    cups: ({ color, size }) => (
+      <>
+        <CupGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "-top-2 left-1 h-7 w-7": size === "sm",
+            "-top-4 left-1 h-10 w-10": size === "md",
+            "-top-6 left-1 h-14 w-14": size === "lg",
+          })}
+        />
+        <CupGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "-top-2 right-1 h-7 w-7": size === "sm",
+            "-top-4 right-1 h-10 w-10": size === "md",
+            "-top-6 right-1 h-14 w-14": size === "lg",
+          })}
+        />
+        <CupGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "top-2 left-4 ml-0.5 h-7 w-7": size === "sm",
+            "top-2 left-7 h-10 w-10 mt-0.5": size === "md",
+            "top-3 left-9 h-14 w-14": size === "lg",
+          })}
+        />
+        <CupGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "bottom-5 left-1 h-7 w-7": size === "sm",
+            "bottom-6 left-1 h-10 w-10 mb-0.5": size === "md",
+            "bottom-8 left-1 h-14 w-14 mb-0.5": size === "lg",
+          })}
+        />
+        <CupGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "bottom-5 right-1 h-7 w-7": size === "sm",
+            "bottom-6 right-1 h-10 w-10 mb-0.5": size === "md",
+            "bottom-8 right-1 h-14 w-14 mb-0.5": size === "lg",
+          })}
+        />
+        <CupGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "-bottom-2 left-1 h-7 w-7": size === "sm",
+            "-bottom-4 left-1 h-10 w-10": size === "md",
+            "-bottom-6 left-1 h-14 w-14": size === "lg",
+          })}
+        />
+        <CupGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "-bottom-2 right-1 h-7 w-7": size === "sm",
+            "-bottom-4 right-1 h-10 w-10": size === "md",
+            "-bottom-6 right-1 h-14 w-14": size === "lg",
+          })}
+        />
+      </>
+    ),
   },
 };
 
 export const SuitGlyph = ({ suit, rank, size }: SuitGlyphProps) => {
   const color = SUIT_COLOR[suit];
   const Layout = LAYOUT[rank][suit];
-  return <Layout color={color} size={size} />;
+  return (
+    <div
+      className={
+        "relative flex h-full w-full flex-col items-center justify-center"
+      }
+    >
+      <Layout color={color} size={size} />{" "}
+    </div>
+  );
 };

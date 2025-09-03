@@ -106,31 +106,49 @@ function App() {
         <Card rank={2} suit="golds" size={"sm"} />
         <Card rank={2} suit="golds" />
         <Card rank={2} suit="golds" size={"lg"} />
+        <Card rank={2} suit="cups" size={"sm"} />
+        <Card rank={2} suit="cups" />
+        <Card rank={2} suit="cups" size={"lg"} />
       </div>
       <div className={"pt-4"}>
         <Card rank={3} suit="golds" size={"sm"} />
         <Card rank={3} suit="golds" />
         <Card rank={3} suit="golds" size={"lg"} />
+        <Card rank={3} suit="cups" size={"sm"} />
+        <Card rank={3} suit="cups" />
+        <Card rank={3} suit="cups" size={"lg"} />
       </div>
       <div className={"pt-4"}>
         <Card rank={4} suit="golds" size={"sm"} />
         <Card rank={4} suit="golds" />
         <Card rank={4} suit="golds" size={"lg"} />
+        <Card rank={4} suit="cups" size={"sm"} />
+        <Card rank={4} suit="cups" />
+        <Card rank={4} suit="cups" size={"lg"} />
       </div>
       <div className={"pt-4"}>
         <Card rank={5} suit="golds" size={"sm"} />
         <Card rank={5} suit="golds" />
         <Card rank={5} suit="golds" size={"lg"} />
+        <Card rank={5} suit="cups" size={"sm"} />
+        <Card rank={5} suit="cups" />
+        <Card rank={5} suit="cups" size={"lg"} />
       </div>
       <div className={"pt-4"}>
         <Card rank={6} suit="golds" size={"sm"} />
         <Card rank={6} suit="golds" />
         <Card rank={6} suit="golds" size={"lg"} />
+        <Card rank={6} suit="cups" size={"sm"} />
+        <Card rank={6} suit="cups" />
+        <Card rank={6} suit="cups" size={"lg"} />
       </div>
       <div className={"pt-4"}>
         <Card rank={7} suit="golds" size={"sm"} />
         <Card rank={7} suit="golds" />
         <Card rank={7} suit="golds" size={"lg"} />
+        <Card rank={7} suit="cups" size={"sm"} />
+        <Card rank={7} suit="cups" />
+        <Card rank={7} suit="cups" size={"lg"} />
       </div>
     </div>
   );
