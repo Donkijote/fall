@@ -101,6 +101,9 @@ function App() {
         <Card rank={1} suit="cups" size={"sm"} />
         <Card rank={1} suit="cups" />
         <Card rank={1} suit="cups" size={"lg"} />
+        <Card rank={1} suit="clubs" size={"sm"} />
+        <Card rank={1} suit="clubs" />
+        <Card rank={1} suit="clubs" size={"lg"} />
       </div>
       <div className={"pt-4"}>
         <Card rank={2} suit="golds" size={"sm"} />

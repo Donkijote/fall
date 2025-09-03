@@ -1,6 +1,7 @@
 import { clsx } from "clsx";
 import type { FC, PropsWithChildren } from "react";
 
+import { ClubGlyph } from "@/components/card/ClubGlyph";
 import { CupGlyph } from "@/components/card/CupGlyph";
 import { GoldGlyph } from "@/components/card/GoldGlyph";
 import { type Suit, SUIT_COLOR } from "@/domain/entities/Card";
@@ -18,7 +19,7 @@ const LAYOUT: Record<
 > = {
   1: {
     golds: ({ color }) => <GoldGlyph fill={color} />,
-    clubs: ({ children }) => <div>{children}</div>,
+    clubs: ({ color }) => <ClubGlyph fill={color} />,
     blades: ({ children }) => <div>{children}</div>,
     cups: ({ color }) => <CupGlyph fill={color} />,
   },
