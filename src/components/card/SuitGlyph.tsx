@@ -50,17 +50,17 @@ const LAYOUT: Record<
         <CupGlyph
           fill={color}
           className={clsx("absolute", {
-            "top-2 left-4 h-[48px] w-[48px]": size === "sm",
-            "top-2 left-5 h-[70px] w-[70px]": size === "md",
-            "top-3 left-6 h-[86px] w-[86px]": size === "lg",
+            "-top-3 left-2 ml-0.5 mt-0.5 h-[44px] w-[44px]": size === "sm",
+            "-top-5 left-3 ml-0.5 mt-0.5 h-[64px] w-[64px]": size === "md",
+            "-top-6 left-5 h-[86px] w-[86px]": size === "lg",
           })}
         />
         <CupGlyph
           fill={color}
           className={clsx("absolute", {
-            "bottom-2 left-4 h-[48px] w-[48px]": size === "sm",
-            "bottom-2 left-5 h-[70px] w-[70px]": size === "md",
-            "bottom-3 left-6 h-[86px] w-[86px]": size === "lg",
+            "-bottom-3 left-2 ml-0.5 mb-0.5 h-[44px] w-[44px]": size === "sm",
+            "-bottom-5 left-3 ml-0.5 mb-0.5 h-[64px] w-[64px]": size === "md",
+            "-bottom-6 left-5 h-[86px] w-[86px]": size === "lg",
           })}
         />
       </>
