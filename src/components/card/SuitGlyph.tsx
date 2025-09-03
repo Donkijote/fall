@@ -254,41 +254,41 @@ const LAYOUT: Record<
         <CupGlyph
           fill={color}
           className={clsx("absolute", {
-            "-top-2 left-1 h-7 w-7": size === "sm",
-            "-top-4 left-1 h-10 w-10": size === "md",
-            "-top-6 left-1 h-14 w-14 mt-0.5": size === "lg",
+            "-top-2 -left-0 h-8 w-8": size === "sm",
+            "-top-4 left-0 h-12 w-12": size === "md",
+            "-top-6 left-0 h-16 w-16": size === "lg",
           })}
         />
         <CupGlyph
           fill={color}
           className={clsx("absolute", {
-            "-top-2 right-1 h-7 w-7": size === "sm",
-            "-top-4 right-1 h-10 w-10": size === "md",
-            "-top-6 right-1 h-14 w-14 mt-0.5": size === "lg",
+            "-top-2 -right-0 h-8 w-8": size === "sm",
+            "-top-4 right-0 h-12 w-12": size === "md",
+            "-top-6 right-0 h-16 w-16": size === "lg",
           })}
         />
         <CupGlyph
           fill={color}
           className={clsx("absolute", {
-            "bottom-4 mb-0.5 left-3 h-10 w-10": size === "sm",
-            "bottom-4 left-4 mb-0.5 h-16 w-16": size === "md",
-            "bottom-6 left-6 h-20 w-20": size === "lg",
+            "bottom-5 left-4 h-8 w-8": size === "sm",
+            "bottom-6 left-6 h-12 w-12": size === "md",
+            "bottom-8 left-8 h-16 w-16": size === "lg",
           })}
         />
         <CupGlyph
           fill={color}
           className={clsx("absolute", {
-            "-bottom-2 left-1 h-7 w-7": size === "sm",
-            "-bottom-4 left-1 h-10 w-10": size === "md",
-            "-bottom-6 left-1 h-14 w-14 mb-0.5": size === "lg",
+            "-bottom-2 left-0 h-8 w-8": size === "sm",
+            "-bottom-4 left-0 h-12 w-12": size === "md",
+            "-bottom-6 left-0 h-16 w-16": size === "lg",
           })}
         />
         <CupGlyph
           fill={color}
           className={clsx("absolute", {
-            "-bottom-2 right-1 h-7 w-7": size === "sm",
-            "-bottom-4 right-1 h-10 w-10": size === "md",
-            "-bottom-6 right-1 h-14 w-14 mb-0.5": size === "lg",
+            "-bottom-2 right-0 h-8 w-8": size === "sm",
+            "-bottom-4 right-0 h-12 w-12": size === "md",
+            "-bottom-6 right-0 h-16 w-16": size === "lg",
           })}
         />
       </>
