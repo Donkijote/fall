@@ -15,8 +15,9 @@ export const ClubGlyph = ({ fill, className }: GlyphColor) => (
       transform="translate(-17,20) scale(0.081000,-0.081000) scale(-1, 1) rotate(145)"
     >
       <path
-        fill="#0F4309"
+        fill={fill}
         opacity="1.000000"
+        style={{ filter: "brightness(0.5)" }}
         stroke="none"
         d="
 M431.263977,662.294495
@@ -653,8 +654,9 @@ M431.263977,662.294495
 z"
       />
       <path
-        fill="#71BA1D"
+        fill={fill}
         opacity="1.000000"
+        style={{ filter: "brightness(1.25)" }}
         stroke="none"
         d="
 M130.484924,1194.911133
@@ -705,8 +707,9 @@ M130.484924,1194.911133
 z"
       />
       <path
-        fill="#3B920F"
+        fill={fill}
         opacity="1.000000"
+        style={{ filter: "brightness(0.95)" }}
         stroke="none"
         d="
 M130.084045,1195.239502

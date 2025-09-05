@@ -49,17 +49,17 @@ const LAYOUT: Record<
         <ClubGlyph
           fill={color}
           className={clsx("absolute", {
-            "-top-0 -left-4 h-[72px] w-[72px]": size === "sm",
-            "-top-2 -left-7 h-28 w-28": size === "md",
-            "-top-3 -left-10 h-38 w-38": size === "lg",
+            "top-0 -left-5.5 h-20 w-20": size === "sm",
+            "-top-2 -left-8 h-30 w-30": size === "md",
+            "-top-2.5 -left-10 h-38 w-38": size === "lg",
           })}
         />
         <ClubGlyph
-          fill={color}
+          fill={SUIT_COLOR["cups"]}
           className={clsx("absolute", {
-            "-bottom-0 -right-4 h-[72px] w-[72px]": size === "sm",
-            "-bottom-2 -right-7 h-28 w-28": size === "md",
-            "-bottom-3 -right-10 h-38 w-38": size === "lg",
+            "bottom-0 -right-5.5 h-20 w-20": size === "sm",
+            "-bottom-2 -right-8 h-30 w-30": size === "md",
+            "-bottom-2.5 -right-10 h-38 w-38": size === "lg",
           })}
         />
       </div>
@@ -122,7 +122,7 @@ const LAYOUT: Record<
         }
       >
         <ClubGlyph
-          fill={color}
+          fill={SUIT_COLOR["cups"]}
           className={clsx("absolute", {
             "-top-2 -left-3.5 h-[92px] w-[92px]": size === "sm",
             "-top-5 -right-5 mt-0.5 h-[136px] w-[136px]": size === "md",
@@ -138,7 +138,7 @@ const LAYOUT: Record<
           })}
         />
         <ClubGlyph
-          fill={color}
+          fill={SUIT_COLOR["golds"]}
           className={clsx("absolute", {
             "-top-1.5 -right-3.5 h-[92px] w-[92px]": size === "sm",
             "-bottom-5 -right-6 h-[136px] w-[136px]": size === "md",
@@ -229,7 +229,7 @@ const LAYOUT: Record<
           })}
         />
         <ClubGlyph
-          fill={color}
+          fill={SUIT_COLOR["cups"]}
           className={clsx("absolute", {
             "-top-0.5 -right-0 h-9 w-9": size === "sm",
             "-top-2 -right-0 h-14 w-14": size === "md",
@@ -237,7 +237,7 @@ const LAYOUT: Record<
           })}
         />
         <ClubGlyph
-          fill={color}
+          fill={SUIT_COLOR["cups"]}
           className={clsx("absolute", {
             "-bottom-0.5 -left-0 h-9 w-9": size === "sm",
             "-bottom-2 -left-0 h-14 w-14": size === "md",
@@ -352,7 +352,7 @@ const LAYOUT: Record<
           })}
         />
         <ClubGlyph
-          fill={color}
+          fill={SUIT_COLOR["cups"]}
           className={clsx("absolute", {
             "-top-2 -right-0.5 h-10 w-10": size === "sm",
             "-top-5 -right-2 h-16 w-16": size === "md",
@@ -360,7 +360,7 @@ const LAYOUT: Record<
           })}
         />
         <ClubGlyph
-          fill={color}
+          fill={SUIT_COLOR["cups"]}
           className={clsx("absolute", {
             "-bottom-2 -left-0.5 h-10 w-10": size === "sm",
             "-bottom-5 -left-2 h-16 w-16": size === "md",
@@ -376,7 +376,7 @@ const LAYOUT: Record<
           })}
         />
         <ClubGlyph
-          fill={color}
+          fill={SUIT_COLOR["golds"]}
           className={clsx("absolute", {
             "top-4.5 left-2.5 h-10 w-10": size === "sm",
             "top-4.5 left-4 h-16 w-16": size === "md",
@@ -495,7 +495,7 @@ const LAYOUT: Record<
           })}
         />
         <ClubGlyph
-          fill={color}
+          fill={SUIT_COLOR["cups"]}
           className={clsx("absolute", {
             "-top-0 left-3.5 h-8 w-9": size === "sm",
             "-top-2 left-5 w-14 h-[54px]": size === "md",
@@ -511,7 +511,7 @@ const LAYOUT: Record<
           })}
         />
         <ClubGlyph
-          fill={color}
+          fill={SUIT_COLOR["cups"]}
           className={clsx("absolute", {
             "-bottom-0 -left-2 h-8 w-9": size === "sm",
             "-bottom-2 -left-3 w-14 h-[54px]": size === "md",
@@ -527,7 +527,7 @@ const LAYOUT: Record<
           })}
         />
         <ClubGlyph
-          fill={color}
+          fill={SUIT_COLOR["cups"]}
           className={clsx("absolute", {
             "-bottom-0 -right-2 h-8 w-9": size === "sm",
             "-bottom-2 -right-3 w-14 h-[54px]": size === "md",
@@ -658,7 +658,7 @@ const LAYOUT: Record<
         }
       >
         <ClubGlyph
-          fill={color}
+          fill={SUIT_COLOR["cups"]}
           className={clsx("absolute", {
             "-top-1 -left-2 h-9 w-9": size === "sm",
             "-top-3 -left-3 w-14 h-[54px]": size === "md",
@@ -674,7 +674,7 @@ const LAYOUT: Record<
           })}
         />
         <ClubGlyph
-          fill={color}
+          fill={SUIT_COLOR["cups"]}
           className={clsx("absolute", {
             "-top-1 -right-2 h-9 w-9": size === "sm",
             "-top-3 -right-3 w-14 h-[54px]": size === "md",
@@ -682,7 +682,7 @@ const LAYOUT: Record<
           })}
         />
         <ClubGlyph
-          fill={color}
+          fill={SUIT_COLOR["golds"]}
           className={clsx("absolute", {
             "top-5 left-3 h-9 w-9": size === "sm",
             "top-6 left-5 w-14 h-[54px]": size === "md",
@@ -698,7 +698,7 @@ const LAYOUT: Record<
           })}
         />
         <ClubGlyph
-          fill={color}
+          fill={SUIT_COLOR["cups"]}
           className={clsx("absolute", {
             "-bottom-1 left-3.5 h-9 w-9": size === "sm",
             "-bottom-3 left-5 w-14 h-[54px]": size === "md",
