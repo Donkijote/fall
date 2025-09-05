@@ -13,7 +13,7 @@ export const SwordGlyph = ({ fill, className }: GlyphColor) => (
     <g
       fill={fill}
       className={className}
-      transform="translate(95,-10) scale(-0.120000,0.120000)"
+      transform="translate(95,-11) scale(-0.120000,0.120000)"
     >
       <path
         d="M 360.626 102.506 L 361.657 608.111 L 403.416 608.111 L 402.384 147.65 L 360.626 102.506 Z"

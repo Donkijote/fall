@@ -118,6 +118,9 @@ function App() {
         <Card rank={2} suit="clubs" size={"sm"} />
         <Card rank={2} suit="clubs" />
         <Card rank={2} suit="clubs" size={"lg"} />
+        <Card rank={2} suit="blades" size={"sm"} />
+        <Card rank={2} suit="blades" />
+        <Card rank={2} suit="blades" size={"lg"} />
       </div>
       <div className={"pt-4"}>
         <Card rank={3} suit="golds" size={"sm"} />
@@ -129,6 +132,9 @@ function App() {
         <Card rank={3} suit="clubs" size={"sm"} />
         <Card rank={3} suit="clubs" />
         <Card rank={3} suit="clubs" size={"lg"} />
+        <Card rank={3} suit="blades" size={"sm"} />
+        <Card rank={3} suit="blades" />
+        <Card rank={3} suit="blades" size={"lg"} />
       </div>
       <div className={"pt-4"}>
         <Card rank={4} suit="golds" size={"sm"} />

@@ -65,7 +65,26 @@ const LAYOUT: Record<
         />
       </div>
     ),
-    blades: ({ children }) => <div>{children}</div>,
+    blades: ({ color, size }) => (
+      <div className={"[&_svg]:first:rotate-180"}>
+        <SwordGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "-top-1 -left-5.5 h-20 w-20": size === "sm",
+            "-top-3 -left-9 h-32 w-32": size === "md",
+            "-top-4 -left-11 h-40 w-40": size === "lg",
+          })}
+        />
+        <SwordGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "-bottom-1 -right-5.5 h-20 w-20": size === "sm",
+            "-bottom-3 -right-9 h-32 w-32": size === "md",
+            "-bottom-4 -right-11 h-40 w-40": size === "lg",
+          })}
+        />
+      </div>
+    ),
     cups: ({ color, size }) => (
       <>
         <CupGlyph
@@ -148,7 +167,34 @@ const LAYOUT: Record<
         />
       </div>
     ),
-    blades: ({ children }) => <div>{children}</div>,
+    blades: ({ color, size }) => (
+      <div className={"[&_svg]:odd:rotate-180"}>
+        <SwordGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "-top-0 -left-7 h-20 w-20": size === "sm",
+            "-top-3 -left-10 h-30 w-30": size === "md",
+            "-top-4 -left-14 h-40 w-40": size === "lg",
+          })}
+        />
+        <SwordGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "-bottom-1 -right-1.5 h-20 w-20": size === "sm",
+            "-bottom-2 -right-2.5 h-30 w-30": size === "md",
+            "-bottom-4 -right-3.5 h-40 w-40": size === "lg",
+          })}
+        />
+        <SwordGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "-bottom-1 -right-7 h-20 w-20": size === "sm",
+            "-bottom-2 -right-11 h-30 w-30": size === "md",
+            "-bottom-4 -right-15 h-40 w-40": size === "lg",
+          })}
+        />
+      </div>
+    ),
     cups: ({ color, size }) => (
       <>
         <CupGlyph
