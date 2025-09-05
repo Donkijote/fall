@@ -4,6 +4,7 @@ import type { FC, PropsWithChildren } from "react";
 import { ClubGlyph } from "@/components/card/ClubGlyph";
 import { CupGlyph } from "@/components/card/CupGlyph";
 import { GoldGlyph } from "@/components/card/GoldGlyph";
+import { SwordGlyph } from "@/components/card/SwordGlyph";
 import { type Suit, SUIT_COLOR } from "@/domain/entities/Card";
 
 type SuitGlyphProps = {
@@ -20,7 +21,7 @@ const LAYOUT: Record<
   1: {
     golds: ({ color }) => <GoldGlyph fill={color} />,
     clubs: ({ color }) => <ClubGlyph fill={color} />,
-    blades: ({ children }) => <div>{children}</div>,
+    blades: ({ color }) => <SwordGlyph fill={color} />,
     cups: ({ color }) => <CupGlyph fill={color} />,
   },
   2: {
