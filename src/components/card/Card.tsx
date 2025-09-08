@@ -20,33 +20,7 @@ const sizeClass = {
   lg: "w-36",
 };
 
-function Corner({
-  rank,
-  suit,
-  size,
-}: {
-  rank: number;
-  suit: Suit;
-  size: CardProps["size"];
-}) {
-  const color = SUIT_COLOR[suit];
-  return (
-    <div className="flex flex-col items-center text-[10px] leading-none">
-      <span
-        className={clsx("font-semibold", {
-          "text-lg": size === "lg",
-          "text-sm": size === "md",
-          "text-[10px]": size === "sm",
-        })}
-        style={{ color }}
-      >
-        {rank}
-      </span>
-    </div>
-  );
-}
-
-export function Card({
+export const Card = ({
   rank,
   suit,
   size = "md",
@@ -55,7 +29,7 @@ export function Card({
   disabled = false,
   onClick,
   className,
-}: CardProps) {
+}: CardProps) => {
   return (
     <button
       type="button"
@@ -104,4 +78,30 @@ export function Card({
       <div className="inset-0 from-black/5 to-white/0 pointer-events-none absolute bg-gradient-to-br" />
     </button>
   );
-}
+};
+
+const Corner = ({
+  rank,
+  suit,
+  size,
+}: {
+  rank: number;
+  suit: Suit;
+  size: CardProps["size"];
+}) => {
+  const color = SUIT_COLOR[suit];
+  return (
+    <div className="flex flex-col items-center text-[10px] leading-none">
+      <span
+        className={clsx("font-semibold", {
+          "text-lg": size === "lg",
+          "text-sm": size === "md",
+          "text-[10px]": size === "sm",
+        })}
+        style={{ color }}
+      >
+        {rank}
+      </span>
+    </div>
+  );
+};
