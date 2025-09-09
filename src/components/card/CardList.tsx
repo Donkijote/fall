@@ -69,6 +69,9 @@ export const CardList = () => {
         <Card rank={5} suit="clubs" size={"sm"} />
         <Card rank={5} suit="clubs" />
         <Card rank={5} suit="clubs" size={"lg"} />
+        <Card rank={5} suit="blades" size={"sm"} />
+        <Card rank={5} suit="blades" />
+        <Card rank={5} suit="blades" size={"lg"} />
       </div>
       <div>
         <Card rank={6} suit="golds" size={"sm"} />
@@ -80,6 +83,9 @@ export const CardList = () => {
         <Card rank={6} suit="clubs" size={"sm"} />
         <Card rank={6} suit="clubs" />
         <Card rank={6} suit="clubs" size={"lg"} />
+        <Card rank={6} suit="blades" size={"sm"} />
+        <Card rank={6} suit="blades" />
+        <Card rank={6} suit="blades" size={"lg"} />
       </div>
       <div>
         <Card rank={7} suit="golds" size={"sm"} />
@@ -91,6 +97,9 @@ export const CardList = () => {
         <Card rank={7} suit="clubs" size={"sm"} />
         <Card rank={7} suit="clubs" />
         <Card rank={7} suit="clubs" size={"lg"} />
+        <Card rank={7} suit="blades" size={"sm"} />
+        <Card rank={7} suit="blades" />
+        <Card rank={7} suit="blades" size={"lg"} />
       </div>
     </div>
   );
