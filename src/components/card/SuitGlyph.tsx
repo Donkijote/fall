@@ -4,7 +4,7 @@ import type { FC, PropsWithChildren } from "react";
 import { ClubGlyph } from "@/components/card/ClubGlyph";
 import { CupGlyph } from "@/components/card/CupGlyph";
 import { GoldGlyph } from "@/components/card/GoldGlyph";
-import { SwordGlyph } from "@/components/card/SwordGlyph";
+import { SwordGlyph, SwordGlyphVariant } from "@/components/card/SwordGlyph";
 import { type Suit, SUIT_COLOR } from "@/domain/entities/Card";
 
 type SuitGlyphProps = {
@@ -301,7 +301,42 @@ const LAYOUT: Record<
         />
       </div>
     ),
-    blades: ({ children }) => <div>{children}</div>,
+    blades: ({ size }) => (
+      <div
+        className={
+          "[&_svg]:first:rotate-140 [&_svg]:nth-2:-rotate-150 [&_svg]:nth-3:rotate-30 [&_svg]:nth-4:-rotate-40"
+        }
+      >
+        <SwordGlyphVariant
+          className={clsx("absolute", {
+            "-top-0.5 -left-0 h-9 w-9": size === "sm",
+            "-top-2 -left-0 h-14 w-14": size === "md",
+            "-top-3 -left-1 h-20 w-20": size === "lg",
+          })}
+        />
+        <SwordGlyphVariant
+          className={clsx("absolute", {
+            "-top-0.5 -right-0 h-9 w-9": size === "sm",
+            "-top-2 -right-0 h-14 w-14": size === "md",
+            "-top-3 -right-1 h-20 w-20": size === "lg",
+          })}
+        />
+        <SwordGlyphVariant
+          className={clsx("absolute", {
+            "-bottom-0.5 -left-0 h-9 w-9": size === "sm",
+            "-bottom-2 -left-0 h-14 w-14": size === "md",
+            "-bottom-3 -left-1 h-20 w-20": size === "lg",
+          })}
+        />
+        <SwordGlyphVariant
+          className={clsx("absolute", {
+            "-bottom-0.5 -right-0 h-9 w-9": size === "sm",
+            "-bottom-2 -right-0 h-14 w-14": size === "md",
+            "-bottom-3 -right-1 h-20 w-20": size === "lg",
+          })}
+        />
+      </div>
+    ),
     cups: ({ color, size }) => (
       <>
         <CupGlyph

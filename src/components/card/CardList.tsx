@@ -55,6 +55,9 @@ export const CardList = () => {
         <Card rank={4} suit="clubs" size={"sm"} />
         <Card rank={4} suit="clubs" />
         <Card rank={4} suit="clubs" size={"lg"} />
+        <Card rank={4} suit="blades" size={"sm"} />
+        <Card rank={4} suit="blades" />
+        <Card rank={4} suit="blades" size={"lg"} />
       </div>
       <div>
         <Card rank={5} suit="golds" size={"sm"} />
