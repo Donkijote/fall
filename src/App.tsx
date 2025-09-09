@@ -1,7 +1,7 @@
-import { clsx } from "clsx";
 import { useEffect } from "react";
 
 import { useGameStore } from "@/application/store/gameStore";
+import { Card } from "@/components/card/Card";
 import { CardList } from "@/components/card/CardList";
 
 import "./App.css";
@@ -59,12 +59,12 @@ function App() {
       </div>
       <div className={"pt-8 gap-4 flex justify-center"}>
         {state.table.map((card) => (
-          <div
-            className={"p-8 border-gray-800 border"}
+          <Card
             key={card.suit + card.rank}
-          >
-            <p>{card.rank}</p>
-          </div>
+            rank={card.rank}
+            suit={card.suit}
+            disabled={true}
+          />
         ))}
       </div>
       <div className={"pt-12 gap-20 flex items-center justify-center"}>
@@ -79,16 +79,16 @@ function App() {
             </div>
             <div className={"gap-4 flex flex-row items-center justify-center"}>
               {player.hand.map((card, index) => (
-                <button
-                  className={clsx("p-8 border-gray-800 border", {
-                    "cursor-pointer": player.id === state.currentPlayer,
-                  })}
+                <Card
                   key={card.suit + card.rank}
+                  rank={card.rank}
+                  suit={card.suit}
                   onClick={() => service.playCard(player.id, index)}
                   disabled={player.id !== state.currentPlayer}
-                >
-                  <p>{card.rank}</p>
-                </button>
+                  className={
+                    player.id === state.currentPlayer ? "cursor-pointer" : ""
+                  }
+                />
               ))}
             </div>
           </div>
