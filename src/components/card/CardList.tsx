@@ -101,6 +101,48 @@ export const CardList = () => {
         <Card rank={7} suit="blades" />
         <Card rank={7} suit="blades" size={"lg"} />
       </div>
+      <div>
+        <Card rank={10} suit="golds" size={"sm"} />
+        <Card rank={10} suit="golds" />
+        <Card rank={10} suit="golds" size={"lg"} />
+        <Card rank={10} suit="cups" size={"sm"} />
+        <Card rank={10} suit="cups" />
+        <Card rank={10} suit="cups" size={"lg"} />
+        <Card rank={10} suit="clubs" size={"sm"} />
+        <Card rank={10} suit="clubs" />
+        <Card rank={10} suit="clubs" size={"lg"} />
+        <Card rank={10} suit="blades" size={"sm"} />
+        <Card rank={10} suit="blades" />
+        <Card rank={10} suit="blades" size={"lg"} />
+      </div>
+      <div>
+        <Card rank={11} suit="golds" size={"sm"} />
+        <Card rank={11} suit="golds" />
+        <Card rank={11} suit="golds" size={"lg"} />
+        <Card rank={11} suit="cups" size={"sm"} />
+        <Card rank={11} suit="cups" />
+        <Card rank={11} suit="cups" size={"lg"} />
+        <Card rank={11} suit="clubs" size={"sm"} />
+        <Card rank={11} suit="clubs" />
+        <Card rank={11} suit="clubs" size={"lg"} />
+        <Card rank={11} suit="blades" size={"sm"} />
+        <Card rank={11} suit="blades" />
+        <Card rank={11} suit="blades" size={"lg"} />
+      </div>
+      <div>
+        <Card rank={12} suit="golds" size={"sm"} />
+        <Card rank={12} suit="golds" />
+        <Card rank={12} suit="golds" size={"lg"} />
+        <Card rank={12} suit="cups" size={"sm"} />
+        <Card rank={12} suit="cups" />
+        <Card rank={12} suit="cups" size={"lg"} />
+        <Card rank={12} suit="clubs" size={"sm"} />
+        <Card rank={12} suit="clubs" />
+        <Card rank={12} suit="clubs" size={"lg"} />
+        <Card rank={12} suit="blades" size={"sm"} />
+        <Card rank={12} suit="blades" />
+        <Card rank={12} suit="blades" size={"lg"} />
+      </div>
     </div>
   );
 };

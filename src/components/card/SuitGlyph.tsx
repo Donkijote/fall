@@ -1025,6 +1025,24 @@ const LAYOUT: Record<
       </>
     ),
   },
+  10: {
+    golds: ({ color }) => <GoldGlyph fill={color} />,
+    clubs: ({ color }) => <ClubGlyph fill={color} />,
+    blades: ({ color }) => <SwordGlyph fill={color} />,
+    cups: ({ color }) => <CupGlyph fill={color} />,
+  },
+  11: {
+    golds: ({ color }) => <GoldGlyph fill={color} />,
+    clubs: ({ color }) => <ClubGlyph fill={color} />,
+    blades: ({ color }) => <SwordGlyph fill={color} />,
+    cups: ({ color }) => <CupGlyph fill={color} />,
+  },
+  12: {
+    golds: ({ color }) => <GoldGlyph fill={color} />,
+    clubs: ({ color }) => <ClubGlyph fill={color} />,
+    blades: ({ color }) => <SwordGlyph fill={color} />,
+    cups: ({ color }) => <CupGlyph fill={color} />,
+  },
 };
 
 export const SuitGlyph = ({ suit, rank, size }: SuitGlyphProps) => {
@@ -1036,7 +1054,7 @@ export const SuitGlyph = ({ suit, rank, size }: SuitGlyphProps) => {
         "relative flex h-full w-full flex-col items-center justify-center"
       }
     >
-      <Layout color={color} size={size} />{" "}
+      <Layout color={color} size={size} />
     </div>
   );
 };
