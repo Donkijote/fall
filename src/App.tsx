@@ -80,8 +80,9 @@ function App() {
           {state.players.map((player, index) => (
             <div
               className={clsx("absolute w-full", {
-                "top-10": index % 2 === 0,
-                "bottom-10": index % 2 !== 0,
+                "top-10": index === 0,
+                "bottom-10": index === 1,
+                "left-30 !w-0 top-[42%]": index === 2,
               })}
             >
               <div
@@ -92,8 +93,8 @@ function App() {
               >
                 <div
                   className={clsx("absolute", {
-                    "-bottom-10": index % 2 === 0,
-                    "-top-10": index % 2 !== 0,
+                    "-bottom-10": index === 0,
+                    "-top-10": index === 1,
                   })}
                 >
                   <div className={"flex w-full flex-row"}>
@@ -104,7 +105,16 @@ function App() {
                   </div>
                 </div>
                 <div
-                  className={"gap-4 flex flex-row items-center justify-center"}
+                  className={clsx(
+                    "gap-4 relative flex flex-row items-center justify-center",
+                    {
+                      "rotate-90":
+                        index === 0 ? (index + 1) % 2 === 0 : index % 2 === 0,
+                      "group isTop": index === 0,
+                      "group isBottom": index === 1,
+                      "group isLeft": index === 2,
+                    },
+                  )}
                 >
                   {player.hand.map((card, cIndex) => (
                     <Card
@@ -119,12 +129,12 @@ function App() {
                           ? "cursor-pointer"
                           : "",
                         {
-                          "mt-4 -rotate-14": index % 2 !== 0 && cIndex === 0,
-                          "mb-4": index % 2 !== 0 && cIndex === 1,
-                          "mt-4 rotate-14": index % 2 !== 0 && cIndex === 2,
-                          "mb-4 rotate-14": index % 2 === 0 && cIndex === 0,
-                          "mt-4": index % 2 === 0 && cIndex === 1,
-                          "mb-4 -rotate-14": index % 2 === 0 && cIndex === 2,
+                          "group-[.isTop]:mb-4 group-[.isBottom]:mt-4 group-[.isLeft]:mt-4 group-[.isBottom]:-rotate-14 group-[.isLeft]:-rotate-14 group-[.isTop]:rotate-14":
+                            cIndex === 0,
+                          "group-[.isTop]:mt-4 group-[.isBottom]:mb-4 group-[.isLeft]:mb-4":
+                            cIndex === 1,
+                          "group-[.isTop]:mb-4 group-[.isBottom]:mt-4 group-[.isLeft]:mt-4 group-[.isBottom]:rotate-14 group-[.isLeft]:rotate-14 group-[.isTop]:-rotate-14":
+                            cIndex === 2,
                         },
                       )}
                     />

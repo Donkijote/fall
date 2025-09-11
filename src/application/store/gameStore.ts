@@ -20,6 +20,13 @@ export const initialState: GameState = {
       score: 0,
       team: 2,
     },
+    {
+      id: "3",
+      hand: [],
+      collected: [],
+      score: 0,
+      team: 3,
+    },
   ],
   table: [],
   deck: [],
