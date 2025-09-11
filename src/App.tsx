@@ -79,6 +79,7 @@ function App() {
         <>
           {state.players.map((player, index) => (
             <div
+              key={player.id}
               className={clsx("absolute w-full", {
                 "top-10": index === 0,
                 "bottom-10": index === 1,
@@ -89,12 +90,12 @@ function App() {
                 className={
                   "gap-8 relative flex flex-col items-center justify-center"
                 }
-                key={player.id}
               >
                 <div
                   className={clsx("absolute", {
                     "-bottom-10": index === 0,
                     "-top-10": index === 1,
+                    "left-30": index === 2,
                   })}
                 >
                   <div className={"flex w-full flex-row"}>
@@ -139,6 +140,27 @@ function App() {
                       )}
                     />
                   ))}
+                </div>
+                <div
+                  className={clsx("w-70 h-70 absolute", {
+                    "left-50 top-0": index === 0,
+                    "right-50 top-0": index === 1,
+                    "-bottom-80": index === 2,
+                    "-top-80": index === 3,
+                  })}
+                >
+                  <div className={"relative h-full w-full"}>
+                    {player.collected.map((card) => (
+                      <Card
+                        key={card.suit + card.rank}
+                        rank={card.rank}
+                        suit={card.suit}
+                        faceDown={true}
+                        className={`!absolute rotate-[${Math.floor(Math.random() * 50)}deg]`}
+                        disabled={true}
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
