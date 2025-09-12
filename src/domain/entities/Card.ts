@@ -13,7 +13,7 @@ export interface Card {
 export const RANK_ORDER = [1, 2, 3, 4, 5, 6, 7, 10, 11, 12];
 
 export const SUIT_COLOR: Record<Suit, string> = {
-  golds: "#D4AF37",
+  golds: "#FDC11F",
   cups: "#E23D3D",
   blades: "#2B2B2B",
   clubs: "#3B920F",

@@ -1026,7 +1026,7 @@ M433.212036,808.172974
 z"
       />
       <path
-        fill="#D4AF37"
+        fill="#FDC11F"
         opacity="1.000000"
         stroke="none"
         d="
@@ -1040,7 +1040,7 @@ M433.119629,808.705688
 z"
       />
       <path
-        fill="#D4AF37"
+        fill="#FDC11F"
         opacity="1.000000"
         stroke="none"
         d="
