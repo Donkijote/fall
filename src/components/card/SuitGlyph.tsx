@@ -9,7 +9,11 @@ import {
   TenOfGoldGlyph,
   TwelveOfGoldGlyph,
 } from "@/components/card/GoldGlyph";
-import { SwordGlyph, SwordGlyphVariant } from "@/components/card/SwordGlyph";
+import {
+  SwordGlyph,
+  SwordGlyphVariant,
+  TwelveOfSwordGlyph,
+} from "@/components/card/SwordGlyph";
 import { type Suit, SUIT_COLOR } from "@/domain/entities/Card";
 
 type SuitGlyphProps = {
@@ -1102,7 +1106,16 @@ const LAYOUT: Record<
       </div>
     ),
     clubs: ({ color }) => <ClubGlyph fill={color} />,
-    blades: ({ color }) => <SwordGlyph fill={color} />,
+    blades: ({ color, size }) => (
+      <TwelveOfSwordGlyph
+        fill={color}
+        className={clsx("absolute", {
+          "-bottom-2 -left-2 h-21": size === "sm",
+          "-bottom-4 -left-2 h-30": size === "md",
+          "-bottom-5.5 -left-3 h-40": size === "lg",
+        })}
+      />
+    ),
     cups: ({ color }) => <CupGlyph fill={color} />,
   },
 };
