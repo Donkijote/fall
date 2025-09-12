@@ -3,7 +3,7 @@ import type { FC, PropsWithChildren } from "react";
 
 import { ClubGlyph } from "@/components/card/ClubGlyph";
 import { CupGlyph } from "@/components/card/CupGlyph";
-import { GoldGlyph } from "@/components/card/GoldGlyph";
+import { GoldGlyph, TenOfGoldGlyph } from "@/components/card/GoldGlyph";
 import { SwordGlyph, SwordGlyphVariant } from "@/components/card/SwordGlyph";
 import { type Suit, SUIT_COLOR } from "@/domain/entities/Card";
 
@@ -1026,7 +1026,26 @@ const LAYOUT: Record<
     ),
   },
   10: {
-    golds: ({ color }) => <GoldGlyph fill={color} />,
+    golds: ({ color, size }) => (
+      <div className={"h-full w-full"}>
+        <GoldGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "-top-0.5 -left-1 h-7 w-7": size === "sm",
+            "-top-2 -left-1 h-11 w-11": size === "md",
+            "-top-3 -left-1 h-14": size === "lg",
+          })}
+        />
+        <TenOfGoldGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "-bottom-2 -left-2 h-19": size === "sm",
+            "-bottom-4 -left-1 h-26": size === "md",
+            "-bottom-6 -left-3 h-36": size === "lg",
+          })}
+        />
+      </div>
+    ),
     clubs: ({ color }) => <ClubGlyph fill={color} />,
     blades: ({ color }) => <SwordGlyph fill={color} />,
     cups: ({ color }) => <CupGlyph fill={color} />,
