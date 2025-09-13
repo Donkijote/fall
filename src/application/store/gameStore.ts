@@ -14,18 +14,18 @@ export const initialState: GameState = {
       team: 1,
     },
     {
-      id: "2",
-      hand: [],
-      collected: [],
-      score: 0,
-      team: 1,
-    },
-    {
       id: "3",
       hand: [],
       collected: [],
       score: 0,
       team: 2,
+    },
+    {
+      id: "2",
+      hand: [],
+      collected: [],
+      score: 0,
+      team: 1,
     },
     {
       id: "4",

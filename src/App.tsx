@@ -83,8 +83,8 @@ function App() {
               key={player.id}
               className={clsx("absolute w-full", {
                 "top-10": index === 0,
-                "bottom-10": index === 1,
-                "left-30 !w-0 top-[42%]": index === 2,
+                "bottom-10": index === 2,
+                "left-30 !w-0 top-[42%]": index === 1,
                 "right-30 !w-0 top-[42%]": index === 3,
               })}
             >
@@ -96,8 +96,8 @@ function App() {
                 <div
                   className={clsx("absolute", {
                     "-bottom-10": index === 0,
-                    "-top-10": index === 1,
-                    "left-30": index === 2,
+                    "-top-10": index === 2,
+                    "left-30": index === 1,
                     "right-30": index === 3,
                   })}
                 >
@@ -114,10 +114,10 @@ function App() {
                     {
                       "rotate-90":
                         state.players.length > 2 &&
-                        (index === 2 || index === 3),
+                        (index === 1 || index === 3),
                       "group isTop": index === 0,
-                      "group isBottom": index === 1,
-                      "group isLeft": index === 2,
+                      "group isBottom": index === 2,
+                      "group isLeft": index === 1,
                       "group isRight": index === 3,
                     },
                   )}
