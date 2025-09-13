@@ -2,18 +2,9 @@ import { clsx } from "clsx";
 import type { FC, PropsWithChildren } from "react";
 
 import { ClubGlyph } from "@/components/card/ClubGlyph";
-import { CupGlyph } from "@/components/card/CupGlyph";
-import {
-  ElevenOfGoldGlyph,
-  GoldGlyph,
-  TenOfGoldGlyph,
-  TwelveOfGoldGlyph,
-} from "@/components/card/GoldGlyph";
-import {
-  SwordGlyph,
-  SwordGlyphVariant,
-  TwelveOfSwordGlyph,
-} from "@/components/card/SwordGlyph";
+import { CupGlyph, TenOfCupsGlyph } from "@/components/card/CupGlyph";
+import { ElevenOfGoldGlyph, GoldGlyph, TenOfGoldGlyph, TwelveOfGoldGlyph } from "@/components/card/GoldGlyph";
+import { SwordGlyph, SwordGlyphVariant, TwelveOfSwordGlyph } from "@/components/card/SwordGlyph";
 import { type Suit, SUIT_COLOR } from "@/domain/entities/Card";
 
 type SuitGlyphProps = {
@@ -1040,9 +1031,9 @@ const LAYOUT: Record<
         <GoldGlyph
           fill={color}
           className={clsx("absolute", {
-            "-top-0.5 -left-1 h-7 w-7": size === "sm",
-            "-top-2 -left-1 h-11 w-11": size === "md",
-            "-top-3 -left-1 h-14": size === "lg",
+            "-top-0 -left-1 h-6": size === "sm",
+            "-top-1 -left-1 h-10": size === "md",
+            "-top-2 -left-1 h-12": size === "lg",
           })}
         />
         <TenOfGoldGlyph
@@ -1057,7 +1048,25 @@ const LAYOUT: Record<
     ),
     clubs: ({ color }) => <ClubGlyph fill={color} />,
     blades: ({ color }) => <SwordGlyph fill={color} />,
-    cups: ({ color }) => <CupGlyph fill={color} />,
+    cups: ({ color, size }) => (
+      <div className={"h-full w-full"}>
+        <CupGlyph
+          fill={color}
+          className={clsx("absolute", {
+            "-top-0 -left-0 h-4": size === "sm",
+            "-top-1 -left-0 h-7": size === "md",
+            "-top-2 -left-0 h-10": size === "lg",
+          })}
+        />
+        <TenOfCupsGlyph
+          className={clsx("absolute", {
+            "-bottom-2.5 -left-3 h-21": size === "sm",
+            "-bottom-4 -left-3 h-28": size === "md",
+            "-bottom-7 -left-3.5 h-38": size === "lg",
+          })}
+        />
+      </div>
+    ),
   },
   11: {
     golds: ({ color, size }) => (
