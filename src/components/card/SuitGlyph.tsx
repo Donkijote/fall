@@ -2,7 +2,11 @@ import { clsx } from "clsx";
 import type { FC, PropsWithChildren } from "react";
 
 import { ClubGlyph } from "@/components/card/ClubGlyph";
-import { CupGlyph, TenOfCupsGlyph } from "@/components/card/CupGlyph";
+import {
+  AceOfCupGlyph,
+  CupGlyph,
+  TenOfCupsGlyph,
+} from "@/components/card/CupGlyph";
 import {
   AceOfGoldGlyph,
   ElevenOfGoldGlyph,
@@ -32,7 +36,7 @@ const LAYOUT: Record<
     golds: ({ color }) => <AceOfGoldGlyph fill={color} />,
     clubs: ({ color }) => <ClubGlyph fill={color} />,
     blades: ({ color }) => <SwordGlyph fill={color} />,
-    cups: ({ color }) => <CupGlyph fill={color} />,
+    cups: ({ color }) => <AceOfCupGlyph fill={color} />,
   },
   2: {
     golds: ({ color, size }) => (
@@ -379,33 +383,33 @@ const LAYOUT: Record<
         <CupGlyph
           fill={color}
           className={clsx("absolute", {
-            "-top-1 -left-1 h-[38px] w-[38px]": size === "sm",
-            "-top-3 -left-1 h-14 w-14": size === "md",
-            "-top-3 -left-1 h-18 w-18": size === "lg",
+            "-top-1 -left-0.5 h-8": size === "sm",
+            "-top-3 -left-1 h-12": size === "md",
+            "-top-4 -left-1 h-16": size === "lg",
           })}
         />
         <CupGlyph
           fill={color}
           className={clsx("absolute", {
-            "-top-1 -right-1 h-[38px] w-[38px]": size === "sm",
-            "-top-3 -right-1 h-14 w-14": size === "md",
-            "-top-3 -right-1 h-18 w-18": size === "lg",
+            "-top-1 right-0.5 h-8": size === "sm",
+            "-top-3 right-1 h-12": size === "md",
+            "-top-4 right-1 h-16": size === "lg",
           })}
         />
         <CupGlyph
           fill={color}
           className={clsx("absolute", {
-            "-bottom-0 -left-1 h-[38px] w-[38px]": size === "sm",
-            "-bottom-2 -left-1 h-14 w-14": size === "md",
-            "-bottom-2 -left-1 h-18 w-18": size === "lg",
+            "-bottom-1.5 -left-0.5 h-8": size === "sm",
+            "-bottom-3 -left-1 h-12": size === "md",
+            "-bottom-5 -left-1 h-16": size === "lg",
           })}
         />
         <CupGlyph
           fill={color}
           className={clsx("absolute", {
-            "-bottom-0 -right-1 h-[38px] w-[38px]": size === "sm",
-            "-bottom-2 -right-1 h-14 w-14": size === "md",
-            "-bottom-2 -right-1 h-18 w-18": size === "lg",
+            "-bottom-1.5 right-0.5 h-8": size === "sm",
+            "-bottom-3 right-1 h-12": size === "md",
+            "-bottom-5 right-1 h-16": size === "lg",
           })}
         />
       </>
@@ -551,42 +555,42 @@ const LAYOUT: Record<
       <>
         <CupGlyph
           fill={color}
-          className={clsx("absolute", {
-            "-top-2 -left-0 h-8 w-8": size === "sm",
-            "-top-4 left-0 h-12 w-12": size === "md",
-            "-top-6 left-0 h-16 w-16": size === "lg",
+          className={clsx("left-0 absolute", {
+            "-top-1.5 h-7.5": size === "sm",
+            "-top-4 h-11": size === "md",
+            "-top-6 h-15": size === "lg",
+          })}
+        />
+        <CupGlyph
+          fill={color}
+          className={clsx("right-0.5 absolute", {
+            "-top-1.5 h-7.5": size === "sm",
+            "-top-4 h-11": size === "md",
+            "-top-6 h-15": size === "lg",
           })}
         />
         <CupGlyph
           fill={color}
           className={clsx("absolute", {
-            "-top-2 -right-0 h-8 w-8": size === "sm",
-            "-top-4 right-0 h-12 w-12": size === "md",
-            "-top-6 right-0 h-16 w-16": size === "lg",
-          })}
-        />
-        <CupGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "bottom-5 left-4 h-8 w-8": size === "sm",
-            "bottom-6 left-6 h-12 w-12": size === "md",
+            "bottom-5 left-4 h-7.5": size === "sm",
+            "bottom-7 left-6.5 h-11": size === "md",
             "bottom-8 left-8 h-16 w-16": size === "lg",
           })}
         />
         <CupGlyph
           fill={color}
-          className={clsx("absolute", {
-            "-bottom-2 left-0 h-8 w-8": size === "sm",
-            "-bottom-4 left-0 h-12 w-12": size === "md",
-            "-bottom-6 left-0 h-16 w-16": size === "lg",
+          className={clsx("left-0 absolute", {
+            "-bottom-2 h-7.5": size === "sm",
+            "-bottom-4 h-11": size === "md",
+            "-bottom-5.5 h-15": size === "lg",
           })}
         />
         <CupGlyph
           fill={color}
-          className={clsx("absolute", {
-            "-bottom-2 right-0 h-8 w-8": size === "sm",
-            "-bottom-4 right-0 h-12 w-12": size === "md",
-            "-bottom-6 right-0 h-16 w-16": size === "lg",
+          className={clsx("right-0.5 absolute", {
+            "-bottom-2 h-7.5": size === "sm",
+            "-bottom-4 h-11": size === "md",
+            "-bottom-5.5 h-15": size === "lg",
           })}
         />
       </>
@@ -978,58 +982,58 @@ const LAYOUT: Record<
       <>
         <CupGlyph
           fill={color}
-          className={clsx("absolute", {
-            "-top-2 left-1 h-7 w-7": size === "sm",
-            "-top-4 left-1 h-10 w-10": size === "md",
-            "-top-6 left-1 h-14 w-14": size === "lg",
+          className={clsx("left-0 absolute", {
+            "-top-1.5 left-0 h-7": size === "sm",
+            "-top-3 h-10": size === "md",
+            "-top-4.5 h-13.5": size === "lg",
+          })}
+        />
+        <CupGlyph
+          fill={color}
+          className={clsx("right-1 absolute", {
+            "-top-1.5 h-7": size === "sm",
+            "-top-3 h-10": size === "md",
+            "-top-4.5 h-13.5": size === "lg",
           })}
         />
         <CupGlyph
           fill={color}
           className={clsx("absolute", {
-            "-top-2 right-1 h-7 w-7": size === "sm",
-            "-top-4 right-1 h-10 w-10": size === "md",
-            "-top-6 right-1 h-14 w-14": size === "lg",
+            "top-1 left-4 h-7": size === "sm",
+            "top-0.5 left-6.5 h-10": size === "md",
+            "top-0 left-9 h-13.5": size === "lg",
           })}
         />
         <CupGlyph
           fill={color}
-          className={clsx("absolute", {
-            "top-2 left-4 ml-0.5 h-7 w-7": size === "sm",
-            "top-2 left-7 h-10 w-10 mt-0.5": size === "md",
-            "top-3 left-9 h-14 w-14": size === "lg",
+          className={clsx("left-0 absolute", {
+            "bottom-5.5 h-7": size === "sm",
+            "bottom-7 h-10": size === "md",
+            "bottom-9 h-13.5": size === "lg",
           })}
         />
         <CupGlyph
           fill={color}
-          className={clsx("absolute", {
-            "bottom-5 left-1 h-7 w-7": size === "sm",
-            "bottom-6 left-1 h-10 w-10 mb-0.5": size === "md",
-            "bottom-8 left-1 h-14 w-14 mb-0.5": size === "lg",
+          className={clsx("right-1 absolute", {
+            "bottom-5.5 h-7 w-7": size === "sm",
+            "bottom-7 h-10": size === "md",
+            "bottom-9 h-13.5": size === "lg",
           })}
         />
         <CupGlyph
           fill={color}
-          className={clsx("absolute", {
-            "bottom-5 right-1 h-7 w-7": size === "sm",
-            "bottom-6 right-1 h-10 w-10 mb-0.5": size === "md",
-            "bottom-8 right-1 h-14 w-14 mb-0.5": size === "lg",
+          className={clsx("left-0 absolute", {
+            "-bottom-2 h-7 w-7": size === "sm",
+            "-bottom-4 h-10": size === "md",
+            "-bottom-5.5 h-13.5": size === "lg",
           })}
         />
         <CupGlyph
           fill={color}
-          className={clsx("absolute", {
-            "-bottom-2 left-1 h-7 w-7": size === "sm",
-            "-bottom-4 left-1 h-10 w-10": size === "md",
-            "-bottom-6 left-1 h-14 w-14": size === "lg",
-          })}
-        />
-        <CupGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-bottom-2 right-1 h-7 w-7": size === "sm",
-            "-bottom-4 right-1 h-10 w-10": size === "md",
-            "-bottom-6 right-1 h-14 w-14": size === "lg",
+          className={clsx("right-1 absolute", {
+            "-bottom-2 h-7 w-7": size === "sm",
+            "-bottom-4 h-10": size === "md",
+            "-bottom-5.5 h-13.5": size === "lg",
           })}
         />
       </>
