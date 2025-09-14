@@ -3,8 +3,18 @@ import type { FC, PropsWithChildren } from "react";
 
 import { ClubGlyph } from "@/components/card/ClubGlyph";
 import { CupGlyph, TenOfCupsGlyph } from "@/components/card/CupGlyph";
-import { ElevenOfGoldGlyph, GoldGlyph, TenOfGoldGlyph, TwelveOfGoldGlyph } from "@/components/card/GoldGlyph";
-import { SwordGlyph, SwordGlyphVariant, TwelveOfSwordGlyph } from "@/components/card/SwordGlyph";
+import {
+  AceOfGoldGlyph,
+  ElevenOfGoldGlyph,
+  GoldGlyph,
+  TenOfGoldGlyph,
+  TwelveOfGoldGlyph,
+} from "@/components/card/GoldGlyph";
+import {
+  SwordGlyph,
+  SwordGlyphVariant,
+  TwelveOfSwordGlyph,
+} from "@/components/card/SwordGlyph";
 import { type Suit, SUIT_COLOR } from "@/domain/entities/Card";
 
 type SuitGlyphProps = {
@@ -19,7 +29,7 @@ const LAYOUT: Record<
   Record<Suit, FC<PropsWithChildren<{ color: string; size: string }>>>
 > = {
   1: {
-    golds: ({ color }) => <GoldGlyph fill={color} />,
+    golds: ({ color }) => <AceOfGoldGlyph fill={color} />,
     clubs: ({ color }) => <ClubGlyph fill={color} />,
     blades: ({ color }) => <SwordGlyph fill={color} />,
     cups: ({ color }) => <CupGlyph fill={color} />,
@@ -30,17 +40,17 @@ const LAYOUT: Record<
         <GoldGlyph
           fill={color}
           className={clsx("absolute", {
-            "-top-2 -left-1 h-[52px] w-[52px]": size === "sm",
-            "-top-3 -left-1 h-[70px] w-[70px]": size === "md",
-            "h-24 w-24 -top-6 -left-1": size === "lg",
+            "-top-1.5 left-3 h-10": size === "sm",
+            "-top-3.5 left-4 h-15": size === "md",
+            "-top-5.5 left-6 h-21": size === "lg",
           })}
         />
         <GoldGlyph
           fill={color}
           className={clsx("absolute", {
-            "-bottom-2 -right-1 h-[52px] w-[52px]": size === "sm",
-            "-bottom-3 -right-1 h-[70px] w-[70px]": size === "md",
-            "h-24 w-24 -bottom-6 -right-1": size === "lg",
+            "-bottom-1.5 left-3 h-10": size === "sm",
+            "-bottom-3.5 left-4 h-15": size === "md",
+            "-bottom-5.5 left-6 h-21": size === "lg",
           })}
         />
       </>
@@ -112,25 +122,25 @@ const LAYOUT: Record<
         <GoldGlyph
           fill={color}
           className={clsx("absolute", {
-            "-top-1 -left-1 h-[42px] w-[42px]": size === "sm",
-            "-top-3 -left-1 h-[62px] w-[62px]": size === "md",
-            "h-20 w-20 -top-5 -left-1": size === "lg",
+            "-top-1 -left-0 h-9": size === "sm",
+            "-top-3 left-1 h-13": size === "md",
+            "-top-4 left-0 h-17": size === "lg",
           })}
         />
         <GoldGlyph
           fill={color}
           className={clsx("absolute", {
-            "bottom-4 -right-1 h-[42px] w-[42px]": size === "sm",
-            "bottom-4 -right-1 h-[62px] w-[62px]": size === "md",
-            "h-20 w-20 bottom-6 -right-1": size === "lg",
+            "bottom-4.5 -right-1 h-9": size === "sm",
+            "bottom-5 -right-0 h-13": size === "md",
+            "bottom-6.5 -right-0 h-17": size === "lg",
           })}
         />
         <GoldGlyph
           fill={color}
           className={clsx("absolute", {
-            "-bottom-2 -left-1 h-[42px] w-[42px]": size === "sm",
-            "-bottom-5 -left-1 h-[62px] w-[62px]": size === "md",
-            "h-20 w-20 -bottom-6 -left-1": size === "lg",
+            "-bottom-2 -left-0 h-9": size === "sm",
+            "-bottom-5 left-1 h-13": size === "md",
+            "-bottom-6 -left-0 h-17": size === "lg",
           })}
         />
       </>
@@ -229,34 +239,34 @@ const LAYOUT: Record<
       <>
         <GoldGlyph
           fill={color}
-          className={clsx("absolute", {
-            "-top-0 -left-1 h-[38px] w-[38px]": size === "sm",
-            "-top-2 -left-1 h-14 w-14": size === "md",
-            "-top-2 -left-1 h-18 w-18": size === "lg",
+          className={clsx("left-0 absolute", {
+            "-top-1 h-8": size === "sm",
+            "-top-2.5 h-12": size === "md",
+            "-top-3.5 h-16": size === "lg",
           })}
         />
         <GoldGlyph
           fill={color}
-          className={clsx("absolute", {
-            "-top-0 -right-1 h-[38px] w-[38px]": size === "sm",
-            "-top-2 -right-1 h-14 w-14": size === "md",
-            "-top-2 -right-1 h-18 w-18": size === "lg",
+          className={clsx("right-0 absolute", {
+            "-top-1 h-8": size === "sm",
+            "-top-2.5 h-12": size === "md",
+            "-top-3.5 h-16": size === "lg",
           })}
         />
         <GoldGlyph
           fill={color}
-          className={clsx("absolute", {
-            "-bottom-0 -left-1 h-[38px] w-[38px]": size === "sm",
-            "-bottom-2 -left-1 h-14 w-14": size === "md",
-            "-bottom-2 -left-1 h-18 w-18": size === "lg",
+          className={clsx("left-0 absolute", {
+            "-bottom-1 h-8": size === "sm",
+            "-bottom-2.5 h-12": size === "md",
+            "-bottom-3.5 h-16": size === "lg",
           })}
         />
         <GoldGlyph
           fill={color}
-          className={clsx("absolute", {
-            "-bottom-0 -right-1 h-[38px] w-[38px]": size === "sm",
-            "-bottom-2 -right-1 h-14 w-14": size === "md",
-            "-bottom-2 -right-1 h-18 w-18": size === "lg",
+          className={clsx("right-0 absolute", {
+            "-bottom-1 h-8": size === "sm",
+            "-bottom-2.5 h-12": size === "md",
+            "-bottom-3.5 h-16": size === "lg",
           })}
         />
       </>
@@ -407,41 +417,41 @@ const LAYOUT: Record<
         <GoldGlyph
           fill={color}
           className={clsx("absolute", {
-            "-top-2 left-1 h-7 w-7": size === "sm",
-            "-top-3 left-1 h-10 w-10": size === "md",
-            "-top-4 left-1 h-14 w-14": size === "lg",
+            "-top-1.5 left-0.5 h-7": size === "sm",
+            "-top-3 left-1 h-10": size === "md",
+            "-top-4.5 left-1 h-13.5": size === "lg",
           })}
         />
         <GoldGlyph
           fill={color}
           className={clsx("absolute", {
-            "-top-2 right-1 h-7 w-7": size === "sm",
-            "-top-3 right-1 h-10 w-10": size === "md",
-            "-top-4 right-1 h-14 w-14": size === "lg",
+            "-top-1.5 right-0.5 h-7": size === "sm",
+            "-top-3 right-1 h-10": size === "md",
+            "-top-4.5 right-1 h-13.5": size === "lg",
           })}
         />
         <GoldGlyph
           fill={color}
           className={clsx("absolute", {
-            "bottom-4 mb-0.5 left-3 h-10 w-10": size === "sm",
-            "bottom-4 left-4 mb-0.5 h-16 w-16": size === "md",
-            "bottom-6 left-6 h-20 w-20": size === "lg",
+            "bottom-5 left-3.5 h-9": size === "sm",
+            "bottom-6 left-5 h-13": size === "md",
+            "bottom-7 left-7 h-18": size === "lg",
           })}
         />
         <GoldGlyph
           fill={color}
           className={clsx("absolute", {
-            "-bottom-2 left-1 h-7 w-7": size === "sm",
-            "-bottom-3 left-1 h-10 w-10": size === "md",
-            "-bottom-4 left-1 h-14 w-14": size === "lg",
+            "-bottom-1.5 left-0.5 h-7": size === "sm",
+            "-bottom-3 left-1 h-10": size === "md",
+            "-bottom-4.5 left-1 h-13.5": size === "lg",
           })}
         />
         <GoldGlyph
           fill={color}
           className={clsx("absolute", {
-            "-bottom-2 right-1 h-7 w-7": size === "sm",
-            "-bottom-3 right-1 h-10 w-10": size === "md",
-            "-bottom-4 right-1 h-14 w-14": size === "lg",
+            "-bottom-1.5 right-0.5 h-7": size === "sm",
+            "-bottom-3 right-1 h-10": size === "md",
+            "-bottom-4.5 right-1 h-13.5": size === "lg",
           })}
         />
       </>
@@ -588,49 +598,49 @@ const LAYOUT: Record<
         <GoldGlyph
           fill={color}
           className={clsx("absolute", {
-            "-top-2 left-1 h-7 w-7": size === "sm",
-            "-top-3 left-1 h-10 w-10": size === "md",
-            "-top-4 left-1 h-14 w-14": size === "lg",
+            "-top-2 left-1 h-7": size === "sm",
+            "-top-3 left-1.5 h-9.5": size === "md",
+            "-top-5 left-1.5 h-13": size === "lg",
           })}
         />
         <GoldGlyph
           fill={color}
           className={clsx("absolute", {
             "-top-2 right-1 h-7 w-7": size === "sm",
-            "-top-3 right-1 h-10 w-10": size === "md",
-            "-top-4 right-1 h-14 w-14": size === "lg",
+            "-top-3 right-1.5 h-9.5": size === "md",
+            "-top-5 right-1.5 h-13": size === "lg",
           })}
         />
         <GoldGlyph
           fill={color}
           className={clsx("absolute", {
             "bottom-6 left-1 h-7 w-7": size === "sm",
-            "bottom-7 left-1 h-10 w-10 mb-0.5": size === "md",
-            "bottom-9 left-1 h-14 w-14": size === "lg",
+            "bottom-7.5 left-1.5 h-9.5": size === "md",
+            "bottom-9.5 left-1.5 h-13": size === "lg",
           })}
         />
         <GoldGlyph
           fill={color}
           className={clsx("absolute", {
             "bottom-6 right-1 h-7 w-7": size === "sm",
-            "bottom-7 right-1 h-10 w-10 mb-0.5": size === "md",
-            "bottom-9 right-1 h-14 w-14": size === "lg",
+            "bottom-7.5 right-1.5 h-9.5": size === "md",
+            "bottom-9.5 right-1.5 h-13": size === "lg",
           })}
         />
         <GoldGlyph
           fill={color}
           className={clsx("absolute", {
             "-bottom-2 left-1 h-7 w-7": size === "sm",
-            "-bottom-3 left-1 h-10 w-10": size === "md",
-            "-bottom-4 left-1 h-14 w-14": size === "lg",
+            "-bottom-3 left-1.5 h-9.5": size === "md",
+            "-bottom-5 left-1.5 h-13": size === "lg",
           })}
         />
         <GoldGlyph
           fill={color}
           className={clsx("absolute", {
             "-bottom-2 right-1 h-7 w-7": size === "sm",
-            "-bottom-3 right-1 h-10 w-10": size === "md",
-            "-bottom-4 right-1 h-14 w-14": size === "lg",
+            "-bottom-3 right-1.5 h-9.5": size === "md",
+            "-bottom-5 right-1.5 h-13": size === "lg",
           })}
         />
       </>
@@ -792,57 +802,57 @@ const LAYOUT: Record<
         <GoldGlyph
           fill={color}
           className={clsx("absolute", {
-            "-top-2 left-1 h-7 w-7": size === "sm",
-            "-top-3 left-1 h-10 w-10": size === "md",
-            "-top-6 left-1 h-14 w-14": size === "lg",
+            "-top-2 left-1 h-6": size === "sm",
+            "-top-4 left-1 h-9.5": size === "md",
+            "-top-6 left-1.5 h-12.5": size === "lg",
           })}
         />
         <GoldGlyph
           fill={color}
           className={clsx("absolute", {
-            "-top-2 right-1 h-7 w-7": size === "sm",
-            "-top-3 right-1 h-10 w-10": size === "md",
-            "-top-6 right-1 h-14 w-14": size === "lg",
+            "-top-2 right-1 h-6": size === "sm",
+            "-top-4 right-1 h-9.5": size === "md",
+            "-top-6 right-1.5 h-12.5": size === "lg",
           })}
         />
         <GoldGlyph
           fill={color}
           className={clsx("absolute", {
-            "top-3 left-4 ml-0.5 h-7 w-7": size === "sm",
-            "top-3 left-7 h-10 w-10 mt-0.5": size === "md",
-            "top-3 left-9 h-14 w-14": size === "lg",
+            "top-3.5 left-5 h-6": size === "sm",
+            "top-3 left-7.3 h-9.5": size === "md",
+            "top-3.5 left-9.5 h-12.5": size === "lg",
           })}
         />
         <GoldGlyph
           fill={color}
           className={clsx("absolute", {
-            "bottom-4 left-1 h-7 w-7": size === "sm",
-            "bottom-4 left-1 h-10 w-10 mb-0.5": size === "md",
-            "bottom-6 left-1 h-14 w-14": size === "lg",
+            "bottom-4 left-1 h-6": size === "sm",
+            "bottom-5.5 left-1 h-9.5": size === "md",
+            "bottom-6.5 left-1.5 h-12.5": size === "lg",
           })}
         />
         <GoldGlyph
           fill={color}
           className={clsx("absolute", {
-            "bottom-4 right-1 h-7 w-7": size === "sm",
-            "bottom-4 right-1 h-10 w-10 mb-0.5": size === "md",
-            "bottom-6 right-1 h-14 w-14": size === "lg",
+            "bottom-4 right-1 h-6": size === "sm",
+            "bottom-5.5 right-1 h-9.5": size === "md",
+            "bottom-6.5 right-1.5 h-12.5": size === "lg",
           })}
         />
         <GoldGlyph
           fill={color}
           className={clsx("absolute", {
-            "-bottom-2 left-1 h-7 w-7": size === "sm",
-            "-bottom-4 left-1 h-10 w-10": size === "md",
-            "-bottom-6 left-1 h-14 w-14": size === "lg",
+            "-bottom-2 left-1 h-6": size === "sm",
+            "-bottom-4 left-1 h-9.5": size === "md",
+            "-bottom-6 left-1.5 h-12.5": size === "lg",
           })}
         />
         <GoldGlyph
           fill={color}
           className={clsx("absolute", {
-            "-bottom-2 right-1 h-7 w-7": size === "sm",
-            "-bottom-4 right-1 h-10 w-10": size === "md",
-            "-bottom-6 right-1 h-14 w-14": size === "lg",
+            "-bottom-2 right-1 h-6": size === "sm",
+            "-bottom-4 right-1 h-9.5": size === "md",
+            "-bottom-6 right-1.5 h-12.5": size === "lg",
           })}
         />
       </>
