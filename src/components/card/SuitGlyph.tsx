@@ -1,7 +1,14 @@
 import { clsx } from "clsx";
 import type { FC, PropsWithChildren } from "react";
 
-import { ClubGlyph } from "@/components/card/ClubGlyph";
+import {
+  AceOfClubsGlyph,
+  ClubGlyph,
+  GreenClubGlyph,
+  RedClubGlyph,
+  ThreeOfClubsGlyph,
+  TwoOfClubsGlyph,
+} from "@/components/card/ClubGlyph";
 import {
   AceOfCupGlyph,
   CupGlyph,
@@ -34,7 +41,16 @@ const LAYOUT: Record<
 > = {
   1: {
     golds: ({ color }) => <AceOfGoldGlyph fill={color} />,
-    clubs: ({ color }) => <ClubGlyph fill={color} />,
+    clubs: ({ color, size }) => (
+      <AceOfClubsGlyph
+        fill={color}
+        className={clsx("absolute", {
+          "-top-1 h-22 -rotate-5": size === "sm",
+          "-top-2 -left-4 h-31 -rotate-6": size === "md",
+          "-top-4 -left-5 h-42 -rotate-8": size === "lg",
+        })}
+      />
+    ),
     blades: ({ color }) => <SwordGlyph fill={color} />,
     cups: ({ color }) => <AceOfCupGlyph fill={color} />,
   },
@@ -60,24 +76,14 @@ const LAYOUT: Record<
       </>
     ),
     clubs: ({ color, size }) => (
-      <div className={"[&_svg]:last:rotate-180"}>
-        <ClubGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "top-0 -left-5.5 h-20 w-20": size === "sm",
-            "-top-2 -left-8 h-30 w-30": size === "md",
-            "-top-2.5 -left-10 h-38 w-38": size === "lg",
-          })}
-        />
-        <ClubGlyph
-          fill={SUIT_COLOR["cups"]}
-          className={clsx("absolute", {
-            "bottom-0 -right-5.5 h-20 w-20": size === "sm",
-            "-bottom-2 -right-8 h-30 w-30": size === "md",
-            "-bottom-2.5 -right-10 h-38 w-38": size === "lg",
-          })}
-        />
-      </div>
+      <TwoOfClubsGlyph
+        fill={color}
+        className={clsx("absolute", {
+          "-top-1 -left-3 h-21": size === "sm",
+          "-top-2 -left-4 h-30": size === "md",
+          "-top-4 -left-5 h-40": size === "lg",
+        })}
+      />
     ),
     blades: ({ color, size }) => (
       <div className={"[&_svg]:first:rotate-180"}>
@@ -150,36 +156,14 @@ const LAYOUT: Record<
       </>
     ),
     clubs: ({ color, size }) => (
-      <div
-        className={
-          "[&_svg]:first:rotate-180 [&_svg]:nth-2:rotate-32 [&_svg]:nth-3:-rotate-32"
-        }
-      >
-        <ClubGlyph
-          fill={SUIT_COLOR["cups"]}
-          className={clsx("absolute", {
-            "-top-2 -left-3.5 h-[92px] w-[92px]": size === "sm",
-            "-top-5 -right-5 mt-0.5 h-[136px] w-[136px]": size === "md",
-            "-bottom-6 -right-7 mr-1 h-[180px] w-[180px]": size === "lg",
-          })}
-        />
-        <ClubGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-top-1.5 -left-4 h-[92px] w-[92px]": size === "sm",
-            "-top-4 -left-6 h-[136px] w-[136px]": size === "md",
-            "-top-6 -left-8 h-[180px] w-[180px]": size === "lg",
-          })}
-        />
-        <ClubGlyph
-          fill={SUIT_COLOR["golds"]}
-          className={clsx("absolute", {
-            "-top-1.5 -right-3.5 h-[92px] w-[92px]": size === "sm",
-            "-bottom-5 -right-6 h-[136px] w-[136px]": size === "md",
-            "-bottom-7 -right-7 h-[180px] w-[180px]": size === "lg",
-          })}
-        />
-      </div>
+      <ThreeOfClubsGlyph
+        fill={color}
+        className={clsx("absolute", {
+          "-top-1.5 -left-2.5 h-24": size === "sm",
+          "-top-3 -left-1.5 h-32": size === "md",
+          "-top-4 -left-2 h-42": size === "lg",
+        })}
+      />
     ),
     blades: ({ color, size }) => (
       <div className={"[&_svg]:odd:rotate-180"}>
@@ -275,45 +259,55 @@ const LAYOUT: Record<
         />
       </>
     ),
-    clubs: ({ color, size }) => (
-      <div
-        className={
-          "[&_svg]:first:-rotate-38 [&_svg]:nth-2:rotate-38 [&_svg]:nth-3:-rotate-142 [&_svg]:nth-4:rotate-142"
-        }
-      >
-        <ClubGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-top-0.5 -left-0 h-9 w-9": size === "sm",
-            "-top-2 -left-0 h-14 w-14": size === "md",
-            "-top-3 -left-1 h-20 w-20": size === "lg",
+    clubs: ({ size }) => (
+      <>
+        <GreenClubGlyph
+          className={clsx("absolute -rotate-6", {
+            "-top-0.5 -right-3 h-20": size === "sm",
+            "-top-2 -right-3 h-28": size === "md",
+            "-top-2 -right-2 h-40": size === "lg",
           })}
-        />
-        <ClubGlyph
-          fill={SUIT_COLOR["cups"]}
-          className={clsx("absolute", {
-            "-top-0.5 -right-0 h-9 w-9": size === "sm",
-            "-top-2 -right-0 h-14 w-14": size === "md",
-            "-top-3 -right-1 h-20 w-20": size === "lg",
+          translate={clsx({
+            "translate(40,0)": size !== "lg",
+            "translate(50,0)": size === "lg",
           })}
+          scale={"scale(-0.170000,0.170000)"}
         />
-        <ClubGlyph
-          fill={SUIT_COLOR["cups"]}
-          className={clsx("absolute", {
-            "-bottom-0.5 -left-0 h-9 w-9": size === "sm",
-            "-bottom-2 -left-0 h-14 w-14": size === "md",
-            "-bottom-3 -left-1 h-20 w-20": size === "lg",
+        <RedClubGlyph
+          className={clsx("absolute rotate-6", {
+            "-top-0.5 -right-1.5 h-20": size === "sm",
+            "-top-2 -right-1 h-28": size === "md",
+            "-top-2 -right-3 h-40": size === "lg",
           })}
+          translate={"translate(80,0)"}
+          scale={"scale(-0.180000,0.180000)"}
         />
-        <ClubGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-bottom-0.5 -right-0 h-9 w-9": size === "sm",
-            "-bottom-2 -right-0 h-14 w-14": size === "md",
-            "-bottom-3 -right-1 h-20 w-20": size === "lg",
+        <RedClubGlyph
+          className={clsx("absolute rotate-6", {
+            "-bottom-1 -right-0.5 h-20": size === "sm",
+            "-bottom-2 -right-1 h-28": size === "md",
+            "-bottom-3 -right-1 h-40": size === "lg",
           })}
+          translate={clsx({
+            "translate(30,100)": size !== "md",
+            "translate(25,100)": size === "md",
+          })}
+          scale={"scale(0.180000,-0.180000)"}
         />
-      </div>
+        <GreenClubGlyph
+          className={clsx("absolute -rotate-6", {
+            "-bottom-1 -right-0.5 h-20": size === "sm",
+            "-bottom-2 -right-3.5 h-28": size === "md",
+            "-bottom-3 -right-5 h-40": size === "lg",
+          })}
+          translate={clsx({
+            "translate(60,100)": size === "sm",
+            "translate(50,100)": size === "md",
+            "translate(51,100)": size === "lg",
+          })}
+          scale={"scale(0.170000,-0.170000)"}
+        />
+      </>
     ),
     blades: ({ size }) => (
       <>
@@ -460,53 +454,45 @@ const LAYOUT: Record<
         />
       </>
     ),
-    clubs: ({ color, size }) => (
-      <div
-        className={
-          "[&_svg]:first:-rotate-150 [&_svg]:nth-2:rotate-150 [&_svg]:nth-3:-rotate-27 [&_svg]:nth-4:rotate-27 [&_svg]:nth-5:rotate-90"
-        }
-      >
-        <ClubGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-top-2 -left-0.5 h-10 w-10": size === "sm",
-            "-top-5 -left-2 h-16 w-16": size === "md",
-            "-top-7 -left-3 h-22 w-22": size === "lg",
+    clubs: ({ size }) => (
+      <>
+        <GreenClubGlyph
+          className={clsx("absolute rotate-60", {
+            "top-0.5 right-2 h-20": size === "sm",
+            "top-0.5 right-3 h-28": size === "md",
+            "top-0.5 right-4 h-40": size === "lg",
           })}
+          translate={"translate(0,50)"}
+          scale={"scale(0.170000,-0.170000)"}
         />
-        <ClubGlyph
-          fill={SUIT_COLOR["cups"]}
-          className={clsx("absolute", {
-            "-top-2 -right-0.5 h-10 w-10": size === "sm",
-            "-top-5 -right-2 h-16 w-16": size === "md",
-            "-top-7 -right-3 h-22 w-22": size === "lg",
+        <RedClubGlyph
+          className={clsx("absolute -rotate-60", {
+            "-top-2 -right-2 h-20": size === "sm",
+            "-top-3 -right-3 h-28": size === "md",
+            "-top-4.5 -right-4 h-40": size === "lg",
           })}
+          translate={"translate(70,70)"}
+          scale={"scale(0.180000,-0.180000)"}
         />
-        <ClubGlyph
-          fill={SUIT_COLOR["cups"]}
-          className={clsx("absolute", {
-            "-bottom-2 -left-0.5 h-10 w-10": size === "sm",
-            "-bottom-5 -left-2 h-16 w-16": size === "md",
-            "-bottom-7 -left-3 h-22 w-22": size === "lg",
+        <RedClubGlyph
+          className={clsx("absolute rotate-120", {
+            "-bottom-2 -right-1.5 h-20": size === "sm",
+            "-bottom-3 -right-1.5 h-28": size === "md",
+            "-bottom-4.5 -right-2.5 h-40": size === "lg",
           })}
+          translate={"translate(70,70)"}
+          scale={"scale(0.180000,-0.180000)"}
         />
-        <ClubGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-bottom-2 -right-0.5 h-10 w-10": size === "sm",
-            "-bottom-5 -right-2 h-16 w-16": size === "md",
-            "-bottom-7 -right-3 h-22 w-22": size === "lg",
+        <GreenClubGlyph
+          className={clsx("absolute rotate-60", {
+            "-bottom-4.5 right-3 h-20": size === "sm",
+            "-bottom-7 right-4.5 h-28": size === "md",
+            "-bottom-10 right-7 h-40": size === "lg",
           })}
+          translate={"translate(100,0)"}
+          scale={"scale(-0.170000,0.170000)"}
         />
-        <ClubGlyph
-          fill={SUIT_COLOR["golds"]}
-          className={clsx("absolute", {
-            "top-4.5 left-2.5 h-10 w-10": size === "sm",
-            "top-4.5 left-4 h-16 w-16": size === "md",
-            "top-5 left-4 h-22 w-22": size === "lg",
-          })}
-        />
-      </div>
+      </>
     ),
     blades: ({ size }) => (
       <div
