@@ -23,6 +23,7 @@ import {
   TwelveOfGoldGlyph,
 } from "@/components/card/GoldGlyph";
 import {
+  AceOfSwordGlyph,
   SwordGlyph,
   SwordGlyphVariant,
   TwelveOfSwordGlyph,
@@ -41,10 +42,9 @@ const LAYOUT: Record<
   Record<Suit, FC<PropsWithChildren<{ color: string; size: string }>>>
 > = {
   1: {
-    golds: ({ color }) => <AceOfGoldGlyph fill={color} />,
-    clubs: ({ color, size }) => (
+    golds: () => <AceOfGoldGlyph />,
+    clubs: ({ size }) => (
       <AceOfClubsGlyph
-        fill={color}
         className={clsx("absolute", {
           "-top-1 h-22 -rotate-5": size === "sm",
           "-top-2 -left-4 h-31 -rotate-6": size === "md",
@@ -52,8 +52,16 @@ const LAYOUT: Record<
         })}
       />
     ),
-    blades: ({ color }) => <SwordGlyph fill={color} />,
-    cups: ({ color }) => <AceOfCupGlyph fill={color} />,
+    blades: ({ size }) => (
+      <AceOfSwordGlyph
+        className={clsx("absolute", {
+          "-top-1 -left-2.5 h-23": size === "sm",
+          "-top-2 -left-4 h-33": size === "md",
+          "-top-4 -left-5 h-44": size === "lg",
+        })}
+      />
+    ),
+    cups: () => <AceOfCupGlyph />,
   },
   2: {
     golds: ({ color, size }) => (
@@ -87,21 +95,21 @@ const LAYOUT: Record<
       />
     ),
     blades: ({ color, size }) => (
-      <div className={"[&_svg]:first:rotate-180"}>
+      <div className={"[&_svg]:last:rotate-180"}>
         <SwordGlyph
           fill={color}
           className={clsx("absolute", {
-            "-top-1 -left-5.5 h-20 w-20": size === "sm",
-            "-top-3 -left-9 h-32 w-32": size === "md",
-            "-top-4 -left-11 h-40 w-40": size === "lg",
+            "-top-1.5 left-2 h-22": size === "sm",
+            "-top-3.5 left-2.5 h-32": size === "md",
+            "-top-4.5 left-2.5 h-42": size === "lg",
           })}
         />
         <SwordGlyph
           fill={color}
           className={clsx("absolute", {
-            "-bottom-1 -right-5.5 h-20 w-20": size === "sm",
-            "-bottom-3 -right-9 h-32 w-32": size === "md",
-            "-bottom-4 -right-11 h-40 w-40": size === "lg",
+            "-bottom-1.5 right-1.5 h-22": size === "sm",
+            "-bottom-3.5 right-2.5 h-32": size === "md",
+            "-bottom-4.5 right-2.5 h-42": size === "lg",
           })}
         />
       </div>
@@ -167,32 +175,32 @@ const LAYOUT: Record<
       />
     ),
     blades: ({ color, size }) => (
-      <div className={"[&_svg]:odd:rotate-180"}>
+      <>
         <SwordGlyph
           fill={color}
           className={clsx("absolute", {
-            "-top-0 -left-7 h-20 w-20": size === "sm",
-            "-top-3 -left-10 h-30 w-30": size === "md",
-            "-top-4 -left-14 h-40 w-40": size === "lg",
+            "-top-1.5 left-1 h-22": size === "sm",
+            "-top-3 left-1.5 h-32": size === "md",
+            "-top-4 left-1.5 h-42": size === "lg",
+          })}
+        />
+        <SwordGlyph
+          fill={color}
+          className={clsx("absolute rotate-180", {
+            "-top-1.5 -left-11 h-22": size === "sm",
+            "-top-3 -left-16 h-32": size === "md",
+            "-top-4 -left-21 h-42": size === "lg",
           })}
         />
         <SwordGlyph
           fill={color}
           className={clsx("absolute", {
-            "-bottom-1 -right-1.5 h-20 w-20": size === "sm",
-            "-bottom-2 -right-2.5 h-30 w-30": size === "md",
-            "-bottom-4 -right-3.5 h-40 w-40": size === "lg",
+            "-top-1.5 left-10 h-22": size === "sm",
+            "-top-3 left-15.5 h-32": size === "md",
+            "-top-4 left-21 h-42": size === "lg",
           })}
         />
-        <SwordGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-bottom-1 -right-7 h-20 w-20": size === "sm",
-            "-bottom-2 -right-11 h-30 w-30": size === "md",
-            "-bottom-4 -right-15 h-40 w-40": size === "lg",
-          })}
-        />
-      </div>
+      </>
     ),
     cups: ({ color, size }) => (
       <>
@@ -1062,7 +1070,7 @@ const LAYOUT: Record<
       </div>
     ),
     clubs: ({ color }) => <ClubGlyph fill={color} />,
-    blades: ({ color }) => <SwordGlyph fill={color} />,
+    blades: ({ color }) => <AceOfSwordGlyph fill={color} />,
     cups: ({ color, size }) => (
       <div className={"h-full w-full"}>
         <CupGlyph
@@ -1105,7 +1113,7 @@ const LAYOUT: Record<
       </div>
     ),
     clubs: ({ color }) => <ClubGlyph fill={color} />,
-    blades: ({ color }) => <SwordGlyph fill={color} />,
+    blades: ({ color }) => <AceOfSwordGlyph fill={color} />,
     cups: ({ color }) => <CupGlyph fill={color} />,
   },
   12: {
