@@ -1050,24 +1050,14 @@ const LAYOUT: Record<
   },
   10: {
     golds: ({ color, size }) => (
-      <div className={"h-full w-full"}>
-        <GoldGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-top-0 -left-1 h-6": size === "sm",
-            "-top-1 -left-1 h-10": size === "md",
-            "-top-2 -left-1 h-12": size === "lg",
-          })}
-        />
-        <TenOfGoldGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-bottom-2 -left-2 h-19": size === "sm",
-            "-bottom-4 -left-1 h-26": size === "md",
-            "-bottom-6 -left-3 h-36": size === "lg",
-          })}
-        />
-      </div>
+      <TenOfGoldGlyph
+        fill={color}
+        className={clsx("absolute", {
+          "-bottom-2 left-3.5 h-22": size === "sm",
+          "-bottom-4 left-5 h-32": size === "md",
+          "-bottom-6 left-7 h-42": size === "lg",
+        })}
+      />
     ),
     clubs: ({ color }) => <ClubGlyph fill={color} />,
     blades: ({ color }) => <AceOfSwordGlyph fill={color} />,
@@ -1093,24 +1083,14 @@ const LAYOUT: Record<
   },
   11: {
     golds: ({ color, size }) => (
-      <div className={"h-full w-full"}>
-        <GoldGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-top-0.5 -left-0 h-6": size === "sm",
-            "-top-2 -left-0 h-10": size === "md",
-            "-top-3 -left-0 h-12": size === "lg",
-          })}
-        />
-        <ElevenOfGoldGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-bottom-2 -left-2 h-19": size === "sm",
-            "-bottom-4 -left-1 h-26": size === "md",
-            "-bottom-5.5 -left-3 h-36": size === "lg",
-          })}
-        />
-      </div>
+      <ElevenOfGoldGlyph
+        fill={color}
+        className={clsx("absolute", {
+          "-bottom-2 left-0.5 h-22": size === "sm",
+          "-bottom-4 left-1.5 h-32": size === "md",
+          "-bottom-5.5 left-3 h-42": size === "lg",
+        })}
+      />
     ),
     clubs: ({ color }) => <ClubGlyph fill={color} />,
     blades: ({ color }) => <AceOfSwordGlyph fill={color} />,
@@ -1118,24 +1098,14 @@ const LAYOUT: Record<
   },
   12: {
     golds: ({ color, size }) => (
-      <div className={"h-full w-full"}>
-        <GoldGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-top-0.5 -left-0 h-6": size === "sm",
-            "-top-2 -left-0 h-9": size === "md",
-            "-top-3 -left-0 h-12": size === "lg",
-          })}
-        />
-        <TwelveOfGoldGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-bottom-2 -left-1 h-22": size === "sm",
-            "-bottom-4 -left-0.5 h-32": size === "md",
-            "-bottom-5.5 -left-1 h-42": size === "lg",
-          })}
-        />
-      </div>
+      <TwelveOfGoldGlyph
+        fill={color}
+        className={clsx("absolute", {
+          "-bottom-2 left-2 h-22": size === "sm",
+          "-bottom-4.5 left-3 h-32": size === "md",
+          "-bottom-6 left-4 h-42": size === "lg",
+        })}
+      />
     ),
     clubs: ({ color }) => <ClubGlyph fill={color} />,
     blades: ({ color, size }) => (
