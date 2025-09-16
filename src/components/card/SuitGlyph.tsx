@@ -26,8 +26,10 @@ import {
 } from "@/components/card/GoldGlyph";
 import {
   AceOfSwordGlyph,
+  ElevenOfSwordGlyph,
   SwordGlyph,
   SwordGlyphVariant,
+  TenOfSwordGlyph,
   TwelveOfSwordGlyph,
 } from "@/components/card/SwordGlyph";
 import { type Suit, SUIT_COLOR } from "@/domain/entities/Card";
@@ -1071,7 +1073,16 @@ const LAYOUT: Record<
         })}
       />
     ),
-    blades: ({ color }) => <AceOfSwordGlyph fill={color} />,
+    blades: ({ color, size }) => (
+      <TenOfSwordGlyph
+        fill={color}
+        className={clsx("absolute", {
+          "-bottom-2 left-3.5 h-22": size === "sm",
+          "-bottom-4 left-5 h-32": size === "md",
+          "-bottom-5 left-7 h-42": size === "lg",
+        })}
+      />
+    ),
     cups: ({ color, size }) => (
       <div className={"h-full w-full"}>
         <CupGlyph
@@ -1113,7 +1124,16 @@ const LAYOUT: Record<
         })}
       />
     ),
-    blades: ({ color }) => <AceOfSwordGlyph fill={color} />,
+    blades: ({ color, size }) => (
+      <ElevenOfSwordGlyph
+        fill={color}
+        className={clsx("absolute", {
+          "-bottom-2 left-0.5 h-22": size === "sm",
+          "-bottom-3.5 left-1.5 h-32": size === "md",
+          "-bottom-5 left-3 h-42": size === "lg",
+        })}
+      />
+    ),
     cups: ({ color }) => <CupGlyph fill={color} />,
   },
   12: {
@@ -1141,9 +1161,9 @@ const LAYOUT: Record<
       <TwelveOfSwordGlyph
         fill={color}
         className={clsx("absolute", {
-          "-bottom-2 -left-2 h-21": size === "sm",
-          "-bottom-4 -left-2 h-30": size === "md",
-          "-bottom-5.5 -left-3 h-40": size === "lg",
+          "-bottom-2 left-2 h-22": size === "sm",
+          "-bottom-3.5 left-3 h-32": size === "md",
+          "-bottom-5 left-4 h-42": size === "lg",
         })}
       />
     ),
