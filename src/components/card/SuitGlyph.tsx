@@ -3,10 +3,12 @@ import type { FC, PropsWithChildren } from "react";
 
 import {
   AceOfClubsGlyph,
-  ClubGlyph,
+  ElevenOfClubs,
   GreenClubGlyph,
   RedClubGlyph,
+  TenOfClubs,
   ThreeOfClubsGlyph,
+  TwelveOfClubs,
   TwoOfClubsGlyph,
   YellowClubGlyph,
 } from "@/components/card/ClubGlyph";
@@ -1059,7 +1061,16 @@ const LAYOUT: Record<
         })}
       />
     ),
-    clubs: ({ color }) => <ClubGlyph fill={color} />,
+    clubs: ({ color, size }) => (
+      <TenOfClubs
+        fill={color}
+        className={clsx("absolute", {
+          "-bottom-2 left-3.5 h-22": size === "sm",
+          "-bottom-4 left-5 h-32": size === "md",
+          "-bottom-6 left-7 h-42": size === "lg",
+        })}
+      />
+    ),
     blades: ({ color }) => <AceOfSwordGlyph fill={color} />,
     cups: ({ color, size }) => (
       <div className={"h-full w-full"}>
@@ -1092,7 +1103,16 @@ const LAYOUT: Record<
         })}
       />
     ),
-    clubs: ({ color }) => <ClubGlyph fill={color} />,
+    clubs: ({ color, size }) => (
+      <ElevenOfClubs
+        fill={color}
+        className={clsx("absolute", {
+          "-bottom-2 left-0.5 h-22": size === "sm",
+          "-bottom-3.5 left-1.5 h-32": size === "md",
+          "-bottom-5 left-3 h-42": size === "lg",
+        })}
+      />
+    ),
     blades: ({ color }) => <AceOfSwordGlyph fill={color} />,
     cups: ({ color }) => <CupGlyph fill={color} />,
   },
@@ -1107,7 +1127,16 @@ const LAYOUT: Record<
         })}
       />
     ),
-    clubs: ({ color }) => <ClubGlyph fill={color} />,
+    clubs: ({ color, size }) => (
+      <TwelveOfClubs
+        fill={color}
+        className={clsx("absolute", {
+          "-bottom-2 left-2 h-22": size === "sm",
+          "-bottom-3.5 left-3 h-32": size === "md",
+          "-bottom-5 left-4 h-42": size === "lg",
+        })}
+      />
+    ),
     blades: ({ color, size }) => (
       <TwelveOfSwordGlyph
         fill={color}
