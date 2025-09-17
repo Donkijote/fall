@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useGameStore } from "@/application/store/gameStore";
 import { Card } from "@/infrastructure/ui/components/card/Card";
 import { CardList } from "@/infrastructure/ui/components/card/CardList";
-import { Table } from "@/infrastructure/ui/components/tables/Table";
+import { Table } from "@/infrastructure/ui/components/table/Table";
 
 import "./App.css";
 
@@ -59,21 +59,16 @@ function App() {
           </button>
         </div>
       </div>
-      <div className={"relative h-[calc(100vh-120px)] w-full"}>
-        <Table />
-        <div
-          className={"flex h-full w-full flex-wrap items-center justify-center"}
-        >
-          <div className={"gap-8 flex w-1/6 flex-wrap"}>
-            {state.table.map((card) => (
-              <Card
-                key={card.suit + card.rank}
-                rank={card.rank}
-                suit={card.suit}
-                disabled={true}
-              />
-            ))}
-          </div>
+      <Table>
+        <div className={"gap-8 flex w-1/6 flex-wrap"}>
+          {state.table.map((card) => (
+            <Card
+              key={card.suit + card.rank}
+              rank={card.rank}
+              suit={card.suit}
+              disabled={true}
+            />
+          ))}
         </div>
         <>
           {state.players.map((player, index) => (
@@ -169,7 +164,7 @@ function App() {
             </div>
           ))}
         </>
-      </div>
+      </Table>
       <CardList />
     </div>
   );
