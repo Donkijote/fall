@@ -15,7 +15,9 @@ import {
 import {
   AceOfCupGlyph,
   CupGlyph,
+  ElevenOfCupsGlyph,
   TenOfCupsGlyph,
+  TwelveOfCupsGlyph,
 } from "@/components/card/CupGlyph";
 import {
   AceOfGoldGlyph,
@@ -65,7 +67,15 @@ const LAYOUT: Record<
         })}
       />
     ),
-    cups: () => <AceOfCupGlyph />,
+    cups: ({ size }) => (
+      <AceOfCupGlyph
+        className={clsx("absolute", {
+          "-top-1.5 left-2.5 h-22": size === "sm",
+          "-top-4 left-3.5 h-32": size === "md",
+          "-top-5 left-5 h-42": size === "lg",
+        })}
+      />
+    ),
   },
   2: {
     golds: ({ color, size }) => (
@@ -1067,9 +1077,9 @@ const LAYOUT: Record<
       <TenOfClubs
         fill={color}
         className={clsx("absolute", {
-          "-bottom-2 left-3.5 h-22": size === "sm",
-          "-bottom-4 left-5 h-32": size === "md",
-          "-bottom-6 left-7 h-42": size === "lg",
+          "-bottom-3 left-3.5 h-24.5": size === "sm",
+          "-bottom-5 left-5 h-34.5": size === "md",
+          "-bottom-7 left-7 h-44.5": size === "lg",
         })}
       />
     ),
@@ -1077,30 +1087,20 @@ const LAYOUT: Record<
       <TenOfSwordGlyph
         fill={color}
         className={clsx("absolute", {
-          "-bottom-2 left-3.5 h-22": size === "sm",
-          "-bottom-4 left-5 h-32": size === "md",
-          "-bottom-5 left-7 h-42": size === "lg",
+          "-bottom-2 left-3 h-22.5": size === "sm",
+          "-bottom-4 left-4.5 h-32.5": size === "md",
+          "-bottom-5 left-6.5 h-42.5": size === "lg",
         })}
       />
     ),
-    cups: ({ color, size }) => (
-      <div className={"h-full w-full"}>
-        <CupGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-top-0 -left-0 h-4": size === "sm",
-            "-top-1 -left-0 h-7": size === "md",
-            "-top-2 -left-0 h-10": size === "lg",
-          })}
-        />
-        <TenOfCupsGlyph
-          className={clsx("absolute", {
-            "-bottom-2.5 -left-3 h-21": size === "sm",
-            "-bottom-4 -left-3 h-28": size === "md",
-            "-bottom-7 -left-3.5 h-38": size === "lg",
-          })}
-        />
-      </div>
+    cups: ({ size }) => (
+      <TenOfCupsGlyph
+        className={clsx("absolute", {
+          "-bottom-2 left-1.5 h-22": size === "sm",
+          "-bottom-4 left-2 h-31": size === "md",
+          "-bottom-6 left-3 h-41": size === "lg",
+        })}
+      />
     ),
   },
   11: {
@@ -1108,9 +1108,9 @@ const LAYOUT: Record<
       <ElevenOfGoldGlyph
         fill={color}
         className={clsx("absolute", {
-          "-bottom-2 left-0.5 h-22": size === "sm",
-          "-bottom-4 left-1.5 h-32": size === "md",
-          "-bottom-5.5 left-3 h-42": size === "lg",
+          "-bottom-2 left-0 h-22.5": size === "sm",
+          "-bottom-4 left-0.5 h-32.5": size === "md",
+          "-bottom-5.5 left-1 h-42.5": size === "lg",
         })}
       />
     ),
@@ -1118,9 +1118,9 @@ const LAYOUT: Record<
       <ElevenOfClubs
         fill={color}
         className={clsx("absolute", {
-          "-bottom-2 left-0.5 h-22": size === "sm",
-          "-bottom-3.5 left-1.5 h-32": size === "md",
-          "-bottom-5 left-3 h-42": size === "lg",
+          "-bottom-2 left-0 h-23": size === "sm",
+          "-bottom-3 left-0 h-33": size === "md",
+          "-bottom-5 left-0 h-43": size === "lg",
         })}
       />
     ),
@@ -1128,22 +1128,30 @@ const LAYOUT: Record<
       <ElevenOfSwordGlyph
         fill={color}
         className={clsx("absolute", {
-          "-bottom-2 left-0.5 h-22": size === "sm",
-          "-bottom-3.5 left-1.5 h-32": size === "md",
-          "-bottom-5 left-3 h-42": size === "lg",
+          "-bottom-2 left-0 h-22.5": size === "sm",
+          "-bottom-3.5 left-0.5 h-32.5": size === "md",
+          "-bottom-5 left-0.5 h-42.5": size === "lg",
         })}
       />
     ),
-    cups: ({ color }) => <CupGlyph fill={color} />,
+    cups: ({ size }) => (
+      <ElevenOfCupsGlyph
+        className={clsx("absolute", {
+          "-bottom-2 left-0 h-23": size === "sm",
+          "-bottom-4 left-0.5 h-33": size === "md",
+          "-bottom-5 left-0.5 h-43": size === "lg",
+        })}
+      />
+    ),
   },
   12: {
     golds: ({ color, size }) => (
       <TwelveOfGoldGlyph
         fill={color}
         className={clsx("absolute", {
-          "-bottom-2 left-2 h-22": size === "sm",
-          "-bottom-4.5 left-3 h-32": size === "md",
-          "-bottom-6 left-4 h-42": size === "lg",
+          "-bottom-2 left-2 h-22.5": size === "sm",
+          "-bottom-4.5 left-3 h-32.5": size === "md",
+          "-bottom-6 left-4 h-42.5": size === "lg",
         })}
       />
     ),
@@ -1167,7 +1175,15 @@ const LAYOUT: Record<
         })}
       />
     ),
-    cups: ({ color }) => <CupGlyph fill={color} />,
+    cups: ({ size }) => (
+      <TwelveOfCupsGlyph
+        className={clsx("absolute", {
+          "-bottom-4 left-2.5 h-24": size === "sm",
+          "-bottom-7 left-3.5 h-34.5": size === "md",
+          "-bottom-9 left-4.5 h-44.5": size === "lg",
+        })}
+      />
+    ),
   },
 };
 
