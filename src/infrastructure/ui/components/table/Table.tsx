@@ -38,6 +38,7 @@ type TableCardProps = {
 const TableCard = ({ card }: TableCardProps) => {
   const randomPositionLeft = `${Math.floor(Math.random() * 65)}%`;
   const randomPositionTop = `${Math.floor(Math.random() * 60)}%`;
+  const randomDeg = `rotate(${Math.floor(Math.random() * (180 - -180)) + -180}deg)`;
   return (
     <Card
       rank={card.rank}
@@ -46,6 +47,7 @@ const TableCard = ({ card }: TableCardProps) => {
       style={{
         left: randomPositionLeft,
         top: randomPositionTop,
+        transform: randomDeg,
         position: "absolute",
       }}
     />
