@@ -72,7 +72,7 @@ export function createGameService(
         (p) => p.id === nextState.dealer,
       );
       const newDealerIdx =
-        (dealerIdx + nextState.players.length - 1) % nextState.players.length;
+        (dealerIdx + nextState.players.length + 1) % nextState.players.length;
       const newDealer = nextState.players[newDealerIdx].id;
 
       nextState = {
