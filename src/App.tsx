@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useGameStore } from "@/application/store/gameStore";
 import { Card } from "@/infrastructure/ui/components/card/Card";
 import { CardList } from "@/infrastructure/ui/components/card/CardList";
+import { Table } from "@/infrastructure/ui/components/tables/Table";
 
 import "./App.css";
 
@@ -58,11 +59,8 @@ function App() {
           </button>
         </div>
       </div>
-      <div
-        className={
-          "border-gray-700 relative h-[calc(100vh-120px)] w-full border"
-        }
-      >
+      <div className={"relative h-[calc(100vh-120px)] w-full"}>
+        <Table />
         <div
           className={"flex h-full w-full flex-wrap items-center justify-center"}
         >
