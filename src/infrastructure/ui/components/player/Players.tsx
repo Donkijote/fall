@@ -10,93 +10,167 @@ export const Players = () => {
 
   return (
     <>
-      {players.map((player, index) => (
-        <div
-          key={player.id}
-          className={clsx("absolute w-full", {
-            "top-10": index === 0,
-            "bottom-10": index === 2,
-            "left-30 !w-0 top-[42%]": index === 1,
-            "right-30 !w-0 top-[42%]": index === 3,
-          })}
-        >
+      {players.map((player, index) => {
+        const positions = computePlayerItemsPositions(index, players.length);
+        return (
           <div
-            className={
-              "gap-8 relative flex flex-col items-center justify-center"
-            }
+            key={player.id}
+            className={clsx("absolute w-full", positions.players)}
           >
             <div
-              className={clsx("absolute", {
-                "-bottom-10": index === 0,
-                "-top-10": index === 2,
-                "left-30": index === 1,
-                "right-30": index === 3,
-              })}
+              className={
+                "gap-8 relative flex flex-col items-center justify-center"
+              }
             >
-              <div className={"flex w-full flex-row"}>
-                <p className={"w-full text-center"}>{player.id}</p>
-                {player.id === dealer && <p className={"self-end"}>D!</p>}
+              <div className={clsx("absolute", positions.dealerBadge)}>
+                <div className={"flex w-full flex-row"}>
+                  <p className={"w-full text-center"}>{player.id}</p>
+                  {player.id === dealer && <p className={"self-end"}>D!</p>}
+                </div>
               </div>
-            </div>
-            <div
-              className={clsx(
-                "gap-4 relative flex flex-row items-center justify-center",
-                {
-                  "rotate-90":
-                    players.length > 2 && (index === 1 || index === 3),
-                  "group isTop": index === 0,
-                  "group isBottom": index === 2,
-                  "group isLeft": index === 1,
-                  "group isRight": index === 3,
-                },
-              )}
-            >
-              {player.hand.map((card, cIndex) => (
-                <Card
-                  key={card.suit + card.rank}
-                  rank={card.rank}
-                  suit={card.suit}
-                  onClick={() => playCard(player.id, cIndex)}
-                  disabled={player.id !== currentPlayer}
-                  faceDown={player.id !== currentPlayer}
-                  className={clsx(
-                    player.id === currentPlayer ? "cursor-pointer" : "",
-                    {
-                      "group-[.isTop]:mb-4 group-[.isBottom]:mt-4 group-[.isLeft]:mt-4 group-[.isRight]:mb-4 group-[.isBottom]:-rotate-14 group-[.isLeft]:-rotate-14 group-[.isRight]:rotate-14 group-[.isTop]:rotate-14":
-                        cIndex === 0,
-                      "group-[.isTop]:mt-4 group-[.isBottom]:mb-4 group-[.isLeft]:mb-4 group-[.isRight]:mt-4":
-                        cIndex === 1,
-                      "group-[.isTop]:mb-4 group-[.isBottom]:mt-4 group-[.isLeft]:mt-4 group-[.isRight]:mb-4 group-[.isBottom]:rotate-14 group-[.isLeft]:rotate-14 group-[.isRight]:-rotate-14 group-[.isTop]:-rotate-14":
-                        cIndex === 2,
-                    },
-                  )}
-                />
-              ))}
-            </div>
-            <div
-              className={clsx("w-70 h-70 absolute", {
-                "left-50 top-0": index === 0,
-                "right-50 top-0": index === 1,
-                "-bottom-80": index === 2,
-                "-top-80": index === 3,
-              })}
-            >
-              <div className={"relative h-full w-full"}>
-                {player.collected.map((card) => (
+              <div
+                className={clsx(
+                  "gap-4 relative flex flex-row items-center justify-center",
+                  positions.cardGroups,
+                )}
+              >
+                {player.hand.map((card, cIndex) => (
                   <Card
                     key={card.suit + card.rank}
                     rank={card.rank}
                     suit={card.suit}
-                    faceDown={true}
-                    className={`!absolute rotate-[${Math.floor(Math.random() * 50)}deg]`}
-                    disabled={true}
+                    onClick={() => playCard(player.id, cIndex)}
+                    disabled={player.id !== currentPlayer}
+                    faceDown={player.id !== currentPlayer}
+                    className={clsx(
+                      player.id === currentPlayer ? "cursor-pointer" : "",
+                      {
+                        "group-[.isTop]:mb-4 group-[.isBottom]:mt-4 group-[.isLeft]:mt-4 group-[.isRight]:mb-4 group-[.isBottom]:-rotate-14 group-[.isLeft]:-rotate-14 group-[.isRight]:rotate-14 group-[.isTop]:rotate-14":
+                          cIndex === 0,
+                        "group-[.isTop]:mt-4 group-[.isBottom]:mb-4 group-[.isLeft]:mb-4 group-[.isRight]:mt-4":
+                          cIndex === 1,
+                        "group-[.isTop]:mb-4 group-[.isBottom]:mt-4 group-[.isLeft]:mt-4 group-[.isRight]:mb-4 group-[.isBottom]:rotate-14 group-[.isLeft]:rotate-14 group-[.isRight]:-rotate-14 group-[.isTop]:-rotate-14":
+                          cIndex === 2,
+                      },
+                    )}
                   />
                 ))}
               </div>
+              <div
+                className={clsx(
+                  "w-70 h-70 absolute",
+                  positions.collectedCardsPiles,
+                )}
+              >
+                <div className={"relative h-full w-full"}>
+                  {player.collected.map((card, index) => {
+                    const randomDeg = `rotate-${Math.floor(Math.random() * 50)}`;
+                    const increasingZIndex = `z-${index}`;
+
+                    return (
+                      <Card
+                        key={card.suit + card.rank + randomDeg + index}
+                        rank={card.rank}
+                        suit={card.suit}
+                        faceDown={true}
+                        className={clsx(
+                          "!absolute",
+                          randomDeg,
+                          increasingZIndex,
+                        )}
+                        disabled={true}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </>
   );
+};
+
+const computePlayerItemsPositions = (
+  playerIndex: number,
+  totalPlayers: number,
+) => {
+  const twoPlayerMode = totalPlayers === 2;
+  const threePlayerMode = totalPlayers === 3;
+  const fourPlayerMode = totalPlayers === 4;
+  const positions: Record<string, Record<string, boolean>> = {
+    players: {},
+    dealerBadge: {},
+    cardGroups: {},
+    collectedCardsPiles: {},
+  };
+
+  // Player positions based on number of players
+  if (twoPlayerMode) {
+    positions.players["bottom-40"] = playerIndex === 0;
+    positions.players["top-40"] = playerIndex === 1;
+
+    positions.dealerBadge["-bottom-10"] = playerIndex === 1;
+
+    positions.cardGroups["group isBottom"] = playerIndex === 0;
+    positions.cardGroups["group isTop"] = playerIndex === 1;
+
+    positions.collectedCardsPiles["right-55 top-0"] = playerIndex === 0;
+    positions.collectedCardsPiles["left-90 top-7"] = playerIndex === 1;
+  }
+
+  if (threePlayerMode) {
+    positions.players["bottom-40"] = playerIndex === 0;
+    positions.players["right-50 !w-0 top-[42%]"] = playerIndex === 1;
+    positions.players["left-50 !w-0 top-[42%]"] = playerIndex === 2;
+
+    positions.dealerBadge["right-30"] = playerIndex === 1;
+    positions.dealerBadge["left-30"] = playerIndex === 2;
+
+    positions.cardGroups["group isBottom"] = playerIndex === 0;
+    positions.cardGroups["group isRight"] = playerIndex === 1;
+    positions.cardGroups["group isLeft"] = playerIndex === 2;
+
+    positions.collectedCardsPiles["right-55 top-0"] = playerIndex === 0;
+    positions.collectedCardsPiles["right-7 -top-60 rotate-90"] =
+      playerIndex === 1;
+    positions.collectedCardsPiles["-left-20 top-80 rotate-90"] =
+      playerIndex === 2;
+  }
+
+  if (fourPlayerMode) {
+    positions.players["bottom-40"] = playerIndex === 0;
+    positions.players["right-50 !w-0 top-[42%]"] = playerIndex === 1;
+    positions.players["top-40"] = playerIndex === 2;
+    positions.players["left-50 !w-0 top-[42%]"] = playerIndex === 3;
+
+    positions.dealerBadge["right-30"] = playerIndex === 1;
+    positions.dealerBadge["-bottom-10"] = playerIndex === 2;
+    positions.dealerBadge["left-30"] = playerIndex === 3;
+
+    positions.cardGroups["group isBottom"] = playerIndex === 0;
+    positions.cardGroups["group isRight"] = playerIndex === 1;
+    positions.cardGroups["group isTop"] = playerIndex === 2;
+    positions.cardGroups["group isLeft"] = playerIndex === 3;
+
+    positions.collectedCardsPiles["right-55 -bottom-25"] = playerIndex === 0;
+    positions.collectedCardsPiles["right-7 -top-60 rotate-90"] =
+      playerIndex === 1;
+    positions.collectedCardsPiles["left-90 top-7"] = playerIndex === 2;
+    positions.collectedCardsPiles["-left-20 top-80 rotate-90"] =
+      playerIndex === 3;
+  }
+
+  // Dealer badge position
+  positions.dealerBadge["-top-10"] = playerIndex === 0;
+
+  // Card group orientation
+  positions.cardGroups["rotate-90"] =
+    ((playerIndex === 2 || playerIndex === 1) && threePlayerMode) ||
+    (fourPlayerMode && (playerIndex === 1 || playerIndex === 3));
+
+  // Collected cards piles
+
+  return positions;
 };
