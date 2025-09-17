@@ -143,6 +143,11 @@ export const CardList = () => {
         <Card rank={12} suit="blades" />
         <Card rank={12} suit="blades" size={"lg"} />
       </div>
+      <div>
+        <Card rank={12} suit="golds" size={"sm"} faceDown={true} />
+        <Card rank={12} suit="golds" faceDown={true} />
+        <Card rank={12} suit="golds" size={"lg"} faceDown={true} />
+      </div>
     </div>
   );
 };
