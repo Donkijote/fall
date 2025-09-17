@@ -1,4 +1,5 @@
 import { clsx } from "clsx";
+import type { CSSProperties } from "react";
 
 import { type Rank, type Suit, SUIT_COLOR } from "@/domain/entities/Card";
 import { SuitGlyph } from "@/infrastructure/ui/components/card/SuitGlyph";
@@ -12,6 +13,7 @@ export type CardProps = {
   disabled?: boolean;
   onClick?: () => void;
   className?: string;
+  style?: CSSProperties;
 };
 
 const sizeClass = {
@@ -29,6 +31,7 @@ export const Card = ({
   disabled = false,
   onClick,
   className,
+  style,
 }: CardProps) => {
   return (
     <button
@@ -45,6 +48,7 @@ export const Card = ({
         "overflow-hidden",
         className,
       )}
+      style={style}
     >
       {!faceDown ? (
         <div className="inset-0 p-2 absolute flex flex-col justify-between">

@@ -3,6 +3,7 @@ import { clsx } from "clsx";
 import { useGameStoreService } from "@/application/hooks/useGameStoreService";
 import { useGameStoreState } from "@/application/hooks/useGameStoreState";
 import { Card } from "@/infrastructure/ui/components/card/Card";
+import { CollectedCard } from "@/infrastructure/ui/components/player/CollectedCard";
 
 export const Players = () => {
   const { players, dealer, currentPlayer } = useGameStoreState();
@@ -63,25 +64,13 @@ export const Players = () => {
                 )}
               >
                 <div className={"relative h-full w-full"}>
-                  {player.collected.map((card, index) => {
-                    const randomDeg = `rotate-${Math.floor(Math.random() * 50)}`;
-                    const increasingZIndex = `z-${index}`;
-
-                    return (
-                      <Card
-                        key={card.suit + card.rank + randomDeg + index}
-                        rank={card.rank}
-                        suit={card.suit}
-                        faceDown={true}
-                        className={clsx(
-                          "!absolute",
-                          randomDeg,
-                          increasingZIndex,
-                        )}
-                        disabled={true}
-                      />
-                    );
-                  })}
+                  {player.collected.map((card, index) => (
+                    <CollectedCard
+                      key={player.id + card.suit + card.rank}
+                      card={card}
+                      index={index}
+                    />
+                  ))}
                 </div>
               </div>
             </div>
