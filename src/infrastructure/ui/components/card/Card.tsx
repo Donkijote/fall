@@ -1,7 +1,7 @@
 import { clsx } from "clsx";
 
-import { SuitGlyph } from "@/components/card/SuitGlyph";
 import { type Rank, type Suit, SUIT_COLOR } from "@/domain/entities/Card";
+import { SuitGlyph } from "@/infrastructure/ui/components/card/SuitGlyph";
 
 export type CardProps = {
   rank: Rank;

@@ -1,6 +1,7 @@
 import { clsx } from "clsx";
 import type { FC, PropsWithChildren } from "react";
 
+import { type Suit, SUIT_COLOR } from "@/domain/entities/Card";
 import {
   AceOfClubsGlyph,
   ElevenOfClubs,
@@ -11,21 +12,21 @@ import {
   TwelveOfClubs,
   TwoOfClubsGlyph,
   YellowClubGlyph,
-} from "@/components/card/ClubGlyph";
+} from "@/infrastructure/ui/components/card/ClubGlyph";
 import {
   AceOfCupGlyph,
   CupGlyph,
   ElevenOfCupsGlyph,
   TenOfCupsGlyph,
   TwelveOfCupsGlyph,
-} from "@/components/card/CupGlyph";
+} from "@/infrastructure/ui/components/card/CupGlyph";
 import {
   AceOfGoldGlyph,
   ElevenOfGoldGlyph,
   GoldGlyph,
   TenOfGoldGlyph,
   TwelveOfGoldGlyph,
-} from "@/components/card/GoldGlyph";
+} from "@/infrastructure/ui/components/card/GoldGlyph";
 import {
   AceOfSwordGlyph,
   ElevenOfSwordGlyph,
@@ -33,8 +34,7 @@ import {
   SwordGlyphVariant,
   TenOfSwordGlyph,
   TwelveOfSwordGlyph,
-} from "@/components/card/SwordGlyph";
-import { type Suit, SUIT_COLOR } from "@/domain/entities/Card";
+} from "@/infrastructure/ui/components/card/SwordGlyph";
 
 type SuitGlyphProps = {
   suit: Suit;

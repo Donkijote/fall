@@ -2,8 +2,8 @@ import { clsx } from "clsx";
 import { useEffect } from "react";
 
 import { useGameStore } from "@/application/store/gameStore";
-import { Card } from "@/components/card/Card";
-import { CardList } from "@/components/card/CardList";
+import { Card } from "@/infrastructure/ui/components/card/Card";
+import { CardList } from "@/infrastructure/ui/components/card/CardList";
 
 import "./App.css";
 
