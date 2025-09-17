@@ -5,7 +5,7 @@ export const WoodTable = () => {
     <img
       src={WoodTableImg}
       alt="PokerTable"
-      className={"absolute h-full w-full object-cover"}
+      className={"object-fit absolute h-full w-full"}
     />
   );
 };
