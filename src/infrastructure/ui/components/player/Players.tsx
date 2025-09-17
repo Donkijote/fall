@@ -6,7 +6,7 @@ import { Card } from "@/infrastructure/ui/components/card/Card";
 import { CollectedCard } from "@/infrastructure/ui/components/player/CollectedCard";
 
 export const Players = () => {
-  const { players, dealer, currentPlayer } = useGameStoreState();
+  const { players, dealer, currentPlayer, deck } = useGameStoreState();
   const { playCard } = useGameStoreService();
 
   return (
@@ -73,6 +73,23 @@ export const Players = () => {
                   ))}
                 </div>
               </div>
+              {player.id === dealer && (
+                <div className={clsx("w-50 h-50 absolute z-0", positions.deck)}>
+                  {deck.map((card, index) => (
+                    <Card
+                      rank={card.rank}
+                      suit={card.suit}
+                      faceDown={true}
+                      disabled={true}
+                      style={{
+                        position: "absolute",
+                        zIndex: index,
+                        bottom: index * 0.5,
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         );
@@ -93,6 +110,7 @@ const computePlayerItemsPositions = (
     dealerBadge: {},
     cardGroups: {},
     collectedCardsPiles: {},
+    deck: {},
   };
 
   // Player positions based on number of players
@@ -106,7 +124,10 @@ const computePlayerItemsPositions = (
     positions.cardGroups["group isTop"] = playerIndex === 1;
 
     positions.collectedCardsPiles["right-55 top-0"] = playerIndex === 0;
-    positions.collectedCardsPiles["left-90 top-7"] = playerIndex === 1;
+    positions.collectedCardsPiles["left-90 top-5"] = playerIndex === 1;
+
+    positions.deck["left-100 bottom-5"] = playerIndex === 0;
+    positions.deck["right-55 -top-20"] = playerIndex === 1;
   }
 
   if (threePlayerMode) {
@@ -126,6 +147,10 @@ const computePlayerItemsPositions = (
       playerIndex === 1;
     positions.collectedCardsPiles["-left-20 top-80 rotate-90"] =
       playerIndex === 2;
+
+    positions.deck["left-100 bottom-5"] = playerIndex === 0;
+    positions.deck["-right-50 top-80 rotate-90"] = playerIndex === 1;
+    positions.deck["-right-60 -top-70 rotate-90"] = playerIndex === 2;
   }
 
   if (fourPlayerMode) {
@@ -146,9 +171,14 @@ const computePlayerItemsPositions = (
     positions.collectedCardsPiles["right-55 -bottom-25"] = playerIndex === 0;
     positions.collectedCardsPiles["right-7 -top-60 rotate-90"] =
       playerIndex === 1;
-    positions.collectedCardsPiles["left-90 top-7"] = playerIndex === 2;
+    positions.collectedCardsPiles["left-120 top-5"] = playerIndex === 2;
     positions.collectedCardsPiles["-left-20 top-80 rotate-90"] =
       playerIndex === 3;
+
+    positions.deck["left-100 bottom-5"] = playerIndex === 0;
+    positions.deck["-right-50 top-80 rotate-90"] = playerIndex === 1;
+    positions.deck["right-55 -top-20"] = playerIndex === 2;
+    positions.deck["-right-60 -top-70 rotate-90"] = playerIndex === 3;
   }
 
   // Dealer badge position
@@ -158,8 +188,6 @@ const computePlayerItemsPositions = (
   positions.cardGroups["rotate-90"] =
     ((playerIndex === 2 || playerIndex === 1) && threePlayerMode) ||
     (fourPlayerMode && (playerIndex === 1 || playerIndex === 3));
-
-  // Collected cards piles
 
   return positions;
 };
