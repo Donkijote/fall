@@ -105,7 +105,7 @@ export function playCard(
     const dealerIndex = nextState.players.findIndex(
       (p) => p.id === nextState.dealer,
     );
-    const firstToPlay = (dealerIndex - 1 + playerCount) % playerCount;
+    const firstToPlay = (dealerIndex + 1 + playerCount) % playerCount;
     nextState.currentPlayer = nextState.players[firstToPlay].id;
   }
 
