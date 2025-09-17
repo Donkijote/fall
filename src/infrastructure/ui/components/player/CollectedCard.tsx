@@ -7,7 +7,7 @@ type CollectedCardProps = {
 };
 
 export const CollectedCard = ({ card, index }: CollectedCardProps) => {
-  const randomDeg = `rotate(${Math.floor(Math.random() * 50)}deg)`;
+  const randomDeg = `rotate(${Math.floor(Math.random() * (50 - -50)) + -50}deg)`;
 
   return (
     <CardComponent

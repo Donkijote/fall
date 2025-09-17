@@ -9,14 +9,14 @@ import { PokerTable } from "./PokerTable";
 import { WoodTable } from "./WoodTable";
 
 const TableStyles = [<ItalianTable />, <PokerTable />, <WoodTable />];
+const randomIndex = Math.floor(Math.random() * TableStyles.length);
 
 export const Table = ({ children }: { children: ReactNode }) => {
-  // const randomIndex = Math.floor(Math.random() * TableStyles.length);
   const { table } = useGameStoreState();
 
   return (
     <div className={"relative h-[calc(100vh-120px)] w-full"}>
-      {TableStyles[1]}
+      {TableStyles[randomIndex]}
       <div
         className={
           "absolute top-1/2 left-1/2 h-[40%] w-[40%] -translate-x-1/2 -translate-y-1/2 transform"
@@ -38,6 +38,7 @@ type TableCardProps = {
 const TableCard = ({ card }: TableCardProps) => {
   const randomPositionLeft = `${Math.floor(Math.random() * 65)}%`;
   const randomPositionTop = `${Math.floor(Math.random() * 60)}%`;
+  const randomDeg = `rotate(${Math.floor(Math.random() * (180 - -180)) + -180}deg)`;
   return (
     <Card
       rank={card.rank}
@@ -46,6 +47,7 @@ const TableCard = ({ card }: TableCardProps) => {
       style={{
         left: randomPositionLeft,
         top: randomPositionTop,
+        transform: randomDeg,
         position: "absolute",
       }}
     />
