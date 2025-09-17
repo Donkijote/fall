@@ -63,7 +63,6 @@ export function playCard(
     });
   } else {
     newTable.push(card);
-    state.lastPlayedCard = card;
   }
 
   // Rotate to next player (to the right)
@@ -79,6 +78,7 @@ export function playCard(
     players: newPlayers,
     table: newTable,
     currentPlayer: nextPlayerId,
+    lastPlayedCard: card,
   };
 
   // Clean table points
