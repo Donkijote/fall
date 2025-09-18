@@ -77,6 +77,7 @@ export const Players = () => {
                 <div className={clsx("w-50 h-50 absolute z-0", positions.deck)}>
                   {deck.map((card, index) => (
                     <Card
+                      key={card.suit + card.rank + index}
                       rank={card.rank}
                       suit={card.suit}
                       faceDown={true}

@@ -15,7 +15,7 @@ export const Table = ({ children }: { children: ReactNode }) => {
   const { table } = useGameStoreState();
 
   return (
-    <div className={"relative h-[calc(100vh-120px)] w-full"}>
+    <div className={"relative h-[calc(100dvh)] w-full"}>
       {TableStyles[randomIndex]}
       <div
         className={
