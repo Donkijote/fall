@@ -146,6 +146,7 @@ describe("Game Service", () => {
       currentPlayer: expect.any(String),
       scores: expect.any(Object),
       phase: "roundEnd",
+      lastPlayedCard: expect.any(Object),
     });
   });
   it("should not play card due to invalid phase", () => {
