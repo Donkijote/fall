@@ -20,7 +20,12 @@ function App() {
   }, [state, service]);
 
   return (
-    <div data-testid={"App"} className={"px-8 py-3"}>
+    <div
+      data-testid={"App"}
+      className={
+        "px-8 py-3 bg-red-500 sm:bg-blue-500 md:bg-green-500 lg:bg-amber-500 xl:bg-gray-500 2xl:bg-purple-500"
+      }
+    >
       <h1 className={"mb-3"}>Fall</h1>
       <div className={"gap-2 flex flex-row justify-between"}>
         <div className={"gap-2 flex"}>
