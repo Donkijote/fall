@@ -39,15 +39,22 @@ export const FlipCardAnimation = () => {
       await Promise.all(spreadAnimations);
 
       // Step 3: Flip (update faceDown state halfway through)
-      setTimeout(() => setFaceDown(Array(numCards).fill(false)), 3 * 500);
-      const flipAnimations = cards.map((card) =>
-        animate(
-          card,
+      for (let i = 0; i <= cards.length - 1; i++) {
+        setTimeout(
+          () =>
+            setFaceDown((prevState) => {
+              const updatedState = [...prevState];
+              updatedState[i] = false;
+              return updatedState;
+            }),
+          500,
+        );
+        await animate(
+          cards[i],
           { rotateY: flipDirection === "right" ? [0, 180] : [0, -180] },
-          { duration: 3, ease: "easeInOut" },
-        ),
-      );
-      await Promise.all(flipAnimations);
+          { duration: 1, ease: "easeInOut" },
+        );
+      }
 
       // Step 4: Collapse back
       const collapseAnimations = cards.map((card) =>
