@@ -1,8 +1,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
-import type { Rank, Suit } from "@/domain/entities/Card";
-import { Card } from "@/infrastructure/ui/components/card/Card";
+import { FlipCardAnimation } from "@/infrastructure/ui/components/animations/FlipCardAnimation";
 import { TABLES_BACKGROUND } from "@/infrastructure/ui/constants/tables";
 
 export const HomeScreen = () => {
@@ -40,7 +39,7 @@ export const HomeScreen = () => {
       </header>
 
       {/* Floating Cards (decorative) */}
-      <AnimatedBackground />
+      <FlipCardAnimation />
 
       {/* Middle: Actions */}
       <main className="gap-4 mb-24 relative flex flex-col items-center">
@@ -75,54 +74,6 @@ export const HomeScreen = () => {
         <button>📜 Rules</button>
         <button>👤 Profile</button>
       </footer>
-    </div>
-  );
-};
-
-const cards = [
-  { rank: 12, suit: "blades", x: 50, y: 80, delay: 0 },
-  { rank: 12, suit: "cups", x: 50, y: 80, delay: 0 },
-  { rank: 12, suit: "golds", x: 50, y: 80, delay: 0 },
-  { rank: 12, suit: "clubs", x: 50, y: 80, delay: 0 },
-  { rank: 11, suit: "clubs", x: 220, y: 160, delay: 0.3 },
-  { rank: 11, suit: "blades", x: 220, y: 160, delay: 0.3 },
-  { rank: 11, suit: "cups", x: 220, y: 160, delay: 0.3 },
-  { rank: 11, suit: "golds", x: 220, y: 160, delay: 0.3 },
-  { rank: 1, suit: "cups", x: 380, y: 240, delay: 0.6 },
-  { rank: 1, suit: "blades", x: 380, y: 240, delay: 0.6 },
-  { rank: 1, suit: "clubs", x: 380, y: 240, delay: 0.6 },
-  { rank: 1, suit: "golds", x: 380, y: 240, delay: 0.6 },
-];
-
-const AnimatedBackground = () => {
-  console.log("here");
-  return (
-    <div className="inset-0 absolute overflow-hidden">
-      {cards.map((c, i) => (
-        <motion.div
-          key={c.rank + c.suit + i}
-          className="absolute"
-          style={{
-            top: `${Math.random() * 80}%`,
-            left: `${Math.random() * 80}%`,
-          }}
-          initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
-          animate={{
-            opacity: [0.3, 0.6, 0.3],
-            scale: [1, 1.05, 1], // subtle breathing effect
-            y: [c.y, c.y + 10, c.y], // soft float up/down
-            rotate: [0, 2, -2, 0], // gentle tilt
-          }}
-          transition={{
-            duration: 10 + i * 2,
-            delay: c.delay,
-            ease: "easeInOut",
-            repeat: Infinity, // loop forever
-          }}
-        >
-          <Card rank={c.rank as Rank} size={"sm"} suit={c.suit as Suit} />
-        </motion.div>
-      ))}
     </div>
   );
 };
