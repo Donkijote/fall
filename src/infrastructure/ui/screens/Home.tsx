@@ -1,18 +1,13 @@
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
 
+import bg from "@/assets/lobby/home_2.png";
 import { FlipCardAnimation } from "@/infrastructure/ui/components/animations/FlipCardAnimation";
-import { TABLES_BACKGROUND } from "@/infrastructure/ui/constants/tables";
+import { IconButton } from "@/infrastructure/ui/components/buttons/IconButton";
+
+import { faGear, faScroll, faUser } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const HomeScreen = () => {
-  const [bg, setBg] = useState("");
-
-  useEffect(() => {
-    const random =
-      TABLES_BACKGROUND[Math.floor(Math.random() * TABLES_BACKGROUND.length)];
-    setBg(random);
-  }, []);
-
   return (
     <div
       className="text-text-primary relative flex h-screen w-screen flex-col items-center justify-between"
@@ -23,7 +18,7 @@ export const HomeScreen = () => {
       }}
     >
       {/* Overlay */}
-      <div className="inset-0 bg-black/60 absolute" />
+      <div className="inset-0 bg-black/20 absolute" />
 
       {/* Top: Title */}
       <header className="mt-8 relative text-center">
@@ -69,10 +64,16 @@ export const HomeScreen = () => {
       </main>
 
       {/* Bottom: Utilities */}
-      <footer className="gap-6 mb-6 text-sm relative flex items-center justify-center opacity-70">
-        <button>⚙️ Settings</button>
-        <button>📜 Rules</button>
-        <button>👤 Profile</button>
+      <footer className="gap-6 mb-6 text-sm relative flex items-center justify-center opacity-90">
+        <IconButton
+          icon={<FontAwesomeIcon icon={faGear} className={"text-[3rem]"} />}
+        />
+        <IconButton
+          icon={<FontAwesomeIcon icon={faScroll} className={"text-[3rem]"} />}
+        />
+        <IconButton
+          icon={<FontAwesomeIcon icon={faUser} className={"text-[3rem]"} />}
+        />
       </footer>
     </div>
   );
