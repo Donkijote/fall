@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 
 import bg from "@/assets/lobby/home_2.png";
 import { FlipCardAnimation } from "@/infrastructure/ui/components/animations/FlipCardAnimation";
+import { HangingCardAnimation } from "@/infrastructure/ui/components/animations/HangingCardAnimation";
 import { IconButton } from "@/infrastructure/ui/components/buttons/IconButton";
 
 import { faGear, faScroll, faUser } from "@fortawesome/free-solid-svg-icons";
@@ -35,6 +36,21 @@ export const HomeScreen = () => {
 
       {/* Floating Cards (decorative) */}
       <FlipCardAnimation />
+      <HangingCardAnimation
+        positionClassName={"left-30"}
+        threadLongitude={100}
+        card={{ rank: 1, suit: "blades" }}
+      />
+      <HangingCardAnimation
+        positionClassName={"left-90"}
+        threadLongitude={420}
+        card={{ rank: 11, suit: "blades" }}
+      />
+      <HangingCardAnimation
+        positionClassName={"right-90"}
+        threadLongitude={820}
+        card={{ rank: 12, suit: "blades" }}
+      />
 
       {/* Middle: Actions */}
       <main className="gap-4 mb-24 relative flex flex-col items-center">
