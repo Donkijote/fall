@@ -53,8 +53,8 @@ export const HomeScreen = () => {
       />
 
       {/* Middle: Actions */}
+      {/*
       <main className="gap-4 mb-24 relative flex flex-col items-center">
-        {/* Buttons */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
@@ -78,6 +78,7 @@ export const HomeScreen = () => {
           </motion.button>
         </motion.div>
       </main>
+      */}
 
       {/* Bottom: Utilities */}
       <footer className="gap-6 mb-6 text-sm relative flex items-center justify-center opacity-90">

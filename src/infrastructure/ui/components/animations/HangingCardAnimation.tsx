@@ -1,6 +1,6 @@
 import { clsx } from "clsx";
 import { motion, useAnimate } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import type { Card as ICard } from "@/domain/entities/Card";
 
@@ -18,15 +18,11 @@ export const HangingCardAnimation = ({
   card: { rank, suit },
 }: HangingCardAnimationProps) => {
   const [scope, animate] = useAnimate();
-  const [faceDown, setFaceDown] = useState<boolean>(true);
-
-  console.log(Math.floor(Math.random() * 50));
 
   useEffect(() => {
     const runAnimation = async () => {
       const container = scope.current;
 
-      setTimeout(() => setFaceDown((prevState) => !prevState), 1500);
       await Promise.all([
         // Step 1 + 2 + 3: Drop + Bounce + elastic rope stretch
         animate(
@@ -59,8 +55,6 @@ export const HangingCardAnimation = ({
     runAnimation().then();
   }, [animate, scope]);
 
-  console.log(faceDown);
-
   return (
     <div className={clsx("absolute", positionClassName)}>
       <motion.div ref={scope} className="flex origin-top flex-col items-center">
@@ -73,10 +67,15 @@ export const HangingCardAnimation = ({
         {/* Knot */}
         <div className="w-3 h-3 bg-gray-500 shadow-md -mt-1 z-10 rounded-full" />
 
-        {/* Card with flip */}
+        {/* Card with delayed infinite flip */}
         <motion.div
           animate={{ rotateY: [0, 360] }}
-          transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
+          transition={{
+            duration: 2.5,
+            repeat: Infinity,
+            ease: "linear",
+            delay: 0.6, // slight delay after rope bounce
+          }}
           className="origin-top"
         >
           <Card rank={rank} suit={suit} faceDown={false} />
