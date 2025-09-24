@@ -104,7 +104,7 @@ export const FlipCardAnimation = () => {
       const slideBackCardAnimations = lastThreeCards.map((card) =>
         animate(
           card,
-          { y: -30, x: 10, zIndex: 0 },
+          { y: 0, x: 0, zIndex: 0 },
           { duration: 0.6, delay: stagger(0.2), ease: "easeIn" },
         ),
       );
@@ -159,6 +159,7 @@ export const FlipCardAnimation = () => {
               style={{
                 zIndex: index,
                 bottom: index * 0.25,
+                transform: "rotateY(180deg)",
               }}
             />
           </div>
