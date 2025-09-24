@@ -19,14 +19,13 @@ export const FlipCardAnimation = () => {
 
     (async () => {
       if (!containerRef.current) return;
-      // Step 1: Fade in stacked
+
       await animate(
         containerRef.current.querySelector(".cardContainer")!,
         { y: [1500, 0] },
         { duration: 0.8, delay: 2, ease: "easeOut" },
       );
 
-      // Step 2: Spread
       await Promise.all([
         await animate(
           lastThreeCards[2],
@@ -45,7 +44,6 @@ export const FlipCardAnimation = () => {
         ),
       ]);
 
-      // Step 3: Flip (update faceDown state halfway through)
       for (let i = 0; i <= numCards - 1; i++) {
         setTimeout(
           () =>
@@ -63,14 +61,12 @@ export const FlipCardAnimation = () => {
         );
       }
 
-      // Step 4: Collapse back
       const collapseBackAnimations = lastThreeCards.map((card) =>
         animate(card, { x: "-140%" }, { duration: 1, ease: "easeInOut" }),
       );
 
       await Promise.all(collapseBackAnimations);
 
-      // Step 5: Flip back
       const flipBackAnimations = lastThreeCards.map((card) =>
         animate(
           card,
@@ -82,7 +78,6 @@ export const FlipCardAnimation = () => {
       setTimeout(() => setFaceDown([true, true, true]), 0.5 * 500);
       await Promise.all(flipBackAnimations);
 
-      //Step 7: Lift deck
       await Promise.all([
         animate(
           cards.slice(0, 37),
@@ -100,7 +95,6 @@ export const FlipCardAnimation = () => {
         }),
       ]);
 
-      // Step 8: Slide back cards
       const slideBackCardAnimations = lastThreeCards.map((card) =>
         animate(
           card,
@@ -110,7 +104,6 @@ export const FlipCardAnimation = () => {
       );
       await Promise.all(slideBackCardAnimations);
 
-      // Step 9: Put down deck
       await Promise.all([
         animate(
           cards,
@@ -127,18 +120,11 @@ export const FlipCardAnimation = () => {
           ],
         }),
       ]);
-
-      // Reset for reuse
-      //setFaceDown(Array(numCards).fill(true));
-      /*cards.forEach((card) => {
-        (card as HTMLElement).style.transform = "";
-        (card as HTMLElement).style.opacity = "0";
-      });*/
     })();
   }, []);
 
   return (
-    <div ref={containerRef} className="bottom-100 absolute left-[47%]">
+    <div ref={containerRef} className="bottom-130 absolute left-[50%]">
       <div className={"cardContainer"}>
         {deck.map((card, index) => (
           <div
@@ -158,7 +144,7 @@ export const FlipCardAnimation = () => {
               }
               style={{
                 zIndex: index,
-                bottom: index * 0.25,
+                top: index * 0.25,
                 transform: "rotateY(180deg)",
               }}
             />
