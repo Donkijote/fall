@@ -5,7 +5,7 @@ import { createDeck } from "@/domain/rules/deck";
 
 import { Card } from "../card/Card";
 
-export const BouncingCard = () => {
+export const BouncingCardAnimation = () => {
   const [scope, animate] = useAnimate();
   const deck = createDeck();
 
