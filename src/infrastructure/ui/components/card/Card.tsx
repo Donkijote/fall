@@ -3,6 +3,7 @@ import type { CSSProperties } from "react";
 
 import { type Rank, type Suit, SUIT_COLOR } from "@/domain/entities/Card";
 import { SuitGlyph } from "@/infrastructure/ui/components/card/SuitGlyph";
+import { useBreakpoint } from "@/infrastructure/ui/hooks/useBreakpoint";
 
 export type CardProps = {
   rank: Rank;
@@ -25,7 +26,7 @@ const sizeClass = {
 export const Card = ({
   rank,
   suit,
-  size = "md",
+  size: cardSize,
   faceDown = false,
   selected = false,
   disabled = false,
@@ -33,6 +34,24 @@ export const Card = ({
   className,
   style,
 }: CardProps) => {
+  const { breakpoint, isMobile, orientation } = useBreakpoint();
+  let size: "sm" | "md" | "lg" = cardSize ?? "sm";
+
+  console.log(breakpoint, orientation);
+
+  if (
+    breakpoint &&
+    !isMobile &&
+    (breakpoint === "md" ||
+      breakpoint === "lg" ||
+      breakpoint === "xl" ||
+      breakpoint === "2xl")
+  ) {
+    if (orientation === "landscape") {
+      size = "md"; // laptop/desktop in landscape
+    }
+  }
+
   return (
     <button
       type="button"
