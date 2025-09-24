@@ -5,10 +5,7 @@ import bg from "@/assets/lobby/home_2.png";
 import { BouncingCardAnimation } from "@/infrastructure/ui/components/animations/BounceCardAnimation";
 import { FlipCardAnimation } from "@/infrastructure/ui/components/animations/FlipCardAnimation";
 import { HangingCardAnimation } from "@/infrastructure/ui/components/animations/HangingCardAnimation";
-import { IconButton } from "@/infrastructure/ui/components/buttons/IconButton";
-
-import { faGear, faScroll, faUser } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { BottomNavbar } from "@/infrastructure/ui/components/navbar/BottomNavbar";
 
 export const HomeScreen = () => {
   const [animation, setAnimation] = useState<"flip" | "bounce">("flip");
@@ -92,23 +89,7 @@ export const HomeScreen = () => {
       */}
 
       {/* Bottom: Utilities */}
-      <footer className="h-18 relative w-full">
-        <div
-          className={
-            "-bottom-0 gap-6 text-sm bg-red-200 h-18 fixed flex w-full items-center justify-center opacity-90"
-          }
-        >
-          <IconButton
-            icon={<FontAwesomeIcon icon={faGear} className={"text-[3rem]"} />}
-          />
-          <IconButton
-            icon={<FontAwesomeIcon icon={faScroll} className={"text-[3rem]"} />}
-          />
-          <IconButton
-            icon={<FontAwesomeIcon icon={faUser} className={"text-[3rem]"} />}
-          />
-        </div>
-      </footer>
+      <BottomNavbar />
     </div>
   );
 };
