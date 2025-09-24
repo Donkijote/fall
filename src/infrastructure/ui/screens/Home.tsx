@@ -6,27 +6,38 @@ import { BouncingCardAnimation } from "@/infrastructure/ui/components/animations
 import { FlipCardAnimation } from "@/infrastructure/ui/components/animations/FlipCardAnimation";
 import { HangingCardAnimation } from "@/infrastructure/ui/components/animations/HangingCardAnimation";
 import { BottomNavbar } from "@/infrastructure/ui/components/navbar/BottomNavbar";
+import { useBreakpoint } from "@/infrastructure/ui/hooks/useBreakpoint";
 
 export const HomeScreen = () => {
   const [animation, setAnimation] = useState<"flip" | "bounce">("flip");
+  const { breakpoint, isMobile, orientation } = useBreakpoint();
 
   const handleComplete = useCallback(() => {
     setAnimation((prev) => (prev === "flip" ? "bounce" : "flip"));
   }, []);
 
+  let secondThreadLongitude = 420;
+  let thirdThreadLongitude = 820;
+
+  if (
+    breakpoint &&
+    isMobile &&
+    orientation === "landscape" &&
+    breakpoint !== "sm"
+  ) {
+    secondThreadLongitude = 330;
+    thirdThreadLongitude = 230;
+  }
+
   return (
     <div
-      className="text-text-primary relative flex h-screen w-screen flex-col items-center justify-between"
+      className="text-text-primary relative flex h-screen w-screen flex-col items-center justify-between bg-cover bg-center"
       style={{
         backgroundImage: `url(${bg})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
       }}
     >
-      {/* Overlay */}
       <div className="inset-0 bg-black/20 absolute" />
 
-      {/* Top: Title */}
       <header className="mt-8 relative text-center">
         <motion.h1
           initial={{ opacity: 0, y: -40 }}
@@ -45,50 +56,21 @@ export const HomeScreen = () => {
         <BouncingCardAnimation onComplete={handleComplete} />
       )}
       <HangingCardAnimation
-        positionClassName={"left-30"}
+        positionClassName={"left-30 md:left-20"}
         threadLongitude={100}
         card={{ rank: 1, suit: "blades" }}
       />
       <HangingCardAnimation
-        positionClassName={"left-90"}
-        threadLongitude={420}
+        positionClassName={"left-90 md:left-40"}
+        threadLongitude={secondThreadLongitude}
         card={{ rank: 11, suit: "blades" }}
       />
       <HangingCardAnimation
-        positionClassName={"right-90"}
-        threadLongitude={820}
+        positionClassName={"right-90 md:right-40"}
+        threadLongitude={thirdThreadLongitude}
         card={{ rank: 12, suit: "blades" }}
       />
 
-      {/* Middle: Actions */}
-      {/*
-      <main className="gap-4 mb-24 relative flex flex-col items-center">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="gap-6 relative z-10 flex flex-col"
-        >
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-10 py-6 text-xl font-bold text-black rounded-2xl shadow-lg bg-accent-gold cursor-pointer"
-          >
-            Play
-          </motion.button>
-
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-6 py-3 text-base rounded-xl border-accent-red text-accent-red hover:bg-accent-red/10 cursor-pointer border transition"
-          >
-            Quick Match
-          </motion.button>
-        </motion.div>
-      </main>
-      */}
-
-      {/* Bottom: Utilities */}
       <BottomNavbar />
     </div>
   );

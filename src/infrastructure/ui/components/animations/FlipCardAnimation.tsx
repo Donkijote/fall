@@ -33,17 +33,17 @@ export const FlipCardAnimation = ({
       await Promise.all([
         await animate(
           lastThreeCards[2],
-          { x: "-140%", y: "-280%" },
+          { x: "-140%", y: "-40vh" },
           { duration: 0.6, ease: "easeInOut" },
         ),
         await animate(
           lastThreeCards[1],
-          { x: 0, y: "-280%" },
+          { x: 0, y: "-40vh" },
           { duration: 0.6, ease: "easeInOut" },
         ),
         await animate(
           lastThreeCards[0],
-          { x: "140%", y: "-280%" },
+          { x: "140%", y: "-40vh" },
           { duration: 0.6, ease: "easeInOut" },
         ),
       ]);
@@ -132,7 +132,7 @@ export const FlipCardAnimation = ({
   return (
     <div
       ref={containerRef}
-      className="bottom-130 absolute left-1/2 -translate-x-1/2"
+      className="absolute top-[60vh] left-1/2 -translate-x-1/2"
     >
       <div className={"cardContainer"}>
         {deck.map((card, index) => (
