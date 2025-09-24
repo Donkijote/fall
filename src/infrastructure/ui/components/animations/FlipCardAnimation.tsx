@@ -6,7 +6,11 @@ import { Card } from "@/infrastructure/ui/components/card/Card";
 
 const numCards = 3;
 
-export const FlipCardAnimation = () => {
+export const FlipCardAnimation = ({
+  onComplete,
+}: {
+  onComplete: () => void;
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [faceDown, setFaceDown] = useState<boolean[]>(Array(3).fill(true));
   const deck = createDeck();
@@ -120,16 +124,21 @@ export const FlipCardAnimation = () => {
           ],
         }),
       ]);
+
+      onComplete();
     })();
-  }, []);
+  }, [onComplete]);
 
   return (
-    <div ref={containerRef} className="bottom-130 absolute left-[50%]">
+    <div
+      ref={containerRef}
+      className="bottom-130 absolute left-1/2 -translate-x-1/2"
+    >
       <div className={"cardContainer"}>
         {deck.map((card, index) => (
           <div
             key={index}
-            className={"card absolute"}
+            className={"card absolute left-1/2 -translate-x-1/2"}
             style={{ zIndex: index }}
           >
             <Card

@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
+import { useCallback, useState } from "react";
 
 import bg from "@/assets/lobby/home_2.png";
+import { BouncingCardAnimation } from "@/infrastructure/ui/components/animations/BounceCardAnimation";
 import { FlipCardAnimation } from "@/infrastructure/ui/components/animations/FlipCardAnimation";
 import { HangingCardAnimation } from "@/infrastructure/ui/components/animations/HangingCardAnimation";
 import { IconButton } from "@/infrastructure/ui/components/buttons/IconButton";
@@ -9,6 +11,12 @@ import { faGear, faScroll, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const HomeScreen = () => {
+  const [animation, setAnimation] = useState<"flip" | "bounce">("flip");
+
+  const handleComplete = useCallback(() => {
+    setAnimation((prev) => (prev === "flip" ? "bounce" : "flip"));
+  }, []);
+
   return (
     <div
       className="text-text-primary relative flex h-screen w-screen flex-col items-center justify-between"
@@ -34,8 +42,11 @@ export const HomeScreen = () => {
         <p className="text-sm opacity-80">Modern Edition</p>
       </header>
 
-      {/* Floating Cards (decorative) */}
-      <FlipCardAnimation />
+      {animation === "flip" ? (
+        <FlipCardAnimation onComplete={handleComplete} />
+      ) : (
+        <BouncingCardAnimation onComplete={handleComplete} />
+      )}
       <HangingCardAnimation
         positionClassName={"left-30"}
         threadLongitude={100}
@@ -81,16 +92,22 @@ export const HomeScreen = () => {
       */}
 
       {/* Bottom: Utilities */}
-      <footer className="gap-6 mb-6 text-sm relative flex items-center justify-center opacity-90">
-        <IconButton
-          icon={<FontAwesomeIcon icon={faGear} className={"text-[3rem]"} />}
-        />
-        <IconButton
-          icon={<FontAwesomeIcon icon={faScroll} className={"text-[3rem]"} />}
-        />
-        <IconButton
-          icon={<FontAwesomeIcon icon={faUser} className={"text-[3rem]"} />}
-        />
+      <footer className="h-18 relative w-full">
+        <div
+          className={
+            "-bottom-0 gap-6 text-sm bg-red-200 h-18 fixed flex w-full items-center justify-center opacity-90"
+          }
+        >
+          <IconButton
+            icon={<FontAwesomeIcon icon={faGear} className={"text-[3rem]"} />}
+          />
+          <IconButton
+            icon={<FontAwesomeIcon icon={faScroll} className={"text-[3rem]"} />}
+          />
+          <IconButton
+            icon={<FontAwesomeIcon icon={faUser} className={"text-[3rem]"} />}
+          />
+        </div>
       </footer>
     </div>
   );

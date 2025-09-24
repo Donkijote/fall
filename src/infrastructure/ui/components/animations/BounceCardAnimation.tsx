@@ -5,7 +5,11 @@ import { createDeck } from "@/domain/rules/deck";
 
 import { Card } from "../card/Card";
 
-export const BouncingCardAnimation = () => {
+export const BouncingCardAnimation = ({
+  onComplete,
+}: {
+  onComplete: () => void;
+}) => {
   const [scope, animate] = useAnimate();
   const deck = createDeck();
 
@@ -85,16 +89,18 @@ export const BouncingCardAnimation = () => {
         { rotate: Math.round(finalAngle / 180) * 180, top: "60vh" },
         { duration: 0.8, ease: "easeOut", delay: 1 },
       ).finished;
+
+      onComplete();
     };
 
     runAnimation().then();
-  }, [scope, animate]);
+  }, [scope, animate, onComplete]);
 
   return (
     <div className="inset-0 absolute">
       <div
         ref={scope}
-        className="absolute top-[60vh] left-[50vw]"
+        className="absolute top-[60vh] left-1/2 -translate-x-1/2"
         style={{ zIndex: 40 }}
       >
         <Card
@@ -107,11 +113,11 @@ export const BouncingCardAnimation = () => {
           }}
         />
       </div>
-      <div className="absolute top-[60vh] left-[50vw]">
+      <div className="absolute top-[60vh] left-1/2 -translate-x-1/2">
         {deck.slice(0, 39).map((card, index) => (
           <div
             key={index}
-            className={"card absolute"}
+            className={"card absolute left-1/2 -translate-x-1/2"}
             style={{ zIndex: index }}
           >
             <Card
