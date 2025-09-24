@@ -1,4 +1,3 @@
-// @ts-expect-error: Could not find a declaration file for module 'tailwindcss/defaultTheme'.
 import defaultTheme from "tailwindcss/defaultTheme";
 
 export default {

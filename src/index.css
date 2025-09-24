@@ -4,4 +4,23 @@
 
 @theme {
   --breakpoint-3xl: 120rem;
+
+  --color-background: #121212;
+  --color-background-secondary: #1e1e1e;
+
+  --color-accent-red: #e63946;
+  --color-accent-gold: #ffd166;
+  --color-accent-green: #06d6a0;
+  --color-accent-blue: #118ab2;
+
+  --color-text-primary: #f5f5f5;
+  --color-text-secondary: #b0b0b0;
+  --color-text-disabled: #737373;
+
+  --color-border: #2a2a2a;
+  --color-shadow: rgba(0, 0, 0, 0.6);
+}
+
+html, body {
+    overflow: hidden;
 }
