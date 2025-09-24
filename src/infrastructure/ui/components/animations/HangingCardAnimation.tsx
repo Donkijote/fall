@@ -27,7 +27,7 @@ export const HangingCardAnimation = ({
         animate(
           container,
           {
-            y: [-1000, 0, -50, 0, -25, 0],
+            y: [-1500, 0, -50, 0, -25, 0],
             scaleY: [1, 1.1, 1, 1.05, 1],
           },
           {

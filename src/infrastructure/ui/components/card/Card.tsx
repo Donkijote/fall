@@ -37,19 +37,20 @@ export const Card = ({
   const { breakpoint, isMobile, orientation } = useBreakpoint();
   let size: "sm" | "md" | "lg" = cardSize ?? "sm";
 
-  console.log(breakpoint, orientation);
+  if (breakpoint && !isMobile && (breakpoint === "md" || breakpoint === "lg")) {
+    if (orientation === "portrait") {
+      size = "md";
+    } else if (orientation === "landscape") {
+      size = "sm";
+    }
+  }
 
   if (
     breakpoint &&
     !isMobile &&
-    (breakpoint === "md" ||
-      breakpoint === "lg" ||
-      breakpoint === "xl" ||
-      breakpoint === "2xl")
+    (breakpoint === "2xl" || breakpoint === "3xl")
   ) {
-    if (orientation === "landscape") {
-      size = "md"; // laptop/desktop in landscape
-    }
+    size = "lg";
   }
 
   return (
