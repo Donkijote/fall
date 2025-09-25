@@ -1,9 +1,9 @@
 import { clsx } from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 
-import OneVsOne from "@/assets/lobby/1vs1.png";
-import OneVsOneVsOne from "@/assets/lobby/1vs1vs1.png";
-import TwoVsTwo from "@/assets/lobby/2vs2.png";
+import OneVsOne from "@/assets/lobby/1vs1.webp";
+import OneVsOneVsOne from "@/assets/lobby/1vs2.webp";
+import TwoVsTwo from "@/assets/lobby/2vs2.webp";
 
 import { faClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
