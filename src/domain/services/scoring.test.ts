@@ -1,4 +1,7 @@
-import { initialState } from "@/application/store/gameStore";
+import {
+  mockedState,
+  mockedStateWithPlayers,
+} from "@/application/store/gameStore";
 import type { GameState } from "@/domain/entities/GameState";
 import { createDeck } from "@/domain/rules/deck";
 
@@ -6,28 +9,32 @@ import { applyCountingRule, awardPoints, checkGameOver } from "./scoring";
 
 describe("Scoring", () => {
   it("should award points correctly", () => {
-    const score = awardPoints(initialState, initialState.players[0].id, 4);
-    expect(score.scores.values[initialState.players[0].id]).toBe(4);
+    const score = awardPoints(
+      mockedStateWithPlayers,
+      mockedStateWithPlayers.players[0].id,
+      4,
+    );
+    expect(score.scores.values[mockedStateWithPlayers.players[0].id]).toBe(4);
   });
   it("should award points correctly for teams", () => {
     const teamState: GameState = {
-      ...initialState,
+      ...mockedStateWithPlayers,
       scores: { type: "team", values: {} },
     };
     const score = awardPoints(teamState, teamState.players[0].id, 4);
     expect(score.scores.values[teamState.players[0].id]).toBe(4);
   });
   it("should check for game over without winner", () => {
-    const state = checkGameOver(initialState);
+    const state = checkGameOver(mockedState);
     expect(state.phase).toBe(state.phase);
     expect(state.winner).toBeUndefined();
   });
   it("should check for game over with winner", () => {
     const winnerState: GameState = {
-      ...initialState,
+      ...mockedStateWithPlayers,
       scores: {
         type: "individual",
-        values: { [initialState.players[0].id]: 24 },
+        values: { [mockedStateWithPlayers.players[0].id]: 24 },
       },
     };
     const state = checkGameOver(winnerState);
@@ -35,17 +42,17 @@ describe("Scoring", () => {
     expect(state.winner).toBe(winnerState.players[0].id);
   });
   it("should not check counting rule", () => {
-    const state = applyCountingRule(initialState);
-    expect(state).toStrictEqual(initialState);
+    const state = applyCountingRule(mockedState);
+    expect(state).toStrictEqual(mockedState);
   });
   it("should check counting rule for team", () => {
     const deck = createDeck();
-    const players = initialState.players.map((player) => {
+    const players = mockedStateWithPlayers.players.map((player) => {
       player.collected = deck.splice(0, 21);
       return player;
     });
     const teamState: GameState = {
-      ...initialState,
+      ...mockedStateWithPlayers,
       players,
       scores: { type: "team", values: {} },
       dealer: "1",
@@ -56,12 +63,12 @@ describe("Scoring", () => {
   });
   it("should check counting rule for individual 1 vs 1", () => {
     const deck = createDeck();
-    const players = initialState.players.map((player) => {
+    const players = mockedStateWithPlayers.players.map((player) => {
       player.collected = deck.splice(0, 21);
       return player;
     });
     const teamState: GameState = {
-      ...initialState,
+      ...mockedStateWithPlayers,
       players,
       scores: { type: "individual", values: {} },
       dealer: "1",
@@ -72,7 +79,7 @@ describe("Scoring", () => {
   });
   it("should check counting rule for individual 1 vs 1 vs 1", () => {
     const deck = createDeck();
-    const players = initialState.players
+    const players = mockedStateWithPlayers.players
       .concat([
         {
           id: "3",
@@ -87,7 +94,7 @@ describe("Scoring", () => {
         return player;
       });
     const teamState: GameState = {
-      ...initialState,
+      ...mockedStateWithPlayers,
       players,
       scores: { type: "individual", values: {} },
       dealer: "1",

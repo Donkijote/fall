@@ -1,4 +1,7 @@
-import { initialState } from "@/application/store/gameStore";
+import {
+  initialState,
+  mockedStateWithPlayers,
+} from "@/application/store/gameStore";
 import type { GameState } from "@/domain/entities/GameState";
 
 import { resolveHands } from "./resolveHands";
@@ -11,7 +14,10 @@ describe("Resolve Hands", () => {
     expect(newState).toStrictEqual(state);
   });
   it("should return same state if less than 3 cards in players hands", () => {
-    const state: GameState = { ...initialState, phase: "announceSings" };
+    const state: GameState = {
+      ...mockedStateWithPlayers,
+      phase: "announceSings",
+    };
     state.players[0].hand = [
       {
         suit: "golds",
@@ -23,7 +29,10 @@ describe("Resolve Hands", () => {
     expect(newState).toStrictEqual(state);
   });
   it("should resolve simple best hand", () => {
-    const state: GameState = { ...initialState, phase: "announceSings" };
+    const state: GameState = {
+      ...mockedStateWithPlayers,
+      phase: "announceSings",
+    };
     state.players[0].hand = [
       {
         suit: "golds",
@@ -57,7 +66,10 @@ describe("Resolve Hands", () => {
     expect(newState.scores.values[state.players[0].id]).toBeGreaterThan(0);
   });
   it("should resolve tie best hand by higher rank", () => {
-    const state: GameState = { ...initialState, phase: "announceSings" };
+    const state: GameState = {
+      ...mockedStateWithPlayers,
+      phase: "announceSings",
+    };
     state.players[0].hand = [
       {
         suit: "golds",
@@ -93,7 +105,7 @@ describe("Resolve Hands", () => {
   });
   it("should resolve tie best hand by dealers right", () => {
     const state: GameState = {
-      ...initialState,
+      ...mockedStateWithPlayers,
       phase: "announceSings",
       dealer: "2",
     };
@@ -147,8 +159,8 @@ describe("Resolve Hands", () => {
     });
 
     const newState = resolveHands(state);
-    expect(newState.scores.values[state.players[0].id]).toBeUndefined();
+    expect(newState.scores.values[state.players[0].id]).toBeGreaterThan(0);
     expect(newState.scores.values[state.players[1].id]).toBeUndefined();
-    expect(newState.scores.values[state.players[2].id]).toBeGreaterThan(0);
+    expect(newState.scores.values[state.players[2].id]).toBeUndefined();
   });
 });

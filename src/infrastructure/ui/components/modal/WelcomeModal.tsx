@@ -17,7 +17,7 @@ export const WelcomeModal = () => {
 
     const user: User = {
       id: uuidv4(),
-      name: "",
+      name: username.trim(),
       username: username.trim(),
       email: "",
       avatar: "",

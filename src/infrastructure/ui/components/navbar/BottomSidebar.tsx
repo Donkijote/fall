@@ -1,9 +1,18 @@
 import { clsx } from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
+import { useNavigate } from "react-router";
 
-import OneVsOne from "@/assets/lobby/1vs1.png";
-import OneVsOneVsOne from "@/assets/lobby/1vs1vs1.png";
-import TwoVsTwo from "@/assets/lobby/2vs2.png";
+import { useGameStoreService } from "@/application/hooks/useGameStoreService";
+import {
+  StorageKeys,
+  StorageService,
+} from "@/application/services/StorageService";
+import OneVsOne from "@/assets/lobby/1vs1.webp";
+import OneVsOneVsOne from "@/assets/lobby/1vs2.webp";
+import TwoVsTwo from "@/assets/lobby/2vs2.webp";
+import type { GameMode } from "@/domain/entities/GameState";
+import type { User } from "@/domain/entities/User";
+import { GAME_PATH } from "@/routes/Routes";
 
 import { faClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,30 +22,43 @@ type BottomSidebarProps = {
   onClose: () => void;
 };
 
+const gameModes = [
+  {
+    id: "1vs1" as GameMode,
+    title: "1 vs 1",
+    description: "Classic duel",
+    bg: OneVsOne,
+    hover: "from-accent-gold/40 to-yellow-500/40",
+  },
+  {
+    id: "1vs2" as GameMode,
+    title: "1 vs 2",
+    description: "Battle royale style",
+    bg: OneVsOneVsOne,
+    hover: "from-accent-red/40 to-red-500/40",
+  },
+  {
+    id: "2vs2" as GameMode,
+    title: "2 vs 2",
+    description: "Team match",
+    bg: TwoVsTwo,
+    hover: "from-accent-blue to-blue-500/40",
+  },
+];
+
 export const BottomSidebar = ({ isOpen, onClose }: BottomSidebarProps) => {
-  const gameModes = [
-    {
-      id: "1v1",
-      title: "1 vs 1",
-      description: "Classic duel",
-      bg: OneVsOne,
-      hover: "from-accent-gold/40 to-yellow-500/40",
-    },
-    {
-      id: "1v1v1",
-      title: "1 vs 2",
-      description: "Battle royale style",
-      bg: OneVsOneVsOne,
-      hover: "from-accent-red/40 to-red-500/40",
-    },
-    {
-      id: "2v2",
-      title: "2 vs 2",
-      description: "Team match",
-      bg: TwoVsTwo,
-      hover: "from-accent-blue to-blue-500/40",
-    },
-  ];
+  const gameStoreService = useGameStoreService();
+  const navigate = useNavigate();
+
+  const onSelectGameMode = (gameMode: GameMode) => {
+    const storeUserKey = StorageService.get(StorageKeys.FALL_USER);
+    if (!storeUserKey) {
+      throw new Error("User not found in storage");
+    }
+    const parsedUser = JSON.parse(storeUserKey) as User;
+    gameStoreService.setupGame(parsedUser.id, gameMode);
+    navigate(GAME_PATH);
+  };
 
   return (
     <AnimatePresence>
@@ -65,6 +87,7 @@ export const BottomSidebar = ({ isOpen, onClose }: BottomSidebarProps) => {
                 className={clsx(
                   "group border-white/20 shadow-lg relative flex-1 cursor-pointer overflow-hidden border-r last:border-r-0",
                 )}
+                onClick={() => onSelectGameMode(mode.id)}
               >
                 <div
                   className="inset-0 absolute bg-cover bg-center bg-no-repeat transition-transform duration-500 group-hover:scale-110 group-active:scale-110"

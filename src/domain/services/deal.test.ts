@@ -1,18 +1,23 @@
 import { expect } from "vitest";
 
-import { initialState } from "@/application/store/gameStore";
+import { mockedStateWithPlayers } from "@/application/store/gameStore";
 import { createDeck } from "@/domain/rules/deck";
 
 import { applyTablePatternBonus, chooseDealer, dealRound } from "./deal";
 
+const stateWithDealer = {
+  ...mockedStateWithPlayers,
+  dealer: mockedStateWithPlayers.players[0].id,
+};
+
 describe("Deal", () => {
   it("should choose dealer", () => {
-    const dealer = chooseDealer(initialState);
+    const dealer = chooseDealer(stateWithDealer);
     expect(dealer.dealer).toBeDefined();
     expect(dealer.phase).toBe("dealerChoice");
   });
   it("should deal table when isDealerFirstDeal is true and players first", () => {
-    const state = chooseDealer(initialState);
+    const state = chooseDealer(stateWithDealer);
     const result = dealRound(state, { isDealerFirstDeal: true });
     expect(result.table.length).toBe(4);
     for (const p of result.players) {
@@ -20,7 +25,7 @@ describe("Deal", () => {
     }
   });
   it("should deal table when isDealerFirstDeal is true and table first", () => {
-    const state = chooseDealer(initialState);
+    const state = chooseDealer(stateWithDealer);
     const deckWithDuplicatedCard = [...state.deck];
     deckWithDuplicatedCard.unshift(deckWithDuplicatedCard[0]);
     const result = dealRound(
@@ -37,7 +42,7 @@ describe("Deal", () => {
     }
   });
   it("should deal only players", () => {
-    const state = chooseDealer(initialState);
+    const state = chooseDealer(stateWithDealer);
     const result = dealRound(state, {
       isDealerFirstDeal: false,
     });
@@ -49,18 +54,18 @@ describe("Deal", () => {
   it("should apply table bonus", () => {
     const deck = createDeck();
     const state = applyTablePatternBonus(
-      { ...initialState, dealer: initialState.players[0].id },
+      stateWithDealer,
       [deck[0], deck[1], deck[2], deck[3]],
       "inc",
     );
 
     expect(state).toStrictEqual({
-      ...initialState,
-      dealer: initialState.players[0].id,
+      ...stateWithDealer,
+      dealer: stateWithDealer.players[0].id,
       scores: {
         type: "individual",
         values: {
-          [initialState.players[0].id]: 10,
+          [stateWithDealer.players[0].id]: 10,
         },
       },
     });
