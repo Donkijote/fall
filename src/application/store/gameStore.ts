@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 import type { GameState } from "@/domain/entities/GameState";
 
-import { createGameService } from "../GameService";
+import { createGameService } from "../services/GameService";
 
 export const initialState: GameState = {
   players: [
