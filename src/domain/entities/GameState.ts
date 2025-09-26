@@ -22,7 +22,7 @@ export interface Player {
 
 export type DealOrder = "playersThenTable" | "tableThenPlayers";
 export type TablePattern = "inc" | "dec";
-export type GameMode = "1v1" | "1v2" | "2v2";
+export type GameMode = "1vs1" | "1vs2" | "2vs2";
 
 export interface GameConfig {
   allowOptional: boolean;

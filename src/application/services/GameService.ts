@@ -15,21 +15,21 @@ export function createGameService(
       if (state.phase !== "init") return;
       const players = [mainPlayerId];
 
-      if (gameMode === "1v1") {
+      if (gameMode === "1vs1") {
         if (useBots) {
           players.push("bot-1");
         } else {
           // TODO: handle waiting for another human player
         }
       }
-      if (gameMode === "1v2") {
+      if (gameMode === "1vs2") {
         if (useBots) {
           players.push("bot-1", "bot-2");
         } else {
           // TODO: handle waiting for another human player
         }
       }
-      if (gameMode === "2v2") {
+      if (gameMode === "2vs2") {
         if (useBots) {
           players.push("bot-1", "bot-2", "bot-3");
         } else {
@@ -37,7 +37,7 @@ export function createGameService(
         }
       }
 
-      const isTeamPlay = gameMode === "2v2" && players.length === 4;
+      const isTeamPlay = gameMode === "2vs2" && players.length === 4;
       const playersConfig: Array<Player> = players.map((id, index) => ({
         id,
         hand: [],

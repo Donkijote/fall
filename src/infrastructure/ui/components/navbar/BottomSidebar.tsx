@@ -1,5 +1,6 @@
 import { clsx } from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
+import { useNavigate } from "react-router";
 
 import { useGameStoreService } from "@/application/hooks/useGameStoreService";
 import {
@@ -11,6 +12,7 @@ import OneVsOneVsOne from "@/assets/lobby/1vs2.webp";
 import TwoVsTwo from "@/assets/lobby/2vs2.webp";
 import type { GameMode } from "@/domain/entities/GameState";
 import type { User } from "@/domain/entities/User";
+import { GAME_PATH } from "@/routes/Routes";
 
 import { faClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -29,14 +31,14 @@ const gameModes = [
     hover: "from-accent-gold/40 to-yellow-500/40",
   },
   {
-    id: "1v2" as GameMode,
+    id: "1vs2" as GameMode,
     title: "1 vs 2",
     description: "Battle royale style",
     bg: OneVsOneVsOne,
     hover: "from-accent-red/40 to-red-500/40",
   },
   {
-    id: "2v2" as GameMode,
+    id: "2vs2" as GameMode,
     title: "2 vs 2",
     description: "Team match",
     bg: TwoVsTwo,
@@ -46,6 +48,7 @@ const gameModes = [
 
 export const BottomSidebar = ({ isOpen, onClose }: BottomSidebarProps) => {
   const gameStoreService = useGameStoreService();
+  const navigate = useNavigate();
 
   const onSelectGameMode = (gameMode: GameMode) => {
     const storeUserKey = StorageService.get(StorageKeys.FALL_USER);
@@ -54,6 +57,7 @@ export const BottomSidebar = ({ isOpen, onClose }: BottomSidebarProps) => {
     }
     const parsedUser = JSON.parse(storeUserKey) as User;
     gameStoreService.setupGame(parsedUser.id, gameMode);
+    navigate(GAME_PATH);
   };
 
   return (
