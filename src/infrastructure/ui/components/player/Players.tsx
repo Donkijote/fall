@@ -6,7 +6,8 @@ import { Card } from "@/infrastructure/ui/components/card/Card";
 import { CollectedCard } from "@/infrastructure/ui/components/player/CollectedCard";
 
 export const Players = () => {
-  const { players, dealer, currentPlayer, deck } = useGameStoreState();
+  const { players, dealer, deck, mainPlayer, currentPlayer } =
+    useGameStoreState();
   const { playCard } = useGameStoreService();
 
   return (
@@ -41,19 +42,18 @@ export const Players = () => {
                     rank={card.rank}
                     suit={card.suit}
                     onClick={() => playCard(player.id, cIndex)}
-                    disabled={player.id !== currentPlayer}
-                    faceDown={player.id !== currentPlayer}
-                    className={clsx(
-                      player.id === currentPlayer ? "cursor-pointer" : "",
-                      {
-                        "group-[.isTop]:mb-4 group-[.isBottom]:mt-4 group-[.isLeft]:mt-4 group-[.isRight]:mb-4 group-[.isBottom]:-rotate-14 group-[.isLeft]:-rotate-14 group-[.isRight]:rotate-14 group-[.isTop]:rotate-14":
-                          cIndex === 0,
-                        "group-[.isTop]:mt-4 group-[.isBottom]:mb-4 group-[.isLeft]:mb-4 group-[.isRight]:mt-4":
-                          cIndex === 1,
-                        "group-[.isTop]:mb-4 group-[.isBottom]:mt-4 group-[.isLeft]:mt-4 group-[.isRight]:mb-4 group-[.isBottom]:rotate-14 group-[.isLeft]:rotate-14 group-[.isRight]:-rotate-14 group-[.isTop]:-rotate-14":
-                          cIndex === 2,
-                      },
-                    )}
+                    disabled={currentPlayer !== mainPlayer}
+                    faceDown={player.id !== mainPlayer}
+                    className={clsx({
+                      "cursor-pointer":
+                        player.id === mainPlayer && currentPlayer === player.id,
+                      "group-[.isTop]:mb-4 group-[.isBottom]:mt-4 group-[.isLeft]:mt-4 group-[.isRight]:mb-4 group-[.isBottom]:-rotate-14 group-[.isLeft]:-rotate-14 group-[.isRight]:rotate-14 group-[.isTop]:rotate-14":
+                        cIndex === 0,
+                      "group-[.isTop]:mt-4 group-[.isBottom]:mb-4 group-[.isLeft]:mb-4 group-[.isRight]:mt-4":
+                        cIndex === 1,
+                      "group-[.isTop]:mb-4 group-[.isBottom]:mt-4 group-[.isLeft]:mt-4 group-[.isRight]:mb-4 group-[.isBottom]:rotate-14 group-[.isLeft]:rotate-14 group-[.isRight]:-rotate-14 group-[.isTop]:-rotate-14":
+                        cIndex === 2,
+                    })}
                   />
                 ))}
               </div>
