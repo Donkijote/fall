@@ -295,7 +295,7 @@ describe("Game Service", () => {
 
     expect(mockSetState).not.toHaveBeenCalled();
   });
-  it("should be bot's turn", async () => {
+  it("should be bot's turn", () => {
     vi.useFakeTimers({ shouldAdvanceTime: true });
     const deck = createDeck();
     const state: GameState = JSON.parse(
@@ -323,5 +323,43 @@ describe("Game Service", () => {
     ).playBotTurn(mockedStateWithPlayers.players[1].id);
 
     expect(mockSetState).not.toHaveBeenCalled();
+  });
+  it("should be bot's dealer choose", () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    createGameService(
+      vi.fn().mockReturnValue({
+        ...mockedStateWithPlayers,
+        dealer: mockedStateWithPlayers.players[1].id,
+        phase: "dealerChoice",
+      }),
+      mockSetState,
+    ).botDealerChoose(mockedStateWithPlayers.players[1].id);
+
+    vi.advanceTimersByTime(1000);
+
+    expect(mockSetState).toHaveBeenCalledWith({
+      ...mockedStateWithPlayers,
+      deck: expect.any(Array),
+      players: expect.arrayContaining([
+        expect.objectContaining({
+          ...mockedStateWithPlayers.players[0],
+          hand: expect.any(Array),
+        }),
+        expect.objectContaining({
+          ...mockedStateWithPlayers.players[1],
+          hand: expect.any(Array),
+        }),
+      ]),
+      table: expect.any(Array),
+      currentPlayer: expect.any(String),
+      scores: expect.any(Object),
+      dealer: mockedStateWithPlayers.players[1].id,
+      phase: "announceSings",
+      config: {
+        ...mockedStateWithPlayers.config,
+        tablePattern: expect.any(String),
+        dealOrder: expect.any(String),
+      },
+    });
   });
 });

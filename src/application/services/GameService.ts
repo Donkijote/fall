@@ -15,6 +15,13 @@ export function createGameService(
     if (nextState?.currentPlayer?.startsWith("bot-")) {
       api.playBotTurn(nextState.currentPlayer);
     }
+
+    if (
+      nextState.phase === "dealerChoice" &&
+      nextState.dealer?.startsWith("bot-")
+    ) {
+      api.botDealerChoose(nextState.dealer);
+    }
   }
 
   const api = {
@@ -141,6 +148,26 @@ export function createGameService(
         if (newState.currentPlayer === botId) {
           api.playCard(botId, randomIndex);
         }
+      }, 1000);
+    },
+
+    botDealerChoose: (botId: string) => {
+      const state = getState();
+      if (state.phase !== "dealerChoice" || state.dealer !== botId) return;
+
+      const dealOrders: Array<"playersThenTable" | "tableThenPlayers"> = [
+        "playersThenTable",
+        "tableThenPlayers",
+      ];
+      const tablePatterns: Array<"inc" | "dec"> = ["inc", "dec"];
+
+      const randomOrder =
+        dealOrders[Math.floor(Math.random() * dealOrders.length)];
+      const randomPattern =
+        tablePatterns[Math.floor(Math.random() * tablePatterns.length)];
+
+      setTimeout(() => {
+        api.dealerChoose(randomOrder, randomPattern);
       }, 1000);
     },
   };
