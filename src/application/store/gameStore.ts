@@ -23,7 +23,7 @@ export const initialState: GameState = {
   ],
   table: [],
   deck: [],
-  phase: "deal",
+  phase: "init",
   dealer: "",
   currentPlayer: "",
   scores: { type: "individual", values: {} },
@@ -44,7 +44,7 @@ export type GameStore = {
 
 export const useGameStore = create<GameStore>((set, get) => {
   const setState = (s: GameState) => set({ state: s });
-  const service = createGameService(() => get().state as GameState, setState);
+  const service = createGameService(() => get().state, setState);
 
   return {
     state: initialState,

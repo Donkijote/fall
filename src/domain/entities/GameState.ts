@@ -3,6 +3,7 @@ import type { User } from "@/domain/entities/User";
 import type { Card } from "./Card";
 
 export type Phase =
+  | "init"
   | "chooseDealer"
   | "dealerChoice"
   | "deal"
