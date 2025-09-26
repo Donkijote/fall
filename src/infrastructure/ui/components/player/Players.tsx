@@ -4,9 +4,10 @@ import { useGameStoreService } from "@/application/hooks/useGameStoreService";
 import { useGameStoreState } from "@/application/hooks/useGameStoreState";
 import { Card } from "@/infrastructure/ui/components/card/Card";
 import { CollectedCard } from "@/infrastructure/ui/components/player/CollectedCard";
+import { PlayerChip } from "@/infrastructure/ui/components/player/PlayerChip";
 
 export const Players = () => {
-  const { players, dealer, deck, mainPlayer, currentPlayer } =
+  const { players, dealer, deck, mainPlayer, currentPlayer, scores } =
     useGameStoreState();
   const { playCard } = useGameStoreService();
 
@@ -25,10 +26,13 @@ export const Players = () => {
               }
             >
               <div className={clsx("absolute", positions.dealerBadge)}>
-                <div className={"flex w-full flex-row"}>
-                  <p className={"w-full text-center"}>{player.id}</p>
-                  {player.id === dealer && <p className={"self-end"}>D!</p>}
-                </div>
+                <PlayerChip
+                  name={player.id}
+                  score={scores.values}
+                  team={player.team}
+                  isMainPlayer={player.id === mainPlayer}
+                  isDealer={player.id === dealer}
+                />
               </div>
               <div
                 className={clsx(
