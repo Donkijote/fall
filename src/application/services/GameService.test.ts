@@ -18,11 +18,57 @@ describe("Game Service", () => {
     createGameService(
       vi.fn().mockReturnValue(mockedState),
       mockSetState,
-    ).setupGame("1", "1v1");
+    ).setupGame("1", "1vs1");
 
     expect(mockSetState).toHaveBeenCalledWith({
       ...mockedStateWithPlayers,
       phase: "deal",
+    });
+  });
+  it("should setup game 1vs2", () => {
+    createGameService(
+      vi.fn().mockReturnValue(mockedState),
+      mockSetState,
+    ).setupGame("1", "1vs2");
+
+    const players = [...mockedStateWithPlayers.players];
+    players.push({
+      ...mockedStateWithPlayers.players[0],
+      id: "bot-2",
+      team: 3,
+    });
+
+    expect(mockSetState).toHaveBeenCalledWith({
+      ...mockedStateWithPlayers,
+      phase: "deal",
+      players,
+    });
+  });
+  it("should setup game 2vs2", () => {
+    createGameService(
+      vi.fn().mockReturnValue(mockedState),
+      mockSetState,
+    ).setupGame("1", "2vs2");
+
+    const players = [...mockedStateWithPlayers.players];
+    players.push(
+      {
+        ...mockedStateWithPlayers.players[0],
+        id: "bot-2",
+        team: 1,
+      },
+      {
+        ...mockedStateWithPlayers.players[0],
+        id: "bot-3",
+        team: 2,
+      },
+    );
+
+    expect(mockSetState).toHaveBeenCalledWith({
+      ...mockedStateWithPlayers,
+      phase: "deal",
+      players,
+      scores: { type: "team", values: {} },
     });
   });
   it("should start game", () => {
@@ -246,6 +292,35 @@ describe("Game Service", () => {
       }),
       mockSetState,
     ).endRound();
+
+    expect(mockSetState).not.toHaveBeenCalled();
+  });
+  it("should be bot's turn", async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    const deck = createDeck();
+    const state: GameState = JSON.parse(
+      JSON.stringify({
+        ...mockedStateWithPlayers,
+        phase: "play",
+        deck,
+        currentPlayer: mockedStateWithPlayers.players[1].id,
+      }),
+    );
+    state.players[1].hand = [deck[5], deck[7], deck[1]];
+
+    createGameService(vi.fn().mockReturnValue(state), mockSetState).playBotTurn(
+      mockedStateWithPlayers.players[1].id,
+    );
+
+    vi.advanceTimersByTime(1000);
+
+    expect(mockSetState).toHaveBeenCalled();
+  });
+  it("should not be bot's turn because empty hand", () => {
+    createGameService(
+      vi.fn().mockReturnValue(mockedStateWithPlayers),
+      mockSetState,
+    ).playBotTurn(mockedStateWithPlayers.players[1].id);
 
     expect(mockSetState).not.toHaveBeenCalled();
   });
