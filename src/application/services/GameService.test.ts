@@ -1,6 +1,6 @@
 import { afterEach, expect } from "vitest";
 
-import { createGameService } from "@/application/GameService";
+import { createGameService } from "@/application/services/GameService";
 import { initialState } from "@/application/store/gameStore";
 import type { GameState } from "@/domain/entities/GameState";
 import { createDeck } from "@/domain/rules/deck";

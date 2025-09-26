@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 import type { GameState } from "@/domain/entities/GameState";
 
-import { createGameService } from "../GameService";
+import { createGameService } from "../services/GameService";
 
 export const initialState: GameState = {
   players: [
@@ -44,7 +44,7 @@ export type GameStore = {
 
 export const useGameStore = create<GameStore>((set, get) => {
   const setState = (s: GameState) => set({ state: s });
-  const service = createGameService(() => get().state as GameState, setState);
+  const service = createGameService(() => get().state, setState);
 
   return {
     state: initialState,

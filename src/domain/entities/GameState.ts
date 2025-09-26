@@ -1,8 +1,9 @@
+import type { User } from "@/domain/entities/User";
+
 import type { Card } from "./Card";
 
-export type PlayerId = string;
-
 export type Phase =
+  | "init"
   | "chooseDealer"
   | "dealerChoice"
   | "deal"
@@ -12,7 +13,7 @@ export type Phase =
   | "gameOver";
 
 export interface Player {
-  id: PlayerId;
+  id: User["id"];
   hand: Card[];
   collected: Card[];
   score: number;
@@ -35,10 +36,11 @@ export interface GameState {
   players: Player[];
   table: Card[];
   deck: Card[];
+  mainPlayer?: User;
   lastPlayedCard?: Card;
   phase: Phase;
-  dealer: PlayerId;
-  currentPlayer: PlayerId;
+  dealer: User["id"];
+  currentPlayer: User["id"];
   scores: {
     type: "individual" | "team";
     values: Record<string, number>;
