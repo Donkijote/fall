@@ -23,7 +23,7 @@ export const initialState: GameState = {
   ],
   table: [],
   deck: [],
-  phase: "init",
+  phase: "deal",
   dealer: "",
   currentPlayer: "",
   scores: { type: "individual", values: {} },
