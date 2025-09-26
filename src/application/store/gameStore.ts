@@ -5,25 +5,10 @@ import type { GameState } from "@/domain/entities/GameState";
 import { createGameService } from "../services/GameService";
 
 export const initialState: GameState = {
-  players: [
-    {
-      id: "1",
-      hand: [],
-      collected: [],
-      score: 0,
-      team: 1,
-    },
-    {
-      id: "2",
-      hand: [],
-      collected: [],
-      score: 0,
-      team: 2,
-    },
-  ],
+  players: [],
   table: [],
   deck: [],
-  phase: "deal",
+  phase: "init",
   dealer: "",
   currentPlayer: "",
   scores: { type: "individual", values: {} },

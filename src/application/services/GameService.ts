@@ -12,17 +12,19 @@ export function createGameService(
   return {
     setupGame: (players: Array<string>) => {
       const state = getState();
+      if (state.phase !== "init") return;
       const isTeamPlay = players.length === 4;
       const playersConfig: Array<Player> = players.map((id, index) => ({
         id,
         hand: [],
         collected: [],
         score: 0,
-        team: isTeamPlay ? (players.indexOf(id) % 2) + 1 : index,
+        team: isTeamPlay ? (players.indexOf(id) % 2) + 1 : index + 1,
       }));
 
       const nextState: GameState = {
         ...state,
+        phase: "deal",
         players: playersConfig,
         scores: isTeamPlay ? { type: "team", values: {} } : state.scores,
       };
