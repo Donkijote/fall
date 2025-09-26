@@ -36,8 +36,9 @@ export const GameScreen = () => {
           <div className={"gap-2 flex flex-col items-center"}>
             <span>Score</span>
             <span>
-              Team 1: {state.scores.values[1]} vs Team 2:{" "}
-              {state.scores.values[2]}
+              Team 1: {state.scores.values[Object.keys(state.scores.values)[0]]}{" "}
+              vs Team 2:{" "}
+              {state.scores.values[Object.keys(state.scores.values)[1]]}
             </span>
           </div>
           <div className={"gap-2 flex"}>
