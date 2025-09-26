@@ -2,6 +2,10 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
+import {
+  StorageKeys,
+  StorageService,
+} from "@/application/services/StorageService";
 import type { User } from "@/domain/entities/User";
 
 export const WelcomeModal = () => {
@@ -11,7 +15,6 @@ export const WelcomeModal = () => {
   const handleSave = () => {
     if (!username.trim()) return;
 
-    // Create a proper User object
     const user: User = {
       id: uuidv4(),
       name: "",
@@ -20,14 +23,12 @@ export const WelcomeModal = () => {
       avatar: "",
     };
 
-    // Save to localStorage
-    localStorage.setItem("fallUser", JSON.stringify(user));
+    StorageService.set(StorageKeys.FALL_USER, user);
     setIsOpen(false);
   };
 
-  // Check for stored user on mount
   useEffect(() => {
-    const stored = localStorage.getItem("fallUser");
+    const stored = StorageService.get(StorageKeys.FALL_USER);
     if (!stored) {
       setIsOpen(true);
     }

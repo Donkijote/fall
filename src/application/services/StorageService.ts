@@ -1,5 +1,5 @@
 export const StorageKeys = {
-  USER: "FALL_USER",
+  FALL_USER: "FALL_USER",
 } as const;
 
 export const StorageService = {
