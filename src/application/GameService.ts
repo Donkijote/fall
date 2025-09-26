@@ -1,5 +1,5 @@
 import type { Card } from "@/domain/entities/Card";
-import type { GameState } from "@/domain/entities/GameState";
+import type { GameState, Player } from "@/domain/entities/GameState";
 import { chooseDealer, dealRound } from "@/domain/services/deal";
 import { playCard as domainPlayCard } from "@/domain/services/moves";
 import { resolveHands } from "@/domain/services/resolveHands";
@@ -10,6 +10,26 @@ export function createGameService(
   setState: (s: GameState) => void,
 ) {
   return {
+    setupGame: (players: Array<string>) => {
+      const state = getState();
+      const isTeamPlay = players.length === 4;
+      const playersConfig: Array<Player> = players.map((id, index) => ({
+        id,
+        hand: [],
+        collected: [],
+        score: 0,
+        team: isTeamPlay ? (players.indexOf(id) % 2) + 1 : index,
+      }));
+
+      const nextState: GameState = {
+        ...state,
+        players: playersConfig,
+        scores: isTeamPlay ? { type: "team", values: {} } : state.scores,
+      };
+
+      setState(nextState);
+    },
+
     startGame: () => {
       const state = getState();
       if (state.phase !== "deal") return;
