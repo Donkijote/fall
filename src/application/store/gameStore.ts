@@ -10,6 +10,7 @@ export const mockedState: GameState = {
   deck: [],
   phase: "init",
   dealer: "",
+  mainPlayer: "",
   currentPlayer: "",
   scores: { type: "individual", values: {} },
   config: {
@@ -24,13 +25,14 @@ export const mockedState: GameState = {
 
 export const mockedStateWithPlayers: GameState = {
   ...mockedState,
-  players: ["1", "2"].map((id, index) => ({
+  players: ["1", "bot-1"].map((id, index) => ({
     id,
     hand: [],
     collected: [],
     score: 0,
     team: index + 1,
   })),
+  mainPlayer: "1",
 };
 
 export const initialState: GameState = {
@@ -40,6 +42,7 @@ export const initialState: GameState = {
   phase: "init",
   dealer: "",
   currentPlayer: "",
+  mainPlayer: "",
   scores: { type: "individual", values: {} },
   config: {
     allowOptional: true,

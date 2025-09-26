@@ -159,8 +159,8 @@ describe("Resolve Hands", () => {
     });
 
     const newState = resolveHands(state);
-    expect(newState.scores.values[state.players[0].id]).toBeUndefined();
+    expect(newState.scores.values[state.players[0].id]).toBeGreaterThan(0);
     expect(newState.scores.values[state.players[1].id]).toBeUndefined();
-    expect(newState.scores.values[state.players[2].id]).toBeGreaterThan(0);
+    expect(newState.scores.values[state.players[2].id]).toBeUndefined();
   });
 });

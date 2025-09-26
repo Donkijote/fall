@@ -22,6 +22,7 @@ export interface Player {
 
 export type DealOrder = "playersThenTable" | "tableThenPlayers";
 export type TablePattern = "inc" | "dec";
+export type GameMode = "1v1" | "1v2" | "2v2";
 
 export interface GameConfig {
   allowOptional: boolean;
@@ -36,7 +37,7 @@ export interface GameState {
   players: Player[];
   table: Card[];
   deck: Card[];
-  mainPlayer?: User;
+  mainPlayer: User["id"];
   lastPlayedCard?: Card;
   phase: Phase;
   dealer: User["id"];

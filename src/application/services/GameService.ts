@@ -1,5 +1,5 @@
 import type { Card } from "@/domain/entities/Card";
-import type { GameState, Player } from "@/domain/entities/GameState";
+import type { GameMode, GameState, Player } from "@/domain/entities/GameState";
 import { chooseDealer, dealRound } from "@/domain/services/deal";
 import { playCard as domainPlayCard } from "@/domain/services/moves";
 import { resolveHands } from "@/domain/services/resolveHands";
@@ -10,10 +10,34 @@ export function createGameService(
   setState: (s: GameState) => void,
 ) {
   return {
-    setupGame: (players: Array<string>) => {
+    setupGame: (mainPlayerId: string, gameMode: GameMode, useBots = true) => {
       const state = getState();
       if (state.phase !== "init") return;
-      const isTeamPlay = players.length === 4;
+      const players = [mainPlayerId];
+
+      if (gameMode === "1v1") {
+        if (useBots) {
+          players.push("bot-1");
+        } else {
+          // TODO: handle waiting for another human player
+        }
+      }
+      if (gameMode === "1v2") {
+        if (useBots) {
+          players.push("bot-1", "bot-2");
+        } else {
+          // TODO: handle waiting for another human player
+        }
+      }
+      if (gameMode === "2v2") {
+        if (useBots) {
+          players.push("bot-1", "bot-2", "bot-3");
+        } else {
+          // TODO: handle waiting for another human player
+        }
+      }
+
+      const isTeamPlay = gameMode === "2v2" && players.length === 4;
       const playersConfig: Array<Player> = players.map((id, index) => ({
         id,
         hand: [],
@@ -27,6 +51,7 @@ export function createGameService(
         phase: "deal",
         players: playersConfig,
         scores: isTeamPlay ? { type: "team", values: {} } : state.scores,
+        mainPlayer: mainPlayerId,
       };
 
       setState(nextState);

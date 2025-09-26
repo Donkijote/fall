@@ -18,7 +18,7 @@ describe("Game Service", () => {
     createGameService(
       vi.fn().mockReturnValue(mockedState),
       mockSetState,
-    ).setupGame(["1", "2"]);
+    ).setupGame("1", "1v1");
 
     expect(mockSetState).toHaveBeenCalledWith({
       ...mockedStateWithPlayers,
