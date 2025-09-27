@@ -9,31 +9,17 @@ export function awardPoints(
 ): GameState {
   if (pts <= 0) return state;
 
-  if (state.scores.type === "team") {
-    const player = state.players.find((p) => p.id === playerId);
-    if (player?.team === undefined || player?.team === null) return state;
+  const player = state.players.find((p) => p.id === playerId);
+  if (player?.team === undefined || player?.team === null) return state;
 
-    const teamKey = String(player.team);
-    return {
-      ...state,
-      scores: {
-        ...state.scores,
-        values: {
-          ...state.scores.values,
-          [teamKey]: (state.scores.values[teamKey] ?? 0) + pts,
-        },
-      },
-    };
-  }
-
-  // individual scoring
+  const teamKey = String(player.team);
   return {
     ...state,
     scores: {
       ...state.scores,
       values: {
         ...state.scores.values,
-        [playerId]: (state.scores.values[playerId] ?? 0) + pts,
+        [teamKey]: (state.scores.values[teamKey] ?? 0) + pts,
       },
     },
   };
