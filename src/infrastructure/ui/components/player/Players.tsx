@@ -159,7 +159,7 @@ const computePlayerItemsPositions = (
     positions.players["bottom-40"] = playerIndex === 0;
     positions.players["top-40"] = playerIndex === 1;
 
-    positions.dealerBadge["-bottom-10"] = playerIndex === 1;
+    positions.dealerBadge["-top-35"] = playerIndex === 1;
 
     positions.cardGroups["group isBottom"] = playerIndex === 0;
     positions.cardGroups["group isTop"] = playerIndex === 1;
@@ -173,11 +173,11 @@ const computePlayerItemsPositions = (
 
   if (threePlayerMode) {
     positions.players["bottom-40"] = playerIndex === 0;
-    positions.players["right-50 !w-0 top-[42%]"] = playerIndex === 1;
-    positions.players["left-50 !w-0 top-[42%]"] = playerIndex === 2;
+    positions.players["right-55 !w-0 top-[42%]"] = playerIndex === 1;
+    positions.players["left-55 !w-0 top-[42%]"] = playerIndex === 2;
 
-    positions.dealerBadge["right-30"] = playerIndex === 1;
-    positions.dealerBadge["left-30"] = playerIndex === 2;
+    positions.dealerBadge["-right-45"] = playerIndex === 1;
+    positions.dealerBadge["-left-45"] = playerIndex === 2;
 
     positions.cardGroups["group isBottom"] = playerIndex === 0;
     positions.cardGroups["group isRight"] = playerIndex === 1;
@@ -196,13 +196,13 @@ const computePlayerItemsPositions = (
 
   if (fourPlayerMode) {
     positions.players["bottom-40"] = playerIndex === 0;
-    positions.players["right-50 !w-0 top-[42%]"] = playerIndex === 1;
+    positions.players["right-55 !w-0 top-[42%]"] = playerIndex === 1;
     positions.players["top-40"] = playerIndex === 2;
-    positions.players["left-50 !w-0 top-[42%]"] = playerIndex === 3;
+    positions.players["left-55 !w-0 top-[42%]"] = playerIndex === 3;
 
-    positions.dealerBadge["right-30"] = playerIndex === 1;
-    positions.dealerBadge["-bottom-10"] = playerIndex === 2;
-    positions.dealerBadge["left-30"] = playerIndex === 3;
+    positions.dealerBadge["-right-45"] = playerIndex === 1;
+    positions.dealerBadge["-top-20"] = playerIndex === 2;
+    positions.dealerBadge["-left-45"] = playerIndex === 3;
 
     positions.cardGroups["group isBottom"] = playerIndex === 0;
     positions.cardGroups["group isRight"] = playerIndex === 1;
@@ -223,7 +223,7 @@ const computePlayerItemsPositions = (
   }
 
   // Dealer badge position
-  positions.dealerBadge["-top-10"] = playerIndex === 0;
+  positions.dealerBadge["-bottom-35"] = playerIndex === 0;
 
   // Card group orientation
   positions.cardGroups["rotate-90"] =
