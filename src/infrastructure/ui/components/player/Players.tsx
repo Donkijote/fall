@@ -4,12 +4,13 @@ import { useGameStoreService } from "@/application/hooks/useGameStoreService";
 import { useGameStoreState } from "@/application/hooks/useGameStoreState";
 import { Card } from "@/infrastructure/ui/components/card/Card";
 import { CollectedCard } from "@/infrastructure/ui/components/player/CollectedCard";
+import { DealerChoiceControls } from "@/infrastructure/ui/components/player/DealerChoiceControls";
 import { PlayerChip } from "@/infrastructure/ui/components/player/PlayerChip";
 
 export const Players = () => {
-  const { players, dealer, deck, mainPlayer, currentPlayer, scores } =
+  const { players, dealer, deck, mainPlayer, currentPlayer, scores, phase } =
     useGameStoreState();
-  const { playCard } = useGameStoreService();
+  const { playCard, dealerChoose } = useGameStoreService();
 
   return (
     <>
@@ -26,6 +27,16 @@ export const Players = () => {
               }
             >
               <div className={clsx("absolute", positions.dealerBadge)}>
+                <DealerChoiceControls
+                  isOpen={
+                    player.id === mainPlayer &&
+                    player.id === dealer &&
+                    phase === "dealerChoice"
+                  }
+                  onChoose={(dealOrder, tablePattern) =>
+                    dealerChoose(dealOrder, tablePattern)
+                  }
+                />
                 <PlayerChip
                   name={player.id}
                   score={scores.values}
