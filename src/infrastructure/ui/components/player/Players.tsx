@@ -1,19 +1,42 @@
 import { clsx } from "clsx";
+import { useMemo } from "react";
 
 import { useGameStoreService } from "@/application/hooks/useGameStoreService";
 import { useGameStoreState } from "@/application/hooks/useGameStoreState";
+import {
+  StorageKeys,
+  StorageService,
+} from "@/application/services/StorageService";
+import type { User } from "@/domain/entities/User";
 import { Card } from "@/infrastructure/ui/components/card/Card";
 import { CollectedCard } from "@/infrastructure/ui/components/player/CollectedCard";
+import { DealerChoiceControls } from "@/infrastructure/ui/components/player/DealerChoiceControls";
+import { PlayerChip } from "@/infrastructure/ui/components/player/PlayerChip";
 
 export const Players = () => {
-  const { players, dealer, deck, mainPlayer, currentPlayer } =
+  const { players, dealer, deck, mainPlayer, currentPlayer, scores, phase } =
     useGameStoreState();
-  const { playCard } = useGameStoreService();
+  const { playCard, dealerChoose } = useGameStoreService();
+
+  const storedUser = useMemo(() => {
+    const userStore = StorageService.get(StorageKeys.FALL_USER);
+    if (!userStore) return null;
+    try {
+      return JSON.parse(userStore) as User;
+    } catch {
+      return null;
+    }
+  }, []);
 
   return (
     <>
       {players.map((player, index) => {
         const positions = computePlayerItemsPositions(index, players.length);
+        const displayUserName =
+          player.id === storedUser?.id ? storedUser.username : player.id;
+        const avatar =
+          player.id === storedUser?.id ? storedUser.avatar : undefined;
+
         return (
           <div
             key={player.id}
@@ -25,10 +48,24 @@ export const Players = () => {
               }
             >
               <div className={clsx("absolute", positions.dealerBadge)}>
-                <div className={"flex w-full flex-row"}>
-                  <p className={"w-full text-center"}>{player.id}</p>
-                  {player.id === dealer && <p className={"self-end"}>D!</p>}
-                </div>
+                <DealerChoiceControls
+                  isOpen={
+                    player.id === mainPlayer &&
+                    player.id === dealer &&
+                    phase === "dealerChoice"
+                  }
+                  onChoose={(dealOrder, tablePattern) =>
+                    dealerChoose(dealOrder, tablePattern)
+                  }
+                />
+                <PlayerChip
+                  name={displayUserName}
+                  score={scores.values}
+                  team={player.team}
+                  isMainPlayer={player.id === mainPlayer}
+                  isDealer={player.id === dealer}
+                  avatar={avatar}
+                />
               </div>
               <div
                 className={clsx(
@@ -42,7 +79,10 @@ export const Players = () => {
                     rank={card.rank}
                     suit={card.suit}
                     onClick={() => playCard(player.id, cIndex)}
-                    disabled={currentPlayer !== mainPlayer}
+                    disabled={
+                      currentPlayer !== mainPlayer ||
+                      currentPlayer !== player.id
+                    }
                     faceDown={player.id !== mainPlayer}
                     className={clsx({
                       "cursor-pointer":
@@ -119,7 +159,7 @@ const computePlayerItemsPositions = (
     positions.players["bottom-40"] = playerIndex === 0;
     positions.players["top-40"] = playerIndex === 1;
 
-    positions.dealerBadge["-bottom-10"] = playerIndex === 1;
+    positions.dealerBadge["-top-35"] = playerIndex === 1;
 
     positions.cardGroups["group isBottom"] = playerIndex === 0;
     positions.cardGroups["group isTop"] = playerIndex === 1;
@@ -133,11 +173,11 @@ const computePlayerItemsPositions = (
 
   if (threePlayerMode) {
     positions.players["bottom-40"] = playerIndex === 0;
-    positions.players["right-50 !w-0 top-[42%]"] = playerIndex === 1;
-    positions.players["left-50 !w-0 top-[42%]"] = playerIndex === 2;
+    positions.players["right-55 !w-0 top-[42%]"] = playerIndex === 1;
+    positions.players["left-55 !w-0 top-[42%]"] = playerIndex === 2;
 
-    positions.dealerBadge["right-30"] = playerIndex === 1;
-    positions.dealerBadge["left-30"] = playerIndex === 2;
+    positions.dealerBadge["-right-45"] = playerIndex === 1;
+    positions.dealerBadge["-left-45"] = playerIndex === 2;
 
     positions.cardGroups["group isBottom"] = playerIndex === 0;
     positions.cardGroups["group isRight"] = playerIndex === 1;
@@ -156,13 +196,13 @@ const computePlayerItemsPositions = (
 
   if (fourPlayerMode) {
     positions.players["bottom-40"] = playerIndex === 0;
-    positions.players["right-50 !w-0 top-[42%]"] = playerIndex === 1;
+    positions.players["right-55 !w-0 top-[42%]"] = playerIndex === 1;
     positions.players["top-40"] = playerIndex === 2;
-    positions.players["left-50 !w-0 top-[42%]"] = playerIndex === 3;
+    positions.players["left-55 !w-0 top-[42%]"] = playerIndex === 3;
 
-    positions.dealerBadge["right-30"] = playerIndex === 1;
-    positions.dealerBadge["-bottom-10"] = playerIndex === 2;
-    positions.dealerBadge["left-30"] = playerIndex === 3;
+    positions.dealerBadge["-right-45"] = playerIndex === 1;
+    positions.dealerBadge["-top-20"] = playerIndex === 2;
+    positions.dealerBadge["-left-45"] = playerIndex === 3;
 
     positions.cardGroups["group isBottom"] = playerIndex === 0;
     positions.cardGroups["group isRight"] = playerIndex === 1;
@@ -183,7 +223,7 @@ const computePlayerItemsPositions = (
   }
 
   // Dealer badge position
-  positions.dealerBadge["-top-10"] = playerIndex === 0;
+  positions.dealerBadge["-bottom-35"] = playerIndex === 0;
 
   // Card group orientation
   positions.cardGroups["rotate-90"] =
