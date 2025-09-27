@@ -1,7 +1,13 @@
 import { clsx } from "clsx";
+import { useMemo } from "react";
 
 import { useGameStoreService } from "@/application/hooks/useGameStoreService";
 import { useGameStoreState } from "@/application/hooks/useGameStoreState";
+import {
+  StorageKeys,
+  StorageService,
+} from "@/application/services/StorageService";
+import type { User } from "@/domain/entities/User";
 import { Card } from "@/infrastructure/ui/components/card/Card";
 import { CollectedCard } from "@/infrastructure/ui/components/player/CollectedCard";
 import { DealerChoiceControls } from "@/infrastructure/ui/components/player/DealerChoiceControls";
@@ -12,10 +18,25 @@ export const Players = () => {
     useGameStoreState();
   const { playCard, dealerChoose } = useGameStoreService();
 
+  const storedUser = useMemo(() => {
+    const userStore = StorageService.get(StorageKeys.FALL_USER);
+    if (!userStore) return null;
+    try {
+      return JSON.parse(userStore) as User;
+    } catch {
+      return null;
+    }
+  }, []);
+
   return (
     <>
       {players.map((player, index) => {
         const positions = computePlayerItemsPositions(index, players.length);
+        const displayUserName =
+          player.id === storedUser?.id ? storedUser.username : player.id;
+        const avatar =
+          player.id === storedUser?.id ? storedUser.avatar : undefined;
+
         return (
           <div
             key={player.id}
@@ -38,11 +59,12 @@ export const Players = () => {
                   }
                 />
                 <PlayerChip
-                  name={player.id}
+                  name={displayUserName}
                   score={scores.values}
                   team={player.team}
                   isMainPlayer={player.id === mainPlayer}
                   isDealer={player.id === dealer}
+                  avatar={avatar}
                 />
               </div>
               <div
@@ -57,7 +79,10 @@ export const Players = () => {
                     rank={card.rank}
                     suit={card.suit}
                     onClick={() => playCard(player.id, cIndex)}
-                    disabled={currentPlayer !== mainPlayer}
+                    disabled={
+                      currentPlayer !== mainPlayer ||
+                      currentPlayer !== player.id
+                    }
                     faceDown={player.id !== mainPlayer}
                     className={clsx({
                       "cursor-pointer":
