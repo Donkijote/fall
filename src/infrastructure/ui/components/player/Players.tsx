@@ -1,4 +1,4 @@
-import { clsx } from "clsx";
+import clsx from "clsx";
 import { useMemo } from "react";
 
 import { useGameStoreService } from "@/application/hooks/useGameStoreService";
@@ -9,14 +9,20 @@ import {
 } from "@/application/services/StorageService";
 import type { User } from "@/domain/entities/User";
 import { Card } from "@/infrastructure/ui/components/card/Card";
-import { CollectedCard } from "@/infrastructure/ui/components/player/CollectedCard";
-import { DealerChoiceControls } from "@/infrastructure/ui/components/player/DealerChoiceControls";
-import { PlayerChip } from "@/infrastructure/ui/components/player/PlayerChip";
+
+import { CollectedCard } from "./CollectedCard";
+import { DealerChoiceControls } from "./DealerChoiceControls";
+import { PlayerChip } from "./PlayerChip";
 
 export const Players = () => {
-  const { players, dealer, deck, mainPlayer, currentPlayer, scores, phase } =
+  const { players, dealer, mainPlayer, currentPlayer, scores, phase, deck } =
     useGameStoreState();
   const { playCard, dealerChoose } = useGameStoreService();
+
+  const positions = useMemo(
+    () => computePlayerPositions(players.length),
+    [players.length],
+  );
 
   const storedUser = useMemo(() => {
     const userStore = StorageService.get(StorageKeys.FALL_USER);
@@ -31,7 +37,7 @@ export const Players = () => {
   return (
     <>
       {players.map((player, index) => {
-        const positions = computePlayerItemsPositions(index, players.length);
+        const pos = positions[index];
         const displayUserName =
           player.id === storedUser?.id ? storedUser.username : player.id;
         const avatar =
@@ -40,70 +46,58 @@ export const Players = () => {
         return (
           <div
             key={player.id}
-            className={clsx("absolute w-full", positions.players)}
+            className={clsx(
+              "absolute flex flex-col items-center",
+              pos.container,
+              "h-[20rem] w-[12rem]",
+            )}
+            style={{
+              transform: pos.rotation,
+              transformOrigin: "center center",
+            }}
           >
-            <div
-              className={
-                "gap-8 relative flex flex-col items-center justify-center"
-              }
-            >
-              <div className={clsx("absolute", positions.dealerBadge)}>
-                <DealerChoiceControls
-                  isOpen={
-                    player.id === mainPlayer &&
-                    player.id === dealer &&
-                    phase === "dealerChoice"
-                  }
-                  onChoose={(dealOrder, tablePattern) =>
-                    dealerChoose(dealOrder, tablePattern)
-                  }
-                />
-                <PlayerChip
-                  name={displayUserName}
-                  score={scores.values}
-                  team={player.team}
-                  isMainPlayer={player.id === mainPlayer}
-                  isDealer={player.id === dealer}
-                  avatar={avatar}
-                />
+            <div className="space-x-2 relative flex h-full w-full flex-row items-center justify-center">
+              <div className="space-x-2 flex flex-row items-center justify-center">
+                {player.hand.map((card, cIndex) => {
+                  const total = player.hand.length;
+                  const middle = (total - 1) / 2;
+
+                  const rotate = (cIndex - middle) * 10;
+                  const translateY = Math.abs(cIndex - middle) * 12;
+
+                  return (
+                    <Card
+                      key={card.suit + card.rank}
+                      rank={card.rank}
+                      suit={card.suit}
+                      onClick={() => {
+                        if (
+                          player.id !== mainPlayer &&
+                          currentPlayer !== player.id
+                        ) {
+                          return;
+                        }
+                        playCard(player.id, cIndex);
+                      }}
+                      disabled={
+                        currentPlayer !== mainPlayer || player.id !== mainPlayer
+                      }
+                      faceDown={player.id !== mainPlayer}
+                      style={{
+                        transform: `rotate(${rotate}deg) translateY(${translateY}px)`,
+                      }}
+                      className={clsx({
+                        "cursor-pointer":
+                          player.id === mainPlayer &&
+                          currentPlayer === player.id,
+                      })}
+                    />
+                  );
+                })}
               </div>
-              <div
-                className={clsx(
-                  "gap-4 relative flex flex-row items-center justify-center",
-                  positions.cardGroups,
-                )}
-              >
-                {player.hand.map((card, cIndex) => (
-                  <Card
-                    key={card.suit + card.rank}
-                    rank={card.rank}
-                    suit={card.suit}
-                    onClick={() => playCard(player.id, cIndex)}
-                    disabled={
-                      currentPlayer !== mainPlayer ||
-                      currentPlayer !== player.id
-                    }
-                    faceDown={player.id !== mainPlayer}
-                    className={clsx({
-                      "cursor-pointer":
-                        player.id === mainPlayer && currentPlayer === player.id,
-                      "group-[.isTop]:mb-4 group-[.isBottom]:mt-4 group-[.isLeft]:mt-4 group-[.isRight]:mb-4 group-[.isBottom]:-rotate-14 group-[.isLeft]:-rotate-14 group-[.isRight]:rotate-14 group-[.isTop]:rotate-14":
-                        cIndex === 0,
-                      "group-[.isTop]:mt-4 group-[.isBottom]:mb-4 group-[.isLeft]:mb-4 group-[.isRight]:mt-4":
-                        cIndex === 1,
-                      "group-[.isTop]:mb-4 group-[.isBottom]:mt-4 group-[.isLeft]:mt-4 group-[.isRight]:mb-4 group-[.isBottom]:rotate-14 group-[.isLeft]:rotate-14 group-[.isRight]:-rotate-14 group-[.isTop]:-rotate-14":
-                        cIndex === 2,
-                    })}
-                  />
-                ))}
-              </div>
-              <div
-                className={clsx(
-                  "w-70 h-70 absolute",
-                  positions.collectedCardsPiles,
-                )}
-              >
-                <div className={"relative h-full w-full"}>
+
+              <div className="-mr-24 absolute top-1/2 -right-full -translate-y-1/2">
+                <div className="w-16 h-24 sm:w-20 sm:h-28 lg:w-24 lg:h-32 relative">
                   {player.collected.map((card, index) => (
                     <CollectedCard
                       key={player.id + card.suit + card.rank}
@@ -113,24 +107,51 @@ export const Players = () => {
                   ))}
                 </div>
               </div>
+
               {player.id === dealer && (
-                <div className={clsx("w-50 h-50 absolute z-0", positions.deck)}>
-                  {deck.map((card, index) => (
-                    <Card
-                      key={card.suit + card.rank + index}
-                      rank={card.rank}
-                      suit={card.suit}
-                      faceDown={true}
-                      disabled={true}
-                      style={{
-                        position: "absolute",
-                        zIndex: index,
-                        bottom: index * 0.5,
-                      }}
-                    />
-                  ))}
+                <div className="-ml-28 absolute top-1/2 -left-full -translate-y-1/2">
+                  <div className="w-16 h-24 sm:w-20 sm:h-28 lg:w-24 lg:h-32 relative">
+                    {deck.map((card, index) => (
+                      <Card
+                        key={card.suit + card.rank + index}
+                        rank={card.rank}
+                        suit={card.suit}
+                        faceDown={true}
+                        disabled={true}
+                        style={{
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                          transform: `translate(${index * 0.25}px, ${
+                            index * 0.35
+                          }px)`,
+                        }}
+                      />
+                    ))}
+                  </div>
                 </div>
               )}
+            </div>
+
+            <div className={clsx("relative", pos.chipOffset)}>
+              <DealerChoiceControls
+                isOpen={
+                  player.id === mainPlayer &&
+                  player.id === dealer &&
+                  phase === "dealerChoice"
+                }
+                onChoose={(dealOrder, tablePattern) =>
+                  dealerChoose(dealOrder, tablePattern)
+                }
+              />
+              <PlayerChip
+                name={displayUserName}
+                avatar={avatar}
+                score={scores.values}
+                team={player.team}
+                isMainPlayer={player.id === mainPlayer}
+                isDealer={player.id === dealer}
+              />
             </div>
           </div>
         );
@@ -139,96 +160,91 @@ export const Players = () => {
   );
 };
 
-const computePlayerItemsPositions = (
-  playerIndex: number,
-  totalPlayers: number,
-) => {
-  const twoPlayerMode = totalPlayers === 2;
-  const threePlayerMode = totalPlayers === 3;
-  const fourPlayerMode = totalPlayers === 4;
-  const positions: Record<string, Record<string, boolean>> = {
-    players: {},
-    dealerBadge: {},
-    cardGroups: {},
-    collectedCardsPiles: {},
-    deck: {},
-  };
-
-  // Player positions based on number of players
-  if (twoPlayerMode) {
-    positions.players["bottom-40"] = playerIndex === 0;
-    positions.players["top-40"] = playerIndex === 1;
-
-    positions.dealerBadge["-top-35"] = playerIndex === 1;
-
-    positions.cardGroups["group isBottom"] = playerIndex === 0;
-    positions.cardGroups["group isTop"] = playerIndex === 1;
-
-    positions.collectedCardsPiles["right-55 top-0"] = playerIndex === 0;
-    positions.collectedCardsPiles["left-90 top-5"] = playerIndex === 1;
-
-    positions.deck["left-100 bottom-5"] = playerIndex === 0;
-    positions.deck["right-55 -top-20"] = playerIndex === 1;
-  }
-
-  if (threePlayerMode) {
-    positions.players["bottom-40"] = playerIndex === 0;
-    positions.players["right-55 !w-0 top-[42%]"] = playerIndex === 1;
-    positions.players["left-55 !w-0 top-[42%]"] = playerIndex === 2;
-
-    positions.dealerBadge["-right-45"] = playerIndex === 1;
-    positions.dealerBadge["-left-45"] = playerIndex === 2;
-
-    positions.cardGroups["group isBottom"] = playerIndex === 0;
-    positions.cardGroups["group isRight"] = playerIndex === 1;
-    positions.cardGroups["group isLeft"] = playerIndex === 2;
-
-    positions.collectedCardsPiles["right-55 top-0"] = playerIndex === 0;
-    positions.collectedCardsPiles["right-7 -top-60 rotate-90"] =
-      playerIndex === 1;
-    positions.collectedCardsPiles["-left-20 top-80 rotate-90"] =
-      playerIndex === 2;
-
-    positions.deck["left-100 bottom-5"] = playerIndex === 0;
-    positions.deck["-right-50 top-80 rotate-90"] = playerIndex === 1;
-    positions.deck["-right-60 -top-70 rotate-90"] = playerIndex === 2;
-  }
-
-  if (fourPlayerMode) {
-    positions.players["bottom-40"] = playerIndex === 0;
-    positions.players["right-55 !w-0 top-[42%]"] = playerIndex === 1;
-    positions.players["top-40"] = playerIndex === 2;
-    positions.players["left-55 !w-0 top-[42%]"] = playerIndex === 3;
-
-    positions.dealerBadge["-right-45"] = playerIndex === 1;
-    positions.dealerBadge["-top-20"] = playerIndex === 2;
-    positions.dealerBadge["-left-45"] = playerIndex === 3;
-
-    positions.cardGroups["group isBottom"] = playerIndex === 0;
-    positions.cardGroups["group isRight"] = playerIndex === 1;
-    positions.cardGroups["group isTop"] = playerIndex === 2;
-    positions.cardGroups["group isLeft"] = playerIndex === 3;
-
-    positions.collectedCardsPiles["right-55 -bottom-25"] = playerIndex === 0;
-    positions.collectedCardsPiles["right-7 -top-60 rotate-90"] =
-      playerIndex === 1;
-    positions.collectedCardsPiles["left-120 top-5"] = playerIndex === 2;
-    positions.collectedCardsPiles["-left-20 top-80 rotate-90"] =
-      playerIndex === 3;
-
-    positions.deck["left-100 bottom-5"] = playerIndex === 0;
-    positions.deck["-right-50 top-80 rotate-90"] = playerIndex === 1;
-    positions.deck["right-55 -top-20"] = playerIndex === 2;
-    positions.deck["-right-60 -top-70 rotate-90"] = playerIndex === 3;
-  }
-
-  // Dealer badge position
-  positions.dealerBadge["-bottom-35"] = playerIndex === 0;
-
-  // Card group orientation
-  positions.cardGroups["rotate-90"] =
-    ((playerIndex === 2 || playerIndex === 1) && threePlayerMode) ||
-    (fourPlayerMode && (playerIndex === 1 || playerIndex === 3));
-
-  return positions;
+type Position = {
+  container: string;
+  rotation: string;
+  chipOffset: string;
 };
+
+function computePlayerPositions(playersCount: number): Position[] {
+  if (playersCount === 2) {
+    return [
+      {
+        container: "bottom-[5%] left-1/2 -translate-x-1/2",
+        rotation: "rotate(0deg)",
+        chipOffset: "mt-2",
+      },
+      {
+        container: "top-[5%] left-1/2 -translate-x-1/2",
+        rotation: "rotate(180deg)",
+        chipOffset: "mb-2",
+      },
+    ];
+  }
+
+  if (playersCount === 4) {
+    return [
+      {
+        container: "bottom-[5%] left-1/2 -translate-x-1/2",
+        rotation: "rotate(0deg)",
+        chipOffset: "mt-6",
+      },
+      {
+        container: "right-[5%] top-1/2 -translate-y-1/2",
+        rotation: "rotate(-90deg)",
+        chipOffset: "mt-4",
+      },
+
+      {
+        container: "top-[5%] left-1/2 -translate-x-1/2",
+        rotation: "rotate(180deg)",
+        chipOffset: "mt-6",
+      },
+      {
+        container: "left-[5%] top-1/2 -translate-y-1/2",
+        rotation: "rotate(90deg)",
+        chipOffset: "mt-4",
+      },
+    ];
+  }
+
+  const layouts: Position[][] = [
+    [
+      {
+        container: "bottom-[5%] left-1/2 -translate-x-1/2",
+        rotation: "rotate(0deg)",
+        chipOffset: "mt-2",
+      },
+
+      {
+        container: "right-[5%] top-1/2 -translate-y-1/2",
+        rotation: "rotate(-90deg)",
+        chipOffset: "mb-2",
+      },
+      {
+        container: "top-[5%] left-1/2 -translate-x-1/2",
+        rotation: "rotate(180deg)",
+        chipOffset: "mb-2",
+      },
+    ],
+    [
+      {
+        container: "bottom-[5%] left-1/2 -translate-x-1/2",
+        rotation: "rotate(0deg)",
+        chipOffset: "mt-2",
+      },
+      {
+        container: "right-[5%] top-1/2 -translate-y-1/2",
+        rotation: "rotate(-90deg)",
+        chipOffset: "mr-2",
+      },
+      {
+        container: "left-[5%] top-1/2 -translate-y-1/2",
+        rotation: "rotate(90deg)",
+        chipOffset: "ml-2",
+      },
+    ],
+  ];
+
+  return layouts[Math.random() > 0.5 ? 0 : 1];
+}
