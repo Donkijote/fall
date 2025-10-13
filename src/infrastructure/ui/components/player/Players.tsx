@@ -49,7 +49,7 @@ export const Players = () => {
             className={clsx(
               "absolute flex flex-col items-center",
               pos.container,
-              "h-[20rem] w-[12rem]",
+              "md:h-[20rem] h-[14rem] w-[12rem]",
             )}
             style={{
               transform: pos.rotation,
@@ -123,7 +123,7 @@ export const Players = () => {
                           top: 0,
                           left: 0,
                           transform: `translate(${index * 0.25}px, ${
-                            index * 0.35
+                            index * 0.25
                           }px)`,
                         }}
                       />
@@ -170,12 +170,12 @@ function computePlayerPositions(playersCount: number): Position[] {
   if (playersCount === 2) {
     return [
       {
-        container: "bottom-[5%] left-1/2 -translate-x-1/2",
+        container: "bottom-[1%] md:bottom-[5%] left-1/2 -translate-x-1/2",
         rotation: "rotate(0deg)",
         chipOffset: "mt-2",
       },
       {
-        container: "top-[5%] left-1/2 -translate-x-1/2",
+        container: "top-[1%] md:top-[5%] left-1/2 -translate-x-1/2",
         rotation: "rotate(180deg)",
         chipOffset: "mb-2",
       },
