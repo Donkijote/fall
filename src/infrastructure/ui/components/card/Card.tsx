@@ -37,7 +37,12 @@ export const Card = ({
   const { breakpoint, isMobile, orientation } = useBreakpoint();
   let size: "sm" | "md" | "lg" = cardSize ?? "sm";
 
-  if (breakpoint && !isMobile && (breakpoint === "md" || breakpoint === "lg")) {
+  if (
+    breakpoint &&
+    !isMobile &&
+    !cardSize &&
+    (breakpoint === "md" || breakpoint === "lg")
+  ) {
     if (orientation === "portrait") {
       size = "md";
     } else if (orientation === "landscape") {
@@ -48,6 +53,7 @@ export const Card = ({
   if (
     breakpoint &&
     !isMobile &&
+    !cardSize &&
     (breakpoint === "2xl" || breakpoint === "3xl")
   ) {
     size = "lg";

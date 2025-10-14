@@ -11,6 +11,16 @@ import TenOfCoins from "@/assets/cards/coins/TenOfCoins.svg";
 import ThreeOfCoins from "@/assets/cards/coins/ThreeOfCoins.svg";
 import TwelveOfCoins from "@/assets/cards/coins/TwelveOfCoins.svg";
 import TwoOfCoins from "@/assets/cards/coins/TwoOfCoins.svg";
+import AceOfCups from "@/assets/cards/cups/AceOfCups.svg";
+import ElevenOfCups from "@/assets/cards/cups/ElevenOfCups.svg";
+import FiveOfCups from "@/assets/cards/cups/FiveOfCups.svg";
+import FourOfCups from "@/assets/cards/cups/FourOfCups.svg";
+import SevenOfCups from "@/assets/cards/cups/SevenOfCups.svg";
+import SixOfCups from "@/assets/cards/cups/SixOfCups.svg";
+import TenOfCups from "@/assets/cards/cups/TenOfCups.svg";
+import ThreeOfCups from "@/assets/cards/cups/ThreeOfCups.svg";
+import TwelveOfCups from "@/assets/cards/cups/TwelveOfCups.svg";
+import TwoOfCups from "@/assets/cards/cups/TwoOfCups.svg";
 import { type Suit, SUIT_COLOR } from "@/domain/entities/Card";
 import {
   AceOfClubsGlyph,
@@ -23,13 +33,6 @@ import {
   TwoOfClubsGlyph,
   YellowClubGlyph,
 } from "@/infrastructure/ui/components/card/ClubGlyph";
-import {
-  AceOfCupGlyph,
-  CupGlyph,
-  ElevenOfCupsGlyph,
-  TenOfCupsGlyph,
-  TwelveOfCupsGlyph,
-} from "@/infrastructure/ui/components/card/CupGlyph";
 import {
   AceOfSwordGlyph,
   ElevenOfSwordGlyph,
@@ -69,15 +72,7 @@ const LAYOUT: Record<
         })}
       />
     ),
-    cups: ({ size }) => (
-      <AceOfCupGlyph
-        className={clsx("absolute", {
-          "-top-1.5 left-2.5 h-22": size === "sm",
-          "-top-4 left-3.5 h-32": size === "md",
-          "-top-5 left-5 h-42": size === "lg",
-        })}
-      />
-    ),
+    cups: () => <img src={AceOfCups} alt={"AceOfCups"} />,
   },
   2: {
     golds: () => <img src={TwoOfCoins} alt={"TwoOfCoins"} />,
@@ -111,26 +106,7 @@ const LAYOUT: Record<
         />
       </div>
     ),
-    cups: ({ color, size }) => (
-      <>
-        <CupGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-top-3 left-2 ml-0.5 mt-0.5 h-[44px] w-[44px]": size === "sm",
-            "-top-5 left-3 ml-0.5 mt-0.5 h-[64px] w-[64px]": size === "md",
-            "-top-6 left-5 h-[86px] w-[86px]": size === "lg",
-          })}
-        />
-        <CupGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-bottom-3 left-2 ml-0.5 mb-0.5 h-[44px] w-[44px]": size === "sm",
-            "-bottom-5 left-3 ml-0.5 mb-0.5 h-[64px] w-[64px]": size === "md",
-            "-bottom-6 left-5 h-[86px] w-[86px]": size === "lg",
-          })}
-        />
-      </>
-    ),
+    cups: () => <img src={TwoOfCups} alt={"TwoOfCups"} />,
   },
   3: {
     golds: () => <img src={ThreeOfCoins} alt={"ThreeOfCoins"} />,
@@ -172,34 +148,7 @@ const LAYOUT: Record<
         />
       </>
     ),
-    cups: ({ color, size }) => (
-      <>
-        <CupGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-top-1 -left-1 h-[42px] w-[42px]": size === "sm",
-            "-top-3 -left-1 h-[62px] w-[62px]": size === "md",
-            "h-20 w-20 -top-5 -left-1": size === "lg",
-          })}
-        />
-        <CupGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "bottom-4 -right-1 h-[42px] w-[42px]": size === "sm",
-            "bottom-4 -right-1 h-[62px] w-[62px]": size === "md",
-            "h-20 w-20 bottom-6 -right-1": size === "lg",
-          })}
-        />
-        <CupGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-bottom-2 -left-1 h-[42px] w-[42px]": size === "sm",
-            "-bottom-5 -left-1 h-[62px] w-[62px]": size === "md",
-            "h-20 w-20 -bottom-6 -left-1": size === "lg",
-          })}
-        />
-      </>
-    ),
+    cups: () => <img src={ThreeOfCups} alt={"ThreeOfCups"} />,
   },
   4: {
     golds: () => <img src={FourOfCoins} alt={"FourOfCoins"} />,
@@ -316,42 +265,7 @@ const LAYOUT: Record<
         </div>
       </>
     ),
-    cups: ({ color, size }) => (
-      <>
-        <CupGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-top-1 -left-0.5 h-8": size === "sm",
-            "-top-3 -left-1 h-12": size === "md",
-            "-top-4 -left-1 h-16": size === "lg",
-          })}
-        />
-        <CupGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-top-1 right-0.5 h-8": size === "sm",
-            "-top-3 right-1 h-12": size === "md",
-            "-top-4 right-1 h-16": size === "lg",
-          })}
-        />
-        <CupGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-bottom-1.5 -left-0.5 h-8": size === "sm",
-            "-bottom-3 -left-1 h-12": size === "md",
-            "-bottom-5 -left-1 h-16": size === "lg",
-          })}
-        />
-        <CupGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-bottom-1.5 right-0.5 h-8": size === "sm",
-            "-bottom-3 right-1 h-12": size === "md",
-            "-bottom-5 right-1 h-16": size === "lg",
-          })}
-        />
-      </>
-    ),
+    cups: () => <img src={FourOfCups} alt={"FourOfCups"} />,
   },
   5: {
     golds: () => <img src={FiveOfCoins} alt={"FiveOfCoins"} />,
@@ -445,50 +359,7 @@ const LAYOUT: Record<
         />
       </div>
     ),
-    cups: ({ color, size }) => (
-      <>
-        <CupGlyph
-          fill={color}
-          className={clsx("left-0 absolute", {
-            "-top-1.5 h-7.5": size === "sm",
-            "-top-4 h-11": size === "md",
-            "-top-6 h-15": size === "lg",
-          })}
-        />
-        <CupGlyph
-          fill={color}
-          className={clsx("right-0.5 absolute", {
-            "-top-1.5 h-7.5": size === "sm",
-            "-top-4 h-11": size === "md",
-            "-top-6 h-15": size === "lg",
-          })}
-        />
-        <CupGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "bottom-5 left-4 h-7.5": size === "sm",
-            "bottom-7 left-6.5 h-11": size === "md",
-            "bottom-8 left-8 h-16 w-16": size === "lg",
-          })}
-        />
-        <CupGlyph
-          fill={color}
-          className={clsx("left-0 absolute", {
-            "-bottom-2 h-7.5": size === "sm",
-            "-bottom-4 h-11": size === "md",
-            "-bottom-5.5 h-15": size === "lg",
-          })}
-        />
-        <CupGlyph
-          fill={color}
-          className={clsx("right-0.5 absolute", {
-            "-bottom-2 h-7.5": size === "sm",
-            "-bottom-4 h-11": size === "md",
-            "-bottom-5.5 h-15": size === "lg",
-          })}
-        />
-      </>
-    ),
+    cups: () => <img src={FiveOfCups} alt={"FiveOfCups"} />,
   },
   6: {
     golds: () => <img src={SixOfCoins} alt={"SixOfCoins"} />,
@@ -596,58 +467,7 @@ const LAYOUT: Record<
         />
       </div>
     ),
-    cups: ({ color, size }) => (
-      <>
-        <CupGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-top-2 left-1 h-7 w-7": size === "sm",
-            "-top-4 left-1 h-10 w-10": size === "md",
-            "-top-6 left-1 h-14 w-14 mt-0.5": size === "lg",
-          })}
-        />
-        <CupGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-top-2 right-1 h-7 w-7": size === "sm",
-            "-top-4 right-1 h-10 w-10": size === "md",
-            "-top-6 right-1 h-14 w-14 mt-0.5": size === "lg",
-          })}
-        />
-        <CupGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "bottom-6 left-1 h-7 w-7": size === "sm",
-            "bottom-7 left-1 h-10 w-10 mb-0.5": size === "md",
-            "bottom-9 left-1 h-14 w-14": size === "lg",
-          })}
-        />
-        <CupGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "bottom-6 right-1 h-7 w-7": size === "sm",
-            "bottom-7 right-1 h-10 w-10 mb-0.5": size === "md",
-            "bottom-9 right-1 h-14 w-14": size === "lg",
-          })}
-        />
-        <CupGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-bottom-2 left-1 h-7 w-7": size === "sm",
-            "-bottom-4 left-1 h-10 w-10": size === "md",
-            "-bottom-6 left-1 h-14 w-14 mb-0.5": size === "lg",
-          })}
-        />
-        <CupGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-bottom-2 right-1 h-7 w-7": size === "sm",
-            "-bottom-4 right-1 h-10 w-10": size === "md",
-            "-bottom-6 right-1 h-14 w-14 mb-0.5": size === "lg",
-          })}
-        />
-      </>
-    ),
+    cups: () => <img src={SixOfCups} alt={"SixOfCups"} />,
   },
   7: {
     golds: () => <img src={SevenOfCoins} alt={"SevenOfCoins"} />,
@@ -769,66 +589,7 @@ const LAYOUT: Record<
         />
       </div>
     ),
-    cups: ({ color, size }) => (
-      <>
-        <CupGlyph
-          fill={color}
-          className={clsx("left-0 absolute", {
-            "-top-1.5 left-0 h-7": size === "sm",
-            "-top-3 h-10": size === "md",
-            "-top-4.5 h-13.5": size === "lg",
-          })}
-        />
-        <CupGlyph
-          fill={color}
-          className={clsx("right-1 absolute", {
-            "-top-1.5 h-7": size === "sm",
-            "-top-3 h-10": size === "md",
-            "-top-4.5 h-13.5": size === "lg",
-          })}
-        />
-        <CupGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "top-1 left-4 h-7": size === "sm",
-            "top-0.5 left-6.5 h-10": size === "md",
-            "top-0 left-9 h-13.5": size === "lg",
-          })}
-        />
-        <CupGlyph
-          fill={color}
-          className={clsx("left-0 absolute", {
-            "bottom-5.5 h-7": size === "sm",
-            "bottom-7 h-10": size === "md",
-            "bottom-9 h-13.5": size === "lg",
-          })}
-        />
-        <CupGlyph
-          fill={color}
-          className={clsx("right-1 absolute", {
-            "bottom-5.5 h-7 w-7": size === "sm",
-            "bottom-7 h-10": size === "md",
-            "bottom-9 h-13.5": size === "lg",
-          })}
-        />
-        <CupGlyph
-          fill={color}
-          className={clsx("left-0 absolute", {
-            "-bottom-2 h-7 w-7": size === "sm",
-            "-bottom-4 h-10": size === "md",
-            "-bottom-5.5 h-13.5": size === "lg",
-          })}
-        />
-        <CupGlyph
-          fill={color}
-          className={clsx("right-1 absolute", {
-            "-bottom-2 h-7 w-7": size === "sm",
-            "-bottom-4 h-10": size === "md",
-            "-bottom-5.5 h-13.5": size === "lg",
-          })}
-        />
-      </>
-    ),
+    cups: () => <img src={SevenOfCups} alt={"SevenOfCups"} />,
   },
   10: {
     golds: () => <img src={TenOfCoins} alt={"TenOfCoins"} />,
@@ -852,15 +613,7 @@ const LAYOUT: Record<
         })}
       />
     ),
-    cups: ({ size }) => (
-      <TenOfCupsGlyph
-        className={clsx("absolute", {
-          "-bottom-2 left-1.5 h-22": size === "sm",
-          "-bottom-4 left-2 h-31": size === "md",
-          "-bottom-6 left-3 h-41": size === "lg",
-        })}
-      />
-    ),
+    cups: () => <img src={TenOfCups} alt={"TenOfCups"} />,
   },
   11: {
     golds: () => <img src={ElevenOfCoins} alt={"ElevenOfCoins"} />,
@@ -884,15 +637,7 @@ const LAYOUT: Record<
         })}
       />
     ),
-    cups: ({ size }) => (
-      <ElevenOfCupsGlyph
-        className={clsx("absolute", {
-          "-bottom-2 left-0 h-23": size === "sm",
-          "-bottom-4 left-0.5 h-33": size === "md",
-          "-bottom-5 left-0.5 h-43": size === "lg",
-        })}
-      />
-    ),
+    cups: () => <img src={ElevenOfCups} alt={"ElevenOfCups"} />,
   },
   12: {
     golds: () => <img src={TwelveOfCoins} alt={"TwelveOfCoins"} />,
@@ -916,15 +661,7 @@ const LAYOUT: Record<
         })}
       />
     ),
-    cups: ({ size }) => (
-      <TwelveOfCupsGlyph
-        className={clsx("absolute", {
-          "-bottom-4 left-2.5 h-24": size === "sm",
-          "-bottom-7 left-3.5 h-34.5": size === "md",
-          "-bottom-9 left-4.5 h-44.5": size === "lg",
-        })}
-      />
-    ),
+    cups: () => <img src={TwelveOfCups} alt={"TwelveOfCups"} />,
   },
 };
 
