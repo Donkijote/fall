@@ -1,6 +1,16 @@
 import { clsx } from "clsx";
 import type { FC, PropsWithChildren } from "react";
 
+import AceOfCoins from "@/assets/cards/coins/AceOfCoins.svg";
+import ElevenOfCoins from "@/assets/cards/coins/ElevenOfCoins.svg";
+import FiveOfCoins from "@/assets/cards/coins/FiveOfCoins.svg";
+import FourOfCoins from "@/assets/cards/coins/FourOfCoins.svg";
+import SevenOfCoins from "@/assets/cards/coins/SevenOfCoins.svg";
+import SixOfCoins from "@/assets/cards/coins/SixOfCoins.svg";
+import TenOfCoins from "@/assets/cards/coins/TenOfCoins.svg";
+import ThreeOfCoins from "@/assets/cards/coins/ThreeOfCoins.svg";
+import TwelveOfCoins from "@/assets/cards/coins/TwelveOfCoins.svg";
+import TwoOfCoins from "@/assets/cards/coins/TwoOfCoins.svg";
 import { type Suit, SUIT_COLOR } from "@/domain/entities/Card";
 import {
   AceOfClubsGlyph,
@@ -21,13 +31,6 @@ import {
   TwelveOfCupsGlyph,
 } from "@/infrastructure/ui/components/card/CupGlyph";
 import {
-  AceOfGoldGlyph,
-  ElevenOfGoldGlyph,
-  GoldGlyph,
-  TenOfGoldGlyph,
-  TwelveOfGoldGlyph,
-} from "@/infrastructure/ui/components/card/GoldGlyph";
-import {
   AceOfSwordGlyph,
   ElevenOfSwordGlyph,
   SwordGlyph,
@@ -40,7 +43,6 @@ type SuitGlyphProps = {
   suit: Suit;
   rank: number;
   size: "sm" | "md" | "lg";
-  className?: string;
 };
 
 const LAYOUT: Record<
@@ -48,7 +50,7 @@ const LAYOUT: Record<
   Record<Suit, FC<PropsWithChildren<{ color: string; size: string }>>>
 > = {
   1: {
-    golds: () => <AceOfGoldGlyph />,
+    golds: () => <img src={AceOfCoins} alt={"AceOfCoins"} />,
     clubs: ({ size }) => (
       <AceOfClubsGlyph
         className={clsx("absolute", {
@@ -78,26 +80,7 @@ const LAYOUT: Record<
     ),
   },
   2: {
-    golds: ({ color, size }) => (
-      <>
-        <GoldGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-top-1.5 left-3 h-10": size === "sm",
-            "-top-3.5 left-4 h-15": size === "md",
-            "-top-5.5 left-6 h-21": size === "lg",
-          })}
-        />
-        <GoldGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-bottom-1.5 left-3 h-10": size === "sm",
-            "-bottom-3.5 left-4 h-15": size === "md",
-            "-bottom-5.5 left-6 h-21": size === "lg",
-          })}
-        />
-      </>
-    ),
+    golds: () => <img src={TwoOfCoins} alt={"TwoOfCoins"} />,
     clubs: ({ color, size }) => (
       <TwoOfClubsGlyph
         fill={color}
@@ -150,34 +133,7 @@ const LAYOUT: Record<
     ),
   },
   3: {
-    golds: ({ color, size }) => (
-      <>
-        <GoldGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-top-1 -left-0 h-9": size === "sm",
-            "-top-3 left-1 h-13": size === "md",
-            "-top-4 left-0 h-17": size === "lg",
-          })}
-        />
-        <GoldGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "bottom-4.5 -right-1 h-9": size === "sm",
-            "bottom-5 -right-0 h-13": size === "md",
-            "bottom-6.5 -right-0 h-17": size === "lg",
-          })}
-        />
-        <GoldGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-bottom-2 -left-0 h-9": size === "sm",
-            "-bottom-5 left-1 h-13": size === "md",
-            "-bottom-6 -left-0 h-17": size === "lg",
-          })}
-        />
-      </>
-    ),
+    golds: () => <img src={ThreeOfCoins} alt={"ThreeOfCoins"} />,
     clubs: ({ color, size }) => (
       <ThreeOfClubsGlyph
         fill={color}
@@ -246,42 +202,7 @@ const LAYOUT: Record<
     ),
   },
   4: {
-    golds: ({ color, size }) => (
-      <>
-        <GoldGlyph
-          fill={color}
-          className={clsx("left-0 absolute", {
-            "-top-1 h-8": size === "sm",
-            "-top-2.5 h-12": size === "md",
-            "-top-3.5 h-16": size === "lg",
-          })}
-        />
-        <GoldGlyph
-          fill={color}
-          className={clsx("right-0 absolute", {
-            "-top-1 h-8": size === "sm",
-            "-top-2.5 h-12": size === "md",
-            "-top-3.5 h-16": size === "lg",
-          })}
-        />
-        <GoldGlyph
-          fill={color}
-          className={clsx("left-0 absolute", {
-            "-bottom-1 h-8": size === "sm",
-            "-bottom-2.5 h-12": size === "md",
-            "-bottom-3.5 h-16": size === "lg",
-          })}
-        />
-        <GoldGlyph
-          fill={color}
-          className={clsx("right-0 absolute", {
-            "-bottom-1 h-8": size === "sm",
-            "-bottom-2.5 h-12": size === "md",
-            "-bottom-3.5 h-16": size === "lg",
-          })}
-        />
-      </>
-    ),
+    golds: () => <img src={FourOfCoins} alt={"FourOfCoins"} />,
     clubs: ({ size }) => (
       <>
         <GreenClubGlyph
@@ -433,50 +354,7 @@ const LAYOUT: Record<
     ),
   },
   5: {
-    golds: ({ color, size }) => (
-      <>
-        <GoldGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-top-1.5 left-0.5 h-7": size === "sm",
-            "-top-3 left-1 h-10": size === "md",
-            "-top-4.5 left-1 h-13.5": size === "lg",
-          })}
-        />
-        <GoldGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-top-1.5 right-0.5 h-7": size === "sm",
-            "-top-3 right-1 h-10": size === "md",
-            "-top-4.5 right-1 h-13.5": size === "lg",
-          })}
-        />
-        <GoldGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "bottom-5 left-3.5 h-9": size === "sm",
-            "bottom-6 left-5 h-13": size === "md",
-            "bottom-7 left-7 h-18": size === "lg",
-          })}
-        />
-        <GoldGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-bottom-1.5 left-0.5 h-7": size === "sm",
-            "-bottom-3 left-1 h-10": size === "md",
-            "-bottom-4.5 left-1 h-13.5": size === "lg",
-          })}
-        />
-        <GoldGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-bottom-1.5 right-0.5 h-7": size === "sm",
-            "-bottom-3 right-1 h-10": size === "md",
-            "-bottom-4.5 right-1 h-13.5": size === "lg",
-          })}
-        />
-      </>
-    ),
+    golds: () => <img src={FiveOfCoins} alt={"FiveOfCoins"} />,
     clubs: ({ size }) => (
       <>
         <GreenClubGlyph
@@ -613,58 +491,7 @@ const LAYOUT: Record<
     ),
   },
   6: {
-    golds: ({ color, size }) => (
-      <>
-        <GoldGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-top-2 left-1 h-7": size === "sm",
-            "-top-3 left-1.5 h-9.5": size === "md",
-            "-top-5 left-1.5 h-13": size === "lg",
-          })}
-        />
-        <GoldGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-top-2 right-1 h-7 w-7": size === "sm",
-            "-top-3 right-1.5 h-9.5": size === "md",
-            "-top-5 right-1.5 h-13": size === "lg",
-          })}
-        />
-        <GoldGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "bottom-6 left-1 h-7 w-7": size === "sm",
-            "bottom-7.5 left-1.5 h-9.5": size === "md",
-            "bottom-9.5 left-1.5 h-13": size === "lg",
-          })}
-        />
-        <GoldGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "bottom-6 right-1 h-7 w-7": size === "sm",
-            "bottom-7.5 right-1.5 h-9.5": size === "md",
-            "bottom-9.5 right-1.5 h-13": size === "lg",
-          })}
-        />
-        <GoldGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-bottom-2 left-1 h-7 w-7": size === "sm",
-            "-bottom-3 left-1.5 h-9.5": size === "md",
-            "-bottom-5 left-1.5 h-13": size === "lg",
-          })}
-        />
-        <GoldGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-bottom-2 right-1 h-7 w-7": size === "sm",
-            "-bottom-3 right-1.5 h-9.5": size === "md",
-            "-bottom-5 right-1.5 h-13": size === "lg",
-          })}
-        />
-      </>
-    ),
+    golds: () => <img src={SixOfCoins} alt={"SixOfCoins"} />,
     clubs: ({ size }) => (
       <>
         <GreenClubGlyph
@@ -823,66 +650,7 @@ const LAYOUT: Record<
     ),
   },
   7: {
-    golds: ({ color, size }) => (
-      <>
-        <GoldGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-top-2 left-1 h-6": size === "sm",
-            "-top-4 left-1 h-9.5": size === "md",
-            "-top-6 left-1.5 h-12.5": size === "lg",
-          })}
-        />
-        <GoldGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-top-2 right-1 h-6": size === "sm",
-            "-top-4 right-1 h-9.5": size === "md",
-            "-top-6 right-1.5 h-12.5": size === "lg",
-          })}
-        />
-        <GoldGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "top-3.5 left-5 h-6": size === "sm",
-            "top-3 left-7.3 h-9.5": size === "md",
-            "top-3.5 left-9.5 h-12.5": size === "lg",
-          })}
-        />
-        <GoldGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "bottom-4 left-1 h-6": size === "sm",
-            "bottom-5.5 left-1 h-9.5": size === "md",
-            "bottom-6.5 left-1.5 h-12.5": size === "lg",
-          })}
-        />
-        <GoldGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "bottom-4 right-1 h-6": size === "sm",
-            "bottom-5.5 right-1 h-9.5": size === "md",
-            "bottom-6.5 right-1.5 h-12.5": size === "lg",
-          })}
-        />
-        <GoldGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-bottom-2 left-1 h-6": size === "sm",
-            "-bottom-4 left-1 h-9.5": size === "md",
-            "-bottom-6 left-1.5 h-12.5": size === "lg",
-          })}
-        />
-        <GoldGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-bottom-2 right-1 h-6": size === "sm",
-            "-bottom-4 right-1 h-9.5": size === "md",
-            "-bottom-6 right-1.5 h-12.5": size === "lg",
-          })}
-        />
-      </>
-    ),
+    golds: () => <img src={SevenOfCoins} alt={"SevenOfCoins"} />,
     clubs: ({ size }) => (
       <>
         <GreenClubGlyph
@@ -1063,16 +831,7 @@ const LAYOUT: Record<
     ),
   },
   10: {
-    golds: ({ color, size }) => (
-      <TenOfGoldGlyph
-        fill={color}
-        className={clsx("absolute", {
-          "-bottom-2 left-3.5 h-22": size === "sm",
-          "-bottom-4 left-5 h-32": size === "md",
-          "-bottom-6 left-7 h-42": size === "lg",
-        })}
-      />
-    ),
+    golds: () => <img src={TenOfCoins} alt={"TenOfCoins"} />,
     clubs: ({ color, size }) => (
       <TenOfClubs
         fill={color}
@@ -1104,16 +863,7 @@ const LAYOUT: Record<
     ),
   },
   11: {
-    golds: ({ color, size }) => (
-      <ElevenOfGoldGlyph
-        fill={color}
-        className={clsx("absolute", {
-          "-bottom-2 left-0 h-22.5": size === "sm",
-          "-bottom-4 left-0.5 h-32.5": size === "md",
-          "-bottom-5.5 left-1 h-42.5": size === "lg",
-        })}
-      />
-    ),
+    golds: () => <img src={ElevenOfCoins} alt={"ElevenOfCoins"} />,
     clubs: ({ color, size }) => (
       <ElevenOfClubs
         fill={color}
@@ -1145,16 +895,7 @@ const LAYOUT: Record<
     ),
   },
   12: {
-    golds: ({ color, size }) => (
-      <TwelveOfGoldGlyph
-        fill={color}
-        className={clsx("absolute", {
-          "-bottom-2 left-2 h-22.5": size === "sm",
-          "-bottom-4.5 left-3 h-32.5": size === "md",
-          "-bottom-6 left-4 h-42.5": size === "lg",
-        })}
-      />
-    ),
+    golds: () => <img src={TwelveOfCoins} alt={"TwelveOfCoins"} />,
     clubs: ({ color, size }) => (
       <TwelveOfClubs
         fill={color}
@@ -1190,13 +931,5 @@ const LAYOUT: Record<
 export const SuitGlyph = ({ suit, rank, size }: SuitGlyphProps) => {
   const color = SUIT_COLOR[suit];
   const Layout = LAYOUT[rank][suit];
-  return (
-    <div
-      className={
-        "relative flex h-full w-full flex-col items-center justify-center"
-      }
-    >
-      <Layout color={color} size={size} />
-    </div>
-  );
+  return <Layout color={color} size={size} />;
 };

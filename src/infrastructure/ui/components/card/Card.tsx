@@ -1,7 +1,7 @@
 import { clsx } from "clsx";
 import type { CSSProperties } from "react";
 
-import { type Rank, type Suit, SUIT_COLOR } from "@/domain/entities/Card";
+import { type Rank, type Suit } from "@/domain/entities/Card";
 import { SuitGlyph } from "@/infrastructure/ui/components/card/SuitGlyph";
 import { useBreakpoint } from "@/infrastructure/ui/hooks/useBreakpoint";
 
@@ -70,24 +70,7 @@ export const Card = ({
       )}
       style={style}
     >
-      {!faceDown ? (
-        <div className="inset-0 p-2 absolute flex flex-col justify-between">
-          {/* corners */}
-          <div className="flex justify-start">
-            <Corner rank={rank} suit={suit} size={size} />
-          </div>
-
-          {/* center content */}
-          <SuitGlyph suit={suit} rank={rank} size={size} />
-
-          {/* corners */}
-          <div className="flex justify-end">
-            <div className="rotate-180">
-              <Corner rank={rank} suit={suit} size={size} />
-            </div>
-          </div>
-        </div>
-      ) : (
+      {faceDown ? (
         <div
           className="inset-0 absolute"
           aria-hidden
@@ -96,36 +79,14 @@ export const Card = ({
               "repeating-linear-gradient(135deg, #1f2937 0 6px, #111827 6px 12px)",
           }}
         />
+      ) : (
+        <div className="p-2 h-full w-full [&_img]:h-full">
+          <SuitGlyph suit={suit} rank={rank} size={size} />
+        </div>
       )}
 
       {/* subtle vignette */}
       <div className="inset-0 from-black/5 to-white/0 pointer-events-none absolute bg-gradient-to-br" />
     </button>
-  );
-};
-
-const Corner = ({
-  rank,
-  suit,
-  size,
-}: {
-  rank: number;
-  suit: Suit;
-  size: CardProps["size"];
-}) => {
-  const color = SUIT_COLOR[suit];
-  return (
-    <div className="flex flex-col items-center text-[10px] leading-none">
-      <span
-        className={clsx("font-semibold", {
-          "text-lg": size === "lg",
-          "text-sm": size === "md",
-          "text-[10px]": size === "sm",
-        })}
-        style={{ color }}
-      >
-        {rank}
-      </span>
-    </div>
   );
 };
