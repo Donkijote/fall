@@ -33,7 +33,6 @@ export const Card = ({
   className,
   style,
 }: CardProps) => {
-  console.log(Boolean(size));
   return (
     <button
       type="button"

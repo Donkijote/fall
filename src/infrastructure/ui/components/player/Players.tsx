@@ -47,7 +47,7 @@ export const Players = () => {
           <div
             key={player.id}
             className={clsx(
-              "absolute flex flex-col items-center",
+              "absolute flex flex-col items-center justify-end",
               pos.container,
               "xl:h-[18rem] lg:h-[16rem] h-[14rem] w-[12rem] landscape:h-[10rem]",
             )}
