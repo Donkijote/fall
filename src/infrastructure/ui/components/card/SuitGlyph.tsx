@@ -21,6 +21,16 @@ import TenOfCups from "@/assets/cards/cups/TenOfCups.svg";
 import ThreeOfCups from "@/assets/cards/cups/ThreeOfCups.svg";
 import TwelveOfCups from "@/assets/cards/cups/TwelveOfCups.svg";
 import TwoOfCups from "@/assets/cards/cups/TwoOfCups.svg";
+import AceOfSwords from "@/assets/cards/swords/AceOfSwords.svg";
+import ElevenOfSwords from "@/assets/cards/swords/ElevenOfSwords.svg";
+import FiveOfSwords from "@/assets/cards/swords/FiveOfSwords.svg";
+import FourOfSwords from "@/assets/cards/swords/FourOfSwords.svg";
+import SevenOfSwords from "@/assets/cards/swords/SevenOfSwords.svg";
+import SixOfSwords from "@/assets/cards/swords/SixOfSwords.svg";
+import TenOfSwords from "@/assets/cards/swords/TenOfSwords.svg";
+import ThreeOfSwords from "@/assets/cards/swords/ThreeOfSwords.svg";
+import TwelveOfSwords from "@/assets/cards/swords/TwelveOfSwords.svg";
+import TwoOfSwords from "@/assets/cards/swords/TwoOfSwords.svg";
 import { type Suit, SUIT_COLOR } from "@/domain/entities/Card";
 import {
   AceOfClubsGlyph,
@@ -33,14 +43,6 @@ import {
   TwoOfClubsGlyph,
   YellowClubGlyph,
 } from "@/infrastructure/ui/components/card/ClubGlyph";
-import {
-  AceOfSwordGlyph,
-  ElevenOfSwordGlyph,
-  SwordGlyph,
-  SwordGlyphVariant,
-  TenOfSwordGlyph,
-  TwelveOfSwordGlyph,
-} from "@/infrastructure/ui/components/card/SwordGlyph";
 
 type SuitGlyphProps = {
   suit: Suit;
@@ -63,15 +65,7 @@ const LAYOUT: Record<
         })}
       />
     ),
-    blades: ({ size }) => (
-      <AceOfSwordGlyph
-        className={clsx("absolute", {
-          "-top-1 -left-2.5 h-23": size === "sm",
-          "-top-2 -left-4 h-33": size === "md",
-          "-top-4 -left-5 h-44": size === "lg",
-        })}
-      />
-    ),
+    blades: () => <img src={AceOfSwords} alt={"AceOfSwords"} />,
     cups: () => <img src={AceOfCups} alt={"AceOfCups"} />,
   },
   2: {
@@ -86,26 +80,7 @@ const LAYOUT: Record<
         })}
       />
     ),
-    blades: ({ color, size }) => (
-      <div className={"[&_svg]:last:rotate-180"}>
-        <SwordGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-top-1.5 left-2 h-22": size === "sm",
-            "-top-3.5 left-2.5 h-32": size === "md",
-            "-top-4.5 left-2.5 h-42": size === "lg",
-          })}
-        />
-        <SwordGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-bottom-1.5 right-1.5 h-22": size === "sm",
-            "-bottom-3.5 right-2.5 h-32": size === "md",
-            "-bottom-4.5 right-2.5 h-42": size === "lg",
-          })}
-        />
-      </div>
-    ),
+    blades: () => <img src={TwoOfSwords} alt={"TwoOfSwords"} />,
     cups: () => <img src={TwoOfCups} alt={"TwoOfCups"} />,
   },
   3: {
@@ -120,34 +95,7 @@ const LAYOUT: Record<
         })}
       />
     ),
-    blades: ({ color, size }) => (
-      <>
-        <SwordGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-top-1.5 left-1 h-22": size === "sm",
-            "-top-3 left-1.5 h-32": size === "md",
-            "-top-4 left-1.5 h-42": size === "lg",
-          })}
-        />
-        <SwordGlyph
-          fill={color}
-          className={clsx("absolute rotate-180", {
-            "-top-1.5 -left-11 h-22": size === "sm",
-            "-top-3 -left-16 h-32": size === "md",
-            "-top-4 -left-21 h-42": size === "lg",
-          })}
-        />
-        <SwordGlyph
-          fill={color}
-          className={clsx("absolute", {
-            "-top-1.5 left-10 h-22": size === "sm",
-            "-top-3 left-15.5 h-32": size === "md",
-            "-top-4 left-21 h-42": size === "lg",
-          })}
-        />
-      </>
-    ),
+    blades: () => <img src={ThreeOfSwords} alt={"ThreeOfSwords"} />,
     cups: () => <img src={ThreeOfCups} alt={"ThreeOfCups"} />,
   },
   4: {
@@ -202,69 +150,7 @@ const LAYOUT: Record<
         />
       </>
     ),
-    blades: ({ size }) => (
-      <>
-        <div
-          className={clsx({
-            "[&_svg]:rotate-150": size === "sm",
-            "[&_svg]:rotate-146": size === "md",
-            "[&_svg]:rotate-148": size === "lg",
-          })}
-        >
-          <SwordGlyphVariant
-            className={clsx("absolute", {
-              "-top-2 -left-0 h-10 w-10": size === "sm",
-              "-top-4 left-0.5 h-14 w-14": size === "md",
-              "-top-5 -left-0 h-20 w-20": size === "lg",
-            })}
-          />
-        </div>
-        <div
-          className={clsx({
-            "[&_svg]:-rotate-154": size === "sm",
-            "[&_svg]:-rotate-151": size === "md",
-            "[&_svg]:-rotate-152": size === "lg",
-          })}
-        >
-          <SwordGlyphVariant
-            className={clsx("absolute", {
-              "-top-1.5 -right-1 h-10 w-10": size === "sm",
-              "-top-3.5 -right-1 h-14 w-14": size === "md",
-              "-top-4 -right-1 h-20 w-20": size === "lg",
-            })}
-          />
-        </div>
-        <div
-          className={clsx({
-            "[&_svg]:rotate-32": size === "sm",
-            "[&_svg]:rotate-29": size === "md",
-            "[&_svg]:rotate-30": size === "lg",
-          })}
-        >
-          <SwordGlyphVariant
-            className={clsx("absolute", {
-              "-bottom-1.5 -left-1 h-10 w-10": size === "sm",
-              "-bottom-3 -left-0 h-14 w-14": size === "md",
-              "-bottom-5 -left-1 h-20 w-20": size === "lg",
-            })}
-          />
-        </div>
-        <div
-          className={clsx({
-            "[&_svg]:-rotate-32": size === "sm" || size === "md",
-            "[&_svg]:-rotate-34": size === "lg",
-          })}
-        >
-          <SwordGlyphVariant
-            className={clsx("absolute", {
-              "-bottom-2 right-0 h-10 w-10": size === "sm",
-              "-bottom-3.5 -right-0 h-14 w-14": size === "md",
-              "-bottom-6 right-0 h-20 w-20": size === "lg",
-            })}
-          />
-        </div>
-      </>
-    ),
+    blades: () => <img src={FourOfSwords} alt={"FourOfSwords"} />,
     cups: () => <img src={FourOfCups} alt={"FourOfCups"} />,
   },
   5: {
@@ -316,49 +202,7 @@ const LAYOUT: Record<
         />
       </>
     ),
-    blades: ({ size }) => (
-      <div
-        className={
-          "[&_svg]:first:rotate-180 [&_svg]:nth-2:rotate-180 [&_svg]:nth-3:-rotate-90"
-        }
-      >
-        <SwordGlyphVariant
-          className={clsx("absolute", {
-            "-top-2 -left-1 h-10 w-10": size === "sm",
-            "-top-3 -left-2 w-14 h-14": size === "md",
-            "-top-5 -left-3 h-20 w-20": size === "lg",
-          })}
-        />
-        <SwordGlyphVariant
-          className={clsx("absolute", {
-            "-top-2 -right-2 h-10 w-10": size === "sm",
-            "-top-3 -right-3 w-14 h-14": size === "md",
-            "-top-5 -right-4.5 h-20 w-20": size === "lg",
-          })}
-        />
-        <SwordGlyphVariant
-          className={clsx("absolute", {
-            "top-5 left-3 h-10 w-10": size === "sm",
-            "top-6.5 left-4.5 w-14 h-14": size === "md",
-            "top-7.5 left-6 h-20 w-20": size === "lg",
-          })}
-        />
-        <SwordGlyphVariant
-          className={clsx("absolute", {
-            "-bottom-2 -left-2 h-10 w-10": size === "sm",
-            "-bottom-3 -left-3.5 w-14 h-14": size === "md",
-            "-bottom-5 -left-5 h-20 w-20": size === "lg",
-          })}
-        />
-        <SwordGlyphVariant
-          className={clsx("absolute", {
-            "-bottom-2 -right-1 h-10 w-10": size === "sm",
-            "-bottom-3 -right-1.5 w-14 h-14": size === "md",
-            "-bottom-5 -right-2.5 h-20 w-20": size === "lg",
-          })}
-        />
-      </div>
-    ),
+    blades: () => <img src={FiveOfSwords} alt={"FiveOfSwords"} />,
     cups: () => <img src={FiveOfCups} alt={"FiveOfCups"} />,
   },
   6: {
@@ -421,52 +265,7 @@ const LAYOUT: Record<
         />
       </>
     ),
-    blades: ({ size }) => (
-      <div className={"[&_svg]:nth-[-n+3]:rotate-180"}>
-        <SwordGlyphVariant
-          className={clsx("absolute", {
-            "-top-2 -left-1 h-10 w-10": size === "sm",
-            "-top-4 -left-2 w-14 h-14": size === "md",
-            "-top-6 -left-3 h-20 w-20": size === "lg",
-          })}
-        />
-        <SwordGlyphVariant
-          className={clsx("absolute", {
-            "-top-2 left-3.5 h-10 w-10": size === "sm",
-            "-top-4 left-6 w-14 h-14": size === "md",
-            "-top-6 left-7.5 h-20 w-20": size === "lg",
-          })}
-        />
-        <SwordGlyphVariant
-          className={clsx("absolute", {
-            "-top-2 -right-2 h-10 w-10": size === "sm",
-            "-top-4 -right-3.5 w-14 h-14": size === "md",
-            "-top-6 -right-5 h-20 w-20": size === "lg",
-          })}
-        />
-        <SwordGlyphVariant
-          className={clsx("absolute", {
-            "-bottom-2 -left-2 h-10 w-10": size === "sm",
-            "-bottom-4 -left-3.5 w-14 h-14": size === "md",
-            "-bottom-6 -left-5 h-20 w-20": size === "lg",
-          })}
-        />
-        <SwordGlyphVariant
-          className={clsx("absolute", {
-            "-bottom-2 left-2.5 h-10 w-10": size === "sm",
-            "-bottom-4 left-4.5 w-14 h-14": size === "md",
-            "-bottom-6 left-5.5 h-20 w-20": size === "lg",
-          })}
-        />
-        <SwordGlyphVariant
-          className={clsx("absolute", {
-            "-bottom-2 -right-1 h-10 w-10": size === "sm",
-            "-bottom-4 -right-2 w-14 h-14": size === "md",
-            "-bottom-6 -right-3 h-20 w-20": size === "lg",
-          })}
-        />
-      </div>
-    ),
+    blades: () => <img src={SixOfSwords} alt={"SixOfSwords"} />,
     cups: () => <img src={SixOfCups} alt={"SixOfCups"} />,
   },
   7: {
@@ -536,59 +335,7 @@ const LAYOUT: Record<
         />
       </>
     ),
-    blades: ({ size }) => (
-      <div className={"[&_svg]:nth-4:-rotate-90 [&_svg]:nth-[-n+3]:rotate-180"}>
-        <SwordGlyphVariant
-          className={clsx("absolute", {
-            "-top-2 -left-1 h-10 w-10": size === "sm",
-            "-top-4 -left-2 w-14 h-14": size === "md",
-            "-top-6 -left-3 h-20 w-20": size === "lg",
-          })}
-        />
-        <SwordGlyphVariant
-          className={clsx("absolute", {
-            "-top-2 left-3.5 h-10 w-10": size === "sm",
-            "-top-4 left-6 w-14 h-14": size === "md",
-            "-top-6 left-7.5 h-20 w-20": size === "lg",
-          })}
-        />
-        <SwordGlyphVariant
-          className={clsx("absolute", {
-            "-top-2 -right-2 h-10 w-10": size === "sm",
-            "-top-4 -right-3.5 w-14 h-14": size === "md",
-            "-top-6 -right-5 h-20 w-20": size === "lg",
-          })}
-        />
-        <SwordGlyphVariant
-          className={clsx("absolute", {
-            "top-5 left-3 h-10 w-10": size === "sm",
-            "top-6 left-5 w-14 h-14": size === "md",
-            "top-7 left-6 h-20 w-20": size === "lg",
-          })}
-        />
-        <SwordGlyphVariant
-          className={clsx("absolute", {
-            "-bottom-2 -left-2 h-10 w-10": size === "sm",
-            "-bottom-4 -left-3.5 w-14 h-14": size === "md",
-            "-bottom-6 -left-5 h-20 w-20": size === "lg",
-          })}
-        />
-        <SwordGlyphVariant
-          className={clsx("absolute", {
-            "-bottom-2 left-2.5 h-10 w-10": size === "sm",
-            "-bottom-4 left-4.5 w-14 h-14": size === "md",
-            "-bottom-6 left-5.5 h-20 w-20": size === "lg",
-          })}
-        />
-        <SwordGlyphVariant
-          className={clsx("absolute", {
-            "-bottom-2 -right-1 h-10 w-10": size === "sm",
-            "-bottom-4 -right-2 w-14 h-14": size === "md",
-            "-bottom-6 -right-3 h-20 w-20": size === "lg",
-          })}
-        />
-      </div>
-    ),
+    blades: () => <img src={SevenOfSwords} alt={"SevenOfSwords"} />,
     cups: () => <img src={SevenOfCups} alt={"SevenOfCups"} />,
   },
   10: {
@@ -603,16 +350,7 @@ const LAYOUT: Record<
         })}
       />
     ),
-    blades: ({ color, size }) => (
-      <TenOfSwordGlyph
-        fill={color}
-        className={clsx("absolute", {
-          "-bottom-2 left-3 h-22.5": size === "sm",
-          "-bottom-4 left-4.5 h-32.5": size === "md",
-          "-bottom-5 left-6.5 h-42.5": size === "lg",
-        })}
-      />
-    ),
+    blades: () => <img src={TenOfSwords} alt={"TenOfSwords"} />,
     cups: () => <img src={TenOfCups} alt={"TenOfCups"} />,
   },
   11: {
@@ -627,16 +365,7 @@ const LAYOUT: Record<
         })}
       />
     ),
-    blades: ({ color, size }) => (
-      <ElevenOfSwordGlyph
-        fill={color}
-        className={clsx("absolute", {
-          "-bottom-2 left-0 h-22.5": size === "sm",
-          "-bottom-3.5 left-0.5 h-32.5": size === "md",
-          "-bottom-5 left-0.5 h-42.5": size === "lg",
-        })}
-      />
-    ),
+    blades: () => <img src={ElevenOfSwords} alt={"ElevenOfSwords"} />,
     cups: () => <img src={ElevenOfCups} alt={"ElevenOfCups"} />,
   },
   12: {
@@ -651,16 +380,7 @@ const LAYOUT: Record<
         })}
       />
     ),
-    blades: ({ color, size }) => (
-      <TwelveOfSwordGlyph
-        fill={color}
-        className={clsx("absolute", {
-          "-bottom-2 left-2 h-22": size === "sm",
-          "-bottom-3.5 left-3 h-32": size === "md",
-          "-bottom-5 left-4 h-42": size === "lg",
-        })}
-      />
-    ),
+    blades: () => <img src={TwelveOfSwords} alt={"TwelveOfSwords"} />,
     cups: () => <img src={TwelveOfCups} alt={"TwelveOfCups"} />,
   },
 };
