@@ -46,7 +46,7 @@ export const PlayerChip = ({
       <div className="relative">
         <div
           className={clsx(
-            "shadow-md w-12 h-12 md:w-16 md:h-16 md:text-sm text-xs lg:w-20 lg:h-20 lg:text-base flex items-center justify-center overflow-hidden rounded-full border-4",
+            "shadow-md w-12 h-12 md:w-14 md:h-14 text-xs lg:w-18 lg:h-18 lg:text-base flex items-center justify-center overflow-hidden rounded-full border-4",
             borderColor,
             isMainPlayer && "ring-accent-gold ring-4",
           )}
@@ -64,7 +64,7 @@ export const PlayerChip = ({
                 bgColor,
               )}
             >
-              <span className="text-white/70 text-sm md:text-xl">
+              <span className="text-white/70 text-sm xl:text-xl">
                 {isBot ? (
                   <FontAwesomeIcon icon={faRobot} />
                 ) : (

@@ -66,13 +66,17 @@ export const Card = ({
       onClick={onClick}
       className={clsx(
         "rounded-xl relative isolate aspect-[63/88]",
-        sizeClass[size],
+        "md:max-lg:w-22 lg:w-24",
         "bg-zinc-50 ring-zinc-200 shadow-sm ring-1",
         "transition-transform duration-150 will-change-transform",
         !disabled && "hover:-translate-y-0.5 active:translate-y-0",
         selected && "ring-amber-400 ring-2 ring-offset-2",
         "overflow-hidden",
         className,
+        {
+          "w-16": faceDown,
+          "w-18": !faceDown,
+        },
       )}
       style={style}
     >

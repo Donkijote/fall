@@ -49,7 +49,7 @@ export const Players = () => {
             className={clsx(
               "absolute flex flex-col items-center",
               pos.container,
-              "md:h-[20rem] h-[14rem] w-[12rem]",
+              "xl:h-[18rem] lg:h-[16rem] h-[14rem] w-[12rem]",
             )}
             style={{
               transform: pos.rotation,
@@ -57,7 +57,12 @@ export const Players = () => {
             }}
           >
             <div className="space-x-2 relative flex h-full w-full flex-row items-center justify-center">
-              <div className="space-x-2 flex flex-row items-center justify-center">
+              <div
+                className={clsx(
+                  "space-x-2 md:relative md:bottom-0 absolute flex flex-row items-center justify-center",
+                  pos.collapseHand,
+                )}
+              >
                 {player.hand.map((card, cIndex) => {
                   const total = player.hand.length;
                   const middle = (total - 1) / 2;
@@ -96,7 +101,7 @@ export const Players = () => {
                 })}
               </div>
 
-              <div className="-mr-24 absolute top-1/2 -right-full -translate-y-1/2">
+              <div className="mr-26 md:-mr-14 lg:-mr-20 md:top-8/12 absolute top-12/12 -right-full">
                 <div className="w-16 h-24 sm:w-20 sm:h-28 lg:w-24 lg:h-32 relative">
                   {player.collected.map((card, index) => (
                     <CollectedCard
@@ -109,7 +114,7 @@ export const Players = () => {
               </div>
 
               {player.id === dealer && (
-                <div className="-ml-28 absolute top-1/2 -left-full -translate-y-1/2">
+                <div className="ml-22 md:-ml-12 lg:-ml-18 md:top-9/12 absolute top-11/12 -left-full">
                   <div className="w-16 h-24 sm:w-20 sm:h-28 lg:w-24 lg:h-32 relative">
                     {deck.map((card, index) => (
                       <Card
@@ -164,20 +169,21 @@ type Position = {
   container: string;
   rotation: string;
   chipOffset: string;
+  collapseHand?: string;
 };
 
 function computePlayerPositions(playersCount: number): Position[] {
   if (playersCount === 2) {
     return [
       {
-        container: "bottom-[1%] md:bottom-[5%] left-1/2 -translate-x-1/2",
+        container: "bottom-[1%] md:bottom-[2%] left-1/2 -translate-x-1/2",
         rotation: "rotate(0deg)",
         chipOffset: "mt-2",
       },
       {
-        container: "top-[1%] md:top-[5%] left-1/2 -translate-x-1/2",
+        container: "top-[1%] md:top-[2%] left-1/2 -translate-x-1/2",
         rotation: "rotate(180deg)",
-        chipOffset: "mb-2",
+        chipOffset: "mt-2",
       },
     ];
   }
@@ -185,25 +191,28 @@ function computePlayerPositions(playersCount: number): Position[] {
   if (playersCount === 4) {
     return [
       {
-        container: "bottom-[5%] left-1/2 -translate-x-1/2",
+        container:
+          "bottom-[1%] md:bottom-[4%] lg:bottom-[8%] left-1/2 -translate-x-1/2",
         rotation: "rotate(0deg)",
-        chipOffset: "mt-6",
+        chipOffset: "mt-0 md:mt-3",
       },
       {
         container: "right-[5%] top-1/2 -translate-y-1/2",
         rotation: "rotate(-90deg)",
-        chipOffset: "mt-4",
+        chipOffset: "mt-2",
+        collapseHand: "bottom-[calc(-100%+20%)]",
       },
 
       {
-        container: "top-[5%] left-1/2 -translate-x-1/2",
+        container: "top-[1%] md:top-[4%] lg:top-[8%] left-1/2 -translate-x-1/2",
         rotation: "rotate(180deg)",
-        chipOffset: "mt-6",
+        chipOffset: "mt-0 md:mt-2",
       },
       {
         container: "left-[5%] top-1/2 -translate-y-1/2",
         rotation: "rotate(90deg)",
-        chipOffset: "mt-4",
+        chipOffset: "mt-2",
+        collapseHand: "bottom-[calc(-100%+20%)]",
       },
     ];
   }
@@ -211,7 +220,7 @@ function computePlayerPositions(playersCount: number): Position[] {
   const layouts: Position[][] = [
     [
       {
-        container: "bottom-[5%] left-1/2 -translate-x-1/2",
+        container: "bottom-[1%] md:bottom-[2%] left-1/2 -translate-x-1/2",
         rotation: "rotate(0deg)",
         chipOffset: "mt-2",
       },
@@ -219,32 +228,35 @@ function computePlayerPositions(playersCount: number): Position[] {
       {
         container: "right-[5%] top-1/2 -translate-y-1/2",
         rotation: "rotate(-90deg)",
-        chipOffset: "mb-2",
+        chipOffset: "mt-2",
+        collapseHand: "bottom-[calc(-100%+15%)]",
       },
       {
-        container: "top-[5%] left-1/2 -translate-x-1/2",
+        container: "top-[1%] md:top-[2%] left-1/2 -translate-x-1/2",
         rotation: "rotate(180deg)",
-        chipOffset: "mb-2",
+        chipOffset: "mt-2",
       },
     ],
     [
       {
-        container: "bottom-[5%] left-1/2 -translate-x-1/2",
+        container: "bottom-[1%] md:bottom-[2%] left-1/2 -translate-x-1/2",
         rotation: "rotate(0deg)",
         chipOffset: "mt-2",
       },
       {
         container: "right-[5%] top-1/2 -translate-y-1/2",
         rotation: "rotate(-90deg)",
-        chipOffset: "mr-2",
+        chipOffset: "mt-2",
+        collapseHand: "bottom-[calc(-100%+15%)]",
       },
       {
         container: "left-[5%] top-1/2 -translate-y-1/2",
         rotation: "rotate(90deg)",
-        chipOffset: "ml-2",
+        chipOffset: "mt-2",
+        collapseHand: "bottom-[calc(-100%+15%)]",
       },
     ],
   ];
 
-  return layouts[Math.random() > 0.5 ? 0 : 1];
+  return layouts[1];
 }
