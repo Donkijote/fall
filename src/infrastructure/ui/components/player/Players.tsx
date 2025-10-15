@@ -49,7 +49,7 @@ export const Players = () => {
             className={clsx(
               "absolute flex flex-col items-center",
               pos.container,
-              "xl:h-[18rem] lg:h-[16rem] h-[14rem] w-[12rem]",
+              "xl:h-[18rem] lg:h-[16rem] h-[14rem] w-[12rem] landscape:h-[10rem]",
             )}
             style={{
               transform: pos.rotation,
@@ -101,7 +101,7 @@ export const Players = () => {
                 })}
               </div>
 
-              <div className="mr-26 md:-mr-14 lg:-mr-20 md:top-8/12 absolute top-12/12 -right-full">
+              <div className="mr-26 landscape:mr-14 landscape:lg:-mr-14 md:-mr-14 lg:-mr-20 md:top-8/12 absolute top-12/12 -right-full">
                 <div className="w-16 h-24 sm:w-20 sm:h-28 lg:w-24 lg:h-32 relative">
                   {player.collected.map((card, index) => (
                     <CollectedCard
@@ -114,7 +114,7 @@ export const Players = () => {
               </div>
 
               {player.id === dealer && (
-                <div className="ml-22 md:-ml-12 lg:-ml-18 md:top-9/12 absolute top-11/12 -left-full">
+                <div className="ml-22 landscape:ml-14 landscape:lg:-ml-18 md:-ml-12 lg:-ml-18 md:top-9/12 absolute top-11/12 -left-full">
                   <div className="w-16 h-24 sm:w-20 sm:h-28 lg:w-24 lg:h-32 relative">
                     {deck.map((card, index) => (
                       <Card
@@ -176,14 +176,18 @@ function computePlayerPositions(playersCount: number): Position[] {
   if (playersCount === 2) {
     return [
       {
-        container: "bottom-[1%] md:bottom-[2%] left-1/2 -translate-x-1/2",
+        container:
+          "bottom-[4%] lg:bottom-[8%] landscape:bottom-[6%] landscape:lg:bottom-[10%] left-1/2 -translate-x-1/2",
         rotation: "rotate(0deg)",
         chipOffset: "mt-2",
       },
       {
-        container: "top-[1%] md:top-[2%] left-1/2 -translate-x-1/2",
+        container:
+          "top-[4%] lg:top-[8%] landscape:lg:top-[9%] left-1/2 -translate-x-1/2",
         rotation: "rotate(180deg)",
         chipOffset: "mt-2",
+        collapseHand:
+          "landscape:bottom-[calc(-100%+35%)] landscape:lg:bottom-0",
       },
     ];
   }
@@ -192,7 +196,7 @@ function computePlayerPositions(playersCount: number): Position[] {
     return [
       {
         container:
-          "bottom-[1%] md:bottom-[4%] lg:bottom-[8%] left-1/2 -translate-x-1/2",
+          "bottom-[1%] md:bottom-[4%] lg:bottom-[8%] landscape:bottom-[6%] landscape:lg:bottom-[12%] left-1/2 -translate-x-1/2",
         rotation: "rotate(0deg)",
         chipOffset: "mt-0 md:mt-3",
       },
@@ -200,19 +204,22 @@ function computePlayerPositions(playersCount: number): Position[] {
         container: "right-[5%] top-1/2 -translate-y-1/2",
         rotation: "rotate(-90deg)",
         chipOffset: "mt-2",
-        collapseHand: "bottom-[calc(-100%+20%)]",
+        collapseHand: "bottom-[calc(-100%+30%)]",
       },
 
       {
-        container: "top-[1%] md:top-[4%] lg:top-[8%] left-1/2 -translate-x-1/2",
+        container:
+          "top-[1%] md:top-[4%] lg:top-[8%] landscape:lg:top-[10%] left-1/2 -translate-x-1/2",
         rotation: "rotate(180deg)",
         chipOffset: "mt-0 md:mt-2",
+        collapseHand:
+          "landscape:bottom-[calc(-100%+55%)] landscape:lg:bottom-0",
       },
       {
         container: "left-[5%] top-1/2 -translate-y-1/2",
         rotation: "rotate(90deg)",
         chipOffset: "mt-2",
-        collapseHand: "bottom-[calc(-100%+20%)]",
+        collapseHand: "bottom-[calc(-100%+30%)]",
       },
     ];
   }
@@ -220,43 +227,50 @@ function computePlayerPositions(playersCount: number): Position[] {
   const layouts: Position[][] = [
     [
       {
-        container: "bottom-[1%] md:bottom-[2%] left-1/2 -translate-x-1/2",
+        container:
+          "bottom-[1%] md:bottom-[6%] lg:bottom-[8%] landscape:lg:bottom-[10%] left-1/2 -translate-x-1/2",
         rotation: "rotate(0deg)",
         chipOffset: "mt-2",
       },
 
       {
-        container: "right-[5%] top-1/2 -translate-y-1/2",
+        container:
+          "right-[5%] landscape:lg:right-[8%] top-1/2 -translate-y-1/2",
         rotation: "rotate(-90deg)",
         chipOffset: "mt-2",
-        collapseHand: "bottom-[calc(-100%+15%)]",
+        collapseHand: "bottom-[calc(-100%+30%)]",
       },
       {
-        container: "top-[1%] md:top-[2%] left-1/2 -translate-x-1/2",
+        container:
+          "top-[1%] md:top-[6%] lg:top-[8%] landscape:top-[3%] landscape:lg:top-[9%] left-1/2 -translate-x-1/2",
         rotation: "rotate(180deg)",
         chipOffset: "mt-2",
+        collapseHand:
+          "landscape:bottom-[calc(-100%+40%)] landscape:lg:bottom-0",
       },
     ],
     [
       {
-        container: "bottom-[1%] md:bottom-[2%] left-1/2 -translate-x-1/2",
+        container:
+          "bottom-[1%] md:bottom-[6%] lg:bottom-[8%] landscape:lg:bottom-[10%] left-1/2 -translate-x-1/2",
         rotation: "rotate(0deg)",
         chipOffset: "mt-2",
       },
       {
-        container: "right-[5%] top-1/2 -translate-y-1/2",
+        container:
+          "right-[5%] landscape:lg:right-[6%] top-1/2 -translate-y-1/2",
         rotation: "rotate(-90deg)",
         chipOffset: "mt-2",
-        collapseHand: "bottom-[calc(-100%+15%)]",
+        collapseHand: "bottom-[calc(-100%+30%)]",
       },
       {
-        container: "left-[5%] top-1/2 -translate-y-1/2",
+        container: "left-[5%] landscape:lg:left-[6%] top-1/2 -translate-y-1/2",
         rotation: "rotate(90deg)",
         chipOffset: "mt-2",
-        collapseHand: "bottom-[calc(-100%+15%)]",
+        collapseHand: "bottom-[calc(-100%+30%)]",
       },
     ],
   ];
 
-  return layouts[1];
+  return layouts[Math.random() > 0.5 ? 0 : 1];
 }

@@ -3,7 +3,6 @@ import type { CSSProperties } from "react";
 
 import { type Rank, type Suit } from "@/domain/entities/Card";
 import { SuitGlyph } from "@/infrastructure/ui/components/card/SuitGlyph";
-import { useBreakpoint } from "@/infrastructure/ui/hooks/useBreakpoint";
 
 export type CardProps = {
   rank: Rank;
@@ -26,7 +25,7 @@ const sizeClass = {
 export const Card = ({
   rank,
   suit,
-  size: cardSize,
+  size,
   faceDown = false,
   selected = false,
   disabled = false,
@@ -34,31 +33,7 @@ export const Card = ({
   className,
   style,
 }: CardProps) => {
-  const { breakpoint, isMobile, orientation } = useBreakpoint();
-  let size: "sm" | "md" | "lg" = cardSize ?? "sm";
-
-  if (
-    breakpoint &&
-    !isMobile &&
-    !cardSize &&
-    (breakpoint === "md" || breakpoint === "lg")
-  ) {
-    if (orientation === "portrait") {
-      size = "md";
-    } else if (orientation === "landscape") {
-      size = "sm";
-    }
-  }
-
-  if (
-    breakpoint &&
-    !isMobile &&
-    !cardSize &&
-    (breakpoint === "2xl" || breakpoint === "3xl")
-  ) {
-    size = "lg";
-  }
-
+  console.log(Boolean(size));
   return (
     <button
       type="button"
@@ -66,7 +41,6 @@ export const Card = ({
       onClick={onClick}
       className={clsx(
         "rounded-xl relative isolate aspect-[63/88]",
-        "md:max-lg:w-22 lg:w-24",
         "bg-zinc-50 ring-zinc-200 shadow-sm ring-1",
         "transition-transform duration-150 will-change-transform",
         !disabled && "hover:-translate-y-0.5 active:translate-y-0",
@@ -74,8 +48,10 @@ export const Card = ({
         "overflow-hidden",
         className,
         {
-          "w-16": faceDown,
-          "w-18": !faceDown,
+          "w-16 landscape:w-14 landscape:lg:w-22": faceDown && !size,
+          "w-18 landscape:w-16 landscape:lg:w-24": !faceDown && !size,
+          "md:max-lg:w-22 lg:w-24": !size,
+          [sizeClass[size as keyof typeof sizeClass]]: Boolean(size),
         },
       )}
       style={style}
@@ -90,7 +66,7 @@ export const Card = ({
           }}
         />
       ) : (
-        <div className="p-2 h-full w-full [&_img]:h-full">
+        <div className="p-2 landscape:p-1.5 landscape:lg:p-2 h-full w-full [&_img]:h-full">
           <SuitGlyph suit={suit} rank={rank} />
         </div>
       )}
