@@ -20,7 +20,7 @@ describe("Resolve Hands", () => {
     };
     state.players[0].hand = [
       {
-        suit: "golds",
+        suit: "coins",
         rank: 1,
       },
     ];
@@ -35,7 +35,7 @@ describe("Resolve Hands", () => {
     };
     state.players[0].hand = [
       {
-        suit: "golds",
+        suit: "coins",
         rank: 1,
       },
       {
@@ -43,13 +43,13 @@ describe("Resolve Hands", () => {
         rank: 2,
       },
       {
-        suit: "blades",
+        suit: "swords",
         rank: 3,
       },
     ];
     state.players[1].hand = [
       {
-        suit: "golds",
+        suit: "coins",
         rank: 4,
       },
       {
@@ -57,7 +57,7 @@ describe("Resolve Hands", () => {
         rank: 7,
       },
       {
-        suit: "blades",
+        suit: "swords",
         rank: 4,
       },
     ];
@@ -72,7 +72,7 @@ describe("Resolve Hands", () => {
     };
     state.players[0].hand = [
       {
-        suit: "golds",
+        suit: "coins",
         rank: 1,
       },
       {
@@ -80,13 +80,13 @@ describe("Resolve Hands", () => {
         rank: 1,
       },
       {
-        suit: "blades",
+        suit: "swords",
         rank: 3,
       },
     ];
     state.players[1].hand = [
       {
-        suit: "golds",
+        suit: "coins",
         rank: 4,
       },
       {
@@ -94,7 +94,7 @@ describe("Resolve Hands", () => {
         rank: 4,
       },
       {
-        suit: "blades",
+        suit: "swords",
         rank: 2,
       },
     ];
@@ -111,7 +111,7 @@ describe("Resolve Hands", () => {
     };
     state.players[0].hand = [
       {
-        suit: "golds",
+        suit: "coins",
         rank: 1,
       },
       {
@@ -119,13 +119,13 @@ describe("Resolve Hands", () => {
         rank: 1,
       },
       {
-        suit: "blades",
+        suit: "swords",
         rank: 3,
       },
     ];
     state.players[1].hand = [
       {
-        suit: "golds",
+        suit: "coins",
         rank: 3,
       },
       {
@@ -133,7 +133,7 @@ describe("Resolve Hands", () => {
         rank: 7,
       },
       {
-        suit: "blades",
+        suit: "swords",
         rank: 2,
       },
     ];
@@ -141,7 +141,7 @@ describe("Resolve Hands", () => {
       id: "3",
       hand: [
         {
-          suit: "golds",
+          suit: "coins",
           rank: 1,
         },
         {
@@ -149,7 +149,7 @@ describe("Resolve Hands", () => {
           rank: 1,
         },
         {
-          suit: "blades",
+          suit: "swords",
           rank: 3,
         },
       ],

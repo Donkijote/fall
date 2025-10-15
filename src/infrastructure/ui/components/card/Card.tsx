@@ -87,7 +87,7 @@ export const Card = ({
         />
       ) : (
         <div className="p-2 h-full w-full [&_img]:h-full">
-          <SuitGlyph suit={suit} rank={rank} size={size} />
+          <SuitGlyph suit={suit} rank={rank} />
         </div>
       )}
 

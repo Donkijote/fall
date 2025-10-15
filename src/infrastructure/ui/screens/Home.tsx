@@ -60,17 +60,17 @@ export const HomeScreen = () => {
         <HangingCardAnimation
           positionClassName={"left-30 md:left-20"}
           threadLongitude={100}
-          card={{ rank: 1, suit: "blades" }}
+          card={{ rank: 1, suit: "swords" }}
         />
         <HangingCardAnimation
           positionClassName={"left-90 md:left-40"}
           threadLongitude={secondThreadLongitude}
-          card={{ rank: 11, suit: "blades" }}
+          card={{ rank: 11, suit: "swords" }}
         />
         <HangingCardAnimation
           positionClassName={"right-90 md:right-40"}
           threadLongitude={thirdThreadLongitude}
-          card={{ rank: 12, suit: "blades" }}
+          card={{ rank: 12, suit: "swords" }}
         />
 
         <BottomNavbar />
