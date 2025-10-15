@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
-import { TableBackground } from "./TableBackground";
 import { TableCards } from "./TableCards";
+import { TableBackground } from "./components/TableBackground";
 
 export const Table = ({ children }: { children: ReactNode }) => {
   return (
