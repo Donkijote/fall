@@ -1,6 +1,6 @@
 import type { Card, Rank, Suit } from "../entities/Card";
 
-export const suits: Suit[] = ["golds", "cups", "blades", "clubs"];
+export const suits: Suit[] = ["coins", "cups", "swords", "clubs"];
 export const ranks: Rank[] = [1, 2, 3, 4, 5, 6, 7, 10, 11, 12];
 
 export function createDeck(): Card[] {

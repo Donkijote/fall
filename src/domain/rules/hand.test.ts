@@ -4,8 +4,8 @@ import { HANDS } from "@/domain/rules/hands";
 describe("Hand", () => {
   it("should return true for big house", () => {
     const cards: Card[] = [
-      { suit: "golds", rank: 12 },
-      { suit: "blades", rank: 12 },
+      { suit: "coins", rank: 12 },
+      { suit: "swords", rank: 12 },
       { suit: "cups", rank: 1 },
     ];
 
@@ -13,8 +13,8 @@ describe("Hand", () => {
   });
   it("should return true for small house", () => {
     const cards: Card[] = [
-      { suit: "golds", rank: 11 },
-      { suit: "blades", rank: 11 },
+      { suit: "coins", rank: 11 },
+      { suit: "swords", rank: 11 },
       { suit: "cups", rank: 1 },
     ];
 
@@ -22,8 +22,8 @@ describe("Hand", () => {
   });
   it("should return true for register", () => {
     const cards: Card[] = [
-      { suit: "golds", rank: 12 },
-      { suit: "blades", rank: 11 },
+      { suit: "coins", rank: 12 },
+      { suit: "swords", rank: 11 },
       { suit: "cups", rank: 1 },
     ];
 
@@ -31,8 +31,8 @@ describe("Hand", () => {
   });
   it("should return true for watchtower", () => {
     const cards: Card[] = [
-      { suit: "golds", rank: 10 },
-      { suit: "blades", rank: 10 },
+      { suit: "coins", rank: 10 },
+      { suit: "swords", rank: 10 },
       { suit: "cups", rank: 11 },
     ];
 
@@ -40,8 +40,8 @@ describe("Hand", () => {
   });
   it("should return true for patrol", () => {
     const cards: Card[] = [
-      { suit: "golds", rank: 10 },
-      { suit: "blades", rank: 7 },
+      { suit: "coins", rank: 10 },
+      { suit: "swords", rank: 7 },
       { suit: "cups", rank: 11 },
     ];
 
@@ -49,8 +49,8 @@ describe("Hand", () => {
   });
   it("should return true for pair", () => {
     const cards: Card[] = [
-      { suit: "golds", rank: 5 },
-      { suit: "blades", rank: 7 },
+      { suit: "coins", rank: 5 },
+      { suit: "swords", rank: 7 },
       { suit: "cups", rank: 5 },
     ];
 
@@ -58,8 +58,8 @@ describe("Hand", () => {
   });
   it("should return true for pair of 10", () => {
     const cards: Card[] = [
-      { suit: "golds", rank: 10 },
-      { suit: "blades", rank: 7 },
+      { suit: "coins", rank: 10 },
+      { suit: "swords", rank: 7 },
       { suit: "cups", rank: 10 },
     ];
 
@@ -67,8 +67,8 @@ describe("Hand", () => {
   });
   it("should return true for pair of 11", () => {
     const cards: Card[] = [
-      { suit: "golds", rank: 11 },
-      { suit: "blades", rank: 7 },
+      { suit: "coins", rank: 11 },
+      { suit: "swords", rank: 7 },
       { suit: "cups", rank: 11 },
     ];
 
@@ -76,8 +76,8 @@ describe("Hand", () => {
   });
   it("should return true for pair of 12", () => {
     const cards: Card[] = [
-      { suit: "golds", rank: 12 },
-      { suit: "blades", rank: 7 },
+      { suit: "coins", rank: 12 },
+      { suit: "swords", rank: 7 },
       { suit: "cups", rank: 12 },
     ];
 
@@ -85,8 +85,8 @@ describe("Hand", () => {
   });
   it("should return true for three of a kind", () => {
     const cards: Card[] = [
-      { suit: "golds", rank: 7 },
-      { suit: "blades", rank: 7 },
+      { suit: "coins", rank: 7 },
+      { suit: "swords", rank: 7 },
       { suit: "cups", rank: 7 },
     ];
 

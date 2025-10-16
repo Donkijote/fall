@@ -6,6 +6,7 @@ export const WoodTable = () => {
       src={WoodTableImg}
       alt="PokerTable"
       className={"object-fit absolute h-full w-full"}
+      data-testid={"WoodTable"}
     />
   );
 };

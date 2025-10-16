@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 import { useGameStore } from "@/application/store/gameStore";
 import { Players } from "@/infrastructure/ui/components/player/Players";
-import { Table } from "@/infrastructure/ui/components/table/Table";
+import { Table } from "@/modules/table/ui/Table";
 
 import "./App.css";
 

@@ -105,7 +105,7 @@ export const BouncingCardAnimation = ({
       >
         <Card
           rank={1}
-          suit={"golds"}
+          suit={"coins"}
           faceDown={true}
           style={{
             zIndex: 40,
@@ -116,7 +116,7 @@ export const BouncingCardAnimation = ({
       <div className="absolute top-[60vh] left-1/2 -translate-x-1/2">
         {deck.slice(0, 39).map((card, index) => (
           <div
-            key={index}
+            key={card.suit + card.rank}
             className={"card absolute left-1/2 -translate-x-1/2"}
             style={{ zIndex: index }}
           >

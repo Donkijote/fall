@@ -97,7 +97,7 @@ export const BottomSidebar = ({ isOpen, onClose }: BottomSidebarProps) => {
                 <div className="inset-0 bg-black/60 group-hover:bg-black/30 group-active:bg-black/30 absolute transition" />
 
                 <div className="p-6 relative z-10 flex h-full flex-col items-center justify-center text-center">
-                  <h3 className="text-4xl font-bold text-white drop-shadow transition-transform duration-300 group-hover:scale-110 group-active:scale-110">
+                  <h3 className="text-3xl md:text-4xl font-bold text-white drop-shadow transition-transform duration-300 group-hover:scale-110 group-active:scale-110">
                     {mode.title}
                   </h3>
                   <p className="mt-2 text-white/80 transition-transform duration-300 group-hover:scale-105 group-active:scale-105">
