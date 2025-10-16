@@ -23,9 +23,8 @@ export const TableCards = () => {
               position: "absolute",
               left: `${p.leftPct}%`,
               top: `${p.topPct}%`,
-              transform: `rotate(${p.rotationDeg}deg)`,
+              transform: `translate(-50%, -50%) rotate(${p.rotationDeg}deg)`,
               zIndex: Math.round(p.z),
-              transition: "none", // stable once placed
             }}
           />
         );

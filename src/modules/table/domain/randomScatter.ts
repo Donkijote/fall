@@ -8,7 +8,7 @@ export const randomScatter = (input: LayoutInput): LayoutOutput => {
 
   const result = new Map(existingPlacements);
 
-  const minDist = constraints?.minDistPct ?? 8;
+  const minDist = constraints?.minDistPct ?? 12;
   const maxAttempts = constraints?.maxAttempts ?? 20;
 
   const toPlacement = (key: string, i: number): Placement => {
@@ -23,7 +23,7 @@ export const randomScatter = (input: LayoutInput): LayoutOutput => {
     const jy = (rng() - 0.5) * 2;
 
     const left = clamp(cx + jx, 5, 95);
-    const top = clamp(cy + jy, 0, 70);
+    const top = clamp(cy + jy, 10, 70);
 
     return {
       key,
