@@ -1,3 +1,5 @@
+import type { Mock } from "vitest";
+
 import { useGameStoreState } from "@/application/hooks/useGameStoreState";
 import type { Placement } from "@/modules/table/entities/types";
 
@@ -29,8 +31,8 @@ vi.mock("@/infrastructure/ui/components/card/Card", () => ({
   },
 }));
 
-const typedUseGameStoreState = useGameStoreState as unknown as vi.Mock;
-const typedUseTableLayout = useTableLayout as unknown as vi.Mock;
+const typedUseGameStoreState = useGameStoreState as unknown as Mock;
+const typedUseTableLayout = useTableLayout as unknown as Mock;
 
 describe("TableCards", () => {
   beforeEach(() => {
