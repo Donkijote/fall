@@ -6,6 +6,7 @@ export const ItalianTable = () => {
       src={ItalianTableImg}
       alt="PokerTable"
       className={"absolute h-full w-full object-cover"}
+      data-testid={"ItalianTable"}
     />
   );
 };
