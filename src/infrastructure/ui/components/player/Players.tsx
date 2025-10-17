@@ -42,6 +42,10 @@ export const Players = () => {
           player.id === storedUser?.id ? storedUser.username : player.id;
         const avatar =
           player.id === storedUser?.id ? storedUser.avatar : undefined;
+        const displayDealerOptions =
+          player.id === mainPlayer &&
+          player.id === dealer &&
+          phase === "dealerChoice";
 
         return (
           <div
@@ -139,16 +143,14 @@ export const Players = () => {
             </div>
 
             <div className={clsx("relative", pos.chipOffset)}>
-              <DealerChoiceControls
-                isOpen={
-                  player.id === mainPlayer &&
-                  player.id === dealer &&
-                  phase === "dealerChoice"
-                }
-                onChoose={(dealOrder, tablePattern) =>
-                  dealerChoose(dealOrder, tablePattern)
-                }
-              />
+              {displayDealerOptions && (
+                <DealerChoiceControls
+                  isOpen={displayDealerOptions}
+                  onChoose={(dealOrder, tablePattern) =>
+                    dealerChoose(dealOrder, tablePattern)
+                  }
+                />
+              )}
               <PlayerChip
                 name={displayUserName}
                 avatar={avatar}
