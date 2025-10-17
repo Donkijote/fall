@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router";
 
 import { useGameStore } from "@/application/store/gameStore";
+import { GameOverModal } from "@/infrastructure/ui/components/modal/GameOverModal";
 import { Players } from "@/infrastructure/ui/components/player/Players";
 import { Table } from "@/modules/table/ui/Table";
 import { HOME_PATH } from "@/routes/Routes";
@@ -30,6 +31,16 @@ export const GameScreen = () => {
       <Table>
         <Players />
       </Table>
+      <GameOverModal
+        isOpen={false}
+        onNewGame={() => null}
+        onReplay={() => null}
+        onClose={() => null}
+        result={"win"}
+        stats={{
+          teamScore: [24, 13],
+        }}
+      />
     </div>
   );
 };
