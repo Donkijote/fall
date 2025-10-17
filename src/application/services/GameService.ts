@@ -1,3 +1,4 @@
+import { initialState } from "@/application/store/gameStore";
 import type { Card } from "@/domain/entities/Card";
 import type { GameMode, GameState, Player } from "@/domain/entities/GameState";
 import { chooseDealer, dealRound } from "@/domain/services/deal";
@@ -65,6 +66,10 @@ export function createGameService(
       if (state.phase !== "deal") return;
       const nextState = chooseDealer(state);
       withBotCheck(nextState);
+    },
+
+    resetGameState: () => {
+      setState(initialState);
     },
 
     dealerChoose: (
