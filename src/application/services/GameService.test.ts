@@ -184,6 +184,7 @@ describe("Game Service", () => {
         ...mockedStateWithPlayers,
         phase: "play",
         currentPlayer: mockedStateWithPlayers.players[0].id,
+        dealer: mockedStateWithPlayers.players[0].id,
       }),
     );
     state.players[0].hand = [deck[5]];
@@ -197,10 +198,12 @@ describe("Game Service", () => {
       players: expect.arrayContaining([
         expect.objectContaining({
           ...mockedStateWithPlayers.players[0],
+          collected: expect.any(Array),
           hand: expect.arrayContaining([]),
         }),
         expect.objectContaining({
           ...mockedStateWithPlayers.players[1],
+          collected: expect.any(Array),
           hand: expect.arrayContaining([]),
         }),
       ]),

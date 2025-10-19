@@ -47,5 +47,6 @@ export interface GameState {
     values: Record<string, number>;
   };
   winner?: string; // playerId or teamId string
+  lastCaptureBy: User["id"] | null;
   config: GameConfig;
 }

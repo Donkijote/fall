@@ -100,6 +100,7 @@ When all cards have been dealt and played:
 - **1v1:** Each counts to **20**. Extra cards beyond 20 → +1 point each.
 - **1v1v1:** Each counts to **12**, dealer must count to **13**. Extra cards beyond quota → +1 point each.
 - **2v2:** Each team counts to **20**. Extra cards beyond 20 → +1 point each.
+- When it's the last round any card remaining on the table will be taken by the last player who captured a card from the table, if any player took a card, then the dealer takes the remaining cards on the table.
 
 ---
 

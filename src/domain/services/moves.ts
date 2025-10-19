@@ -34,7 +34,8 @@ export const playCard = (
   const matchIndex = state.table.findIndex((c) => c.rank === card.rank);
 
   // place on table or collect
-  const newTable = [...state.table] as Array<Card>;
+  const newTable = [...state.table];
+  const isLastRound = state.deck.length === 0;
 
   if (matchIndex !== -1) {
     const capturedCards: Card[] = [];
@@ -57,6 +58,9 @@ export const playCard = (
       }
       return p;
     });
+    if (isLastRound) {
+      state.lastCaptureBy = playerId;
+    }
   } else {
     newTable.push(card);
   }
@@ -79,7 +83,6 @@ export const playCard = (
 
   // Clean table points
   // Only award if we're NOT in the last round (i.e., there are still cards in the deck)
-  const isLastRound = state.deck.length === 0; // check BEFORE any potential redeal logic below
   if (nextState.table.length === 0 && !isLastRound) {
     nextState = awardPoints(nextState, playerId, 4);
   }
@@ -95,30 +98,54 @@ export const playCard = (
 
   // If all hands empty but deck still has cards → redeal
   const allHandsEmpty = nextState.players.every((p) => p.hand.length === 0);
-  if (allHandsEmpty && nextState.deck.length > 0) {
-    nextState = dealRound(nextState, {
-      isDealerFirstDeal: false, // after first round, never deal the table again
-    });
-    // reset currentPlayer to right of dealer (first to act)
-    const dealerIndex = nextState.players.findIndex(
-      (p) => p.id === nextState.dealer,
-    );
-    const firstToPlay = (dealerIndex + 1 + playerCount) % playerCount;
-    nextState.currentPlayer = nextState.players[firstToPlay].id;
+  if (allHandsEmpty) {
+    if (nextState.deck.length > 0) {
+      nextState = dealRound(nextState, {
+        isDealerFirstDeal: false, // after first round, never deal the table again
+      });
+      // reset currentPlayer to right of dealer (first to act)
+      const dealerIndex = nextState.players.findIndex(
+        (p) => p.id === nextState.dealer,
+      );
+      const firstToPlay = (dealerIndex + 1 + playerCount) % playerCount;
+      nextState.currentPlayer = nextState.players[firstToPlay].id;
+    } else {
+      const lastCap: string | null = nextState.lastCaptureBy;
+      if (nextState.table.length > 0 && lastCap) {
+        const lastPlayer = nextState.players.find((p) => p.id === lastCap);
+        if (lastPlayer) {
+          lastPlayer.collected.push(...nextState.table);
+          nextState = {
+            ...nextState,
+            table: [],
+          };
+        }
+      } else {
+        const dealer = nextState.players.find(
+          (p) => p.id === nextState.dealer,
+        )!;
+        dealer.collected.push(...nextState.table);
+        nextState = {
+          ...nextState,
+          table: [],
+        };
+      }
+      nextState.lastCaptureBy = null;
+    }
   }
 
   return nextState;
 };
 
-function fallPoints(rank: number): number {
+const fallPoints = (rank: number): number => {
   if (rank === 10) return 2;
   if (rank === 11) return 3;
   if (rank === 12) return 4;
   return 1;
-}
+};
 
-function nextRank(rank: number): number | null {
+const nextRank = (rank: number): number | null => {
   const idx = RANK_ORDER.indexOf(rank);
   if (idx === -1 || idx === RANK_ORDER.length - 1) return null;
   return RANK_ORDER[idx + 1];
-}
+};

@@ -13,6 +13,7 @@ export const mockedState: GameState = {
   mainPlayer: "",
   currentPlayer: "",
   scores: { type: "individual", values: {} },
+  lastCaptureBy: null,
   config: {
     allowOptional: true,
     threeOfAKindWinsGame: false,
@@ -44,6 +45,7 @@ export const initialState: GameState = {
   currentPlayer: "",
   mainPlayer: "",
   scores: { type: "individual", values: {} },
+  lastCaptureBy: null,
   config: {
     allowOptional: true,
     threeOfAKindWinsGame: false,
