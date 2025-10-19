@@ -3,15 +3,11 @@ import type { GameState } from "../entities/GameState";
 import { dealRound } from "./deal";
 import { awardPoints, checkGameOver } from "./scoring";
 
-/**
- * Player plays a card (simplified).
- * If this action triggers a Fall, points are awarded, and we check game over.
- */
-export function playCard(
+export const playCard = (
   state: GameState,
   playerId: string,
   card: Card,
-): GameState {
+): GameState => {
   const player = state.players.find(
     (p) => p.id === playerId && p.id === state.currentPlayer,
   );
@@ -82,7 +78,9 @@ export function playCard(
   };
 
   // Clean table points
-  if (nextState.table.length === 0) {
+  // Only award if we're NOT in the last round (i.e., there are still cards in the deck)
+  const isLastRound = state.deck.length === 0; // check BEFORE any potential redeal logic below
+  if (nextState.table.length === 0 && !isLastRound) {
     nextState = awardPoints(nextState, playerId, 4);
   }
 
@@ -110,7 +108,7 @@ export function playCard(
   }
 
   return nextState;
-}
+};
 
 function fallPoints(rank: number): number {
   if (rank === 10) return 2;

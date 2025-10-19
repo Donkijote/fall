@@ -69,7 +69,7 @@ The first **player or team to reach 24 points** wins.
     - Rank **12** → +4 points
 
 **Clean Table:**  
-- If after a capture (single or cascade) the table is completely empty, the capturing player/team earns **+4 points**.
+- If after a capture (single or cascade) the table is completely empty, the capturing player/team earns **+4 points**. But only if it's not last round (no cards in deck)
 
 ---
 
