@@ -26,6 +26,7 @@ export const GameOverModal = () => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className="inset-0 bg-black/60 fixed z-50 flex items-center justify-center backdrop-blur-[4px]"
+          data-testid={"gameOverModal"}
         >
           <motion.div
             initial={{ scale: 0.5, opacity: 0 }}
@@ -56,6 +57,7 @@ export const GameOverModal = () => {
             <h2
               id="game-over-title"
               className="mb-2 text-2xl font-bold text-text-primary text-center"
+              data-testid={`gameOverModal-title-${gameResult}`}
             >
               {TEXTS[gameResult].title}
             </h2>
