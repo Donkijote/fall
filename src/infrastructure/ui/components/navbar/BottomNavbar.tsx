@@ -1,6 +1,7 @@
 import { clsx } from "clsx";
 import type { ReactNode } from "react";
 import { useState } from "react";
+import { useSearchParams } from "react-router";
 
 import { BottomSidebar } from "@/infrastructure/ui/components/navbar/BottomSidebar";
 
@@ -14,8 +15,12 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const BottomNavbar = () => {
+  const [searchParams] = useSearchParams();
+
   const [active, setActive] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(
+    Boolean(searchParams.get("bottomSidebar")),
+  );
 
   return (
     <>

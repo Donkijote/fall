@@ -25,13 +25,7 @@ export const Players = () => {
   );
 
   const storedUser = useMemo(() => {
-    const userStore = StorageService.get(StorageKeys.FALL_USER);
-    if (!userStore) return null;
-    try {
-      return JSON.parse(userStore) as User;
-    } catch {
-      return null;
-    }
+    return StorageService.get<User>(StorageKeys.FALL_USER);
   }, []);
 
   return (
@@ -42,6 +36,10 @@ export const Players = () => {
           player.id === storedUser?.id ? storedUser.username : player.id;
         const avatar =
           player.id === storedUser?.id ? storedUser.avatar : undefined;
+        const displayDealerOptions =
+          player.id === mainPlayer &&
+          player.id === dealer &&
+          phase === "dealerChoice";
 
         return (
           <div
@@ -139,16 +137,14 @@ export const Players = () => {
             </div>
 
             <div className={clsx("relative", pos.chipOffset)}>
-              <DealerChoiceControls
-                isOpen={
-                  player.id === mainPlayer &&
-                  player.id === dealer &&
-                  phase === "dealerChoice"
-                }
-                onChoose={(dealOrder, tablePattern) =>
-                  dealerChoose(dealOrder, tablePattern)
-                }
-              />
+              {displayDealerOptions && (
+                <DealerChoiceControls
+                  isOpen={displayDealerOptions}
+                  onChoose={(dealOrder, tablePattern) =>
+                    dealerChoose(dealOrder, tablePattern)
+                  }
+                />
+              )}
               <PlayerChip
                 name={displayUserName}
                 avatar={avatar}

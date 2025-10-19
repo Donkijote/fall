@@ -3,17 +3,14 @@ import { useNavigate } from "react-router";
 
 import { useGameStore } from "@/application/store/gameStore";
 import { Players } from "@/infrastructure/ui/components/player/Players";
+import { GameOverModal } from "@/modules/matchEnd/ui/GameOverModal";
 import { Table } from "@/modules/table/ui/Table";
-import { HOME_PATH } from "@/routes/Routes";
 
 export const GameScreen = () => {
   const { state, service } = useGameStore();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (state.phase === "init") {
-      navigate(HOME_PATH);
-    }
     if (state.phase === "deal") {
       service.startGame();
     }
@@ -30,6 +27,7 @@ export const GameScreen = () => {
       <Table>
         <Players />
       </Table>
+      <GameOverModal />
     </div>
   );
 };

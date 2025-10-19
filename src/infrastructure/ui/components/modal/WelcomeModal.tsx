@@ -28,7 +28,7 @@ export const WelcomeModal = () => {
   };
 
   useEffect(() => {
-    const stored = StorageService.get(StorageKeys.FALL_USER);
+    const stored = StorageService.get<User>(StorageKeys.FALL_USER);
     if (!stored) {
       setIsOpen(true);
     }

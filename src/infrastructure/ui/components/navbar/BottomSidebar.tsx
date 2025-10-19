@@ -51,12 +51,11 @@ export const BottomSidebar = ({ isOpen, onClose }: BottomSidebarProps) => {
   const navigate = useNavigate();
 
   const onSelectGameMode = (gameMode: GameMode) => {
-    const storeUserKey = StorageService.get(StorageKeys.FALL_USER);
-    if (!storeUserKey) {
+    const user = StorageService.get<User>(StorageKeys.FALL_USER);
+    if (!user) {
       throw new Error("User not found in storage");
     }
-    const parsedUser = JSON.parse(storeUserKey) as User;
-    gameStoreService.setupGame(parsedUser.id, gameMode);
+    gameStoreService.setupGame(user.id, gameMode);
     navigate(GAME_PATH);
   };
 
