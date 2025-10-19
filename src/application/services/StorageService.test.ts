@@ -4,65 +4,54 @@ describe("StorageService", () => {
   beforeEach(() => {
     localStorage.clear();
   });
-
   afterEach(() => {
     vi.restoreAllMocks();
   });
 
-  it("set() stringifies the value and stores it under the given key", () => {
-    const spy = vi.spyOn(Storage.prototype, "setItem");
-
+  it("set() stringifies and stores, get<T>() returns parsed value", () => {
     const user = { id: 1, name: "Ana" };
     StorageService.set(StorageKeys.FALL_USER, user);
 
-    expect(spy).toHaveBeenCalledTimes(1);
-    expect(spy).toHaveBeenCalledWith(
-      StorageKeys.FALL_USER,
-      JSON.stringify(user),
-    );
-    expect(localStorage.getItem(StorageKeys.FALL_USER)).toBe(
-      JSON.stringify(user),
-    );
+    const value = StorageService.get<typeof user>(StorageKeys.FALL_USER);
+    expect(value).toEqual(user);
   });
 
-  it("get() returns the stored JSON string (caller is responsible for JSON.parse)", () => {
-    const payload = { id: 2, name: "Ben" };
-    localStorage.setItem(StorageKeys.FALL_USER, JSON.stringify(payload));
-
-    const raw = StorageService.get(StorageKeys.FALL_USER);
-    expect(raw).toBeTypeOf("string");
-    expect(raw).toBe(JSON.stringify(payload));
-
-    // Typical consumer usage:
-    const parsed = JSON.parse(raw!);
-    expect(parsed).toEqual(payload);
+  it("get<T>() returns null when the key does not exist", () => {
+    const value = StorageService.get<{ id: number }>(StorageKeys.FALL_USER);
+    expect(value).toBeNull();
   });
 
-  it("get() returns null when the key does not exist", () => {
-    expect(StorageService.get(StorageKeys.FALL_USER)).toBeNull();
-  });
-
-  it("remove() deletes the stored item", () => {
-    const spy = vi.spyOn(Storage.prototype, "removeItem");
-
-    localStorage.setItem(StorageKeys.FALL_USER, '{"ok":true}');
-    expect(localStorage.getItem(StorageKeys.FALL_USER)).not.toBeNull();
+  it("remove() deletes the stored item; subsequent get() is null", () => {
+    const payload = { ok: true };
+    StorageService.set(StorageKeys.FALL_USER, payload);
 
     StorageService.remove(StorageKeys.FALL_USER);
-
-    expect(spy).toHaveBeenCalledTimes(1);
-    expect(spy).toHaveBeenCalledWith(StorageKeys.FALL_USER);
-    expect(localStorage.getItem(StorageKeys.FALL_USER)).toBeNull();
+    expect(
+      StorageService.get<typeof payload>(StorageKeys.FALL_USER),
+    ).toBeNull();
   });
 
-  it("integration: set() then get() yields the same data after JSON.parse", () => {
-    const data = { id: 3, roles: ["admin", "player"] };
+  it("get<T>() works for primitive values too (strings, numbers, booleans)", () => {
+    StorageService.set(StorageKeys.FALL_USER, "hello");
+    expect(StorageService.get<string>(StorageKeys.FALL_USER)).toBe("hello");
+
+    StorageService.set(StorageKeys.FALL_USER, 42);
+    expect(StorageService.get<number>(StorageKeys.FALL_USER)).toBe(42);
+
+    StorageService.set(StorageKeys.FALL_USER, true);
+    expect(StorageService.get<boolean>(StorageKeys.FALL_USER)).toBe(true);
+  });
+
+  it("gracefully returns null if stored data is not valid JSON", () => {
+    // Simulate foreign/non-JSON write into localStorage
+    localStorage.setItem(StorageKeys.FALL_USER, "not-json");
+    expect(StorageService.get<unknown>(StorageKeys.FALL_USER)).toBeNull();
+  });
+
+  it("integration: set() then get() yields deep-equal data", () => {
+    const data = { id: 3, roles: ["admin", "player"] as const };
     StorageService.set(StorageKeys.FALL_USER, data);
-
-    const stored = StorageService.get(StorageKeys.FALL_USER);
-    expect(stored).not.toBeNull();
-
-    const parsed = JSON.parse(stored!);
-    expect(parsed).toEqual(data);
+    const got = StorageService.get<typeof data>(StorageKeys.FALL_USER);
+    expect(got).toEqual(data);
   });
 });
