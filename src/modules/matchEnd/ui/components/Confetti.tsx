@@ -82,6 +82,9 @@ const ConfettiPiece: FC<{
       transition={{ duration, delay, ease: "easeOut" }}
       className={`absolute block ${hue}`}
       style={{ width: size, height: size, borderRadius: 2 }}
+      data-testid={`burst-${side}-${seed}`}
+      data-side={side}
+      data-seed={String(seed)}
     />
   );
 };
