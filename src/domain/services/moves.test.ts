@@ -206,4 +206,79 @@ describe("Moves", () => {
       newState.scores.values[mockedStateWithPlayers.players[0].id] ?? 0,
     ).toBe(0);
   });
+  it("should give leftover table to the last capturer at the true end (deck empty, all hands empty)", () => {
+    const p0 = mockedStateWithPlayers.players[0].id;
+    const p1 = mockedStateWithPlayers.players[1].id;
+
+    // Make sure it's the final round: no deck left.
+    const state: GameState = {
+      ...mockedStateWithPlayers,
+      deck: [],
+      currentPlayer: p0,
+      // Two arbitrary table cards (ranks don't matter except != played card rank)
+      table: [
+        { suit: "cups", rank: 2 },
+        { suit: "swords", rank: 3 },
+      ],
+      lastPlayedCard: undefined,
+      // Someone captured earlier in the deal/round:
+      lastCaptureBy: p1,
+    };
+
+    // Hands: only current player has exactly one card to play; others are empty.
+    state.players = state.players.map((pl, idx) =>
+      idx === 0
+        ? { ...pl, hand: [{ suit: "clubs", rank: 5 }], collected: [] }
+        : { ...pl, hand: [], collected: [] },
+    );
+
+    const newState = playCard(state, p0, { suit: "clubs", rank: 5 });
+
+    // Table should be swept to lastCaptureBy (p1), including the freshly played card.
+    const leftoverCount = 3; // 2 existing on table + 1 just played (no capture)
+    expect(newState.table).toHaveLength(0);
+
+    const p1After = newState.players.find((p) => p.id === p1)!;
+    expect(p1After.collected).toHaveLength(leftoverCount);
+
+    // Tracker should be cleared after the sweep.
+    expect(newState.lastCaptureBy).toBeNull();
+  });
+
+  it("should give leftover table to the dealer if nobody captured in the deal (fallback)", () => {
+    const p0 = mockedStateWithPlayers.players[0].id;
+    const dealerId = mockedStateWithPlayers.players[1].id; // choose player[1] as dealer for clarity
+
+    const state: GameState = {
+      ...mockedStateWithPlayers,
+      deck: [],
+      currentPlayer: p0,
+      dealer: dealerId,
+      table: [
+        { suit: "swords", rank: 7 },
+        { suit: "clubs", rank: 4 },
+      ],
+      lastPlayedCard: undefined,
+      lastCaptureBy: null, // nobody captured this deal
+    };
+
+    // Hands: only current player has a non-matching single card to end the round.
+    state.players = state.players.map((pl, idx) =>
+      idx === 0
+        ? { ...pl, hand: [{ suit: "coins", rank: 1 }], collected: [] }
+        : { ...pl, hand: [], collected: [] },
+    );
+
+    const newState = playCard(state, p0, { suit: "coins", rank: 1 });
+
+    // All leftovers (2 on table + 1 just played) go to the dealer.
+    const leftoverCount = 3;
+    expect(newState.table).toHaveLength(0);
+
+    const dealerAfter = newState.players.find((p) => p.id === dealerId)!;
+    expect(dealerAfter.collected).toHaveLength(leftoverCount);
+
+    // Tracker should be cleared after the sweep.
+    expect(newState.lastCaptureBy).toBeNull();
+  });
 });
