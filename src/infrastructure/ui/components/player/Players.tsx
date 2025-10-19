@@ -25,13 +25,7 @@ export const Players = () => {
   );
 
   const storedUser = useMemo(() => {
-    const userStore = StorageService.get(StorageKeys.FALL_USER);
-    if (!userStore) return null;
-    try {
-      return JSON.parse(userStore) as User;
-    } catch {
-      return null;
-    }
+    return StorageService.get<User>(StorageKeys.FALL_USER);
   }, []);
 
   return (
