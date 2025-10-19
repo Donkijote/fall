@@ -2,6 +2,7 @@ import { afterEach, expect } from "vitest";
 
 import { createGameService } from "@/application/services/GameService";
 import {
+  initialState,
   mockedState,
   mockedStateWithPlayers,
 } from "@/application/store/gameStore";
@@ -361,5 +362,17 @@ describe("Game Service", () => {
         dealOrder: expect.any(String),
       },
     });
+  });
+  it("should reset game", () => {
+    createGameService(
+      vi.fn().mockReturnValue({
+        ...mockedStateWithPlayers,
+        phase: "play",
+        dealer: mockedStateWithPlayers.players[0].id,
+      }),
+      mockSetState,
+    ).resetGameState();
+
+    expect(mockSetState).toHaveBeenCalledWith(initialState);
   });
 });
