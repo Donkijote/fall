@@ -183,4 +183,27 @@ describe("Moves", () => {
       expect(player.hand).toHaveLength(3);
     });
   });
+  it("should NOT award clean table points when deck is empty (last round)", () => {
+    const state: GameState = {
+      ...mockedStateWithPlayers,
+      deck: [],
+      currentPlayer: mockedStateWithPlayers.players[0].id,
+      table: [deck[0]],
+      lastPlayedCard: deck[1],
+    };
+    state.players[0].hand = [deck[0], deck[2], deck[3]];
+    state.players[0].collected = [];
+
+    const newState = playCard(
+      state,
+      mockedStateWithPlayers.players[0].id,
+      deck[0],
+    );
+
+    expect(newState.table).toHaveLength(0);
+    expect(newState.players[0].collected).toHaveLength(2);
+    expect(
+      newState.scores.values[mockedStateWithPlayers.players[0].id] ?? 0,
+    ).toBe(0);
+  });
 });
