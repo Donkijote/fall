@@ -7,14 +7,44 @@ on:
     types:
       - closed
 
+permissions:
+  contents: write
+  actions: write
+
 jobs:
   release:
     runs-on: ubuntu-latest
-    if: (contains(github.event.pull_request.labels.*.name, 'release/major') || contains(github.event.pull_request.labels.*.name, 'release/minor') || contains(github.event.pull_request.labels.*.name, 'release/patch') || contains(github.event.pull_request.labels.*.name, 'release/current')) && github.event.pull_request.merged == true
+    if: >
+      (contains(github.event.pull_request.labels.*.name, 'release/major') ||
+       contains(github.event.pull_request.labels.*.name, 'release/minor') ||
+       contains(github.event.pull_request.labels.*.name, 'release/patch') ||
+       contains(github.event.pull_request.labels.*.name, 'release/current')) &&
+      github.event.pull_request.merged == true
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Save PR context (number, refs) as artifact
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          jq -n '{
+            number: env.NUMBER|tonumber,
+            headRef: env.HEAD_REF,
+            baseRef: env.BASE_REF
+          }' > pr-context.json
+        env:
+          NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+
+      - name: Upload PR context artifact
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-context
+          path: pr-context.json
+          if-no-files-found: error
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -40,11 +70,11 @@ jobs:
       - name: Get tag version
         id: get_tag
         run: |
-          git fetch
+          git fetch --tags
           git branch --show-current
           git checkout main
           git pull
-          echo "version=v$(pnpm pkg get version | tr -d '\"' | tr -d '\-SNAPSHOT')" >> $GITHUB_OUTPUT
+          echo "version=v$(pnpm pkg get version | tr -d '\"' | tr -d '\-SNAPSHOT')" >> "$GITHUB_OUTPUT"
 
       - name: Tag the commit
         run: |
@@ -55,7 +85,7 @@ jobs:
       - name: Create changelog diff
         id: changelog_diff
         run: |
-          git fetch
+          git fetch --tags
           sed -n "/^## \[${{ steps.get_tag.outputs.version }}\]/,/^## \[$(git describe --abbrev=0 --tags $(git rev-list --tags --max-count=1))\]/{/^## \[$(git describe --abbrev=0 --tags $(git rev-list --tags --skip=1 --max-count=1))\]/!p;}" CHANGELOG.md > release_notes.md
 
       - name: Create release
