@@ -9,14 +9,18 @@ on:
 
 jobs:
   sync:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 22.14.x
 
@@ -28,6 +32,36 @@ jobs:
       - name: Install
         run: pnpm install
 
+      - name: Determine version bump from PR label
+        id: bump
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const run = context.payload.workflow_run;
+            const prs = run.pull_requests || [];
+            if (prs.length === 0) {
+              core.setFailed('No pull request associated with this workflow_run.');
+              return;
+            }
+            // If there are multiple, take the first; adapt if you need stricter matching.
+            const prNumber = prs[0].number;
+
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber,
+            });
+
+            const rel = pr.labels.find(l =>
+              /^release\/(major|minor|patch)$/.test(l.name)
+            );
+            if (!rel) {
+              core.setFailed('Missing required label release/{major|minor|patch} on the PR.');
+              return;
+            }
+            const bump = rel.name.split('/')[1]; // major | minor | patch
+            core.setOutput('bump', bump);
+
       - name: Set up Git
         run: |
           git config user.name "Manuel Gonçalves"
@@ -37,17 +71,17 @@ jobs:
         id: update_version
         run: |
           git fetch
-          git branch --show-current
-          git checkout ${{github.event.pull_request.head.ref}}
+          git checkout main
           git pull
-          echo "Correct Package Version"
-          echo "version=$(pnpm version minor --no-git-tag-version)" >> $GITHUB_OUTPUT
+          echo "Bumping version with: ${{ steps.bump.outputs.bump }}"
+          version=$(pnpm version ${{ steps.bump.outputs.bump }} --no-git-tag-version)
+          echo "version=$version" >> "$GITHUB_OUTPUT"
 
       - name: Update Changelog
         id: update_changelog
         run: |
-          sed -i '/\[Unreleased\]/a ## [${{ steps.update_version.outputs.version }}]' CHANGELOG.md
-          sed -i '/\[Unreleased\]/a\\' CHANGELOG.md
+          sed -i "/\[Unreleased\]/a ## [${{ steps.update_version.outputs.version }}]" CHANGELOG.md
+          sed -i "/\[Unreleased\]/a\\" CHANGELOG.md
 
       - name: Create pull request
         id: create_pr

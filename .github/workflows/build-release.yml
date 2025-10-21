@@ -42,7 +42,7 @@ jobs:
         run: |
           git fetch
           git branch --show-current
-          git checkout ${{github.event.pull_request.head.ref}}
+          git checkout main
           git pull
           echo "version=v$(pnpm pkg get version | tr -d '\"' | tr -d '\-SNAPSHOT')" >> $GITHUB_OUTPUT
 
