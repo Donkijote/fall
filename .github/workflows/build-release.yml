@@ -14,10 +14,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 22.14.x
 
@@ -42,7 +42,7 @@ jobs:
         run: |
           git fetch
           git branch --show-current
-          git checkout ${{github.event.pull_request.head.ref}}
+          git checkout main
           git pull
           echo "version=v$(pnpm pkg get version | tr -d '\"' | tr -d '\-SNAPSHOT')" >> $GITHUB_OUTPUT
 
