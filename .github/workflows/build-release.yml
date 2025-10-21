@@ -76,21 +76,39 @@ jobs:
         if: ${{ steps.ver.outputs.bump == 'current' }}
         run: echo "No version bump requested; proceeding to tag/release with current version."
 
-      - name: Import GPG key & config git
+      - name: Import GPG key & configure loopback
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
-          echo "$GPG_PRIVATE_KEY" | gpg --batch --yes --import
-          GPG_KEY_ID=$(gpg --list-secret-keys --keyid-format=long | awk '/sec/{print $2}' | sed 's|.*/||' | head -n1)
-          echo "GPG_KEY_ID=$GPG_KEY_ID" >> $GITHUB_ENV
+          # Basic Git identity (must match the email on the GPG public key added to GitHub)
           git config user.name "Manuel Gonçalves"
           git config user.email "manuelmjgc@gmail.com"
-          git config user.signingkey "$GPG_KEY_ID"
+
+          # Import private key
+          mkdir -p ~/.gnupg
+          chmod 700 ~/.gnupg
+          echo "$GPG_PRIVATE_KEY" | gpg --batch --yes --import
+
+          # Find key ID
+          GPG_KEY_ID=$(gpg --list-secret-keys --keyid-format=long | awk '/sec/{print $2}' | sed 's|.*/||' | head -n1)
+          echo "GPG_KEY_ID=$GPG_KEY_ID" >> $GITHUB_ENV
+
+          # Tell git to use this key and gpg
+          git config gpg.program gpg
           git config commit.gpgsign true
+          git config user.signingkey "$GPG_KEY_ID"
+
+          # Force non-interactive passphrase entry via loopback
           echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
           echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
-          echo RELOADAGENT | gpg-connect-agent
+
+          # Reload agent to pick up config
+          gpgconf --kill gpg-agent || true
+          gpgconf --launch gpg-agent || true
+
+          echo test | gpg --batch --yes --pinentry-mode loopback \
+            ${GPG_PASSPHRASE:+--passphrase "$GPG_PASSPHRASE"} --clearsign >/dev/null
 
       - name: Bump version in package.json (when requested)
         if: ${{ steps.ver.outputs.bump != 'current' }}
@@ -98,17 +116,17 @@ jobs:
           node -e "const fs=require('fs');const p='package.json';const pkg=JSON.parse(fs.readFileSync(p,'utf8'));pkg.version='${{ steps.ver.outputs.next }}';fs.writeFileSync(p,JSON.stringify(pkg,null,2)+'\n')"
           pnpm install --lockfile-only
 
-      - name: Commit (signed) and push to main
+      - name: Commit and push
         env:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
           TOKEN: ${{ secrets.TOKEN }}
         run: |
-          git add package.json pnpm-lock.yaml || true
-          if git diff --cached --quiet; then
-            echo "Nothing to commit."
-          else            
-            git commit -S -m "chore(release): bump version to ${{ steps.ver.outputs.next }}"
-          fi        
+          git add -A
+          # Use loopback mode during the commit sign as well (just in case)
+          GIT_COMMITTER_DATE="$(date -R)" \
+          git -c gpg.program="gpg --pinentry-mode=loopback ${GPG_PASSPHRASE:+--passphrase $GPG_PASSPHRASE}" \
+              commit -S -m "chore(release): bump version"
+
           git push https://x-access-token:${TOKEN}@github.com/${{ github.repository }}.git HEAD:main
 
       - name: Build (after version bump)
@@ -121,14 +139,17 @@ jobs:
           echo "version=$V" >> "$GITHUB_OUTPUT"
           echo "Final version: $V"
 
-      - name: Create and push tag
+      - name: Create and push signed tag
         run: |
-          TAG="v${{ steps.finalVersion.outputs.version }}"
+          TAG="v$(node -p "require('./package.json').version")"
           git fetch --tags
           if git rev-parse "$TAG" >/dev/null 2>&1; then
             echo "Tag $TAG already exists; skipping"
           else
-            git tag -s "$TAG" -m "Version $TAG" || git tag -a "$TAG" -m "Version $TAG"
+            gpg --batch --yes --pinentry-mode loopback ${GPG_PASSPHRASE:+--passphrase "$GPG_PASSPHRASE"} \
+              --sign --dry-run </dev/null >/dev/null 2>&1 || true
+            git -c gpg.program="gpg --pinentry-mode=loopback ${GPG_PASSPHRASE:+--passphrase $GPG_PASSPHRASE}" \
+                tag -s "$TAG" -m "Version $TAG" || git tag -a "$TAG" -m "Version $TAG"
             git push origin "$TAG"
           fi
 
