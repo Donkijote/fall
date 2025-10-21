@@ -2,22 +2,85 @@ name: Sync Release
 
 on:
   workflow_run:
-    workflows:
-      - Release
-    types:
-      - completed
+    workflows: ["Release"]
+    types: [completed]
+
+permissions:
+  actions: read
+  contents: write
+  pull-requests: read
 
 jobs:
   sync:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
 
     steps:
+      - name: Download PR context from Release run
+        id: dl_ctx
+        uses: actions/download-artifact@v4
+        with:
+          name: pr-context
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+        continue-on-error: true
+
+      - name: Verify PR context
+        id: check_ctx
+        run: |
+          if [ ! -f "pr-context.json" ]; then
+            echo "missing=true" >> "$GITHUB_OUTPUT"
+            echo "No pr-context.json found. Will try to resolve PR via API as a fallback."
+          else
+            echo "missing=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Fallback — Find PR for workflow run commit
+        if: steps.check_ctx.outputs.missing == 'true'
+        id: find_pr
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const sha = context.payload.workflow_run.head_sha;
+            const { owner, repo } = context.repo;
+
+            const resp = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+              owner, repo, commit_sha: sha
+            });
+
+            const pr = resp.data[0];
+            if (!pr) {
+              core.setFailed(`No PR found for commit ${sha}.`);
+              return;
+            }
+
+            core.setOutput('number', pr.number.toString());
+            core.setOutput('headRef', pr.head?.ref || '');
+            core.setOutput('baseRef', pr.base?.ref || '');
+
+      - name: Read PR context (artifact or fallback)
+        id: pr_ctx
+        run: |
+          if [ -f pr-context.json ]; then
+            echo "number=$(jq -r .number pr-context.json)" >> "$GITHUB_OUTPUT"
+            echo "headRef=$(jq -r .headRef pr-context.json)" >> "$GITHUB_OUTPUT"
+            echo "baseRef=$(jq -r .baseRef pr-context.json)" >> "$GITHUB_OUTPUT"
+          else
+            echo "number=${{ steps.find_pr.outputs.number }}" >> "$GITHUB_OUTPUT"
+            echo "headRef=${{ steps.find_pr.outputs.headRef }}" >> "$GITHUB_OUTPUT"
+            echo "baseRef=${{ steps.find_pr.outputs.baseRef }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Log PR info
+        run: |
+          echo "PR #:     ${{ steps.pr_ctx.outputs.number }}"
+          echo "Head ref: ${{ steps.pr_ctx.outputs.headRef }}"
+          echo "Base ref: ${{ steps.pr_ctx.outputs.baseRef }}"
+
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -31,36 +94,6 @@ jobs:
 
       - name: Install
         run: pnpm install
-
-      - name: Determine version bump from PR label
-        id: bump
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const run = context.payload.workflow_run;
-            const prs = run.pull_requests || [];
-            if (prs.length === 0) {
-              core.setFailed('No pull request associated with this workflow_run.');
-              return;
-            }
-            // If there are multiple, take the first; adapt if you need stricter matching.
-            const prNumber = prs[0].number;
-
-            const { data: pr } = await github.rest.pulls.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: prNumber,
-            });
-
-            const rel = pr.labels.find(l =>
-              /^release\/(major|minor|patch)$/.test(l.name)
-            );
-            if (!rel) {
-              core.setFailed('Missing required label release/{major|minor|patch} on the PR.');
-              return;
-            }
-            const bump = rel.name.split('/')[1]; // major | minor | patch
-            core.setOutput('bump', bump);
 
       - name: Set up Git
         run: |

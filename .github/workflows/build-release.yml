@@ -2,61 +2,167 @@ name: Release
 
 on:
   pull_request:
-    branches:
-      - main
-    types:
-      - closed
+    branches: [main]
+    types: [closed]
+
+permissions:
+  contents: write
+  actions: write
 
 jobs:
   release:
     runs-on: ubuntu-latest
-    if: (contains(github.event.pull_request.labels.*.name, 'release/major') || contains(github.event.pull_request.labels.*.name, 'release/minor') || contains(github.event.pull_request.labels.*.name, 'release/patch') || contains(github.event.pull_request.labels.*.name, 'release/current')) && github.event.pull_request.merged == true
+    if: >
+      github.event.pull_request.merged == true &&
+      (contains(github.event.pull_request.labels.*.name, 'release/major') ||
+       contains(github.event.pull_request.labels.*.name, 'release/minor') ||
+       contains(github.event.pull_request.labels.*.name, 'release/patch') ||
+       contains(github.event.pull_request.labels.*.name, 'release/current'))
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.TOKEN }}
 
-      - name: Setup Node
+      - name: Setup Node & PNPM
         uses: actions/setup-node@v4
         with:
           node-version: 22.14.x
-
-      - name: Setup PNPM
-        uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v4
         with:
           version: 10.13.1
 
       - name: Install
         run: pnpm install
 
-      - name: Build
-        run: pnpm run build
-
-      - name: Set up Git
+      - name: Ensure latest main
         run: |
+          git fetch origin main --tags
+          git checkout main
+          git pull --ff-only origin main
+
+      - name: Determine bump type from labels
+        id: bump
+        run: |
+          BUMP="current"
+          echo '${{ toJson(github.event.pull_request.labels.*.name) }}' | grep -q 'release/major' && BUMP=major
+          echo '${{ toJson(github.event.pull_request.labels.*.name) }}' | grep -q 'release/minor' && BUMP=minor
+          echo '${{ toJson(github.event.pull_request.labels.*.name) }}' | grep -q 'release/patch' && BUMP=patch
+          echo "type=$BUMP" >> "$GITHUB_OUTPUT"
+
+      - name: Compute next version
+        id: ver
+        env:
+          BUMP: ${{ steps.bump.outputs.type }}
+        run: |
+          CURR=$(node -p "require('./package.json').version")
+          if [ "$BUMP" = "major" ]; then
+            NEXT=$(node -e "let[vM,vm,vp]=require('./package.json').version.split('.').map(Number);console.log([vM+1,0,0].join('.'))")
+          elif [ "$BUMP" = "minor" ]; then
+            NEXT=$(node -e "let[vM,vm,vp]=require('./package.json').version.split('.').map(Number);console.log([vM,vm+1,0].join('.'))")
+          elif [ "$BUMP" = "patch" ]; then
+            NEXT=$(node -e "let[vM,vm,vp]=require('./package.json').version.split('.').map(Number);console.log([vM,vm,vp+1].join('.'))")
+          else
+            NEXT="$CURR"
+          fi
+          echo "current=$CURR" >> "$GITHUB_OUTPUT"
+          echo "next=$NEXT" >> "$GITHUB_OUTPUT"
+          echo "bump=$BUMP" >> "$GITHUB_OUTPUT"
+          echo "Current: $CURR  Next: $NEXT"
+
+      - name: Skip if no bump (current)
+        if: ${{ steps.ver.outputs.bump == 'current' }}
+        run: echo "No version bump requested; proceeding to tag/release with current version."
+
+      - name: Import GPG key & configure loopback
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          # Basic Git identity (must match the email on the GPG public key added to GitHub)
           git config user.name "Manuel Gonçalves"
           git config user.email "manuelmjgc@gmail.com"
 
-      - name: Get tag version
-        id: get_tag
-        run: |
-          git fetch
-          git branch --show-current
-          git checkout main
-          git pull
-          echo "version=v$(pnpm pkg get version | tr -d '\"' | tr -d '\-SNAPSHOT')" >> $GITHUB_OUTPUT
+          # Import private key
+          mkdir -p ~/.gnupg
+          chmod 700 ~/.gnupg
+          echo "$GPG_PRIVATE_KEY" | gpg --batch --yes --import
 
-      - name: Tag the commit
+          # Find key ID
+          GPG_KEY_ID=$(gpg --list-secret-keys --keyid-format=long | awk '/sec/{print $2}' | sed 's|.*/||' | head -n1)
+          echo "GPG_KEY_ID=$GPG_KEY_ID" >> $GITHUB_ENV
+
+          # Tell git to use this key and gpg
+          git config gpg.program gpg
+          git config commit.gpgsign true
+          git config user.signingkey "$GPG_KEY_ID"
+
+          # Force non-interactive passphrase entry via loopback
+          echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
+          echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
+
+          # Reload agent to pick up config
+          gpgconf --kill gpg-agent || true
+          gpgconf --launch gpg-agent || true
+
+          echo test | gpg --batch --yes --pinentry-mode loopback \
+            ${GPG_PASSPHRASE:+--passphrase "$GPG_PASSPHRASE"} --clearsign >/dev/null
+
+      - name: Bump version in package.json (when requested)
+        if: ${{ steps.ver.outputs.bump != 'current' }}
         run: |
-          current_version=${{ steps.get_tag.outputs.version }}
-          git tag -a "$current_version" -m "Version $current_version"
-          git push --follow-tags
+          node -e "const fs=require('fs');const p='package.json';const pkg=JSON.parse(fs.readFileSync(p,'utf8'));pkg.version='${{ steps.ver.outputs.next }}';fs.writeFileSync(p,JSON.stringify(pkg,null,2)+'\n')"
+          pnpm install --lockfile-only
+
+      - name: Commit and push
+        env:
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          TOKEN: ${{ secrets.TOKEN }}
+        run: |
+          git add -A          
+          git commit -S -m "chore(release): bump version" || echo "Nothing to commit."        
+          git push https://x-access-token:${TOKEN}@github.com/${{ github.repository }}.git HEAD:main
+
+      - name: Build (after version bump)
+        run: pnpm run build
+
+      - name: Determine final version
+        id: finalVersion
+        run: |
+          V=$(node -p "require('./package.json').version")
+          echo "version=$V" >> "$GITHUB_OUTPUT"
+          echo "Final version: $V"
+
+      - name: Create and push signed tag
+        env:
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          TAG="v$(node -p "require('./package.json').version")"
+          git fetch --tags
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag $TAG already exists; skipping"
+          else
+            git tag -s "$TAG" -m "Version $TAG" || git tag -a "$TAG" -m "Version $TAG"
+            git push origin "$TAG"
+          fi
 
       - name: Create changelog diff
         id: changelog_diff
         run: |
-          git fetch
-          sed -n "/^## \[${{ steps.get_tag.outputs.version }}\]/,/^## \[$(git describe --abbrev=0 --tags $(git rev-list --tags --max-count=1))\]/{/^## \[$(git describe --abbrev=0 --tags $(git rev-list --tags --skip=1 --max-count=1))\]/!p;}" CHANGELOG.md > release_notes.md
+          git fetch --tags
+          LAST_TAG=$(git describe --abbrev=0 --tags $(git rev-list --tags --max-count=1))
+          PREV_TAG=$(git describe --abbrev=0 --tags $(git rev-list --tags --skip=1 --max-count=1) 2>/dev/null || echo "")
+          if [ -n "$PREV_TAG" ]; then
+            sed -n "/^## \[${LAST_TAG}\]/,/^## \[$PREV_TAG\]/{/^## \[$PREV_TAG\]/!p;}" CHANGELOG.md > release_notes.md || true
+          else
+            sed -n "/^## \[${LAST_TAG}\]/,\$p" CHANGELOG.md > release_notes.md || true
+          fi
+          if [ ! -s release_notes.md ]; then
+            echo "Changes for ${LAST_TAG}" > release_notes.md
+            git log --oneline --decorate --no-merges "${PREV_TAG:+$PREV_TAG..}${LAST_TAG}" >> release_notes.md || true
+          fi
 
       - name: Create release
         id: create_release
@@ -64,11 +170,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag: ${{ steps.get_tag.outputs.version }}
-          name: Release ${{ steps.get_tag.outputs.version }}
+          tag: v${{ steps.finalVersion.outputs.version }}
+          name: Release v${{ steps.finalVersion.outputs.version }}
           bodyFile: release_notes.md
           draft: false
           prerelease: false
 
       - name: Delete release_notes file
-        run: rm release_notes.md
+        run: rm -f release_notes.md
