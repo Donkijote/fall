@@ -2,19 +2,49 @@ name: Release
 
 on:
   pull_request:
-    branches:
-      - main
-    types:
-      - closed
+    branches: [main]
+    types: [closed]
+
+permissions:
+  contents: write
+  actions: write
 
 jobs:
   release:
     runs-on: ubuntu-latest
-    if: (contains(github.event.pull_request.labels.*.name, 'release/major') || contains(github.event.pull_request.labels.*.name, 'release/minor') || contains(github.event.pull_request.labels.*.name, 'release/patch') || contains(github.event.pull_request.labels.*.name, 'release/current')) && github.event.pull_request.merged == true
+    if: >
+      (contains(github.event.pull_request.labels.*.name, 'release/major') ||
+       contains(github.event.pull_request.labels.*.name, 'release/minor') ||
+       contains(github.event.pull_request.labels.*.name, 'release/patch') ||
+       contains(github.event.pull_request.labels.*.name, 'release/current')) &&
+      github.event.pull_request.merged == true
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Save PR context (number, refs) as artifact
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          jq -n '{
+            number: env.NUMBER|tonumber,
+            headRef: env.HEAD_REF,
+            baseRef: env.BASE_REF
+          }' > pr-context.json
+        env:
+          NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+
+      - name: Upload PR context artifact
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-context
+          path: pr-context.json
+          if-no-files-found: error
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -29,34 +59,106 @@ jobs:
       - name: Install
         run: pnpm install
 
-      - name: Build
-        run: pnpm run build
+      - name: Ensure we are on latest main
+        run: |
+          git fetch origin main --tags
+          git checkout main
+          git pull --ff-only origin main
 
-      - name: Set up Git
+      - name: Determine bump type from labels
+        id: bump
+        run: |
+          # Default to 'current' (no bump)
+          BUMP="current"
+
+          if echo "${{ toJson(github.event.pull_request.labels.*.name) }}" | grep -q 'release/major'; then
+            BUMP="major"
+          elif echo "${{ toJson(github.event.pull_request.labels.*.name) }}" | grep -q 'release/minor'; then
+            BUMP="minor"
+          elif echo "${{ toJson(github.event.pull_request.labels.*.name) }}" | grep -q 'release/patch'; then
+            BUMP="patch"
+          fi
+
+          echo "type=$BUMP" >> "$GITHUB_OUTPUT"
+
+      - name: Show current version
+        id: curr
+        run: |
+          CURR=$(pnpm pkg get version | tr -d '"')
+          echo "version=$CURR" >> "$GITHUB_OUTPUT"
+          echo "Current version: $CURR"
+      
+      - name: Bump version in package.json
+        if: steps.bump.outputs.type != 'current'
+        id: bumpVersion
+        env:
+          BUMP: ${{ steps.bump.outputs.type }}
+        run: |
+          echo "Bumping type: $BUMP"
+          node -e "const fs=require('fs');const p='package.json';const pkg=JSON.parse(fs.readFileSync(p,'utf8'));const v=pkg.version;const [M,m,pch]=v.split('.').map(Number);function inc(t){if(t==='major')return[M+1,0,0].join('.');if(t==='minor')return[M,(m+1),0].join('.');if(t==='patch')return[M,m,(pch+1)].join('.');return v;}const next=inc(process.env.BUMP);pkg.version=next;fs.writeFileSync(p,JSON.stringify(pkg,null,2)+'\n');console.log(next);"
+          NEW=$(node -p "require('./package.json').version")
+          echo "new_version=$NEW" >> "$GITHUB_OUTPUT"
+          echo "New version: $NEW"
+
+      - name: Update pnpm lockfile (no install)
+        if: steps.bump.outputs.type != 'current'
+        run: pnpm install --lockfile-only
+
+      - name: Set up Git author
         run: |
           git config user.name "Manuel Gonçalves"
           git config user.email "manuelmjgc@gmail.com"
 
-      - name: Get tag version
-        id: get_tag
+      - name: Commit version bump
+        if: steps.bump.outputs.type != 'current'
         run: |
-          git fetch
-          git branch --show-current
-          git checkout main
-          git pull
-          echo "version=v$(pnpm pkg get version | tr -d '\"' | tr -d '\-SNAPSHOT')" >> $GITHUB_OUTPUT
+          git add package.json pnpm-lock.yaml || true
+          git commit -m "chore(release): bump version to $(node -p "require('./package.json').version")"
+          git push origin HEAD:main
+    
+      - name: Build
+        run: pnpm run build
+
+      - name: Determine final version for tagging
+        id: finalVersion
+        run: |
+          # If we bumped, use that; else keep current
+          if [ -n "${{ steps.bumpVersion.outputs.new_version }}" ]; then
+            V="${{ steps.bumpVersion.outputs.new_version }}"
+          else
+            V="${{ steps.curr.outputs.version }}"
+          fi
+          echo "version=$V" >> "$GITHUB_OUTPUT"
+          echo "Final version: $V"
 
       - name: Tag the commit
         run: |
-          current_version=${{ steps.get_tag.outputs.version }}
-          git tag -a "$current_version" -m "Version $current_version"
+          current_version=${{ steps.finalVersion.outputs.version }}
+          git fetch --tags
+          git tag -a "v${current_version}" -m "Version v${current_version}" || {
+            echo "Tag v${current_version} already exists, skipping annotate."; exit 0;
+          }
           git push --follow-tags
 
       - name: Create changelog diff
         id: changelog_diff
         run: |
-          git fetch
-          sed -n "/^## \[${{ steps.get_tag.outputs.version }}\]/,/^## \[$(git describe --abbrev=0 --tags $(git rev-list --tags --max-count=1))\]/{/^## \[$(git describe --abbrev=0 --tags $(git rev-list --tags --skip=1 --max-count=1))\]/!p;}" CHANGELOG.md > release_notes.md
+          git fetch --tags
+          LAST_TAG=$(git describe --abbrev=0 --tags $(git rev-list --tags --max-count=1))
+          PREV_TAG=$(git describe --abbrev=0 --tags $(git rev-list --tags --skip=1 --max-count=1) 2>/dev/null || echo "")
+          echo "Last:  $LAST_TAG"
+          echo "Prev:  $PREV_TAG"        
+          if [ -n "$PREV_TAG" ]; then
+            sed -n "/^## \[${LAST_TAG}\]/,/^## \[${PREV_TAG}\]/{/^## \[${PREV_TAG}\]/!p;}" CHANGELOG.md > release_notes.md || true
+          else
+            # First tag case: take from the new version to the end
+            sed -n "/^## \[${LAST_TAG}\]/,\$p" CHANGELOG.md > release_notes.md || true
+          fi
+          # Fallback if sed produced nothing
+          if [ ! -s release_notes.md ]; then
+            echo "Changes for ${LAST_TAG}" > release_notes.md
+            git log --oneline --decorate --no-merges "$(git rev-list -n 1 ${PREV_TAG:-HEAD~1})..HEAD" >> release_notes.md || true
+          fi
 
       - name: Create release
         id: create_release
@@ -64,11 +166,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag: ${{ steps.get_tag.outputs.version }}
-          name: Release ${{ steps.get_tag.outputs.version }}
+          tag: v${{ steps.finalVersion.outputs.version }}
+          name: Release v${{ steps.finalVersion.outputs.version }}
           bodyFile: release_notes.md
           draft: false
           prerelease: false
 
       - name: Delete release_notes file
-        run: rm release_notes.md
+        run: rm -f release_notes.md
