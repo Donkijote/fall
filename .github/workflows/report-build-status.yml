@@ -8,6 +8,7 @@ on:
       - synchronize
   pull_request_target:
     branches:
+      - main
       - develop
     types:
       - ready_for_review
