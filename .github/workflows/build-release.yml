@@ -13,53 +13,31 @@ jobs:
   release:
     runs-on: ubuntu-latest
     if: >
+      github.event.pull_request.merged == true &&
       (contains(github.event.pull_request.labels.*.name, 'release/major') ||
        contains(github.event.pull_request.labels.*.name, 'release/minor') ||
        contains(github.event.pull_request.labels.*.name, 'release/patch') ||
-       contains(github.event.pull_request.labels.*.name, 'release/current')) &&
-      github.event.pull_request.merged == true
+       contains(github.event.pull_request.labels.*.name, 'release/current'))
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ secrets.TOKEN }}
 
-      - name: Save PR context (number, refs) as artifact
-        if: ${{ github.event_name == 'pull_request' }}
-        run: |
-          jq -n '{
-            number: env.NUMBER|tonumber,
-            headRef: env.HEAD_REF,
-            baseRef: env.BASE_REF
-          }' > pr-context.json
-        env:
-          NUMBER: ${{ github.event.pull_request.number }}
-          HEAD_REF: ${{ github.event.pull_request.head.ref }}
-          BASE_REF: ${{ github.event.pull_request.base.ref }}
-
-      - name: Upload PR context artifact
-        if: ${{ github.event_name == 'pull_request' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: pr-context
-          path: pr-context.json
-          if-no-files-found: error
-
-      - name: Setup Node
+      - name: Setup Node & PNPM
         uses: actions/setup-node@v4
         with:
           node-version: 22.14.x
-
-      - name: Setup PNPM
-        uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v4
         with:
           version: 10.13.1
 
       - name: Install
         run: pnpm install
 
-      - name: Ensure we are on latest main
+      - name: Ensure latest main
         run: |
           git fetch origin main --tags
           git checkout main
@@ -68,77 +46,91 @@ jobs:
       - name: Determine bump type from labels
         id: bump
         run: |
-          # Default to 'current' (no bump)
           BUMP="current"
-
-          if echo "${{ toJson(github.event.pull_request.labels.*.name) }}" | grep -q 'release/major'; then
-            BUMP="major"
-          elif echo "${{ toJson(github.event.pull_request.labels.*.name) }}" | grep -q 'release/minor'; then
-            BUMP="minor"
-          elif echo "${{ toJson(github.event.pull_request.labels.*.name) }}" | grep -q 'release/patch'; then
-            BUMP="patch"
-          fi
-
+          echo '${{ toJson(github.event.pull_request.labels.*.name) }}' | grep -q 'release/major' && BUMP=major
+          echo '${{ toJson(github.event.pull_request.labels.*.name) }}' | grep -q 'release/minor' && BUMP=minor
+          echo '${{ toJson(github.event.pull_request.labels.*.name) }}' | grep -q 'release/patch' && BUMP=patch
           echo "type=$BUMP" >> "$GITHUB_OUTPUT"
 
-      - name: Show current version
-        id: curr
-        run: |
-          CURR=$(pnpm pkg get version | tr -d '"')
-          echo "version=$CURR" >> "$GITHUB_OUTPUT"
-          echo "Current version: $CURR"
-      
-      - name: Bump version in package.json
-        if: steps.bump.outputs.type != 'current'
-        id: bumpVersion
+      - name: Compute next version
+        id: ver
         env:
           BUMP: ${{ steps.bump.outputs.type }}
         run: |
-          echo "Bumping type: $BUMP"
-          node -e "const fs=require('fs');const p='package.json';const pkg=JSON.parse(fs.readFileSync(p,'utf8'));const v=pkg.version;const [M,m,pch]=v.split('.').map(Number);function inc(t){if(t==='major')return[M+1,0,0].join('.');if(t==='minor')return[M,(m+1),0].join('.');if(t==='patch')return[M,m,(pch+1)].join('.');return v;}const next=inc(process.env.BUMP);pkg.version=next;fs.writeFileSync(p,JSON.stringify(pkg,null,2)+'\n');console.log(next);"
-          NEW=$(node -p "require('./package.json').version")
-          echo "new_version=$NEW" >> "$GITHUB_OUTPUT"
-          echo "New version: $NEW"
+          CURR=$(node -p "require('./package.json').version")
+          if [ "$BUMP" = "major" ]; then
+            NEXT=$(node -e "let[vM,vm,vp]=require('./package.json').version.split('.').map(Number);console.log([vM+1,0,0].join('.'))")
+          elif [ "$BUMP" = "minor" ]; then
+            NEXT=$(node -e "let[vM,vm,vp]=require('./package.json').version.split('.').map(Number);console.log([vM,vm+1,0].join('.'))")
+          elif [ "$BUMP" = "patch" ]; then
+            NEXT=$(node -e "let[vM,vm,vp]=require('./package.json').version.split('.').map(Number);console.log([vM,vm,vp+1].join('.'))")
+          else
+            NEXT="$CURR"
+          fi
+          echo "current=$CURR" >> "$GITHUB_OUTPUT"
+          echo "next=$NEXT" >> "$GITHUB_OUTPUT"
+          echo "bump=$BUMP" >> "$GITHUB_OUTPUT"
+          echo "Current: $CURR  Next: $NEXT"
 
-      - name: Update pnpm lockfile (no install)
-        if: steps.bump.outputs.type != 'current'
-        run: pnpm install --lockfile-only
+      - name: Skip if no bump (current)
+        if: ${{ steps.ver.outputs.bump == 'current' }}
+        run: echo "No version bump requested; proceeding to tag/release with current version."
 
-      - name: Set up Git author
+      - name: Import GPG key & config git
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
+          echo "$GPG_PRIVATE_KEY" | gpg --batch --yes --import
+          GPG_KEY_ID=$(gpg --list-secret-keys --keyid-format=long | awk '/sec/{print $2}' | sed 's|.*/||' | head -n1)
+          echo "GPG_KEY_ID=$GPG_KEY_ID" >> $GITHUB_ENV
           git config user.name "Manuel Gonçalves"
           git config user.email "manuelmjgc@gmail.com"
+          git config user.signingkey "$GPG_KEY_ID"
+          git config commit.gpgsign true
+          echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
+          echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
+          echo RELOADAGENT | gpg-connect-agent
 
-      - name: Commit version bump
-        if: steps.bump.outputs.type != 'current'
+      - name: Bump version in package.json (when requested)
+        if: ${{ steps.ver.outputs.bump != 'current' }}
+        run: |
+          node -e "const fs=require('fs');const p='package.json';const pkg=JSON.parse(fs.readFileSync(p,'utf8'));pkg.version='${{ steps.ver.outputs.next }}';fs.writeFileSync(p,JSON.stringify(pkg,null,2)+'\n')"
+          pnpm install --lockfile-only
+
+      - name: Commit (signed) and push to main
+        env:
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          TOKEN: ${{ secrets.TOKEN }}
         run: |
           git add package.json pnpm-lock.yaml || true
-          git commit -m "chore(release): bump version to $(node -p "require('./package.json').version")"
-          git push origin HEAD:main
-    
-      - name: Build
+          if git diff --cached --quiet; then
+            echo "Nothing to commit."
+          else            
+            git commit -S -m "chore(release): bump version to ${{ steps.ver.outputs.next }}"
+          fi        
+          git push https://x-access-token:${TOKEN}@github.com/${{ github.repository }}.git HEAD:main
+
+      - name: Build (after version bump)
         run: pnpm run build
 
-      - name: Determine final version for tagging
+      - name: Determine final version
         id: finalVersion
         run: |
-          # If we bumped, use that; else keep current
-          if [ -n "${{ steps.bumpVersion.outputs.new_version }}" ]; then
-            V="${{ steps.bumpVersion.outputs.new_version }}"
-          else
-            V="${{ steps.curr.outputs.version }}"
-          fi
+          V=$(node -p "require('./package.json').version")
           echo "version=$V" >> "$GITHUB_OUTPUT"
           echo "Final version: $V"
 
-      - name: Tag the commit
+      - name: Create and push tag
         run: |
-          current_version=${{ steps.finalVersion.outputs.version }}
+          TAG="v${{ steps.finalVersion.outputs.version }}"
           git fetch --tags
-          git tag -a "v${current_version}" -m "Version v${current_version}" || {
-            echo "Tag v${current_version} already exists, skipping annotate."; exit 0;
-          }
-          git push --follow-tags
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag $TAG already exists; skipping"
+          else
+            git tag -s "$TAG" -m "Version $TAG" || git tag -a "$TAG" -m "Version $TAG"
+            git push origin "$TAG"
+          fi
 
       - name: Create changelog diff
         id: changelog_diff
@@ -146,18 +138,14 @@ jobs:
           git fetch --tags
           LAST_TAG=$(git describe --abbrev=0 --tags $(git rev-list --tags --max-count=1))
           PREV_TAG=$(git describe --abbrev=0 --tags $(git rev-list --tags --skip=1 --max-count=1) 2>/dev/null || echo "")
-          echo "Last:  $LAST_TAG"
-          echo "Prev:  $PREV_TAG"        
           if [ -n "$PREV_TAG" ]; then
-            sed -n "/^## \[${LAST_TAG}\]/,/^## \[${PREV_TAG}\]/{/^## \[${PREV_TAG}\]/!p;}" CHANGELOG.md > release_notes.md || true
+            sed -n "/^## \[${LAST_TAG}\]/,/^## \[$PREV_TAG\]/{/^## \[$PREV_TAG\]/!p;}" CHANGELOG.md > release_notes.md || true
           else
-            # First tag case: take from the new version to the end
             sed -n "/^## \[${LAST_TAG}\]/,\$p" CHANGELOG.md > release_notes.md || true
           fi
-          # Fallback if sed produced nothing
           if [ ! -s release_notes.md ]; then
             echo "Changes for ${LAST_TAG}" > release_notes.md
-            git log --oneline --decorate --no-merges "$(git rev-list -n 1 ${PREV_TAG:-HEAD~1})..HEAD" >> release_notes.md || true
+            git log --oneline --decorate --no-merges "${PREV_TAG:+$PREV_TAG..}${LAST_TAG}" >> release_notes.md || true
           fi
 
       - name: Create release
