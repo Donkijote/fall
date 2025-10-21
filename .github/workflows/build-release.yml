@@ -121,12 +121,8 @@ jobs:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
           TOKEN: ${{ secrets.TOKEN }}
         run: |
-          git add -A
-          # Use loopback mode during the commit sign as well (just in case)
-          GIT_COMMITTER_DATE="$(date -R)" \
-          git -c gpg.program="gpg --pinentry-mode=loopback ${GPG_PASSPHRASE:+--passphrase $GPG_PASSPHRASE}" \
-              commit -S -m "chore(release): bump version"
-
+          git add -A          
+          git commit -S -m "chore(release): bump version" || echo "Nothing to commit."        
           git push https://x-access-token:${TOKEN}@github.com/${{ github.repository }}.git HEAD:main
 
       - name: Build (after version bump)
@@ -140,16 +136,15 @@ jobs:
           echo "Final version: $V"
 
       - name: Create and push signed tag
+        env:
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
           TAG="v$(node -p "require('./package.json').version")"
           git fetch --tags
           if git rev-parse "$TAG" >/dev/null 2>&1; then
             echo "Tag $TAG already exists; skipping"
           else
-            gpg --batch --yes --pinentry-mode loopback ${GPG_PASSPHRASE:+--passphrase "$GPG_PASSPHRASE"} \
-              --sign --dry-run </dev/null >/dev/null 2>&1 || true
-            git -c gpg.program="gpg --pinentry-mode=loopback ${GPG_PASSPHRASE:+--passphrase $GPG_PASSPHRASE}" \
-                tag -s "$TAG" -m "Version $TAG" || git tag -a "$TAG" -m "Version $TAG"
+            git tag -s "$TAG" -m "Version $TAG" || git tag -a "$TAG" -m "Version $TAG"
             git push origin "$TAG"
           fi
 
