@@ -36,7 +36,7 @@ export const SingsSheetScreen = () => {
         <div className="-top-24 -left-24 h-72 w-72 bg-accent-blue/20 blur-3xl absolute rounded-full" />
         <div className="-bottom-24 -right-24 h-72 w-72 bg-accent-gold/20 blur-3xl absolute rounded-full" />
         <div
-          className="inset-0 absolute mix-blend-overlay"
+          className="inset-0 absolute bg-cover mix-blend-overlay"
           style={{
             backgroundImage: `url(${bg})`,
           }}
@@ -54,7 +54,7 @@ export const SingsSheetScreen = () => {
         <motion.div
           initial={{ y: -8, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="rounded-2xl border-white/10 bg-white/10 p-4 backdrop-blur-md shadow-2xl border"
+          className="rounded-2xl border-white/10 bg-white/10 p-4 backdrop-blur-sm shadow-2xl border"
         >
           <div className="gap-3 flex flex-wrap items-center justify-between">
             <div className="gap-3 flex items-center">
@@ -105,72 +105,74 @@ export const SingsSheetScreen = () => {
           </div>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="gap-4 sm:grid-cols-2 lg:grid-cols-3 grid grid-cols-1"
-        >
-          {list.map((hand, i) => (
-            <motion.article
-              key={hand.id}
-              initial={{ y: 10, opacity: 0, scale: 0.98 }}
-              animate={{ y: 0, opacity: 1, scale: 1 }}
-              transition={{
-                type: "spring",
-                stiffness: 200,
-                damping: 20,
-                delay: i * 0.02,
-              }}
-              className="group rounded-2xl border-white/10 bg-white/10 p-4 backdrop-blur-md shadow-2xl relative overflow-hidden border"
-            >
-              <div
-                className="inset-0 pointer-events-none absolute opacity-0 transition group-hover:opacity-100"
-                style={{
-                  background:
-                    "radial-gradient(600px circle at var(--x,50%) var(--y,50%), rgba(255,209,102,0.08), transparent 60%)",
+        <div className={"pb-40 h-[100dvh] overflow-auto"}>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="gap-4 sm:grid-cols-2 lg:grid-cols-3 grid grid-cols-1"
+          >
+            {list.map((hand, i) => (
+              <motion.article
+                key={hand.id}
+                initial={{ y: 10, opacity: 0, scale: 0.98 }}
+                animate={{ y: 0, opacity: 1, scale: 1 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 20,
+                  delay: i * 0.02,
                 }}
-              />
-              <header className="mb-2 gap-3 flex items-start justify-between">
-                <h3 className="text-lg font-semibold text-text-primary">
-                  {hand.name}
-                </h3>
-                <span className="border-white/20 bg-white/10 px-2 py-0.5 text-sm text-text-primary rounded-full border">
-                  {hand.points} pts
-                </span>
-              </header>
+                className="group rounded-2xl border-white/10 bg-white/10 p-4 backdrop-blur-sm shadow-2xl relative overflow-hidden border"
+              >
+                <div
+                  className="inset-0 pointer-events-none absolute opacity-0 transition group-hover:opacity-100"
+                  style={{
+                    background:
+                      "radial-gradient(600px circle at var(--x,50%) var(--y,50%), rgba(255,209,102,0.08), transparent 60%)",
+                  }}
+                />
+                <header className="mb-2 gap-3 flex items-start justify-between">
+                  <h3 className="text-lg font-semibold text-text-primary">
+                    {hand.name}
+                  </h3>
+                  <span className="border-white/20 bg-white/10 px-2 py-0.5 text-sm text-text-primary rounded-full border">
+                    {hand.points} pts
+                  </span>
+                </header>
 
-              {hand.description && (
-                <p className="mb-3 text-sm text-text-secondary">
-                  {hand.description}
-                </p>
-              )}
+                {hand.description && (
+                  <p className="mb-3 text-sm text-text-secondary">
+                    {hand.description}
+                  </p>
+                )}
 
-              {hand.example?.length ? (
-                <div className="mb-3 gap-2 flex">
-                  {hand.example.map((c, idx) => (
-                    <Card
-                      key={c.suit + c.rank + idx}
-                      rank={c.rank}
-                      suit={c.suit}
-                      size={"sm"}
-                    />
+                {hand.example?.length ? (
+                  <div className="mb-3 gap-2 flex">
+                    {hand.example.map((c, idx) => (
+                      <Card
+                        key={c.suit + c.rank + idx}
+                        rank={c.rank}
+                        suit={c.suit}
+                        size={"sm"}
+                      />
+                    ))}
+                  </div>
+                ) : null}
+
+                <div className="gap-2 flex flex-wrap items-center">
+                  {hand.tags?.map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-md border-white/10 bg-white/5 px-2 py-0.5 text-xs text-text-secondary border"
+                    >
+                      {tag}
+                    </span>
                   ))}
                 </div>
-              ) : null}
-
-              <div className="gap-2 flex flex-wrap items-center">
-                {hand.tags?.map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded-md border-white/10 bg-white/5 px-2 py-0.5 text-xs text-text-secondary border"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </motion.article>
-          ))}
-        </motion.div>
+              </motion.article>
+            ))}
+          </motion.div>
+        </div>
 
         {list.length === 0 && (
           <div className="mt-10 max-w-xl rounded-2xl border-white/10 bg-white/10 p-8 text-text-secondary backdrop-blur-md mx-auto w-full border text-center">
