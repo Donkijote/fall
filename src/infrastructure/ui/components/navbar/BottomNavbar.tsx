@@ -1,14 +1,16 @@
 import { clsx } from "clsx";
 import type { ReactNode } from "react";
 import { useState } from "react";
-import { useSearchParams } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 
 import { BottomSidebar } from "@/infrastructure/ui/components/navbar/BottomSidebar";
+import { SINGS_SHEETS } from "@/routes/Routes";
 
 import {
   faCirclePlay,
   faGear,
   faGift,
+  faScroll,
   faTrophy,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
@@ -16,6 +18,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const BottomNavbar = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const [active, setActive] = useState("");
   const [isOpen, setIsOpen] = useState(
@@ -79,6 +82,15 @@ export const BottomNavbar = () => {
               label="Rank"
               active={active === "Rank"}
               onClick={() => setActive("Rank")}
+            />
+            <NavItem
+              icon={<FontAwesomeIcon icon={faScroll} />}
+              label="Sings"
+              active={active === "Sings"}
+              onClick={() => {
+                setActive("Sings");
+                navigate(SINGS_SHEETS);
+              }}
             />
             <NavItem
               icon={<FontAwesomeIcon icon={faGear} />}
