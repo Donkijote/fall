@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 
 import bg from "@/assets/lobby/home_2.png";
 import { getUiHands } from "@/infrastructure/adapters/handWithMeta";
-import { Card } from "@/infrastructure/ui/components/card/Card";
+import { SingsList } from "@/infrastructure/ui/components/singins/SingsList";
 
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -31,7 +31,7 @@ export const SingsSheetScreen = () => {
   }, [query, onlyMandatory, minPoints]);
 
   return (
-    <div className="relative min-h-screen w-full">
+    <div className="relative">
       <div className="inset-0 pointer-events-none absolute -z-10 h-full">
         <div className="-top-24 -left-24 h-72 w-72 bg-accent-blue/20 blur-3xl absolute rounded-full" />
         <div className="-bottom-24 -right-24 h-72 w-72 bg-accent-gold/20 blur-3xl absolute rounded-full" />
@@ -60,9 +60,9 @@ export const SingsSheetScreen = () => {
             <div className="gap-3 flex items-center">
               <button
                 onClick={() => navigate(-1)}
-                className="rounded-lg border-white/20 bg-white/10 px-3 py-2 text-text-primary hover:bg-white/15 cursor-pointer border transition"
+                className="border-white/20 bg-white/10 px-3 py-2 text-text-primary hover:bg-white/15 goBack cursor-pointer rounded-full border transition"
               >
-                <FontAwesomeIcon icon={faArrowLeft} size={"xs"} /> Back
+                <FontAwesomeIcon icon={faArrowLeft} size={"xs"} />
               </button>
               <h1 className="text-xl font-semibold text-text-primary">
                 Sings (Combinations)
@@ -105,73 +105,10 @@ export const SingsSheetScreen = () => {
           </div>
         </motion.div>
 
-        <div className={"pb-40 h-[100dvh] overflow-auto"}>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="gap-4 sm:grid-cols-2 lg:grid-cols-3 grid grid-cols-1"
-          >
-            {list.map((hand, i) => (
-              <motion.article
-                key={hand.id}
-                initial={{ y: 10, opacity: 0, scale: 0.98 }}
-                animate={{ y: 0, opacity: 1, scale: 1 }}
-                transition={{
-                  type: "spring",
-                  stiffness: 200,
-                  damping: 20,
-                  delay: i * 0.02,
-                }}
-                className="group rounded-2xl border-white/10 bg-white/10 p-4 backdrop-blur-sm shadow-2xl relative overflow-hidden border"
-              >
-                <div
-                  className="inset-0 pointer-events-none absolute opacity-0 transition group-hover:opacity-100"
-                  style={{
-                    background:
-                      "radial-gradient(600px circle at var(--x,50%) var(--y,50%), rgba(255,209,102,0.08), transparent 60%)",
-                  }}
-                />
-                <header className="mb-2 gap-3 flex items-start justify-between">
-                  <h3 className="text-lg font-semibold text-text-primary">
-                    {hand.name}
-                  </h3>
-                  <span className="border-white/20 bg-white/10 px-2 py-0.5 text-sm text-text-primary rounded-full border">
-                    {hand.points} pts
-                  </span>
-                </header>
-
-                {hand.description && (
-                  <p className="mb-3 text-sm text-text-secondary">
-                    {hand.description}
-                  </p>
-                )}
-
-                {hand.example?.length ? (
-                  <div className="mb-3 gap-2 flex">
-                    {hand.example.map((c, idx) => (
-                      <Card
-                        key={c.suit + c.rank + idx}
-                        rank={c.rank}
-                        suit={c.suit}
-                        size={"sm"}
-                      />
-                    ))}
-                  </div>
-                ) : null}
-
-                <div className="gap-2 flex flex-wrap items-center">
-                  {hand.tags?.map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-md border-white/10 bg-white/5 px-2 py-0.5 text-xs text-text-secondary border"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </motion.article>
-            ))}
-          </motion.div>
+        <div
+          className={"pb-80 md:pb-40 scrollbar-hide-y h-[100dvh] overflow-auto"}
+        >
+          <SingsList sings={list} />
         </div>
 
         {list.length === 0 && (
