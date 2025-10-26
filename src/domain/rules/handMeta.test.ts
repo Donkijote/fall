@@ -5,7 +5,7 @@ const EXPECTED_NAMES = Object.keys(HAND_META);
 const SUITS = new Set(["coins", "cups", "swords", "clubs"]);
 const kebab = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
-describe("HAND_META", () => {
+describe("Hand Meta", () => {
   it("includes metadata for all expected hands", () => {
     for (const name of EXPECTED_NAMES) {
       expect(HAND_META[name]).toBeTruthy();
