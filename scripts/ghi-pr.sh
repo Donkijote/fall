@@ -1,3 +1,5 @@
+#!/opt/homebrew/bin/bash
+set -euo pipefail
 # ghi-pr: Create a branch and draft PR from a GitHub issue
 #
 # Usage:
@@ -14,7 +16,6 @@
 #   - PR inherits issue labels and auto-closes it on merge
 
 ghi-pr() {
-  set -euo pipefail
 
   if [[ $# -lt 1 ]]; then
     echo "Usage: ghi-pr <issue-number> [--base <branch>]" >&2
@@ -36,16 +37,22 @@ ghi-pr() {
   done
 
   if [[ -z "$issue" ]]; then
-    echo "❌ Missing issue number"; return 2
+    echo "X Missing issue number"; return 2
   fi
 
-  echo "🔍 Fetching issue #$issue…"
+  echo "Fetching issue #${issue}..."
   local title body
   title="$(gh issue view "$issue" --json title --jq .title)"
   body="$(gh issue view "$issue"  --json body  --jq .body)"
 
   # Collect labels, find first kind/* label
-  mapfile -t labels < <(gh issue view "$issue" --json labels --jq '.labels[].name')
+  # Bash 3.2-compatible label collection
+  labels=()
+  labels_output="$(gh issue view "$issue" --json labels --jq '.labels[].name' || true)"
+  while IFS= read -r l; do
+    [[ -n "$l" ]] && labels+=("$l")
+  done <<< "$labels_output"
+
   local kind_label="" kind_prefix=""
 
   for l in "${labels[@]:-}"; do
@@ -53,14 +60,14 @@ ghi-pr() {
   done
 
   if [[ -z "$kind_label" ]]; then
-    echo "⚠️  No kind/* label found — using 'chore' as branch prefix."
+    echo "No kind/* label found — using 'chore' as branch prefix."
     kind_prefix="chore"
   else
     kind_prefix="${kind_label#kind/}" # 'kind/feature' → 'feature'
   fi
 
   local branch="${kind_prefix}/ghi#${issue}"
-  echo "🌿 Using branch: $branch (base: $base)"
+  echo "Using branch: $branch (base: $base)"
 
   # Create/switch branch
   if git rev-parse --verify --quiet "$branch" >/dev/null; then
@@ -69,11 +76,19 @@ ghi-pr() {
     git checkout -b "$branch"
   fi
 
+  # Ensure there is at least one commit ahead of base
+  git fetch origin "${base}" >/dev/null 2>&1 || true
+  ahead_count="$(git rev-list --count "origin/${base}..${branch}" || echo 0)"
+  if [ "${ahead_count}" -eq 0 ]; then
+    echo "No commits ahead of ${base}; creating an empty bootstrap commit."
+    git commit --allow-empty -m "chore: initial PR commit for #${issue}"
+  fi
+
   # Auto-push branch if not on remote
   if git ls-remote --exit-code --heads origin "$branch" >/dev/null 2>&1; then
-    echo "✅ Remote branch 'origin/$branch' already exists."
+    echo "Remote branch 'origin/$branch' already exists."
   else
-    echo "📤 Pushing new branch to origin/$branch..."
+    echo "Pushing new branch to origin/$branch..."
     git push -u origin "$branch"
   fi
 
@@ -94,5 +109,9 @@ ghi-pr() {
     --head "$branch" \
     "${label_flags[@]}"
 
-  echo "✅ Done! Branch '$branch' and draft PR created."
+  echo "Done! Branch '$branch' and draft PR created."
 }
+
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+  ghi-pr "$@"
+fi
