@@ -4,14 +4,14 @@ import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 
 import { BottomSidebar } from "@/infrastructure/ui/components/navbar/BottomSidebar";
-import { SINGS_SHEETS } from "@/routes/Routes";
+import { RULES_PATH, SINGS_SHEETS } from "@/routes/Routes";
 
 import {
   faCirclePlay,
   faGear,
   faGift,
+  faScaleBalanced,
   faScroll,
-  faTrophy,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -78,10 +78,13 @@ export const BottomNavbar = () => {
           {/* Right Items */}
           <div className="gap-4 sm:gap-12 flex items-center">
             <NavItem
-              icon={<FontAwesomeIcon icon={faTrophy} />}
-              label="Rank"
-              active={active === "Rank"}
-              onClick={() => setActive("Rank")}
+              icon={<FontAwesomeIcon icon={faScaleBalanced} />}
+              label="Rules"
+              active={active === "Rules"}
+              onClick={() => {
+                setActive("Rules");
+                navigate(RULES_PATH);
+              }}
             />
             <NavItem
               icon={<FontAwesomeIcon icon={faScroll} />}

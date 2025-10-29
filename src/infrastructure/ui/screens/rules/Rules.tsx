@@ -1,9 +1,13 @@
 import { clsx } from "clsx";
 import { motion } from "framer-motion";
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router";
 
 import bg from "@/assets/lobby/home_2.png";
 import { RULES } from "@/domain/constants/rules";
+
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { SectionAccordion } from "./components/Accordion";
 import { HintModal } from "./components/HintModal";
@@ -11,11 +15,10 @@ import { QuickRef } from "./components/QuickRef";
 import { SingsGrid } from "./components/Sings";
 
 export const RulesScreen = () => {
-  const data = RULES;
-  const sectionIds = useMemo(
-    () => data.sections.map((s) => s.id),
-    [data.sections],
-  );
+  const navigate = useNavigate();
+
+  const sectionIds = useMemo(() => RULES.sections.map((s) => s.id), []);
+
   const [tab, setTab] = useState(sectionIds[0] ?? "overview");
 
   return (
@@ -33,11 +36,19 @@ export const RulesScreen = () => {
           animate={{ y: 0, opacity: 1 }}
           className="mb-6 gap-4 rounded-2xl border-white/10 bg-white/10 backdrop-blur p-4 shadow-sm flex items-start justify-between border"
         >
-          <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-text-primary">
-              {data.hero.title}
-            </h1>
-            <p className="text-text-secondary mt-1">{data.hero.subtitle}</p>
+          <div className={"gap-4 flex items-center"}>
+            <button
+              onClick={() => navigate(-1)}
+              className="border-white/20 bg-white/10 px-3 py-2 text-text-primary hover:bg-white/15 goBack cursor-pointer rounded-full border transition"
+            >
+              <FontAwesomeIcon icon={faArrowLeft} size={"xs"} />
+            </button>
+            <div>
+              <h1 className="text-2xl font-semibold tracking-tight text-text-primary">
+                {RULES.hero.title}
+              </h1>
+              <p className="text-text-secondary mt-1">{RULES.hero.subtitle}</p>
+            </div>
           </div>
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
@@ -54,7 +65,7 @@ export const RulesScreen = () => {
               className="sm:grid-cols-4 xl:grid-cols-8 gap-2 grid w-full grid-cols-2"
               role="tablist"
             >
-              {data.sections.map((s, i) => (
+              {RULES.sections.map((s, i) => (
                 <motion.button
                   key={s.id}
                   onClick={() => setTab(s.id)}
@@ -84,7 +95,7 @@ export const RulesScreen = () => {
             </div>
 
             <div className="mt-4 xl:h-[calc(100vh-220px)] pr-1 h-[calc(100vh-260px)] overflow-y-auto">
-              {data.sections.map((s) => (
+              {RULES.sections.map((s) => (
                 <div
                   key={s.id}
                   hidden={tab !== s.id}
@@ -94,13 +105,13 @@ export const RulesScreen = () => {
                   aria-labelledby={`tab-${s.id}`}
                 >
                   <SectionAccordion items={s.items} />
-                  {s.id === "sings" ? <SingsGrid content={data} /> : null}
+                  {s.id === "sings" ? <SingsGrid content={RULES} /> : null}
                 </div>
               ))}
             </div>
           </div>
 
-          <QuickRef content={data} />
+          <QuickRef content={RULES} />
         </div>
       </div>
 
