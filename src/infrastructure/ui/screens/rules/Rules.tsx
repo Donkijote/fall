@@ -50,13 +50,9 @@ export const RulesScreen = () => {
               <p className="text-text-secondary mt-1">{RULES.hero.subtitle}</p>
             </div>
           </div>
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="md:inline-flex rounded-xl border-white/10 bg-white/10 backdrop-blur px-3 py-1.5 text-sm text-text-primary hidden cursor-pointer items-center border"
-            aria-label="Scroll to top"
-          >
+          <div className="md:inline-flex rounded-xl border-white/10 bg-white/10 backdrop-blur px-3 py-1.5 text-sm text-text-primary hidden cursor-pointer items-center border">
             How to use
-          </button>
+          </div>
         </motion.div>
 
         <div className="xl:grid-cols-[1fr_320px] gap-6 grid grid-cols-1">
@@ -94,7 +90,7 @@ export const RulesScreen = () => {
               ))}
             </div>
 
-            <div className="mt-4 xl:h-[calc(100vh-220px)] pr-1 h-[calc(100vh-260px)] overflow-y-auto">
+            <div className="mt-4 xl:h-[calc(100vh-220px)] pb-28 md:pb-10 pr-1 scrollbar-hide-y h-[calc(100vh-300px)] overflow-y-auto">
               {RULES.sections.map((s) => (
                 <div
                   key={s.id}
