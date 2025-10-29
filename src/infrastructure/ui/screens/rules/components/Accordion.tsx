@@ -13,10 +13,14 @@ type SectionAccordionProps = { items: RuleItem[] };
 
 export const SectionAccordion = ({ items }: SectionAccordionProps) => {
   const allIds = useMemo(() => items.map((i) => i.id), [items]);
+
   const [open, setOpen] = useState<string[]>(allIds);
+
   useEffect(() => setOpen(allIds), [allIds]);
+
   const toggle = (id: string) =>
     setOpen((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
+
   return (
     <motion.div
       initial={{ y: -8, opacity: 0 }}
@@ -34,6 +38,7 @@ export const SectionAccordion = ({ items }: SectionAccordionProps) => {
             aria-expanded={open.includes(it.id)}
             aria-controls={`acc-${it.id}`}
             id={`acc-btn-${it.id}`}
+            data-testid={`acc-btn-${it.id}`}
           >
             <span className="mr-2 truncate">{it.title}</span>
             <div className="gap-2 flex items-center">
