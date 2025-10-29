@@ -17,7 +17,7 @@ export const RulesScreen = () => {
   const [tab, setTab] = useState(sectionIds[0] ?? "overview");
 
   return (
-    <div className="text-text-primary relative min-h-screen">
+    <div className="text-text-primary max-w-5xl px-4 relative mx-auto min-h-screen">
       <div className="inset-0 fixed -z-10">
         <div
           className="inset-0 absolute bg-cover mix-blend-overlay"
@@ -25,7 +25,7 @@ export const RulesScreen = () => {
         />
       </div>
 
-      <div className="max-w-6xl px-4 py-6 mx-auto">
+      <div className="max-w-6xl px-4 py-10 mx-auto">
         <div className="mb-6 gap-4 rounded-2xl border-white/10 bg-white/10 backdrop-blur p-4 shadow-sm flex items-start justify-between border">
           <div>
             <h1 className="text-2xl font-semibold tracking-tight text-text-primary">
