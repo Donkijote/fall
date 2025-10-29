@@ -4,8 +4,8 @@ import { RouterProvider } from "react-router/dom";
 import { CardList } from "@/infrastructure/ui/components/card/CardList";
 import { GameScreen } from "@/infrastructure/ui/screens/Game";
 import { HomeScreen } from "@/infrastructure/ui/screens/Home";
-import { RulesScreen } from "@/infrastructure/ui/screens/Rules";
 import { SingsSheetScreen } from "@/infrastructure/ui/screens/SingsSheet";
+import { RulesScreen } from "@/infrastructure/ui/screens/rules/Rules";
 
 import {
   CARDS_PATH,
