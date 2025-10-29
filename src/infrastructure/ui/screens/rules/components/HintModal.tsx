@@ -1,5 +1,9 @@
 import { AnimatePresence, motion } from "framer-motion";
 
+
+
+
+
 type HintModalProps = {
   open: boolean;
   onClose: () => void;
@@ -14,7 +18,12 @@ export const HintModal = ({ open, onClose }: HintModalProps) => (
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       >
-        <div className="inset-0 bg-black/40 absolute" onClick={onClose} />
+        <button
+          type="button"
+          className="inset-0 bg-black/40 absolute"
+          aria-label="Close modal backdrop"
+          onClick={onClose}
+        />
         <motion.div
           className="max-w-md rounded-2xl border-white/10 bg-white/10 backdrop-blur p-5 shadow-xl absolute top-1/2 left-1/2 w-[92vw] -translate-x-1/2 -translate-y-1/2 border"
           initial={{ scale: 0.95, opacity: 0 }}
