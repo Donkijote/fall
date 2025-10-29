@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import bg from "@/assets/lobby/home_2.png";
 import { RULES } from "@/domain/constants/rules";
@@ -15,20 +15,6 @@ export const RulesScreen = () => {
     [data.sections],
   );
   const [tab, setTab] = useState(sectionIds[0] ?? "overview");
-  const [welcomeOpen, setWelcomeOpen] = useState(false);
-  useEffect(() => {
-    const k = "fall_rules_seen_v1";
-    const seen = typeof window !== "undefined" && localStorage.getItem(k);
-    if (!seen) setWelcomeOpen(true);
-  }, []);
-  const dismiss = () => {
-    try {
-      localStorage.setItem("fall_rules_seen_v1", "1");
-    } catch {
-      /* empty */
-    }
-    setWelcomeOpen(false);
-  };
 
   return (
     <div className="text-text-primary relative min-h-screen">
@@ -98,7 +84,7 @@ export const RulesScreen = () => {
         </div>
       </div>
 
-      <HintModal open={welcomeOpen} onClose={dismiss} />
+      <HintModal />
     </div>
   );
 };

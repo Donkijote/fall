@@ -1,5 +1,6 @@
 export const StorageKeys = {
   FALL_USER: "FALL_USER",
+  FALL_RULES_SEEN: "FALL_RULES_SEEN",
 } as const;
 
 export const StorageService = {
