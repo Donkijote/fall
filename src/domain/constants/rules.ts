@@ -172,6 +172,7 @@ export const RULES: RulesContent = {
       pattern: "x–x–x",
       points: "5 or instant",
       mandatory: true,
+      notes: "Instant win if agreed before game.",
     },
     {
       name: "Pair + any",
