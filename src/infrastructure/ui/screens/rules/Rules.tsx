@@ -1,3 +1,5 @@
+import { clsx } from "clsx";
+import { motion } from "framer-motion";
 import { useMemo, useState } from "react";
 
 import bg from "@/assets/lobby/home_2.png";
@@ -26,7 +28,11 @@ export const RulesScreen = () => {
       </div>
 
       <div className="max-w-6xl px-4 py-10 mx-auto">
-        <div className="mb-6 gap-4 rounded-2xl border-white/10 bg-white/10 backdrop-blur p-4 shadow-sm flex items-start justify-between border">
+        <motion.div
+          initial={{ y: -8, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          className="mb-6 gap-4 rounded-2xl border-white/10 bg-white/10 backdrop-blur p-4 shadow-sm flex items-start justify-between border"
+        >
           <div>
             <h1 className="text-2xl font-semibold tracking-tight text-text-primary">
               {data.hero.title}
@@ -40,7 +46,7 @@ export const RulesScreen = () => {
           >
             How to use
           </button>
-        </div>
+        </motion.div>
 
         <div className="xl:grid-cols-[1fr_320px] gap-6 grid grid-cols-1">
           <div>
@@ -48,18 +54,32 @@ export const RulesScreen = () => {
               className="sm:grid-cols-4 xl:grid-cols-8 gap-2 grid w-full grid-cols-2"
               role="tablist"
             >
-              {data.sections.map((s) => (
-                <button
+              {data.sections.map((s, i) => (
+                <motion.button
                   key={s.id}
                   onClick={() => setTab(s.id)}
-                  className={`rounded-xl border-white/10 backdrop-blur px-3 py-2 text-sm truncate border ${tab === s.id ? "bg-white/20" : "bg-white/10"} text-text-primary cursor-pointer`}
+                  className={clsx(
+                    "rounded-xl border-white/10 backdrop-blur px-3 py-2 text-sm text-text-primary cursor-pointer truncate border",
+                    {
+                      "bg-white/20": tab === s.id,
+                      "bg-white/10": tab !== s.id,
+                    },
+                  )}
                   role="tab"
                   aria-selected={tab === s.id}
                   id={`tab-${s.id}`}
                   aria-controls={`panel-${s.id}`}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 24,
+                    delay: i * 0.04,
+                  }}
                 >
                   {s.title}
-                </button>
+                </motion.button>
               ))}
             </div>
 

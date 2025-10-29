@@ -1,3 +1,5 @@
+import { motion } from "framer-motion";
+
 import type { RulesContent } from "@/domain/entities/Rules";
 
 type QuickRefProps = { content: RulesContent };
@@ -5,7 +7,11 @@ type QuickRefProps = { content: RulesContent };
 export const QuickRef = ({ content }: QuickRefProps) => {
   const { ranks } = content.scoring.fall;
   return (
-    <div className="xl:block top-20 rounded-2xl border-white/10 bg-white/10 backdrop-blur p-4 shadow-lg sticky hidden h-fit border">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="xl:block top-20 rounded-2xl border-white/10 bg-white/10 backdrop-blur p-4 shadow-lg sticky hidden h-fit border"
+    >
       <div className="text-base font-medium text-text-primary mb-2">
         Quick Reference
       </div>
@@ -54,6 +60,6 @@ export const QuickRef = ({ content }: QuickRefProps) => {
           </li>
         </ul>
       </div>
-    </div>
+    </motion.div>
   );
 };

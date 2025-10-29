@@ -18,7 +18,11 @@ export const SectionAccordion = ({ items }: SectionAccordionProps) => {
   const toggle = (id: string) =>
     setOpen((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
   return (
-    <div className="w-full">
+    <motion.div
+      initial={{ y: -8, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      className="w-full"
+    >
       {items.map((it) => (
         <div
           key={it.id}
@@ -87,6 +91,6 @@ export const SectionAccordion = ({ items }: SectionAccordionProps) => {
           </AnimatePresence>
         </div>
       ))}
-    </div>
+    </motion.div>
   );
 };
