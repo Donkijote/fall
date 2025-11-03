@@ -5,36 +5,6 @@ import { awardPoints, checkGameOver } from "@/domain/services/scoring";
 import type { DealOrder, GameState, TablePattern } from "../entities/GameState";
 import { createDeck, shuffle } from "../rules/deck";
 
-// election: each player draws one card, highest wins dealer
-export function chooseDealer(state: GameState): GameState {
-  let deck = createDeck();
-  deck = shuffle(deck);
-
-  const electionCards: Record<string, Card> = {};
-  for (const p of state.players) {
-    const randomCardIndex = Math.floor(Math.random() * deck.length);
-    electionCards[p.id] = deck[randomCardIndex];
-  }
-
-  // find the highest rank (ties broken by order in players array)
-  let dealerId = state.players[0].id;
-  let highest = electionCards[dealerId].rank;
-  for (const p of state.players) {
-    const rank = electionCards[p.id].rank;
-    if (rank > highest) {
-      highest = rank;
-      dealerId = p.id;
-    }
-  }
-
-  return {
-    ...state,
-    deck,
-    dealer: dealerId,
-    phase: "dealerChoice", // next phase: dealer decides inc/dec + order
-  };
-}
-
 export function dealRound(
   state: GameState,
   options?: {
@@ -45,9 +15,7 @@ export function dealRound(
 ): GameState {
   let deck = state.deck.length ? [...state.deck] : shuffle(createDeck());
 
-  const players = [
-    ...state.players.map((p) => ({ ...p, hand: [] as Array<Card> })),
-  ];
+  const players = state.players.map((p) => ({ ...p, hand: [] as Array<Card> }));
 
   const handSize = state.config.handSize ?? 3;
   const dealOrder = options?.dealOrder ?? state.config.dealOrder;
