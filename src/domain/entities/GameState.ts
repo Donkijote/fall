@@ -24,6 +24,15 @@ export type DealOrder = "playersThenTable" | "tableThenPlayers";
 export type TablePattern = "inc" | "dec";
 export type GameMode = "1vs1" | "1vs2" | "2vs2";
 
+export type DealerSelection = {
+  order: string[];
+  turnIndex: number;
+  pickedByKey: Record<string, string | null>;
+  pickedKeys: Set<string>;
+  tieOnlyPlayers?: string[] | null;
+  poolSize: number;
+};
+
 export interface GameConfig {
   allowOptional: boolean;
   threeOfAKindWinsGame: boolean;
@@ -49,4 +58,5 @@ export interface GameState {
   winner?: string; // playerId or teamId string
   lastCaptureBy: User["id"] | null;
   config: GameConfig;
+  dealerSelection?: DealerSelection;
 }
