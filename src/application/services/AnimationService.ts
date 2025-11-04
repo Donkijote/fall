@@ -1,29 +1,47 @@
-import type { CardKey, Rank, Suit } from "@/domain/entities/Card";
-
 export const AnimationKeys = {
   GAME_CARDS: "GAME_CARDS",
 } as const;
 
-const pending = new Map<CardKey, () => void>();
+export type AnimationKey = (typeof AnimationKeys)[keyof typeof AnimationKeys];
 
-export const waitForCardToLand = (suit: Suit, rank: Rank): Promise<void> => {
-  const key: CardKey = `${suit}-${rank}`;
-  return new Promise<void>((resolve) => {
-    pending.set(key, resolve);
-    setTimeout(() => {
-      if (pending.get(key) === resolve) {
-        pending.delete(key);
-        resolve();
-      }
-    }, 1000);
-  });
+type Payloads = {
+  [AnimationKeys.GAME_CARDS]: { suit: string; rank: number };
 };
 
-export const resolveCardLanded = (suit: Suit, rank: Rank) => {
-  const key: CardKey = `${suit}-${rank}`;
-  const res = pending.get(key);
-  if (res) {
-    pending.delete(key);
-    res();
-  }
+type HandlerMap = {
+  [K in AnimationKey]: Set<(p: Payloads[K]) => Promise<void> | void>;
+};
+
+const listeners: HandlerMap = {
+  [AnimationKeys.GAME_CARDS]: new Set(),
+};
+
+export const onAnimation = <K extends AnimationKey>(
+  key: K,
+  handler: (p: Payloads[K]) => Promise<void> | void,
+) => {
+  listeners[key].add(handler);
+  return () => listeners[key].delete(handler);
+};
+
+const play = async <K extends AnimationKey>(key: K, payload: Payloads[K]) => {
+  const set = listeners[key];
+  if (!set?.size) return;
+  await Promise.all([...set].map((h) => Promise.resolve(h(payload))));
+};
+
+export const animationService = {
+  play,
+  run: async (
+    steps: Array<{ key: AnimationKey; payload: Payloads[AnimationKey] }>,
+    opts?: { parallel?: boolean },
+  ) => {
+    if (opts?.parallel) {
+      await Promise.all(steps.map(({ key, payload }) => play(key, payload)));
+      return;
+    }
+    for (const { key, payload } of steps) {
+      await play(key, payload);
+    }
+  },
 };
