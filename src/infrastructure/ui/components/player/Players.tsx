@@ -1,18 +1,24 @@
 import clsx from "clsx";
+import { motion } from "framer-motion";
 import { useMemo } from "react";
+
+
 
 import { useGameStoreService } from "@/application/hooks/useGameStoreService";
 import { useGameStoreState } from "@/application/hooks/useGameStoreState";
-import {
-  StorageKeys,
-  StorageService,
-} from "@/application/services/StorageService";
+import { StorageKeys, StorageService } from "@/application/services/StorageService";
 import type { User } from "@/domain/entities/User";
 import { Card } from "@/infrastructure/ui/components/card/Card";
+
+
 
 import { CollectedCard } from "./CollectedCard";
 import { DealerChoiceControls } from "./DealerChoiceControls";
 import { PlayerChip } from "./PlayerChip";
+
+
+
+
 
 export const Players = () => {
   const { players, dealer, mainPlayer, currentPlayer, scores, phase, deck } =
@@ -67,34 +73,36 @@ export const Players = () => {
 
                   const rotate = (cIndex - middle) * 10;
                   const translateY = Math.abs(cIndex - middle) * 12;
+                  const layoutId = `card-${card.suit}-${card.rank}`;
 
                   return (
-                    <Card
-                      key={card.suit + card.rank}
-                      rank={card.rank}
-                      suit={card.suit}
-                      onClick={() => {
-                        if (
-                          player.id !== mainPlayer &&
-                          currentPlayer !== player.id
-                        ) {
-                          return;
+                    <motion.div key={layoutId} layout={true} layoutId={layoutId}>
+                      <Card
+                        rank={card.rank}
+                        suit={card.suit}
+                        onClick={() => {
+                          if (
+                            player.id !== mainPlayer &&
+                            currentPlayer !== player.id
+                          ) {
+                            return;
+                          }
+                          playCard(player.id, cIndex);
+                        }}
+                        disabled={
+                          currentPlayer !== mainPlayer || player.id !== mainPlayer
                         }
-                        playCard(player.id, cIndex);
-                      }}
-                      disabled={
-                        currentPlayer !== mainPlayer || player.id !== mainPlayer
-                      }
-                      faceDown={player.id !== mainPlayer}
-                      style={{
-                        transform: `rotate(${rotate}deg) translateY(${translateY}px)`,
-                      }}
-                      className={clsx({
-                        "cursor-pointer":
-                          player.id === mainPlayer &&
-                          currentPlayer === player.id,
-                      })}
-                    />
+                        faceDown={player.id !== mainPlayer}
+                        style={{
+                          transform: `rotate(${rotate}deg) translateY(${translateY}px)`,
+                        }}
+                        className={clsx({
+                          "cursor-pointer":
+                            player.id === mainPlayer &&
+                            currentPlayer === player.id,
+                        })}
+                      />
+                    </motion.div>
                   );
                 })}
               </div>
