@@ -3,7 +3,10 @@ import { motion } from "framer-motion";
 
 import { useGameStoreService } from "@/application/hooks/useGameStoreService";
 import { useGameStoreState } from "@/application/hooks/useGameStoreState";
-import { resolveCardLanded } from "@/application/services/AnimationService";
+import {
+  AnimationKeys,
+  animationService,
+} from "@/application/services/AnimationService";
 import type { Rank, Suit } from "@/domain/entities/Card";
 import { Card as CardView } from "@/infrastructure/ui/components/card/Card";
 
@@ -54,7 +57,10 @@ export const TableCards = () => {
             layoutId={layoutId}
             onLayoutAnimationComplete={() => {
               if (!isLast) return;
-              resolveCardLanded(suit as Suit, rank);
+              animationService.dispatch(AnimationKeys.GAME_CARDS, {
+                suit: suit as Suit,
+                rank,
+              });
             }}
           >
             <CardView
