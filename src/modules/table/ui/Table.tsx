@@ -9,7 +9,7 @@ export const Table = ({ children }: { children: ReactNode }) => {
       <TableBackground />
       <div
         className={
-          "landscape:lg:-translate-y-1/2 landscape:lg:top-1/2 landscape:lg:h-[40%] absolute top-1/2 left-1/2 h-[40%] w-[40%] -translate-x-1/2 -translate-y-1/2 transform landscape:top-1/3 landscape:h-[20%] landscape:-translate-y-1/6"
+          "landscape:-translate-y-1/6 absolute left-1/2 top-1/2 h-[50%] w-[90%] -translate-x-1/2 -translate-y-1/2 transform lg:h-[45%] landscape:top-1/3 landscape:h-[40%] landscape:lg:top-1/2 landscape:lg:h-[45%] landscape:lg:w-[60%] landscape:lg:-translate-y-1/2"
         }
       >
         <TableCards />
