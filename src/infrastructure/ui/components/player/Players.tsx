@@ -150,7 +150,7 @@ export const Players = () => {
                 avatar={avatar}
                 score={scores.values}
                 team={player.team}
-                isMainPlayer={player.id === mainPlayer}
+                isMainPlayer={player.id === currentPlayer}
                 isDealer={player.id === dealer}
               />
             </div>
