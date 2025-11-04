@@ -192,12 +192,12 @@ function computePlayerPositions(playersCount: number): Position[] {
     return [
       {
         container:
-          "bottom-[1%] md:bottom-[4%] lg:bottom-[8%] landscape:bottom-[6%] landscape:lg:bottom-[12%] left-1/2 -translate-x-1/2",
+          "bottom-[1%] md:bottom-[4%] landscape:bottom-[3%] left-1/2 -translate-x-1/2",
         rotation: "rotate(0deg)",
         chipOffset: "mt-0 md:mt-3",
       },
       {
-        container: "right-[5%] top-1/2 -translate-y-1/2",
+        container: "right-[5%] md:right-[3%] top-1/2 -translate-y-1/2",
         rotation: "rotate(-90deg)",
         chipOffset: "mt-2",
         collapseHand: "bottom-[calc(-100%+30%)]",
@@ -205,14 +205,14 @@ function computePlayerPositions(playersCount: number): Position[] {
 
       {
         container:
-          "top-[1%] md:top-[4%] lg:top-[8%] landscape:lg:top-[10%] left-1/2 -translate-x-1/2",
+          "top-[1%] md:top-[4%] landscape:top-[3%] left-1/2 -translate-x-1/2",
         rotation: "rotate(180deg)",
         chipOffset: "mt-0 md:mt-2",
         collapseHand:
           "landscape:bottom-[calc(-100%+55%)] landscape:lg:bottom-0",
       },
       {
-        container: "left-[5%] top-1/2 -translate-y-1/2",
+        container: "left-[5%] md:left-[3%] top-1/2 -translate-y-1/2",
         rotation: "rotate(90deg)",
         chipOffset: "mt-2",
         collapseHand: "bottom-[calc(-100%+30%)]",
@@ -220,25 +220,27 @@ function computePlayerPositions(playersCount: number): Position[] {
     ];
   }
 
+  const bottom = {
+    container:
+      "bottom-[1%] md:bottom-[6%] lg:bottom-[8%] landscape:lg:bottom-[3%] left-1/2 -translate-x-1/2",
+    rotation: "rotate(0deg)",
+    chipOffset: "mt-2",
+  };
+
+  const right = {
+    container: "right-[5%] landscape:lg:right-[3%] top-1/2 -translate-y-1/2",
+    rotation: "rotate(-90deg)",
+    chipOffset: "mt-2",
+    collapseHand: "bottom-[calc(-100%+30%)]",
+  };
+
   const layouts: Position[][] = [
     [
+      bottom,
+      right,
       {
         container:
-          "bottom-[1%] md:bottom-[6%] lg:bottom-[8%] landscape:lg:bottom-[10%] left-1/2 -translate-x-1/2",
-        rotation: "rotate(0deg)",
-        chipOffset: "mt-2",
-      },
-
-      {
-        container:
-          "right-[5%] landscape:lg:right-[8%] top-1/2 -translate-y-1/2",
-        rotation: "rotate(-90deg)",
-        chipOffset: "mt-2",
-        collapseHand: "bottom-[calc(-100%+30%)]",
-      },
-      {
-        container:
-          "top-[1%] md:top-[6%] lg:top-[8%] landscape:top-[3%] landscape:lg:top-[9%] left-1/2 -translate-x-1/2",
+          "top-[1%] md:top-[6%] lg:top-[8%] landscape:top-[3%] landscape:lg:top-[3%] left-1/2 -translate-x-1/2",
         rotation: "rotate(180deg)",
         chipOffset: "mt-2",
         collapseHand:
@@ -246,21 +248,10 @@ function computePlayerPositions(playersCount: number): Position[] {
       },
     ],
     [
+      bottom,
+      right,
       {
-        container:
-          "bottom-[1%] md:bottom-[6%] lg:bottom-[8%] landscape:lg:bottom-[10%] left-1/2 -translate-x-1/2",
-        rotation: "rotate(0deg)",
-        chipOffset: "mt-2",
-      },
-      {
-        container:
-          "right-[5%] landscape:lg:right-[6%] top-1/2 -translate-y-1/2",
-        rotation: "rotate(-90deg)",
-        chipOffset: "mt-2",
-        collapseHand: "bottom-[calc(-100%+30%)]",
-      },
-      {
-        container: "left-[5%] landscape:lg:left-[6%] top-1/2 -translate-y-1/2",
+        container: "left-[5%] landscape:lg:left-[3%] top-1/2 -translate-y-1/2",
         rotation: "rotate(90deg)",
         chipOffset: "mt-2",
         collapseHand: "bottom-[calc(-100%+30%)]",
