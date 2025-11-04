@@ -1,7 +1,11 @@
 import { initialState } from "@/application/store/gameStore";
 import type { Card } from "@/domain/entities/Card";
 import type { GameMode, GameState, Player } from "@/domain/entities/GameState";
-import { chooseDealer, dealRound } from "@/domain/services/deal";
+import { dealRound } from "@/domain/services/deal";
+import {
+  dealerCardSelection,
+  setUpDealerSelection,
+} from "@/domain/services/dealer";
 import { playCard as domainPlayCard } from "@/domain/services/moves";
 import { resolveHands } from "@/domain/services/resolveHands";
 import { applyCountingRule } from "@/domain/services/scoring";
@@ -22,6 +26,13 @@ export function createGameService(
       nextState.dealer?.startsWith("bot-")
     ) {
       api.botDealerChoose(nextState.dealer);
+    }
+
+    if (
+      nextState.phase === "chooseDealer" &&
+      nextState.currentPlayer?.startsWith("bot-")
+    ) {
+      api.botPickDealerCard(nextState.currentPlayer);
     }
   }
 
@@ -64,12 +75,27 @@ export function createGameService(
     startGame: () => {
       const state = getState();
       if (state.phase !== "deal") return;
-      const nextState = chooseDealer(state);
+
+      const nextState: GameState = {
+        ...state,
+        ...setUpDealerSelection(state),
+        phase: "chooseDealer",
+        dealer: "",
+        deck: [],
+      } as GameState;
+
       withBotCheck(nextState);
     },
 
     resetGameState: () => {
       setState(initialState);
+    },
+
+    pickDealerCard: (cardKey: string) => {
+      const state = getState();
+      if (state.phase !== "chooseDealer") return;
+
+      withBotCheck(dealerCardSelection(state, cardKey));
     },
 
     dealerChoose: (
@@ -174,6 +200,32 @@ export function createGameService(
       setTimeout(() => {
         api.dealerChoose(randomOrder, randomPattern);
       }, 1000);
+    },
+
+    botPickDealerCard: (botId: string) => {
+      const state = getState();
+      if (state.phase !== "chooseDealer" || state.currentPlayer !== botId)
+        return;
+
+      const sel = state.dealerSelection!;
+      const availableKeys = state.table
+        .map((c) => `${c.suit}-${c.rank}`)
+        .filter((k) => !sel.pickedKeys.has(k));
+
+      if (availableKeys.length === 0) return;
+
+      const choice =
+        availableKeys[Math.floor(Math.random() * availableKeys.length)];
+
+      setTimeout(() => {
+        const newState = getState();
+        if (
+          newState.phase === "chooseDealer" &&
+          newState.currentPlayer === botId
+        ) {
+          api.pickDealerCard(choice);
+        }
+      }, 800);
     },
   };
 

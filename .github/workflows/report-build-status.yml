@@ -2,19 +2,16 @@ name: Report Build Status
 
 on:
   pull_request:
-    branches:
-      - develop
-    types:
-      - synchronize
-  pull_request_target:
-    branches:
-      - develop
-    types:
-      - ready_for_review
+    branches: [develop]
+    types: [ready_for_review, synchronize]
 
 jobs:
   report-build-status:
+    if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
+    concurrency:
+      group: build-${{ github.head_ref || github.ref_name }}
+      cancel-in-progress: true
     steps:
       - uses: actions/checkout@v4
         with:

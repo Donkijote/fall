@@ -80,9 +80,10 @@ describe("Game Service", () => {
 
     expect(mockSetState).toHaveBeenCalledWith({
       ...mockedStateWithPlayers,
-      deck: expect.any(Array),
-      dealer: expect.any(String),
-      phase: "dealerChoice",
+      table: expect.any(Array),
+      dealerSelection: expect.any(Object),
+      currentPlayer: expect.any(String),
+      phase: "chooseDealer",
     });
   });
   it("should not start game due to different phase", () => {
@@ -377,5 +378,103 @@ describe("Game Service", () => {
     ).resetGameState();
 
     expect(mockSetState).toHaveBeenCalledWith(initialState);
+  });
+  it("picks a dealer card for the current human player and advances the turn", () => {
+    const dealerSelectionState: GameState = {
+      ...mockedStateWithPlayers,
+      phase: "chooseDealer",
+      currentPlayer: mockedStateWithPlayers.players[0].id,
+      deck: [],
+      table: [
+        { suit: "coins", rank: 1 },
+        { suit: "cups", rank: 7 },
+        { suit: "swords", rank: 3 },
+      ],
+      dealerSelection: {
+        order: [
+          mockedStateWithPlayers.players[0].id,
+          mockedStateWithPlayers.players[1].id,
+        ],
+        turnIndex: 0,
+        pickedByKey: {
+          [mockedStateWithPlayers.players[0].id]: null,
+          [mockedStateWithPlayers.players[1].id]: null,
+        },
+        pickedKeys: new Set<string>(),
+        tieOnlyPlayers: null,
+        poolSize: 16,
+      },
+    };
+
+    const getState = vi.fn().mockReturnValue(dealerSelectionState);
+    const { pickDealerCard } = createGameService(getState, mockSetState);
+
+    const selectedKey = "coins-1";
+    pickDealerCard(selectedKey);
+
+    expect(mockSetState).toHaveBeenCalled();
+    const updatedState = mockSetState.mock.calls[0][0] as GameState;
+
+    expect(updatedState.phase).toBe("chooseDealer");
+    expect(
+      updatedState.dealerSelection!.pickedByKey[
+        mockedStateWithPlayers.players[0].id
+      ],
+    ).toBe(selectedKey);
+    expect(updatedState.dealerSelection!.pickedKeys.has(selectedKey)).toBe(
+      true,
+    );
+    expect(updatedState.currentPlayer).toBe(
+      mockedStateWithPlayers.players[1].id,
+    );
+    expect(updatedState.dealerSelection!.turnIndex).toBe(1);
+  });
+  it("lets a bot pick a dealer card on its turn", () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+
+    const botTurnSelectionState: GameState = {
+      ...mockedStateWithPlayers,
+      phase: "chooseDealer",
+      currentPlayer: mockedStateWithPlayers.players[1].id,
+      deck: [],
+      table: [
+        { suit: "coins", rank: 2 },
+        { suit: "cups", rank: 6 },
+        { suit: "swords", rank: 4 },
+      ],
+      dealerSelection: {
+        order: [
+          mockedStateWithPlayers.players[0].id,
+          mockedStateWithPlayers.players[1].id,
+        ],
+        turnIndex: 1,
+        pickedByKey: {
+          [mockedStateWithPlayers.players[0].id]: null,
+          [mockedStateWithPlayers.players[1].id]: null,
+        },
+        pickedKeys: new Set<string>(),
+        tieOnlyPlayers: null,
+        poolSize: 16,
+      },
+    };
+
+    const getState = vi.fn().mockReturnValue(botTurnSelectionState);
+    const { botPickDealerCard } = createGameService(getState, mockSetState);
+
+    botPickDealerCard(mockedStateWithPlayers.players[1].id);
+    vi.advanceTimersByTime(800);
+
+    expect(mockSetState).toHaveBeenCalled();
+    const updatedState = mockSetState.mock.calls[0][0] as GameState;
+
+    const botPickedKey =
+      updatedState.dealerSelection!.pickedByKey[
+        mockedStateWithPlayers.players[1].id
+      ];
+    expect(typeof botPickedKey).toBe("string");
+    expect(
+      botPickedKey &&
+        updatedState.dealerSelection!.pickedKeys.has(botPickedKey),
+    ).toBe(true);
   });
 });
