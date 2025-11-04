@@ -34,6 +34,7 @@ describe("Deal", () => {
   it("should deal table first then players", () => {
     const state = dealRound(mockedStateWithPlayers, {
       dealOrder: "tableThenPlayers",
+      isDealerFirstDeal: true,
     });
 
     expect(state).toStrictEqual({
