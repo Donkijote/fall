@@ -1,8 +1,12 @@
 import type { CardKey, Rank, Suit } from "@/domain/entities/Card";
 
+export const AnimationKeys = {
+  GAME_CARDS: "GAME_CARDS",
+} as const;
+
 const pending = new Map<CardKey, () => void>();
 
-export function waitForCardToLand(suit: Suit, rank: Rank): Promise<void> {
+export const waitForCardToLand = (suit: Suit, rank: Rank): Promise<void> => {
   const key: CardKey = `${suit}-${rank}`;
   return new Promise<void>((resolve) => {
     pending.set(key, resolve);
@@ -13,13 +17,13 @@ export function waitForCardToLand(suit: Suit, rank: Rank): Promise<void> {
       }
     }, 1000);
   });
-}
+};
 
-export function resolveCardLanded(suit: Suit, rank: Rank) {
+export const resolveCardLanded = (suit: Suit, rank: Rank) => {
   const key: CardKey = `${suit}-${rank}`;
   const res = pending.get(key);
   if (res) {
     pending.delete(key);
     res();
   }
-}
+};
