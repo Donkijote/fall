@@ -80,9 +80,10 @@ describe("Game Service", () => {
 
     expect(mockSetState).toHaveBeenCalledWith({
       ...mockedStateWithPlayers,
-      deck: expect.any(Array),
-      dealer: expect.any(String),
-      phase: "dealerChoice",
+      table: expect.any(Array),
+      dealerSelection: expect.any(Object),
+      currentPlayer: expect.any(String),
+      phase: "chooseDealer",
     });
   });
   it("should not start game due to different phase", () => {
