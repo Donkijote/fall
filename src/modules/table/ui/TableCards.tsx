@@ -62,27 +62,33 @@ export const TableCards = () => {
                 rank,
               });
             }}
+            style={{
+              position: "absolute",
+              left: `${p.leftPct}%`,
+              top: `${p.topPct}%`,
+              zIndex: Math.round(p.z),
+            }}
+            initial={false}
           >
-            <CardView
-              rank={rank}
-              suit={suit as Suit}
-              faceDown={faceDown}
-              disabled={!isEligible}
-              onClick={() => {
-                if (!isEligible) return;
-                pickDealerCard(key);
-              }}
-              className={clsx({
-                "cursor-pointer": isEligible,
-              })}
+            <div
               style={{
-                position: "absolute",
-                left: `${p.leftPct}%`,
-                top: `${p.topPct}%`,
                 transform: `translate(-50%, -50%) rotate(${p.rotationDeg}deg)`,
-                zIndex: Math.round(p.z),
               }}
-            />
+            >
+              <CardView
+                rank={rank}
+                suit={suit as Suit}
+                faceDown={faceDown}
+                disabled={!isEligible}
+                onClick={async () => {
+                  if (!isEligible) return;
+                  await pickDealerCard(key);
+                }}
+                className={clsx({
+                  "cursor-pointer": isEligible,
+                })}
+              />
+            </div>
           </motion.div>
         );
       })}
