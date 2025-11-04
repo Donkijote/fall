@@ -3,7 +3,7 @@ import { expect } from "vitest";
 import { mockedStateWithPlayers } from "@/application/store/gameStore";
 import { createDeck } from "@/domain/rules/deck";
 
-import { applyTablePatternBonus } from "./deal";
+import { applyTablePatternBonus, dealRound } from "./deal";
 
 const stateWithDealer = {
   ...mockedStateWithPlayers,
@@ -28,6 +28,17 @@ describe("Deal", () => {
           [stateWithDealer.players[0].id]: 10,
         },
       },
+    });
+  });
+
+  it("should deal table first then players", () => {
+    const state = dealRound(mockedStateWithPlayers, {
+      dealOrder: "tableThenPlayers",
+    });
+
+    expect(state).toStrictEqual({
+      ...state,
+      table: expect.any(Array),
     });
   });
 });
