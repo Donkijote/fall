@@ -1,21 +1,24 @@
 import { clsx } from "clsx";
 import type { ReactNode } from "react";
 import { useState } from "react";
-import { useSearchParams } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 
 import { BottomSidebar } from "@/infrastructure/ui/components/navbar/BottomSidebar";
+import { RULES_PATH, SINGS_SHEETS } from "@/routes/Routes";
 
 import {
   faCirclePlay,
   faGear,
   faGift,
-  faTrophy,
+  faScaleBalanced,
+  faScroll,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const BottomNavbar = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const [active, setActive] = useState("");
   const [isOpen, setIsOpen] = useState(
@@ -75,10 +78,22 @@ export const BottomNavbar = () => {
           {/* Right Items */}
           <div className="gap-4 sm:gap-12 flex items-center">
             <NavItem
-              icon={<FontAwesomeIcon icon={faTrophy} />}
-              label="Rank"
-              active={active === "Rank"}
-              onClick={() => setActive("Rank")}
+              icon={<FontAwesomeIcon icon={faScaleBalanced} />}
+              label="Rules"
+              active={active === "Rules"}
+              onClick={() => {
+                setActive("Rules");
+                navigate(RULES_PATH);
+              }}
+            />
+            <NavItem
+              icon={<FontAwesomeIcon icon={faScroll} />}
+              label="Sings"
+              active={active === "Sings"}
+              onClick={() => {
+                setActive("Sings");
+                navigate(SINGS_SHEETS);
+              }}
             />
             <NavItem
               icon={<FontAwesomeIcon icon={faGear} />}

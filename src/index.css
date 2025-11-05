@@ -1,6 +1,11 @@
 @import "tailwindcss";
 
-@tailwind utilities;
+@layer theme, base, components, utilities;
+
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css" layer(utilities);
+
 
 @theme {
   --breakpoint-3xl: 120rem;
@@ -20,6 +25,16 @@
   --color-border: #2a2a2a;
   --color-shadow: rgba(0, 0, 0, 0.6);
 }
+@layer utilities {
+    .scrollbar-hide-y::-webkit-scrollbar {
+        display: none;
+    }
+    .scrollbar-hide-y {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+}
+
 
 html, body {
     overflow: hidden;
