@@ -154,6 +154,14 @@ jobs:
           sign-commits: true
           labels: kind/internal
 
+      - name: Enable auto-merge (main PR)
+        if: ${{ steps.pr_main.outputs.pull-request-number }}
+        uses: peter-evans/enable-pull-request-automerge@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          pull-request-number: ${{ steps.pr_main.outputs.pull-request-number }}
+          merge-method: merge
+
       - name: Create PR to develop
         id: create_pr
         uses: peter-evans/create-pull-request@v7
