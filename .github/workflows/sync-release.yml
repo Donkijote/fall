@@ -162,6 +162,29 @@ jobs:
           pull-request-number: ${{ steps.pr_main.outputs.pull-request-number }}
           merge-method: merge
 
+      - name: Wait for main PR to merge
+        if: ${{ steps.pr_main.outputs.pull-request-number }}
+        uses: actions/github-script@v7
+        id: wait_main_merge
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const prNumber = Number('${{ steps.pr_main.outputs.pull-request-number }}');
+            
+            const deadline = Date.now() + 10 * 60 * 1000; // 10 minutes
+            let state = '';
+            while (Date.now() < deadline) {
+              const { data: pr } = await github.rest.pulls.get({ owner, repo, pull_number: prNumber });
+              state = pr.state; // open/closed
+              if (pr.merged) {
+                core.info(`PR #${prNumber} merged.`);
+                return;
+              }
+              core.info(`PR #${prNumber} not merged yet (state=${state}). Sleeping 10s...`);
+              await new Promise(r => setTimeout(r, 10000));
+            }
+            core.setFailed(`Timed out waiting for PR #${prNumber} to merge.`);
+
       - name: Update sync branch to merged main tip
         run: |
           git fetch origin +refs/heads/*:refs/remotes/origin/* --prune
