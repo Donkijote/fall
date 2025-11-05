@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { motion } from "framer-motion";
 import { useMemo } from "react";
 
 import { useGameStoreService } from "@/application/hooks/useGameStoreService";
@@ -67,34 +68,44 @@ export const Players = () => {
 
                   const rotate = (cIndex - middle) * 10;
                   const translateY = Math.abs(cIndex - middle) * 12;
+                  const layoutId = `card-${card.suit}-${card.rank}`;
 
                   return (
-                    <Card
-                      key={card.suit + card.rank}
-                      rank={card.rank}
-                      suit={card.suit}
-                      onClick={() => {
-                        if (
-                          player.id !== mainPlayer &&
-                          currentPlayer !== player.id
-                        ) {
-                          return;
-                        }
-                        playCard(player.id, cIndex);
-                      }}
-                      disabled={
-                        currentPlayer !== mainPlayer || player.id !== mainPlayer
-                      }
-                      faceDown={player.id !== mainPlayer}
-                      style={{
-                        transform: `rotate(${rotate}deg) translateY(${translateY}px)`,
-                      }}
-                      className={clsx({
-                        "cursor-pointer":
-                          player.id === mainPlayer &&
-                          currentPlayer === player.id,
-                      })}
-                    />
+                    <motion.div
+                      key={layoutId}
+                      layout={true}
+                      layoutId={layoutId}
+                    >
+                      <div
+                        style={{
+                          transform: `rotate(${rotate}deg) translateY(${translateY}px)`,
+                        }}
+                      >
+                        <Card
+                          rank={card.rank}
+                          suit={card.suit}
+                          onClick={async () => {
+                            if (
+                              player.id !== mainPlayer &&
+                              currentPlayer !== player.id
+                            ) {
+                              return;
+                            }
+                            await playCard(player.id, cIndex);
+                          }}
+                          disabled={
+                            currentPlayer !== mainPlayer ||
+                            player.id !== mainPlayer
+                          }
+                          faceDown={player.id !== mainPlayer}
+                          className={clsx({
+                            "cursor-pointer":
+                              player.id === mainPlayer &&
+                              currentPlayer === player.id,
+                          })}
+                        />
+                      </div>
+                    </motion.div>
                   );
                 })}
               </div>

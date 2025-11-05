@@ -1,5 +1,6 @@
 import { afterEach, expect } from "vitest";
 
+import { animationService } from "@/application/services/AnimationService";
 import { createGameService } from "@/application/services/GameService";
 import {
   initialState,
@@ -8,6 +9,13 @@ import {
 } from "@/application/store/gameStore";
 import type { GameState } from "@/domain/entities/GameState";
 import { createDeck } from "@/domain/rules/deck";
+
+vi.mock("@/application/services/AnimationService", () => ({
+  AnimationKeys: { GAME_CARDS: "GAME_CARDS" },
+  animationService: {
+    run: vi.fn().mockResolvedValue(undefined),
+  },
+}));
 
 const mockSetState = vi.fn();
 
@@ -476,5 +484,32 @@ describe("Game Service", () => {
       botPickedKey &&
         updatedState.dealerSelection!.pickedKeys.has(botPickedKey),
     ).toBe(true);
+  });
+  it("continues bot flow when animation callback rejects", async () => {
+    (
+      animationService.run as unknown as ReturnType<typeof vi.fn>
+    ).mockRejectedValueOnce(new Error("boom"));
+
+    const deck = createDeck();
+    const state: GameState = JSON.parse(
+      JSON.stringify({
+        ...mockedStateWithPlayers,
+        phase: "play",
+        deck,
+        currentPlayer: "bot-1",
+      }),
+    );
+
+    state.players[0].hand = [deck[5]];
+
+    const api = createGameService(vi.fn().mockReturnValue(state), mockSetState);
+    const botSpy = vi.spyOn(api, "playBotTurn");
+
+    await api.playCard(mockedStateWithPlayers.players[0].id, 0);
+
+    expect(mockSetState).toHaveBeenCalled();
+
+    expect(botSpy).toHaveBeenCalledTimes(1);
+    expect(botSpy).toHaveBeenCalledWith(mockedStateWithPlayers.players[1].id);
   });
 });
