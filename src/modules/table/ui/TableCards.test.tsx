@@ -1,13 +1,61 @@
+import type { CSSProperties, PropsWithChildren } from "react";
 import type { Mock } from "vitest";
 
 import { useGameStoreService } from "@/application/hooks/useGameStoreService";
 import { useGameStoreState } from "@/application/hooks/useGameStoreState";
+import {
+  AnimationKeys,
+  animationService,
+} from "@/application/services/AnimationService";
 import type { Placement } from "@/modules/table/entities/types";
 
 import { cleanup, render, screen } from "@testing-library/react";
 
 import { useTableLayout } from "../application/useTableLayout";
 import { TableCards } from "../ui/TableCards";
+
+vi.mock("framer-motion", () => ({
+  motion: {
+    div: (
+      props: PropsWithChildren<{
+        layoutId: string;
+        onLayoutAnimationComplete: () => void;
+        style: CSSProperties;
+        layout: boolean;
+        initial: boolean;
+      }>,
+    ) => {
+      const {
+        children,
+        onLayoutAnimationComplete,
+        layoutId,
+        style,
+        layout,
+        initial,
+        ...rest
+      } = props;
+      return (
+        <div
+          data-testid={`motion-${layoutId}`}
+          data-layoutid={layoutId}
+          style={style}
+          data-layout={layout}
+          data-initial={initial}
+          {...rest}
+        >
+          {children}
+          <button
+            data-testid={`complete-${layoutId}`}
+            onClick={() => onLayoutAnimationComplete?.()}
+          />
+        </div>
+      );
+    },
+  },
+  LayoutGroup: ({ children }: never) => (
+    <div data-testid="layout-group">{children}</div>
+  ),
+}));
 
 vi.mock("@/application/hooks/useGameStoreState", () => ({
   useGameStoreState: vi.fn(),
@@ -20,6 +68,15 @@ vi.mock("@/application/hooks/useGameStoreService", () => ({
 vi.mock("../application/useTableLayout", () => ({
   useTableLayout: vi.fn(),
 }));
+
+vi.mock("@/application/services/AnimationService", () => {
+  return {
+    AnimationKeys: { GAME_CARDS: "GAME_CARDS" },
+    animationService: {
+      dispatch: vi.fn(),
+    },
+  };
+});
 
 vi.mock("@/infrastructure/ui/components/card/Card", () => ({
   Card: (props: never) => {
@@ -42,10 +99,14 @@ vi.mock("@/infrastructure/ui/components/card/Card", () => ({
 const typedUseGameStoreState = useGameStoreState as unknown as Mock;
 const typedUseTableLayout = useTableLayout as unknown as Mock;
 const typedUseGameStoreService = useGameStoreService as unknown as Mock;
+const typedAnimationService = animationService as unknown as {
+  dispatch: ReturnType<typeof vi.fn>;
+};
 
 describe("TableCards", () => {
   beforeEach(() => {
     cleanup();
+    vi.clearAllMocks();
     typedUseGameStoreState.mockReset();
     typedUseTableLayout.mockReset();
   });
@@ -349,5 +410,102 @@ describe("TableCards", () => {
     card.click();
 
     expect(pickDealerCard).not.toHaveBeenCalled();
+  });
+
+  it("calls animationService.dispatch for the last played card when layout completes", () => {
+    // Given two placements, lastPlayedCard matches the second
+    typedUseGameStoreState.mockReturnValue({
+      table: [
+        { suit: "coins", rank: 3 },
+        { suit: "cups", rank: 7 },
+      ],
+      phase: "play",
+      dealerSelection: undefined,
+      currentPlayer: "1",
+      mainPlayer: "1",
+      lastPlayedCard: { suit: "cups", rank: 7 },
+    });
+
+    typedUseTableLayout.mockReturnValue([
+      { key: "coins-3", leftPct: 10, topPct: 10, rotationDeg: 0, z: 1 },
+      { key: "cups-7", leftPct: 20, topPct: 20, rotationDeg: 0, z: 2 },
+    ]);
+
+    render(<TableCards />);
+
+    // Trigger layout completion for the NON-last one first (should NOT dispatch)
+    const nonLastBtn = screen.getByTestId("complete-card-coins-3");
+    nonLastBtn.click();
+    expect(typedAnimationService.dispatch).not.toHaveBeenCalled();
+
+    // Now trigger for the lastPlayedCard (should dispatch once with correct payload)
+    const lastBtn = screen.getByTestId("complete-card-cups-7");
+    lastBtn.click();
+
+    expect(typedAnimationService.dispatch).toHaveBeenCalledTimes(1);
+    expect(typedAnimationService.dispatch).toHaveBeenCalledWith(
+      AnimationKeys.GAME_CARDS,
+      { suit: "cups", rank: 7 },
+    );
+  });
+
+  it("does not dispatch when lastPlayedCard is null (no card is 'last')", () => {
+    // One placement, but no lastPlayedCard in state
+    typedUseGameStoreState.mockReturnValue({
+      table: [{ suit: "coins", rank: 5 }],
+      phase: "play",
+      dealerSelection: undefined,
+      currentPlayer: "1",
+      mainPlayer: "1",
+      lastPlayedCard: null,
+    });
+
+    typedUseTableLayout.mockReturnValue([
+      { key: "coins-5", leftPct: 10, topPct: 10, rotationDeg: 0, z: 1 },
+    ]);
+
+    render(<TableCards />);
+
+    // Trigger completion anyway — handler should early-return and not dispatch
+    const btn = screen.getByTestId("complete-card-coins-5");
+    btn.click();
+
+    expect(typedAnimationService.dispatch).not.toHaveBeenCalled();
+  });
+
+  it("only dispatches for the placement that matches lastPlayedCard even if multiple are completed", () => {
+    typedUseGameStoreState.mockReturnValue({
+      table: [
+        { suit: "coins", rank: 1 },
+        { suit: "clubs", rank: 12 },
+        { suit: "swords", rank: 3 },
+      ],
+      phase: "play",
+      dealerSelection: undefined,
+      currentPlayer: "1",
+      mainPlayer: "1",
+      lastPlayedCard: { suit: "clubs", rank: 12 },
+    });
+
+    typedUseTableLayout.mockReturnValue([
+      { key: "coins-1", leftPct: 15, topPct: 15, rotationDeg: 0, z: 1 },
+      { key: "clubs-12", leftPct: 25, topPct: 25, rotationDeg: 0, z: 2 }, // <- last
+      { key: "swords-3", leftPct: 35, topPct: 35, rotationDeg: 0, z: 3 },
+    ]);
+
+    render(<TableCards />);
+
+    // Fire completion for non-last cards first
+    screen.getByTestId("complete-card-coins-1").click();
+    screen.getByTestId("complete-card-swords-3").click();
+    expect(typedAnimationService.dispatch).not.toHaveBeenCalled();
+
+    // Fire completion for the last card
+    screen.getByTestId("complete-card-clubs-12").click();
+    expect(typedAnimationService.dispatch).toHaveBeenCalledTimes(1);
+    expect(typedAnimationService.dispatch).toHaveBeenCalledWith(
+      AnimationKeys.GAME_CARDS,
+      { suit: "clubs", rank: 12 },
+    );
   });
 });

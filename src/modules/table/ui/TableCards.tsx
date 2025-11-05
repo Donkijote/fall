@@ -45,10 +45,11 @@ export const TableCards = () => {
           !alreadyPicked &&
           (!tieOnly || tieOnly.includes(mainPlayer));
         const faceDown = isChoose ? !alreadyPicked : false;
-        const isLast =
-          !!lastPlayedCard &&
-          lastPlayedCard.suit === (suit as Suit) &&
-          lastPlayedCard.rank === rank;
+        const isLast = Boolean(
+          lastPlayedCard &&
+            lastPlayedCard.suit === (suit as Suit) &&
+            lastPlayedCard.rank === rank,
+        );
 
         return (
           <motion.div
