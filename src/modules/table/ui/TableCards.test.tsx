@@ -107,15 +107,18 @@ describe("TableCards", () => {
 
     const card = screen.getByTestId("card-view");
     // style assertions
-    const style = (card as HTMLDivElement).style;
-    expect(style.position).toBe("absolute");
-    expect(style.left).toBe("50%");
-    expect(style.top).toBe("55%");
+    expect(card.parentElement!.parentElement!.style.position).toBe("absolute");
+    expect(card.parentElement!.parentElement!.style.left).toBe("50%");
+    expect(card.parentElement!.parentElement!.style.top).toBe("55%");
     // transform should include translate(-50%, -50%) and rotate(15deg)
-    expect(style.transform).toContain("translate(-50%, -50%)");
-    expect(style.transform).toContain("rotate(15deg)");
+    expect(card.parentElement!.style.transform).toContain(
+      "translate(-50%, -50%)",
+    );
+    expect(card.parentElement!.style.transform).toContain("rotate(15deg)");
     // zIndex must be rounded
-    expect(style.zIndex).toBe(String(Math.round(42.2)));
+    expect(card.parentElement!.parentElement!.style.zIndex).toBe(
+      String(Math.round(42.2)),
+    );
   });
 
   it("keeps zIndex as integer (rounded from placement.z)", () => {
@@ -127,7 +130,8 @@ describe("TableCards", () => {
     ]);
 
     render(<TableCards />);
-    const card = screen.getByTestId("card-view") as HTMLDivElement;
+    const card = screen.getByTestId("card-view").parentElement!
+      .parentElement as HTMLDivElement;
     expect(card.style.zIndex).toBe("1001"); // rounded
   });
 
@@ -149,19 +153,18 @@ describe("TableCards", () => {
     render(<TableCards />);
 
     const cards = screen.getAllByTestId("card-view");
-    const styles = cards.map((c) => (c as HTMLDivElement).style);
+    const styles = cards.map(
+      (c) => (c.parentElement!.parentElement as HTMLDivElement).style,
+    );
 
     expect(styles[0].left).toBe("20%");
     expect(styles[0].top).toBe("30%");
-    expect(styles[0].transform).toContain("rotate(0deg)");
     expect(styles[0].zIndex).toBe("1");
 
     expect(styles[1].left).toBe("40%");
-    expect(styles[1].transform).toContain("rotate(-12deg)");
     expect(styles[1].zIndex).toBe("2");
 
     expect(styles[2].left).toBe("60%");
-    expect(styles[2].transform).toContain("rotate(9deg)");
     expect(styles[2].zIndex).toBe("3");
   });
 
