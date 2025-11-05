@@ -123,11 +123,15 @@ jobs:
       - name: Update Version
         id: update_version
         run: |
-          git fetch
+          set -euo pipefail
+          git fetch --prune
           git checkout main
-          git pull
-          echo "Bumping version with: ${{ steps.bump.outputs.bump }}"
-          version=$(pnpm version ${{ steps.bump.outputs.bump }} --no-git-tag-version)
+          git pull --ff-only
+
+          echo "Bumping version with: ${{ steps.bump.outputs.bump }}"        
+          pnpm version ${{ steps.bump.outputs.bump }} --no-git-tag-version --workspace-root --allow-same-version --silent
+          
+          version=$(node -p "require('./package.json').version")
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
       - name: Update Changelog
@@ -148,6 +152,7 @@ jobs:
             Sync version & changelog into **main**.
             Version: `${{ steps.update_version.outputs.version }}`
           sign-commits: true
+          labels: kind/internal
 
       - name: Create PR to develop
         id: create_pr
@@ -156,7 +161,9 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: sync/release-${{ steps.update_version.outputs.version }}
           title: "Sync Release: ${{ steps.update_version.outputs.version }}"
-          body: "This pull request contains the updated package.json with the upcoming release version"
+          body: |
+            Sync version & changelog into **main**.
+            Version: `${{ steps.update_version.outputs.version }}`
           base: develop
           sign-commits: true
           labels: kind/internal
