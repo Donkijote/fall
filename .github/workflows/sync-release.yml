@@ -8,7 +8,7 @@ on:
 permissions:
   actions: read
   contents: write
-  pull-requests: read
+  pull-requests: write
 
 jobs:
   sync:
@@ -153,6 +153,20 @@ jobs:
             Version: `${{ steps.update_version.outputs.version }}`
           sign-commits: true
           labels: kind/internal
+
+      - name: Enable auto-merge (main PR)
+        if: ${{ steps.pr_main.outputs.pull-request-number }}
+        uses: peter-evans/enable-pull-request-automerge@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          pull-request-number: ${{ steps.pr_main.outputs.pull-request-number }}
+          merge-method: merge
+
+      - name: Update sync branch to merged main tip
+        run: |
+          git fetch origin +refs/heads/*:refs/remotes/origin/* --prune
+          git checkout -B sync/release-${{ steps.update_version.outputs.version }} origin/main
+          git push -u origin sync/release-${{ steps.update_version.outputs.version }} --force-with-lease
 
       - name: Create PR to develop
         id: create_pr
