@@ -116,15 +116,6 @@ jobs:
           node -e "const fs=require('fs');const p='package.json';const pkg=JSON.parse(fs.readFileSync(p,'utf8'));pkg.version='${{ steps.ver.outputs.next }}';fs.writeFileSync(p,JSON.stringify(pkg,null,2)+'\n')"
           pnpm install --lockfile-only
 
-      - name: Commit and push
-        env:
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-          TOKEN: ${{ secrets.TOKEN }}
-        run: |
-          git add -A          
-          git commit -S -m "chore(release): bump version" || echo "Nothing to commit."        
-          git push https://x-access-token:${TOKEN}@github.com/${{ github.repository }}.git HEAD:main
-
       - name: Build (after version bump)
         run: pnpm run build
 

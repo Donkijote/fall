@@ -15,6 +15,10 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
+    concurrency:
+      group: sync-release-${{ github.event.workflow_run.id }}
+      cancel-in-progress: true
+
     steps:
       - name: Download PR context from Release run
         id: dl_ctx
@@ -77,6 +81,22 @@ jobs:
           echo "Head ref: ${{ steps.pr_ctx.outputs.headRef }}"
           echo "Base ref: ${{ steps.pr_ctx.outputs.baseRef }}"
 
+      - name: Determine version bump from PR label
+        id: bump
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const prNumber = Number(`${{ steps.pr_ctx.outputs.number }}`);
+            const { data: pr } = await github.rest.pulls.get({ owner, repo, pull_number: prNumber });
+            const label = pr.labels.find(l => /^release\/(major|minor|patch)$/.test(l.name));
+            if (!label) {
+              core.setFailed('Missing required label release/{major|minor|patch} on the triggering PR.');
+              return;
+            }
+            const bump = label.name.split('/')[1]; // major|minor|patch
+            core.setOutput('bump', bump);
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -103,11 +123,15 @@ jobs:
       - name: Update Version
         id: update_version
         run: |
-          git fetch
+          set -euo pipefail
+          git fetch --prune
           git checkout main
-          git pull
-          echo "Bumping version with: ${{ steps.bump.outputs.bump }}"
-          version=$(pnpm version ${{ steps.bump.outputs.bump }} --no-git-tag-version)
+          git pull --ff-only
+
+          echo "Bumping version with: ${{ steps.bump.outputs.bump }}"        
+          pnpm version ${{ steps.bump.outputs.bump }} --no-git-tag-version --workspace-root --allow-same-version --silent
+          
+          version=$(node -p "require('./package.json').version")
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
       - name: Update Changelog
@@ -116,14 +140,43 @@ jobs:
           sed -i "/\[Unreleased\]/a ## [${{ steps.update_version.outputs.version }}]" CHANGELOG.md
           sed -i "/\[Unreleased\]/a\\" CHANGELOG.md
 
-      - name: Create pull request
+      - name: Create PR to main
+        id: pr_main
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: main
+          branch: sync/release-${{ steps.update_version.outputs.version }}
+          title: "Sync Release: ${{ steps.update_version.outputs.version }}"
+          body: |
+            Sync version & changelog into **main**.
+            Version: `${{ steps.update_version.outputs.version }}`
+          sign-commits: true
+          labels: kind/internal
+
+      - name: Enable auto-merge (main PR)
+        if: ${{ steps.pr_main.outputs.pull-request-number }}
+        uses: peter-evans/enable-pull-request-automerge@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          pull-request-number: ${{ steps.pr_main.outputs.pull-request-number }}
+          merge-method: merge
+
+      - name: Create PR to develop
         id: create_pr
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: sync/release-${{ steps.update_version.outputs.version }}
           title: "Sync Release: ${{ steps.update_version.outputs.version }}"
-          body: "This pull request contains the updated package.json with the upcoming release version"
+          body: |
+            Sync version & changelog into **main**.
+            Version: `${{ steps.update_version.outputs.version }}`
           base: develop
           sign-commits: true
           labels: kind/internal
+
+      - name: Summary
+        run: |
+          echo "Main PR #:    ${{ steps.pr_main.outputs.pull-request-number }}"
+          echo "Develop PR #: ${{ steps.pr_develop.outputs.pull-request-number }}"
