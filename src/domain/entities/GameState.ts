@@ -1,6 +1,6 @@
 import type { User } from "@/domain/entities/User";
 
-import type { Card } from "./Card";
+import type { Card, CardWithKey } from "./Card";
 
 export type Phase =
   | "init"
@@ -60,3 +60,12 @@ export interface GameState {
   config: GameConfig;
   dealerSelection?: DealerSelection;
 }
+
+export type CapturePlan =
+  | { kind: "none" }
+  | {
+      kind: "match" | "cascade";
+      playerId: Player["id"];
+      played: CardWithKey;
+      targets: Array<CardWithKey>;
+    };
