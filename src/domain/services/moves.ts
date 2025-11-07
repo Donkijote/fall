@@ -1,109 +1,171 @@
-import { type Card, RANK_ORDER } from "../entities/Card";
-import type { GameState } from "../entities/GameState";
+import { nextRank, toCardKey } from "@/domain/helpers/card";
+import { cloneState } from "@/domain/helpers/state";
+
+import { type Card, type CardWithKey } from "../entities/Card";
+import type {
+  CapturePlan,
+  GameState,
+  PlayAnalysis,
+} from "../entities/GameState";
 import { dealRound } from "./deal";
 import { awardPoints, checkGameOver } from "./scoring";
 
-export const playCard = (
+export const analyzePlay = (
+  state: GameState,
+  playerId: string,
+  card: Card,
+): PlayAnalysis => {
+  const player = state.players.find(
+    (p) => p.id === playerId && p.id === state.currentPlayer,
+  );
+  if (!player)
+    return {
+      ok: false,
+      reason: "not-current-player",
+      capturePlan: { kind: "none" },
+      isFall: false,
+      isLastRound: state.deck.length === 0,
+    };
+
+  const inHand = player.hand.some(
+    (c) => c.suit === card.suit && c.rank === card.rank,
+  );
+  if (!inHand)
+    return {
+      ok: false,
+      reason: "card-not-in-hand",
+      capturePlan: { kind: "none" },
+      isFall: false,
+      isLastRound: state.deck.length === 0,
+    };
+
+  // capture detection
+  const matchIndex = state.table.findIndex((c) => c.rank === card.rank);
+  const isLastRound = state.deck.length === 0;
+
+  let capturePlan: CapturePlan = { kind: "none" };
+  if (matchIndex !== -1) {
+    const baseCard = state.table[matchIndex];
+    const targets: Array<CardWithKey> = [
+      { suit: baseCard.suit, rank: baseCard.rank, key: toCardKey(baseCard) },
+    ];
+    // cascade by next ranks
+    let next = nextRank(baseCard.rank);
+    while (next !== null) {
+      const idx = state.table.findIndex((c) => c.rank === next);
+      if (idx === -1) break;
+      const t = state.table[idx];
+      targets.push({ suit: t.suit, rank: t.rank, key: toCardKey(t) });
+      next = nextRank(next);
+    }
+
+    capturePlan = {
+      kind: targets.length > 1 ? "cascade" : "match",
+      playerId,
+      played: { suit: card.suit, rank: card.rank, key: toCardKey(card) },
+      targets,
+    };
+  }
+
+  const isFall =
+    !!state.lastPlayedCard && state.lastPlayedCard.rank === card.rank;
+
+  return { ok: true, capturePlan, isFall, isLastRound };
+};
+
+export const removeCardsFromHand = (
   state: GameState,
   playerId: string,
   card: Card,
 ): GameState => {
-  const player = state.players.find(
-    (p) => p.id === playerId && p.id === state.currentPlayer,
+  const next = cloneState(state);
+  const me = next.players.find((p) => p.id === playerId);
+  if (!me) return state;
+  me.hand = me.hand.filter(
+    (c) => !(c.rank === card.rank && c.suit === card.suit),
   );
-  if (!player) return state;
+  return next;
+};
 
-  // Ensure the card exists in hand
-  const cardIndex = player.hand.findIndex(
-    (c) => c.suit === card.suit && c.rank === card.rank,
-  );
-  if (cardIndex === -1) return state;
+export const updateTableAndHandCards = (
+  state: GameState,
+  playerId: string,
+  card: Card,
+  plan: CapturePlan,
+): GameState => {
+  const next = cloneState(state);
+  const me = next.players.find((p) => p.id === playerId)!;
+  const isLastRound = next.deck.length === 0;
 
-  // remove card from hand
-  const newPlayers = state.players.map((p) =>
-    p.id === playerId
-      ? {
-          ...p,
-          hand: p.hand.filter(
-            (c) => !(c.rank === card.rank && c.suit === card.suit),
-          ),
-        }
-      : p,
-  );
-  // --- Normal capture check ---
-  const matchIndex = state.table.findIndex((c) => c.rank === card.rank);
-
-  // place on table or collect
-  const newTable = [...state.table];
-  const isLastRound = state.deck.length === 0;
-
-  if (matchIndex !== -1) {
-    const capturedCards: Card[] = [];
-    const baseCard = newTable.splice(matchIndex, 1)[0];
-    capturedCards.push(baseCard, card);
-
-    // --- Cascade capture ---
-    let next = nextRank(baseCard.rank);
-    while (next !== null) {
-      const idx = newTable.findIndex((c) => c.rank === next);
-      if (idx === -1) break;
-      capturedCards.push(newTable.splice(idx, 1)[0]);
-      next = nextRank(next);
-    }
-
-    // Add captured cards to player's pile
-    newPlayers.map((p) => {
-      if (p.id === playerId) {
-        p.collected.push(...capturedCards);
-      }
-      return p;
-    });
-    if (isLastRound) {
-      state.lastCaptureBy = playerId;
-    }
-  } else {
-    newTable.push(card);
+  if (plan.kind === "none") {
+    next.table = [...next.table, card];
+    return next;
   }
 
-  // Rotate to next player (to the right)
-  const playerCount = state.players.length;
-  const currentIndex = state.players.findIndex(
-    (p) => p.id === state.currentPlayer,
+  // Remove matched + cascade targets from table (by rank occurrences in order)
+  const tableAfter = [...next.table];
+  for (const t of plan.targets) {
+    const idx = tableAfter.findIndex((c) => c.rank === t.rank);
+    if (idx !== -1) tableAfter.splice(idx, 1);
+  }
+  next.table = tableAfter;
+
+  const captured: Card[] = [];
+  const baseTarget = plan.targets[0];
+
+  if (baseTarget) {
+    const baseCard = { suit: baseTarget.suit, rank: baseTarget.rank } as Card;
+    captured.push(baseCard, card);
+  }
+  for (let i = 1; i < plan.targets.length; i++) {
+    const t = plan.targets[i];
+    captured.push({ suit: t.suit, rank: t.rank } as Card);
+  }
+
+  me.collected.push(...captured);
+  if (isLastRound) next.lastCaptureBy = playerId;
+
+  return next;
+};
+
+export const finalizeAfterPlay = (
+  state: GameState,
+  playerId: string,
+  card: Card,
+): GameState => {
+  let nextState = cloneState(state);
+  const isLastRound = nextState.deck.length === 0;
+
+  // Rotate to next player
+  const playerCount = nextState.players.length;
+  const currentIndex = nextState.players.findIndex(
+    (p) => p.id === nextState.currentPlayer,
   );
-  const nextIndex = (currentIndex + 1) % playerCount; // right = next in array order
-  const nextPlayerId = state.players[nextIndex].id;
+  const nextIndex = (currentIndex + 1) % playerCount;
+  nextState.currentPlayer = nextState.players[nextIndex].id;
 
-  let nextState: GameState = {
-    ...state,
-    players: newPlayers,
-    table: newTable,
-    currentPlayer: nextPlayerId,
-    lastPlayedCard: card,
-  };
+  // Maintain lastPlayedCard for future "fall" checks
+  nextState.lastPlayedCard = card;
 
-  // Clean table points
-  // Only award if we're NOT in the last round (i.e., there are still cards in the deck)
+  // Clean table award (only if not last round)
   if (nextState.table.length === 0 && !isLastRound) {
     nextState = awardPoints(nextState, playerId, 4);
   }
 
+  // Fall rule scoring
   const lastCard = state.lastPlayedCard;
   const isFall = !!lastCard && lastCard.rank === card.rank;
-
   if (isFall) {
     const pts = fallPoints(card.rank);
     nextState = awardPoints(nextState, playerId, pts);
     nextState = checkGameOver(nextState);
   }
 
-  // If all hands empty but deck still has cards → redeal
+  // End-of-deal handling (your original logic)
   const allHandsEmpty = nextState.players.every((p) => p.hand.length === 0);
   if (allHandsEmpty) {
     if (nextState.deck.length > 0) {
-      nextState = dealRound(nextState, {
-        isDealerFirstDeal: false, // after first round, never deal the table again
-      });
-      // reset currentPlayer to right of dealer (first to act)
+      nextState = dealRound(nextState, { isDealerFirstDeal: false });
       const dealerIndex = nextState.players.findIndex(
         (p) => p.id === nextState.dealer,
       );
@@ -115,20 +177,14 @@ export const playCard = (
         const lastPlayer = nextState.players.find((p) => p.id === lastCap);
         if (lastPlayer) {
           lastPlayer.collected.push(...nextState.table);
-          nextState = {
-            ...nextState,
-            table: [],
-          };
+          nextState.table = [];
         }
       } else {
         const dealer = nextState.players.find(
           (p) => p.id === nextState.dealer,
         )!;
         dealer.collected.push(...nextState.table);
-        nextState = {
-          ...nextState,
-          table: [],
-        };
+        nextState.table = [];
       }
       nextState.lastCaptureBy = null;
     }
@@ -142,10 +198,4 @@ const fallPoints = (rank: number): number => {
   if (rank === 11) return 3;
   if (rank === 12) return 4;
   return 1;
-};
-
-const nextRank = (rank: number): number | null => {
-  const idx = RANK_ORDER.indexOf(rank);
-  if (idx === -1 || idx === RANK_ORDER.length - 1) return null;
-  return RANK_ORDER[idx + 1];
 };

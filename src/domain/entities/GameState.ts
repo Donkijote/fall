@@ -69,3 +69,11 @@ export type CapturePlan =
       played: CardWithKey;
       targets: Array<CardWithKey>;
     };
+
+export type PlayAnalysis = {
+  ok: boolean;
+  reason?: "not-current-player" | "card-not-in-hand";
+  capturePlan: CapturePlan;
+  isFall: boolean;
+  isLastRound: boolean;
+};
