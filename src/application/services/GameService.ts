@@ -10,7 +10,12 @@ import {
   dealerCardSelection,
   setUpDealerSelection,
 } from "@/domain/services/dealer";
-import { playCard as domainPlayCard } from "@/domain/services/moves";
+import {
+  analyzePlay,
+  finalizeAfterPlay,
+  removeCardsFromHand,
+  updateTableAndHandCards,
+} from "@/domain/services/moves";
 import { resolveHands } from "@/domain/services/resolveHands";
 import { applyCountingRule } from "@/domain/services/scoring";
 
@@ -148,23 +153,63 @@ export function createGameService(
 
       const player = state.players.find((p) => p.id === playerId);
       if (!player) return;
+
       const card: Card | undefined = player.hand[cardIndex];
       if (!card) return;
 
-      let nextState = domainPlayCard(state, playerId, card);
-      const allHandsEmpty = nextState.players.every((p) => p.hand.length === 0);
-      if (allHandsEmpty && nextState.deck.length === 0) {
-        nextState = { ...nextState, phase: "roundEnd" };
-      }
+      const analysis = analyzePlay(state, playerId, card);
+      if (!analysis.ok) return;
 
-      await updateStateAndRunBotsAndContinueFlow(nextState, async () => {
+      const stateAfterRemoveCardsFromHand = removeCardsFromHand(
+        state,
+        playerId,
+        card,
+      );
+
+      const stateAfterUpdateTableAndHandCards = updateTableAndHandCards(
+        stateAfterRemoveCardsFromHand,
+        playerId,
+        card,
+        analysis.capturePlan,
+      );
+
+      setState(stateAfterUpdateTableAndHandCards);
+
+      if (analysis.capturePlan.kind === "none") {
+        // normal: hand -> table
         await animationService.run([
           {
             key: AnimationKeys.GAME_CARDS,
             payload: { suit: card.suit, rank: card.rank },
           },
         ]);
-      });
+      } else {
+        // capture/cascade: hand -> match -> cascade... -> collected pile
+        await animationService.run([
+          {
+            key: AnimationKeys.CAPTURE_SEQUENCE,
+            payload: analysis.capturePlan,
+          },
+        ]);
+      }
+
+      let stateAfterFinalizeAfterPlay = finalizeAfterPlay(
+        getState(),
+        playerId,
+        card,
+      );
+
+      const allHandsEmpty = stateAfterFinalizeAfterPlay.players.every(
+        (p) => p.hand.length === 0,
+      );
+      if (allHandsEmpty && stateAfterFinalizeAfterPlay.deck.length === 0) {
+        stateAfterFinalizeAfterPlay = {
+          ...stateAfterFinalizeAfterPlay,
+          phase: "roundEnd" as const,
+        };
+      }
+
+      await updateStateAndRunBotsAndContinueFlow(stateAfterFinalizeAfterPlay);
     },
 
     endRound: async () => {
