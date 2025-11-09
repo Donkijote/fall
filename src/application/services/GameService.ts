@@ -41,7 +41,10 @@ export function createGameService(
       }
     }
 
-    if (nextState?.currentPlayer?.startsWith("bot-")) {
+    if (
+      nextState.phase === "play" &&
+      nextState?.currentPlayer?.startsWith("bot-")
+    ) {
       await api.playBotTurn(nextState.currentPlayer);
     }
 
