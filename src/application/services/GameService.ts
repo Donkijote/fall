@@ -190,11 +190,11 @@ export function createGameService(
         uiService.setCaptureOverride(null);
       }
 
-      const s2 = {
+      const stateAfterAddRemovedCardToTable = {
         ...stateAfterRemoveCardsFromHand,
         table: [...stateAfterRemoveCardsFromHand.table, card],
       };
-      setState(s2);
+      setState(stateAfterAddRemovedCardToTable);
 
       await animationService.run([
         {
@@ -206,7 +206,7 @@ export function createGameService(
       uiService.clearUI();
 
       const stateAfterUpdateTableAndHandCards = updateTableAndHandCards(
-        getState(),
+        stateAfterAddRemovedCardToTable,
         playerId,
         card,
         analysis.capturePlan,
@@ -215,7 +215,7 @@ export function createGameService(
       setState(stateAfterUpdateTableAndHandCards);
 
       let stateAfterFinalizeAfterPlay = finalizeAfterPlay(
-        getState(),
+        stateAfterUpdateTableAndHandCards,
         playerId,
         card,
       );
