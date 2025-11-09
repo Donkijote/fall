@@ -104,6 +104,12 @@ export const updateTableAndHandCards = (
 
   // Remove matched + cascade targets from table (by rank occurrences in order)
   const tableAfter = [...next.table];
+
+  const playedIdx = tableAfter.findIndex(
+    (c) => c.rank === card.rank && c.suit === card.suit,
+  );
+  if (playedIdx !== -1) tableAfter.splice(playedIdx, 1);
+
   for (const t of plan.targets) {
     const idx = tableAfter.findIndex((c) => c.rank === t.rank);
     if (idx !== -1) tableAfter.splice(idx, 1);
@@ -117,9 +123,12 @@ export const updateTableAndHandCards = (
     const baseCard = { suit: baseTarget.suit, rank: baseTarget.rank } as Card;
     captured.push(baseCard, card);
   }
-  for (let i = 1; i < plan.targets.length; i++) {
-    const t = plan.targets[i];
-    captured.push({ suit: t.suit, rank: t.rank } as Card);
+
+  for (const t of plan.targets) {
+    const idx = tableAfter.findIndex(
+      (c) => c.rank === t.rank && c.suit === t.suit,
+    );
+    if (idx !== -1) tableAfter.splice(idx, 1);
   }
 
   me.collected.push(...captured);
