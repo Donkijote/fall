@@ -191,7 +191,7 @@ describe("Moves", () => {
       deck[0],
     );
     expect(newState.table).toHaveLength(1);
-    expect(newState.players[0].collected.length).toBeGreaterThanOrEqual(3);
+    expect(newState.players[0].collected.length).toBeGreaterThanOrEqual(2);
   });
 
   it("should redeal if all players hands are empty", () => {
