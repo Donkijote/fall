@@ -3,8 +3,10 @@ import {
   animationService,
 } from "@/application/services/AnimationService";
 import { initialState } from "@/application/store/gameStore";
+import { useUIGameStore } from "@/application/store/uiGameStore";
 import type { Card } from "@/domain/entities/Card";
 import type { GameMode, GameState, Player } from "@/domain/entities/GameState";
+import { toCardKey } from "@/domain/helpers/card";
 import { dealRound } from "@/domain/services/deal";
 import {
   dealerCardSelection,
@@ -18,6 +20,8 @@ import {
 } from "@/domain/services/moves";
 import { resolveHands } from "@/domain/services/resolveHands";
 import { applyCountingRule } from "@/domain/services/scoring";
+
+const uiService = useUIGameStore.getState().service;
 
 export function createGameService(
   getState: () => GameState,
@@ -166,32 +170,46 @@ export function createGameService(
         card,
       );
 
+      const playedKey = toCardKey(card);
+      const firstTarget =
+        analysis.capturePlan.kind !== "none"
+          ? analysis.capturePlan.targets[0]
+          : null;
+
+      uiService.setPlayingCard(card);
+
+      if (firstTarget) {
+        uiService.setCaptureOverride({
+          fromKey: playedKey,
+          toKey: toCardKey(firstTarget),
+        });
+      } else {
+        uiService.setCaptureOverride(null);
+      }
+
+      const s2 = {
+        ...stateAfterRemoveCardsFromHand,
+        table: [...stateAfterRemoveCardsFromHand.table, card],
+      };
+      setState(s2);
+
+      await animationService.run([
+        {
+          key: AnimationKeys.GAME_CARDS,
+          payload: { suit: card.suit, rank: card.rank },
+        },
+      ]);
+
+      uiService.clearUI();
+
       const stateAfterUpdateTableAndHandCards = updateTableAndHandCards(
-        stateAfterRemoveCardsFromHand,
+        getState(),
         playerId,
         card,
         analysis.capturePlan,
       );
 
       setState(stateAfterUpdateTableAndHandCards);
-
-      if (analysis.capturePlan.kind === "none") {
-        // normal: hand -> table
-        await animationService.run([
-          {
-            key: AnimationKeys.GAME_CARDS,
-            payload: { suit: card.suit, rank: card.rank },
-          },
-        ]);
-      } else {
-        // capture/cascade: hand -> match -> cascade... -> collected pile
-        await animationService.run([
-          {
-            key: AnimationKeys.CAPTURE_SEQUENCE,
-            payload: analysis.capturePlan,
-          },
-        ]);
-      }
 
       let stateAfterFinalizeAfterPlay = finalizeAfterPlay(
         getState(),
