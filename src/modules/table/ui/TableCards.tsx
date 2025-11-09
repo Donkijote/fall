@@ -1,8 +1,10 @@
 import { clsx } from "clsx";
 import { motion } from "framer-motion";
+import { useMemo } from "react";
 
 import { useGameStoreService } from "@/application/hooks/useGameStoreService";
 import { useGameStoreState } from "@/application/hooks/useGameStoreState";
+import { useUIGameStoreState } from "@/application/hooks/useUIGameStoreState";
 import {
   AnimationKeys,
   animationService,
@@ -13,17 +15,19 @@ import { Card as CardView } from "@/infrastructure/ui/components/card/Card";
 import { useTableLayout } from "../application/useTableLayout";
 
 export const TableCards = () => {
-  const {
-    table,
-    phase,
-    dealerSelection,
-    currentPlayer,
-    mainPlayer,
-    lastPlayedCard,
-  } = useGameStoreState();
+  const { table, phase, dealerSelection, currentPlayer, mainPlayer } =
+    useGameStoreState();
   const { pickDealerCard } = useGameStoreService();
 
+  const { playingCard, captureOverride } = useUIGameStoreState();
+
   const placements = useTableLayout(table);
+
+  const cardsByKey = useMemo(() => {
+    const cardsByKeyMap = new Map<string, (typeof placements)[number]>();
+    placements.forEach((p) => cardsByKeyMap.set(p.key, p));
+    return cardsByKeyMap;
+  }, [placements]);
 
   const isChoose = phase === "chooseDealer";
   const pickedKeys = dealerSelection?.pickedKeys ?? new Set<string>();
@@ -33,10 +37,10 @@ export const TableCards = () => {
 
   return (
     <>
-      {placements.map((p) => {
-        const [suit, rankStr] = p.key.split("-");
+      {placements.map((placement) => {
+        const [suit, rankStr] = placement.key.split("-");
         const rank = Number(rankStr) as Rank;
-        const key = p.key;
+        const key = placement.key;
         const alreadyPicked = pickedKeys.has(key);
         const layoutId = `card-${suit}-${rank}`;
         const isEligible =
@@ -45,11 +49,21 @@ export const TableCards = () => {
           !alreadyPicked &&
           (!tieOnly || tieOnly.includes(mainPlayer));
         const faceDown = isChoose ? !alreadyPicked : false;
-        const isLast = Boolean(
-          lastPlayedCard &&
-            lastPlayedCard.suit === (suit as Suit) &&
-            lastPlayedCard.rank === rank,
-        );
+
+        const isAnimatingCard =
+          !!playingCard &&
+          playingCard.suit === (suit as Suit) &&
+          playingCard.rank === rank;
+
+        const useOverride =
+          isAnimatingCard &&
+          captureOverride &&
+          captureOverride.fromKey === key &&
+          cardsByKey.has(captureOverride.toKey);
+
+        const basePlacement = useOverride
+          ? cardsByKey.get(captureOverride.toKey)!
+          : placement;
 
         return (
           <motion.div
@@ -57,7 +71,7 @@ export const TableCards = () => {
             layout={true}
             layoutId={layoutId}
             onLayoutAnimationComplete={() => {
-              if (!isLast) return;
+              if (!isAnimatingCard) return;
               animationService.dispatch(AnimationKeys.GAME_CARDS, {
                 suit: suit as Suit,
                 rank,
@@ -65,15 +79,15 @@ export const TableCards = () => {
             }}
             style={{
               position: "absolute",
-              left: `${p.leftPct}%`,
-              top: `${p.topPct}%`,
-              zIndex: Math.round(p.z),
+              left: `${basePlacement.leftPct}%`,
+              top: `${basePlacement.topPct}%`,
+              zIndex: Math.round(basePlacement.z),
             }}
             initial={false}
           >
             <div
               style={{
-                transform: `translate(-50%, -50%) rotate(${p.rotationDeg}deg)`,
+                transform: `translate(-50%, -50%) rotate(${basePlacement.rotationDeg}deg)`,
               }}
             >
               <CardView
