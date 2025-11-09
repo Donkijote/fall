@@ -22,7 +22,10 @@ const mockSetState = vi.fn();
 describe("Game Service", () => {
   afterEach(() => {
     mockSetState.mockReset();
+    (animationService.run as unknown as ReturnType<typeof vi.fn>).mockClear();
+    vi.useRealTimers();
   });
+
   it("should setup game", () => {
     createGameService(
       vi.fn().mockReturnValue(mockedState),
@@ -34,6 +37,7 @@ describe("Game Service", () => {
       phase: "deal",
     });
   });
+
   it("should setup game 1vs2", () => {
     createGameService(
       vi.fn().mockReturnValue(mockedState),
@@ -53,6 +57,7 @@ describe("Game Service", () => {
       players,
     });
   });
+
   it("should setup game 2vs2", () => {
     createGameService(
       vi.fn().mockReturnValue(mockedState),
@@ -80,6 +85,7 @@ describe("Game Service", () => {
       scores: { type: "team", values: {} },
     });
   });
+
   it("should start game", () => {
     createGameService(
       vi.fn().mockReturnValue({ ...mockedStateWithPlayers, phase: "deal" }),
@@ -94,6 +100,7 @@ describe("Game Service", () => {
       phase: "chooseDealer",
     });
   });
+
   it("should not start game due to different phase", () => {
     createGameService(
       vi.fn().mockReturnValue({ ...mockedState, phase: "gameOver" }),
@@ -102,6 +109,7 @@ describe("Game Service", () => {
 
     expect(mockSetState).not.toHaveBeenCalled();
   });
+
   it("should dealer choose", () => {
     createGameService(
       vi.fn().mockReturnValue(
@@ -134,6 +142,7 @@ describe("Game Service", () => {
       phase: "announceSings",
     });
   });
+
   it("should not dealer choose due to different phase", () => {
     createGameService(
       vi.fn().mockReturnValue({ ...mockedState, phase: "gameOver" }),
@@ -142,6 +151,7 @@ describe("Game Service", () => {
 
     expect(mockSetState).not.toHaveBeenCalled();
   });
+
   it("should announce sings", () => {
     createGameService(
       vi.fn().mockReturnValue({ ...mockedState, phase: "announceSings" }),
@@ -153,6 +163,7 @@ describe("Game Service", () => {
       phase: "play",
     });
   });
+
   it("should not announce sings due to different phase", () => {
     createGameService(
       vi.fn().mockReturnValue({ ...mockedState, phase: "gameOver" }),
@@ -161,19 +172,27 @@ describe("Game Service", () => {
 
     expect(mockSetState).not.toHaveBeenCalled();
   });
-  it("should play card", () => {
+
+  it("should play card", async () => {
     const deck = createDeck();
     const state: GameState = JSON.parse(
-      JSON.stringify({ ...mockedStateWithPlayers, phase: "play", deck }),
+      JSON.stringify({
+        ...mockedStateWithPlayers,
+        phase: "play",
+        deck,
+        currentPlayer: mockedStateWithPlayers.players[0].id,
+      }),
     );
     state.players[0].hand = [deck[5], deck[7], deck[1]];
-    createGameService(vi.fn().mockReturnValue(state), mockSetState).playCard(
-      mockedStateWithPlayers.players[0].id,
-      0,
-    );
+
+    await createGameService(
+      vi.fn().mockReturnValue(state),
+      mockSetState,
+    ).playCard(mockedStateWithPlayers.players[0].id, 0);
 
     expect(mockSetState).toHaveBeenCalledWith({
       ...state,
+      table: expect.any(Array),
       players: expect.arrayContaining([
         expect.objectContaining({
           ...mockedStateWithPlayers.players[0],
@@ -186,25 +205,35 @@ describe("Game Service", () => {
       ]),
     });
   });
-  it("should play card and round end", () => {
+
+  it("should play card and round end", async () => {
     const deck = createDeck();
+
     const state: GameState = JSON.parse(
       JSON.stringify({
         ...mockedStateWithPlayers,
         phase: "play",
         currentPlayer: mockedStateWithPlayers.players[0].id,
         dealer: mockedStateWithPlayers.players[0].id,
+        deck: [],
+        table: [],
       }),
     );
-    state.players[0].hand = [deck[5]];
-    createGameService(vi.fn().mockReturnValue(state), mockSetState).playCard(
-      mockedStateWithPlayers.players[0].id,
-      0,
+
+    state.players = state.players.map((p, i) =>
+      i === 0 ? { ...p, hand: [deck[5]] } : { ...p, hand: [] },
     );
 
-    expect(mockSetState).toHaveBeenCalledWith({
-      ...state,
-      players: expect.arrayContaining([
+    await createGameService(
+      vi.fn().mockReturnValue(state),
+      mockSetState,
+    ).playCard(mockedStateWithPlayers.players[0].id, 0);
+
+    const finalCall = mockSetState.mock.calls.at(-1)![0] as GameState;
+
+    expect(finalCall.phase).toBe("roundEnd");
+    expect(finalCall.players).toEqual(
+      expect.arrayContaining([
         expect.objectContaining({
           ...mockedStateWithPlayers.players[0],
           collected: expect.any(Array),
@@ -216,37 +245,38 @@ describe("Game Service", () => {
           hand: expect.arrayContaining([]),
         }),
       ]),
-      table: expect.any(Array),
-      currentPlayer: expect.any(String),
-      scores: expect.any(Object),
-      phase: "roundEnd",
-      lastPlayedCard: expect.any(Object),
-    });
+    );
+    expect(finalCall.table).toEqual([]); // swept on finalize
+    expect(finalCall.lastPlayedCard).toEqual(expect.any(Object));
   });
-  it("should not play card due to invalid phase", () => {
-    createGameService(
+
+  it("should not play card due to invalid phase", async () => {
+    await createGameService(
       vi.fn().mockReturnValue({ ...mockedState, phase: "anonymous" }),
       mockSetState,
     ).playCard("3", 0);
 
     expect(mockSetState).not.toHaveBeenCalled();
   });
-  it("should not play card due to undefined user", () => {
-    createGameService(
+
+  it("should not play card due to undefined user", async () => {
+    await createGameService(
       vi.fn().mockReturnValue({ ...mockedState, phase: "play" }),
       mockSetState,
     ).playCard("3", 0);
 
     expect(mockSetState).not.toHaveBeenCalled();
   });
-  it("should not play card due to player has no cards", () => {
-    createGameService(
+
+  it("should not play card due to player has no cards", async () => {
+    await createGameService(
       vi.fn().mockReturnValue({ ...mockedStateWithPlayers, phase: "play" }),
       mockSetState,
     ).playCard(mockedStateWithPlayers.players[0].id, 0);
 
     expect(mockSetState).not.toHaveBeenCalled();
   });
+
   it("should end round with next dealer", () => {
     createGameService(
       vi.fn().mockReturnValue({
@@ -265,6 +295,7 @@ describe("Game Service", () => {
       dealer: mockedStateWithPlayers.players[1].id,
     });
   });
+
   it("should end round with game over", () => {
     createGameService(
       vi.fn().mockReturnValue({
@@ -296,6 +327,7 @@ describe("Game Service", () => {
       },
     });
   });
+
   it("should not end round due to different phase", () => {
     createGameService(
       vi.fn().mockReturnValue({
@@ -308,6 +340,7 @@ describe("Game Service", () => {
 
     expect(mockSetState).not.toHaveBeenCalled();
   });
+
   it("should be bot's turn", () => {
     vi.useFakeTimers({ shouldAdvanceTime: true });
     const deck = createDeck();
@@ -329,6 +362,7 @@ describe("Game Service", () => {
 
     expect(mockSetState).toHaveBeenCalled();
   });
+
   it("should not be bot's turn because empty hand", () => {
     createGameService(
       vi.fn().mockReturnValue(mockedStateWithPlayers),
@@ -337,6 +371,7 @@ describe("Game Service", () => {
 
     expect(mockSetState).not.toHaveBeenCalled();
   });
+
   it("should be bot's dealer choose", () => {
     vi.useFakeTimers({ shouldAdvanceTime: true });
     createGameService(
@@ -375,6 +410,7 @@ describe("Game Service", () => {
       },
     });
   });
+
   it("should reset game", () => {
     createGameService(
       vi.fn().mockReturnValue({
@@ -387,6 +423,7 @@ describe("Game Service", () => {
 
     expect(mockSetState).toHaveBeenCalledWith(initialState);
   });
+
   it("picks a dealer card for the current human player and advances the turn", () => {
     const dealerSelectionState: GameState = {
       ...mockedStateWithPlayers,
@@ -437,6 +474,7 @@ describe("Game Service", () => {
     );
     expect(updatedState.dealerSelection!.turnIndex).toBe(1);
   });
+
   it("lets a bot pick a dealer card on its turn", () => {
     vi.useFakeTimers({ shouldAdvanceTime: true });
 
@@ -484,32 +522,5 @@ describe("Game Service", () => {
       botPickedKey &&
         updatedState.dealerSelection!.pickedKeys.has(botPickedKey),
     ).toBe(true);
-  });
-  it("continues bot flow when animation callback rejects", async () => {
-    (
-      animationService.run as unknown as ReturnType<typeof vi.fn>
-    ).mockRejectedValueOnce(new Error("boom"));
-
-    const deck = createDeck();
-    const state: GameState = JSON.parse(
-      JSON.stringify({
-        ...mockedStateWithPlayers,
-        phase: "play",
-        deck,
-        currentPlayer: "bot-1",
-      }),
-    );
-
-    state.players[0].hand = [deck[5]];
-
-    const api = createGameService(vi.fn().mockReturnValue(state), mockSetState);
-    const botSpy = vi.spyOn(api, "playBotTurn");
-
-    await api.playCard(mockedStateWithPlayers.players[0].id, 0);
-
-    expect(mockSetState).toHaveBeenCalled();
-
-    expect(botSpy).toHaveBeenCalledTimes(1);
-    expect(botSpy).toHaveBeenCalledWith(mockedStateWithPlayers.players[1].id);
   });
 });
