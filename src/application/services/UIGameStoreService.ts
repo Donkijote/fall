@@ -1,4 +1,5 @@
 import { initialUIState } from "@/application/store/uiGameStore";
+import type { CardKey } from "@/domain/entities/Card";
 import type { UIGameStoreService, UIState } from "@/domain/entities/UI";
 
 export const createUIGameStoreService = (
@@ -12,6 +13,11 @@ export const createUIGameStoreService = (
   setCaptureOverride(override) {
     const state = getState();
     setState({ ...state, captureOverride: override });
+  },
+  addCascadeFollower(key: CardKey) {
+    const state = getState();
+    if (state.cascadeFollowers.includes(key)) return;
+    setState({ ...state, cascadeFollowers: [...state.cascadeFollowers, key] });
   },
   clearUI() {
     setState({ ...initialUIState });

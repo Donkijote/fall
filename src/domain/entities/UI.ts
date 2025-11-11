@@ -8,11 +8,13 @@ export type UICaptureOverride = {
 export type UIState = {
   playingCard: Card | null;
   captureOverride: UICaptureOverride | null;
+  cascadeFollowers: CardKey[];
 };
 
 export type UIGameStoreService = {
   setPlayingCard(card: Card | null): void;
   setCaptureOverride(override: UICaptureOverride | null): void;
+  addCascadeFollower(key: CardKey): void;
   clearUI(): void;
 };
 

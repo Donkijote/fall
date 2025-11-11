@@ -175,9 +175,9 @@ export function createGameService(
 
       const playedKey = toCardKey(card);
       const firstTarget =
-        analysis.capturePlan.kind !== "none"
-          ? analysis.capturePlan.targets[0]
-          : null;
+        analysis.capturePlan.kind === "none"
+          ? null
+          : analysis.capturePlan.targets[0];
 
       uiService.setPlayingCard(card);
 
@@ -202,6 +202,29 @@ export function createGameService(
           payload: { suit: card.suit, rank: card.rank },
         },
       ]);
+
+      if (analysis.capturePlan.kind !== "none") {
+        const targets = analysis.capturePlan.targets;
+        uiService.addCascadeFollower(targets[0].key);
+
+        for (let i = 1; i < targets.length; i++) {
+          const target = targets[i];
+
+          uiService.setCaptureOverride({
+            fromKey: playedKey,
+            toKey: target.key,
+          });
+
+          await animationService.run([
+            {
+              key: AnimationKeys.GAME_CARDS,
+              payload: { suit: card.suit, rank: card.rank },
+            },
+          ]);
+
+          uiService.addCascadeFollower(target.key);
+        }
+      }
 
       uiService.clearUI();
 

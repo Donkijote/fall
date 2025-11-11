@@ -20,14 +20,17 @@ export const TableCards = () => {
     useGameStoreState();
   const { pickDealerCard } = useGameStoreService();
 
-  const { playingCard, captureOverride } = useUIGameStoreState();
+  const { playingCard, captureOverride, cascadeFollowers } =
+    useUIGameStoreState();
 
   const placements = useTableLayout(table);
 
   const cardsByKey = useMemo(() => {
-    const map = new Map<string, (typeof placements)[number]>();
-    placements.forEach((p) => map.set(p.key, p));
-    return map as Map<string, TablePlacement>;
+    const map = new Map<string, TablePlacement>();
+    for (const p of placements) {
+      map.set(p.key, p);
+    }
+    return map;
   }, [placements]);
 
   const isChoose = phase === "chooseDealer";
@@ -49,9 +52,16 @@ export const TableCards = () => {
           mainPlayer={mainPlayer}
           playingCard={playingCard}
           captureOverride={captureOverride}
+          cascadeFollowers={cascadeFollowers}
           onPickDealerCard={pickDealerCard}
         />
       ))}
+
+      <FollowerStack
+        followers={cascadeFollowers}
+        anchorKey={captureOverride?.toKey ?? null}
+        cardsByKey={cardsByKey}
+      />
     </>
   );
 };
@@ -66,6 +76,7 @@ type TableCardItemProps = {
   mainPlayer: string;
   playingCard: Card | null;
   captureOverride: { fromKey: string; toKey: string } | null;
+  cascadeFollowers: string[];
   onPickDealerCard: (key: string) => Promise<void>;
 };
 
@@ -79,12 +90,16 @@ const TableCardItem = ({
   mainPlayer,
   playingCard,
   captureOverride,
+  cascadeFollowers,
   onPickDealerCard,
 }: TableCardItemProps) => {
   const [suit, rankStr] = placement.key.split("-");
   const rank = Number(rankStr) as Rank;
   const key = placement.key;
   const layoutId = `card-${suit}-${rank}`;
+
+  const isFollowerGhost = cascadeFollowers.includes(key);
+  if (isFollowerGhost) return null;
 
   const alreadyPicked = pickedKeys.has(key);
   const isEligible =
@@ -147,5 +162,63 @@ const TableCardItem = ({
         />
       </div>
     </motion.div>
+  );
+};
+
+const FollowerStack = ({
+  followers,
+  anchorKey,
+  cardsByKey,
+}: {
+  followers: string[];
+  anchorKey: string | null;
+  cardsByKey: Map<string, TablePlacement>;
+}) => {
+  if (!followers.length) return null;
+
+  const anchorPlacement = anchorKey ? cardsByKey.get(anchorKey) : null;
+
+  return (
+    <>
+      {followers.map((fKey, idx) => {
+        const [suit, rankStr] = fKey.split("-");
+        const rank = Number(rankStr) as Rank;
+        const layoutId = `card-${suit}-${rank}`;
+
+        const origin = cardsByKey.get(fKey);
+        if (!origin) return null;
+
+        const base = anchorPlacement ?? origin;
+        const offset = idx * 2;
+
+        return (
+          <motion.div
+            key={`follower-${fKey}`}
+            layout
+            layoutId={layoutId}
+            style={{
+              position: "absolute",
+              left: `${base.leftPct}%`,
+              top: `${base.topPct}%`,
+              zIndex: Math.round((anchorPlacement?.z ?? origin.z) + 50 + idx),
+            }}
+            initial={false}
+          >
+            <div
+              style={{
+                transform: `translate(-50%, -50%) rotate(${base.rotationDeg}deg) translate(${offset}px, ${offset}px)`,
+              }}
+            >
+              <CardView
+                rank={rank}
+                suit={suit as Suit}
+                disabled={true}
+                faceDown={false}
+              />
+            </div>
+          </motion.div>
+        );
+      })}
+    </>
   );
 };

@@ -6,6 +6,7 @@ import type { UIGameStore, UIState } from "@/domain/entities/UI";
 export const initialUIState: UIState = {
   playingCard: null,
   captureOverride: null,
+  cascadeFollowers: [],
 };
 
 export const useUIGameStore = create<UIGameStore>((set, get) => {
