@@ -15,6 +15,11 @@ import type { Placement as TablePlacement } from "@/modules/table/entities/types
 
 import { useTableLayout } from "../application/useTableLayout";
 
+const LIFT_Y = -10;
+const LIFT_SCALE = 1.04;
+const STACK_OFFSET = 2;
+const EASE = [0.22, 1, 0.36, 1] as const;
+
 export const TableCards = () => {
   const { table, phase, dealerSelection, currentPlayer, mainPlayer } =
     useGameStoreState();
@@ -124,6 +129,21 @@ const TableCardItem = ({
     ? cardsByKey.get(captureOverride.toKey)!
     : placement;
 
+  const anchorZ = captureOverride?.toKey
+    ? (cardsByKey.get(captureOverride.toKey)?.z ?? placement.z)
+    : placement.z;
+
+  const isLifted =
+    !!captureOverride && captureOverride.toKey === key && !!playingCard;
+
+  let zIndex = Math.round(placement.z);
+
+  if (isLifted) {
+    zIndex = anchorZ + 100;
+  } else if (isAnimatingCard && useOverride) {
+    zIndex = anchorZ;
+  }
+
   return (
     <motion.div
       key={key}
@@ -140,13 +160,23 @@ const TableCardItem = ({
         position: "absolute",
         left: `${basePlacement.leftPct}%`,
         top: `${basePlacement.topPct}%`,
-        zIndex: Math.round(basePlacement.z),
+        zIndex,
       }}
+      transition={{ layout: { duration: 0.35, ease: EASE } }}
       initial={false}
     >
-      <div
+      <motion.div
+        animate={{
+          y: isLifted ? LIFT_Y : 0,
+          scale: isLifted ? LIFT_SCALE : 1,
+          boxShadow: isLifted
+            ? "0 10px 20px rgba(0,0,0,0.25)"
+            : "0 0 0 rgba(0,0,0,0)",
+        }}
+        transition={{ duration: 0.28, ease: EASE }}
         style={{
           transform: `translate(-50%, -50%) rotate(${basePlacement.rotationDeg}deg)`,
+          borderRadius: 8,
         }}
       >
         <CardView
@@ -160,7 +190,7 @@ const TableCardItem = ({
           }}
           className={clsx({ "cursor-pointer": isEligible })}
         />
-      </div>
+      </motion.div>
     </motion.div>
   );
 };
@@ -177,6 +207,7 @@ const FollowerStack = ({
   if (!followers.length) return null;
 
   const anchorPlacement = anchorKey ? cardsByKey.get(anchorKey) : null;
+  const anchorZ = anchorPlacement?.z ?? 0;
 
   return (
     <>
@@ -189,7 +220,8 @@ const FollowerStack = ({
         if (!origin) return null;
 
         const base = anchorPlacement ?? origin;
-        const offset = idx * 2;
+        const offset = idx * STACK_OFFSET;
+        const zIndex = Math.round(anchorZ + 1 + idx);
 
         return (
           <motion.div
@@ -200,11 +232,17 @@ const FollowerStack = ({
               position: "absolute",
               left: `${base.leftPct}%`,
               top: `${base.topPct}%`,
-              zIndex: Math.round((anchorPlacement?.z ?? origin.z) + 50 + idx),
+              zIndex,
             }}
+            transition={{ layout: { duration: 0.35, ease: EASE } }}
             initial={false}
           >
-            <div
+            <motion.div
+              animate={{
+                y: anchorPlacement?.z ?? 0,
+                scale: anchorPlacement?.z ?? 1,
+              }}
+              transition={{ duration: 0.28, ease: EASE }}
               style={{
                 transform: `translate(-50%, -50%) rotate(${base.rotationDeg}deg) translate(${offset}px, ${offset}px)`,
               }}
@@ -212,10 +250,10 @@ const FollowerStack = ({
               <CardView
                 rank={rank}
                 suit={suit as Suit}
-                disabled={true}
+                disabled
                 faceDown={false}
               />
-            </div>
+            </motion.div>
           </motion.div>
         );
       })}
