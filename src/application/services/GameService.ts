@@ -196,12 +196,14 @@ export function createGameService(
       };
       setState(stateAfterAddRemovedCardToTable);
 
-      await animationService.run([
-        {
-          key: AnimationKeys.GAME_CARDS,
-          payload: { suit: card.suit, rank: card.rank },
-        },
-      ]);
+      if (analysis.capturePlan.kind !== "none") {
+        await animationService.run([
+          {
+            key: AnimationKeys.GAME_CARDS,
+            payload: { suit: card.suit, rank: card.rank },
+          },
+        ]);
+      }
 
       if (analysis.capturePlan.kind !== "none") {
         const targets = analysis.capturePlan.targets;
@@ -226,8 +228,6 @@ export function createGameService(
         }
       }
 
-      uiService.clearUI();
-
       const stateAfterUpdateTableAndHandCards = updateTableAndHandCards(
         stateAfterAddRemovedCardToTable,
         playerId,
@@ -236,6 +236,16 @@ export function createGameService(
       );
 
       setState(stateAfterUpdateTableAndHandCards);
+      uiService.clearUI();
+
+      if (analysis.capturePlan.kind !== "none") {
+        await animationService.run([
+          {
+            key: AnimationKeys.PILE_COLLECT,
+            payload: { suit: card.suit, rank: card.rank },
+          },
+        ]);
+      }
 
       let stateAfterFinalizeAfterPlay = finalizeAfterPlay(
         stateAfterUpdateTableAndHandCards,

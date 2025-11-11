@@ -5,7 +5,6 @@ import {
   animationService,
   onAnimation,
 } from "@/application/services/AnimationService";
-import type { CapturePlan } from "@/domain/entities/GameState";
 
 export const useAnimationLayer = () => {
   useEffect(() => {
@@ -28,22 +27,24 @@ export const useAnimationLayer = () => {
       });
     });
 
-    const offCapture = onAnimation(
-      AnimationKeys.CAPTURE_SEQUENCE,
-      (plan: CapturePlan) => {
-        return new Promise<void>((resolve) => {
-          animationService._registerWaiter(
-            AnimationKeys.CAPTURE_SEQUENCE,
-            plan,
-            resolve,
-          );
+    const offCapture = onAnimation(AnimationKeys.PILE_COLLECT, (payload) => {
+      return new Promise<void>((resolve) => {
+        const to = setTimeout(() => {
+          animationService.dispatch(AnimationKeys.PILE_COLLECT, payload);
+        }, 500);
 
-          setTimeout(() => {
-            animationService.dispatch(AnimationKeys.CAPTURE_SEQUENCE, plan);
-          }, 1500);
-        });
-      },
-    );
+        const wrappedResolve = () => {
+          clearTimeout(to);
+          resolve();
+        };
+
+        animationService._registerWaiter(
+          AnimationKeys.PILE_COLLECT,
+          payload,
+          wrappedResolve,
+        );
+      });
+    });
 
     return () => {
       offGameCards();

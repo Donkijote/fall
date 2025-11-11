@@ -147,7 +147,7 @@ const TableCardItem = ({
   return (
     <motion.div
       key={key}
-      layout
+      layout={true}
       layoutId={layoutId}
       onLayoutAnimationComplete={() => {
         if (!isAnimatingCard) return;
@@ -226,7 +226,7 @@ const FollowerStack = ({
         return (
           <motion.div
             key={`follower-${fKey}`}
-            layout
+            layout={true}
             layoutId={layoutId}
             style={{
               position: "absolute",

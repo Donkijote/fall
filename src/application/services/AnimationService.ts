@@ -1,15 +1,15 @@
-import type { CapturePlan } from "@/domain/entities/GameState";
+import type { Card } from "@/domain/entities/Card";
 
 export const AnimationKeys = {
   GAME_CARDS: "GAME_CARDS",
-  CAPTURE_SEQUENCE: "CAPTURE_SEQUENCE",
+  PILE_COLLECT: "PILE_COLLECT",
 } as const;
 
 export type AnimationKey = (typeof AnimationKeys)[keyof typeof AnimationKeys];
 
 type Payloads = {
-  [AnimationKeys.GAME_CARDS]: { suit: string; rank: number };
-  [AnimationKeys.CAPTURE_SEQUENCE]: CapturePlan;
+  [AnimationKeys.GAME_CARDS]: Card;
+  [AnimationKeys.PILE_COLLECT]: Card;
 };
 
 type HandlerMap = {
@@ -17,7 +17,7 @@ type HandlerMap = {
 };
 const listeners: HandlerMap = {
   [AnimationKeys.GAME_CARDS]: new Set(),
-  [AnimationKeys.CAPTURE_SEQUENCE]: new Set(),
+  [AnimationKeys.PILE_COLLECT]: new Set(),
 };
 
 type CorrelatorMap = {
@@ -25,8 +25,7 @@ type CorrelatorMap = {
 };
 const correlate: CorrelatorMap = {
   [AnimationKeys.GAME_CARDS]: (p) => `${p.suit}-${p.rank}`,
-  [AnimationKeys.CAPTURE_SEQUENCE]: (p) =>
-    p.kind === "none" ? "none" : p.played.key,
+  [AnimationKeys.PILE_COLLECT]: (p) => `${p.suit}-${p.rank}`,
 };
 
 type PendingMap = {
@@ -34,7 +33,7 @@ type PendingMap = {
 };
 const pending: PendingMap = {
   [AnimationKeys.GAME_CARDS]: new Map(),
-  [AnimationKeys.CAPTURE_SEQUENCE]: new Map(),
+  [AnimationKeys.PILE_COLLECT]: new Map(),
 };
 
 export const onAnimation = <K extends AnimationKey>(
