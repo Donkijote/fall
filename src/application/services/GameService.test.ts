@@ -1,12 +1,16 @@
-import { afterEach, expect } from "vitest";
+import { afterEach, expect, type Mock } from "vitest";
 
-import { animationService } from "@/application/services/AnimationService";
+import {
+  type AnimationKey,
+  animationService,
+} from "@/application/services/AnimationService";
 import { createGameService } from "@/application/services/GameService";
 import {
   initialState,
   mockedState,
   mockedStateWithPlayers,
 } from "@/application/store/gameStore";
+import type { Card, CardWithKey } from "@/domain/entities/Card";
 import type { GameState } from "@/domain/entities/GameState";
 import { createDeck } from "@/domain/rules/deck";
 
@@ -522,5 +526,209 @@ describe("Game Service", () => {
       botPickedKey &&
         updatedState.dealerSelection!.pickedKeys.has(botPickedKey),
     ).toBe(true);
+  });
+
+  it("playCard performs capture cascade: sets UI overrides, runs GAME_CARDS twice, then PILE_COLLECT", async () => {
+    vi.resetModules();
+
+    const uiFns = {
+      setPlayingCard: vi.fn(),
+      setCaptureOverride: vi.fn(),
+      addCascadeFollower: vi.fn(),
+      clearUI: vi.fn(),
+    };
+
+    vi.doMock("@/application/store/uiGameStore", () => ({
+      useUIGameStore: { getState: () => ({ service: uiFns }) },
+    }));
+
+    vi.doMock("@/application/services/AnimationService", () => ({
+      AnimationKeys: { GAME_CARDS: "GAME_CARDS", PILE_COLLECT: "PILE_COLLECT" },
+      animationService: { run: vi.fn().mockResolvedValue(undefined) },
+    }));
+
+    const analyzePlay = vi.fn(() => ({
+      ok: true,
+      capturePlan: {
+        kind: "capture",
+        targets: [
+          { key: "coins-2", suit: "coins", rank: 2 },
+          { key: "coins-3", suit: "coins", rank: 3 },
+        ],
+      },
+    }));
+
+    const removeCardsFromHand = vi.fn(
+      (state: GameState, pid: string, card: Card) => ({
+        ...state,
+        players: state.players.map((p) =>
+          p.id === pid ? { ...p, hand: p.hand.filter((c) => c !== card) } : p,
+        ),
+      }),
+    );
+
+    const updateTableAndHandCards = vi.fn((state) => state);
+    const finalizeAfterPlay = vi.fn((state) => state);
+
+    vi.doMock("@/domain/services/moves", () => ({
+      analyzePlay,
+      removeCardsFromHand,
+      updateTableAndHandCards,
+      finalizeAfterPlay,
+    }));
+
+    vi.doMock("@/domain/helpers/card", () => ({
+      toCardKey: (c: CardWithKey) => c.key ?? `${c.suit}-${c.rank}`,
+    }));
+
+    const { createGameService } = await import(
+      "@/application/services/GameService"
+    );
+    const { animationService, AnimationKeys } = await import(
+      "@/application/services/AnimationService"
+    );
+
+    const setState = vi.fn();
+    const state: GameState = {
+      phase: "play",
+      currentPlayer: "p1",
+      players: [
+        {
+          id: "p1",
+          hand: [{ suit: "coins", rank: 1 }],
+          collected: [],
+          score: 0,
+          team: 1,
+        },
+        { id: "bot-1", hand: [], collected: [], score: 0, team: 2 },
+      ],
+      table: [],
+      deck: [],
+      scores: { type: "individual", values: {} },
+      mainPlayer: "p1",
+    } as unknown as GameState;
+
+    await createGameService(() => state, setState).playCard("p1", 0);
+
+    expect(uiFns.setPlayingCard).toHaveBeenCalledWith({
+      suit: "coins",
+      rank: 1,
+    });
+    expect(uiFns.setCaptureOverride).toHaveBeenCalledWith({
+      fromKey: "coins-1",
+      toKey: "coins-2",
+    });
+    expect(uiFns.addCascadeFollower).toHaveBeenCalledWith("coins-2");
+    expect(uiFns.setCaptureOverride).toHaveBeenCalledWith({
+      fromKey: "coins-1",
+      toKey: "coins-3",
+    });
+    expect(uiFns.addCascadeFollower).toHaveBeenCalledWith("coins-3");
+    expect(uiFns.clearUI).toHaveBeenCalled();
+
+    const runCalls = (animationService.run as Mock).mock.calls.map(
+      (c: Array<{ key: AnimationKey; playload: Card }>) => c[0],
+    );
+
+    const keysRun = runCalls.flat().map((e) => e.key);
+
+    expect(
+      keysRun.filter((k: string) => k === AnimationKeys.GAME_CARDS),
+    ).toHaveLength(2);
+    expect(keysRun.includes(AnimationKeys.PILE_COLLECT)).toBe(true);
+  });
+
+  it("playCard with no capture does not run cascade or PILE_COLLECT, but still sets/clears UI appropriately", async () => {
+    vi.resetModules();
+
+    const uiFns = {
+      setPlayingCard: vi.fn(),
+      setCaptureOverride: vi.fn(),
+      addCascadeFollower: vi.fn(),
+      clearUI: vi.fn(),
+    };
+
+    vi.doMock("@/application/store/uiGameStore", () => ({
+      useUIGameStore: { getState: () => ({ service: uiFns }) },
+    }));
+
+    vi.doMock("@/application/services/AnimationService", () => ({
+      AnimationKeys: { GAME_CARDS: "GAME_CARDS", PILE_COLLECT: "PILE_COLLECT" },
+      animationService: { run: vi.fn().mockResolvedValue(undefined) },
+    }));
+
+    const analyzePlay = vi.fn(() => ({
+      ok: true,
+      capturePlan: { kind: "none", targets: [] },
+    }));
+
+    const removeCardsFromHand = vi.fn(
+      (state: GameState, pid: string, card: Card) => ({
+        ...state,
+        players: state.players.map((p) =>
+          p.id === pid ? { ...p, hand: p.hand.filter((c) => c !== card) } : p,
+        ),
+      }),
+    );
+
+    const updateTableAndHandCards = vi.fn((state) => state);
+    const finalizeAfterPlay = vi.fn((state) => state);
+
+    vi.doMock("@/domain/services/moves", () => ({
+      analyzePlay,
+      removeCardsFromHand,
+      updateTableAndHandCards,
+      finalizeAfterPlay,
+    }));
+
+    vi.doMock("@/domain/helpers/card", () => ({
+      toCardKey: (c: CardWithKey) => c.key ?? `${c.suit}-${c.rank}`,
+    }));
+
+    const { createGameService } = await import(
+      "@/application/services/GameService"
+    );
+    const { animationService, AnimationKeys } = await import(
+      "@/application/services/AnimationService"
+    );
+
+    const setState = vi.fn();
+    const state = {
+      phase: "play",
+      currentPlayer: "p1",
+      players: [
+        {
+          id: "p1",
+          hand: [{ suit: "coins", rank: 1 }],
+          collected: [],
+          score: 0,
+          team: 1,
+        },
+        { id: "bot-1", hand: [], collected: [], score: 0, team: 2 },
+      ],
+      table: [],
+      deck: [],
+      scores: { type: "individual", values: {} },
+      mainPlayer: "p1",
+    } as unknown as GameState;
+
+    await createGameService(() => state, setState).playCard("p1", 0);
+
+    expect(uiFns.setPlayingCard).toHaveBeenCalledWith({
+      suit: "coins",
+      rank: 1,
+    });
+    expect(uiFns.setCaptureOverride).toHaveBeenCalledWith(null);
+    expect(uiFns.addCascadeFollower).not.toHaveBeenCalled();
+    expect(uiFns.clearUI).toHaveBeenCalled();
+
+    const runCalls = (animationService.run as Mock).mock.calls.map(
+      (c: Array<{ key: AnimationKey; playload: Card }>) => c[0],
+    );
+
+    const keysRun = runCalls.flat().map((e) => e.key);
+
+    expect(keysRun.includes(AnimationKeys.GAME_CARDS)).toBe(false);
+    expect(keysRun.includes(AnimationKeys.PILE_COLLECT)).toBe(false);
   });
 });

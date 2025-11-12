@@ -27,19 +27,8 @@ export function createGameService(
   getState: () => GameState,
   setState: (s: GameState) => void,
 ) {
-  async function updateStateAndRunBotsAndContinueFlow(
-    nextState: GameState,
-    animationCallback?: () => Promise<void>,
-  ) {
+  async function updateStateAndRunBotsAndContinueFlow(nextState: GameState) {
     setState(nextState);
-
-    if (animationCallback) {
-      try {
-        await animationCallback();
-      } catch (err) {
-        console.warn("Animation callback failed or skipped:", err);
-      }
-    }
 
     if (
       nextState.phase === "play" &&
