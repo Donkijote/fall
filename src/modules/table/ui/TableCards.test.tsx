@@ -16,11 +16,11 @@ vi.mock("framer-motion", () => {
     initial,
     ...rest
   }: PropsWithChildren<{
-    layoutId: string;
-    onLayoutAnimationComplete: () => void;
-    style: CSSProperties;
-    layout: boolean;
-    initial: boolean;
+    layoutId?: string;
+    onLayoutAnimationComplete?: () => void;
+    style?: CSSProperties;
+    layout?: boolean;
+    initial?: boolean;
   }>) => {
     useEffect(() => {
       onLayoutAnimationComplete?.();
@@ -43,7 +43,6 @@ const { dispatchSpy, runSpy } = vi.hoisted(() => ({
   dispatchSpy: vi.fn(),
   runSpy: vi.fn(),
 }));
-
 vi.mock("@/application/services/AnimationService", () => ({
   AnimationKeys: { GAME_CARDS: "GAME_CARDS" } as const,
   animationService: {
@@ -82,7 +81,9 @@ const baseGameState = {
   dealerSelection: undefined,
   currentPlayer: "me",
   mainPlayer: "me",
-} as GameState;
+  players: ["me", "p2"],
+  scores: { values: { me: 0, p2: 0 } },
+} as unknown as GameState;
 
 vi.mock("@/application/hooks/useGameStoreState", () => ({
   useGameStoreState: () => baseGameState,
@@ -96,6 +97,7 @@ vi.mock("@/application/hooks/useGameStoreService", () => ({
 const uiState = {
   playingCard: null as null | { suit: "coins"; rank: number },
   captureOverride: null as null | { fromKey: string; toKey: string },
+  cascadeFollowers: [] as string[],
 };
 vi.mock("@/application/hooks/useUIGameStoreState", () => ({
   useUIGameStoreState: () => uiState,
@@ -104,17 +106,18 @@ vi.mock("@/application/hooks/useUIGameStoreState", () => ({
 const queryMotionByLayoutId = (lid: string) =>
   document.querySelector(`[data-layoutid="${lid}"]`) as HTMLElement;
 
+// ---- tests ----
 describe("TableCards", () => {
   beforeEach(() => {
     dispatchSpy.mockClear();
     pickDealerCardMock.mockClear();
-    // reset UI state
     uiState.playingCard = null;
     uiState.captureOverride = null;
-
-    // Also reset base state to non-chooseDealer for most tests
-    baseGameState.phase = "play";
+    uiState.cascadeFollowers = [];
+    baseGameState.phase = "play" as GameState["phase"];
     baseGameState.dealerSelection = undefined;
+    baseGameState.currentPlayer = "me";
+    baseGameState.mainPlayer = "me";
   });
 
   it("renders table cards with correct layoutIds and placement styles", () => {
@@ -125,7 +128,6 @@ describe("TableCards", () => {
     expect(el1).toBeTruthy();
     expect(el2).toBeTruthy();
 
-    // Check style positions from mocked placements
     expect(el1!.style.left).toBe("10%");
     expect(el1!.style.top).toBe("20%");
     expect(el2!.style.left).toBe("60%");
@@ -133,13 +135,9 @@ describe("TableCards", () => {
   });
 
   it("dispatches GAME_CARDS only for the animating (playingCard) card", () => {
-    // Set UI so coins-1 is the animating card
     uiState.playingCard = { suit: "coins", rank: 1 };
-
     render(<TableCards />);
 
-    // Our framer-motion mock calls onLayoutAnimationComplete for both items.
-    // Only the animating card should dispatch.
     expect(dispatchSpy).toHaveBeenCalledTimes(1);
     expect(dispatchSpy).toHaveBeenCalledWith("GAME_CARDS", {
       suit: "coins",
@@ -154,7 +152,6 @@ describe("TableCards", () => {
   });
 
   it("applies captureOverride by placing the played card at the target coordinates", () => {
-    // played = coins-1 should borrow coins-2 placement (60%, 70%)
     uiState.playingCard = { suit: "coins", rank: 1 };
     uiState.captureOverride = { fromKey: "coins-1", toKey: "coins-2" };
 
@@ -167,7 +164,6 @@ describe("TableCards", () => {
   });
 
   it("dealer pick: only clickable when eligible, and forwards the correct key", async () => {
-    // Put component in chooseDealer phase and make it my turn
     baseGameState.phase = "chooseDealer";
     baseGameState.currentPlayer = "me";
     baseGameState.mainPlayer = "me";
@@ -182,10 +178,8 @@ describe("TableCards", () => {
     render(<TableCards />);
 
     const firstCard = screen.getByTestId("card-coins-1");
-    // Eligible cards get the cursor-pointer class
     expect(firstCard.className).toContain("cursor-pointer");
 
-    // Click triggers pickDealerCard with the key 'coins-1'
     fireEvent.click(firstCard);
     expect(pickDealerCardMock).toHaveBeenCalledTimes(1);
     expect(pickDealerCardMock).toHaveBeenCalledWith("coins-1");
@@ -210,5 +204,20 @@ describe("TableCards", () => {
 
     fireEvent.click(firstCard);
     expect(pickDealerCardMock).not.toHaveBeenCalled();
+  });
+
+  it("hides follower ghosts and renders follower stack anchored to capture target", () => {
+    uiState.cascadeFollowers = ["coins-1"];
+    uiState.captureOverride = { fromKey: "coins-1", toKey: "coins-2" };
+
+    render(<TableCards />);
+
+    const all = screen.queryAllByTestId("card-coins-1");
+    expect(all).toHaveLength(1);
+
+    const followerWrapper = queryMotionByLayoutId("card-coins-1");
+    expect(followerWrapper).toBeTruthy();
+    expect(followerWrapper!.style.left).toBe("60%");
+    expect(followerWrapper!.style.top).toBe("70%");
   });
 });
