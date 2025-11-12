@@ -8,7 +8,7 @@ import {
 
 export const useAnimationLayer = () => {
   useEffect(() => {
-    const off = onAnimation(AnimationKeys.GAME_CARDS, (payload) => {
+    const offGameCards = onAnimation(AnimationKeys.GAME_CARDS, (payload) => {
       return new Promise<void>((resolve) => {
         const to = setTimeout(() => {
           animationService.dispatch(AnimationKeys.GAME_CARDS, payload);
@@ -27,8 +27,28 @@ export const useAnimationLayer = () => {
       });
     });
 
+    const offCapture = onAnimation(AnimationKeys.PILE_COLLECT, (payload) => {
+      return new Promise<void>((resolve) => {
+        const to = setTimeout(() => {
+          animationService.dispatch(AnimationKeys.PILE_COLLECT, payload);
+        }, 500);
+
+        const wrappedResolve = () => {
+          clearTimeout(to);
+          resolve();
+        };
+
+        animationService._registerWaiter(
+          AnimationKeys.PILE_COLLECT,
+          payload,
+          wrappedResolve,
+        );
+      });
+    });
+
     return () => {
-      off();
+      offGameCards();
+      offCapture();
     };
   }, []);
 };

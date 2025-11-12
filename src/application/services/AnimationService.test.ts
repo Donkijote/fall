@@ -1,3 +1,5 @@
+import type { Card } from "@/domain/entities/Card";
+
 const freshService = async () => {
   vi.resetModules();
   vi.unmock("@/application/services/AnimationService");
@@ -18,7 +20,7 @@ describe("AnimationService", () => {
     const handler = vi.fn();
     const off = onAnimation(AnimationKeys.GAME_CARDS, handler);
 
-    const payload = { suit: "coins", rank: 7 };
+    const payload = { suit: "coins", rank: 7 } as Card;
     await animationService.play(AnimationKeys.GAME_CARDS, payload);
 
     expect(handler).toHaveBeenCalledTimes(1);
@@ -57,11 +59,11 @@ describe("AnimationService", () => {
 
     const step1 = {
       key: AnimationKeys.GAME_CARDS,
-      payload: { suit: "coins", rank: 1 },
+      payload: { suit: "coins", rank: 1 } as Card,
     };
     const step2 = {
       key: AnimationKeys.GAME_CARDS,
-      payload: { suit: "cups", rank: 2 },
+      payload: { suit: "cups", rank: 2 } as Card,
     };
 
     let done = false;
@@ -102,11 +104,11 @@ describe("AnimationService", () => {
 
     const firstAnimation = {
       key: AnimationKeys.GAME_CARDS,
-      payload: { suit: "coins", rank: 3 },
+      payload: { suit: "coins", rank: 3 } as Card,
     };
     const secondAnimation = {
       key: AnimationKeys.GAME_CARDS,
-      payload: { suit: "swords", rank: 4 },
+      payload: { suit: "swords", rank: 4 } as Card,
     };
 
     let done = false;
@@ -137,7 +139,7 @@ describe("AnimationService", () => {
   it("dispatch resolves all pending waiters for the same correlation id", async () => {
     const { animationService, AnimationKeys } = await freshService();
 
-    const payload = { suit: "clubs", rank: 9 };
+    const payload = { suit: "clubs", rank: 7 } as Card;
 
     const firstRegisteredAnimation = new Promise<void>((resolve) => {
       animationService._registerWaiter(

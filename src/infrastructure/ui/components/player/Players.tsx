@@ -43,8 +43,9 @@ export const Players = () => {
           phase === "dealerChoice";
 
         return (
-          <div
+          <motion.div
             key={player.id}
+            layout={true}
             className={clsx(
               "absolute flex flex-col items-center justify-end",
               pos.container,
@@ -165,7 +166,7 @@ export const Players = () => {
                 isDealer={player.id === dealer}
               />
             </div>
-          </div>
+          </motion.div>
         );
       })}
     </>
