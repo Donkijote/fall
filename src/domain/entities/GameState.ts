@@ -17,7 +17,7 @@ export interface Player {
   hand: Card[];
   collected: Card[];
   score: number;
-  team?: number; // for 2v2 (e.g., 0 or 1)
+  team: number; // for 2v2 (e.g., 0 or 1)
 }
 
 export type DealOrder = "playersThenTable" | "tableThenPlayers";
