@@ -42,11 +42,11 @@ export const PlayerChip = ({
   const isBot = name.toLowerCase().includes("bot");
 
   return (
-    <div className="gap-2 flex flex-col items-center">
+    <div className="flex flex-col items-center gap-2">
       <div className="relative">
         <div
           className={clsx(
-            "shadow-md w-12 h-12 landscape:w-10 landscape:h-10 landscape:lg:h-12 landscape:lg:w-12 md:w-14 md:h-14 lg:w-18 lg:h-18 flex items-center justify-center overflow-hidden rounded-full border-4",
+            "xl:w-18 xl:h-18 flex h-12 w-12 items-center justify-center overflow-hidden rounded-full border-4 shadow-md md:h-14 md:w-14 landscape:h-10 landscape:w-10 landscape:lg:h-12 landscape:lg:w-12",
             borderColor,
             isMainPlayer && "ring-accent-gold ring-4",
           )}
@@ -64,7 +64,7 @@ export const PlayerChip = ({
                 bgColor,
               )}
             >
-              <span className="text-white/70 text-sm xl:text-xl">
+              <span className="text-sm text-white/70 xl:text-xl">
                 {isBot ? (
                   <FontAwesomeIcon icon={faRobot} />
                 ) : (
@@ -78,7 +78,7 @@ export const PlayerChip = ({
         {isDealer && (
           <div
             className={
-              "-top-1 -right-1 absolute flex items-center justify-center"
+              "absolute -right-1 -top-1 flex items-center justify-center"
             }
           >
             <motion.div
@@ -96,19 +96,19 @@ export const PlayerChip = ({
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="h-5 w-5 bg-accent-gold absolute rounded-full"
+              className="bg-accent-gold absolute h-5 w-5 rounded-full"
             />
 
-            <span className="text-xs font-bold text-black relative z-10">
+            <span className="relative z-10 text-xs font-bold text-black">
               D
             </span>
           </div>
         )}
       </div>
 
-      <div className="text-xs md:text-base landscape:lg:text-base text-center landscape:text-[10px]">
+      <div className="text-center text-xs md:text-base landscape:text-[10px] landscape:lg:text-base">
         <p className="text-sm font-semibold text-white">{name}</p>
-        <span className="px-2 py-0.5 text-xs text-white bg-white/30 backdrop-blur-sm landscape:lg:text-xs rounded-full landscape:text-[10px]">
+        <span className="rounded-full bg-white/30 px-2 py-0.5 text-xs text-white backdrop-blur-sm landscape:text-[10px] landscape:lg:text-xs">
           {scoreValue} pts
         </span>
       </div>
