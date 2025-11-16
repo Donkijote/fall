@@ -1,5 +1,4 @@
 import clsx from "clsx";
-import { motion } from "framer-motion";
 import { useMemo } from "react";
 
 import { useGameStoreService } from "@/application/hooks/useGameStoreService";
@@ -8,13 +7,12 @@ import {
   StorageKeys,
   StorageService,
 } from "@/application/services/StorageService";
-import type { Card as ICard } from "@/domain/entities/Card";
-import type { Player } from "@/domain/entities/GameState";
 import type { User } from "@/domain/entities/User";
 import { Card } from "@/infrastructure/ui/components/card/Card";
 
 import { CollectedCard } from "./CollectedCard";
 import { DealerChoiceControls } from "./DealerChoiceControls";
+import { HandCard } from "./HandCard";
 import { PlayerChip } from "./PlayerChip";
 
 export const Players = () => {
@@ -52,7 +50,7 @@ export const Players = () => {
                 }
               >
                 {player.hand.map((card, index) => (
-                  <PlayerHandCard
+                  <HandCard
                     card={card}
                     index={index}
                     mainPlayer={mainPlayer}
@@ -113,57 +111,6 @@ export const Players = () => {
         );
       })}
     </>
-  );
-};
-
-type PlayerHandCard = {
-  card: ICard;
-  index: number;
-  player: Player;
-  currentPlayer: string;
-  mainPlayer: string;
-};
-
-const PlayerHandCard = ({
-  card,
-  player,
-  index,
-  mainPlayer,
-  currentPlayer,
-}: PlayerHandCard) => {
-  const { playCard } = useGameStoreService();
-  const total = player.hand.length;
-  const middle = (total - 1) / 2;
-
-  const rotate = (index - middle) * 10;
-  const translateY = Math.abs(index - middle) * 12;
-  const layoutId = `card-${card.suit}-${card.rank}`;
-
-  return (
-    <motion.div key={layoutId} layout={true} layoutId={layoutId}>
-      <div
-        style={{
-          transform: `rotate(${rotate}deg) translateY(${translateY}px)`,
-        }}
-      >
-        <Card
-          rank={card.rank}
-          suit={card.suit}
-          onClick={async () => {
-            if (player.id !== mainPlayer && currentPlayer !== player.id) {
-              return;
-            }
-            await playCard(player.id, index);
-          }}
-          disabled={currentPlayer !== mainPlayer || player.id !== mainPlayer}
-          faceDown={player.id !== mainPlayer}
-          className={clsx({
-            "cursor-pointer":
-              player.id === mainPlayer && currentPlayer === player.id,
-          })}
-        />
-      </div>
-    </motion.div>
   );
 };
 
