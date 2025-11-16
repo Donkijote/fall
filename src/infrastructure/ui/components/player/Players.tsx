@@ -8,6 +8,8 @@ import {
   StorageKeys,
   StorageService,
 } from "@/application/services/StorageService";
+import type { Card as ICard } from "@/domain/entities/Card";
+import type { Player } from "@/domain/entities/GameState";
 import type { User } from "@/domain/entities/User";
 import { Card } from "@/infrastructure/ui/components/card/Card";
 
@@ -18,21 +20,21 @@ import { PlayerChip } from "./PlayerChip";
 export const Players = () => {
   const { players, dealer, mainPlayer, currentPlayer, scores, phase, deck } =
     useGameStoreState();
-  const { playCard, dealerChoose } = useGameStoreService();
+
+  const { dealerChoose } = useGameStoreService();
+
+  const storedUser = useMemo(() => {
+    return StorageService.get<User>(StorageKeys.FALL_USER);
+  }, []);
 
   const positions = useMemo(
     () => computePlayerPositions(players.length),
     [players.length],
   );
 
-  const storedUser = useMemo(() => {
-    return StorageService.get<User>(StorageKeys.FALL_USER);
-  }, []);
-
   return (
     <>
       {players.map((player, index) => {
-        const pos = positions[index];
         const displayUserName =
           player.id === storedUser?.id ? storedUser.username : player.id;
         const avatar =
@@ -41,114 +43,27 @@ export const Players = () => {
           player.id === mainPlayer &&
           player.id === dealer &&
           phase === "dealerChoice";
-
         return (
-          <motion.div
-            key={player.id}
-            layout={true}
-            className={clsx(
-              "absolute flex flex-col items-center justify-end",
-              pos.container,
-              "h-[14rem] w-[12rem] lg:h-[16rem] xl:h-[18rem] landscape:h-[10rem]",
-            )}
-            style={{
-              transform: pos.rotation,
-              transformOrigin: "center center",
-            }}
-          >
-            <div className="relative flex h-full w-full flex-row items-center justify-center space-x-2">
+          <div key={player.id}>
+            <div className={clsx("fixed", positions[index].hand)}>
               <div
-                className={clsx(
-                  "absolute flex flex-row items-center justify-center space-x-2 md:relative md:bottom-0",
-                  pos.collapseHand,
-                )}
+                className={
+                  "flex min-w-[280px] items-center justify-center gap-2 pb-2"
+                }
               >
-                {player.hand.map((card, cIndex) => {
-                  const total = player.hand.length;
-                  const middle = (total - 1) / 2;
-
-                  const rotate = (cIndex - middle) * 10;
-                  const translateY = Math.abs(cIndex - middle) * 12;
-                  const layoutId = `card-${card.suit}-${card.rank}`;
-
-                  return (
-                    <motion.div
-                      key={layoutId}
-                      layout={true}
-                      layoutId={layoutId}
-                    >
-                      <div
-                        style={{
-                          transform: `rotate(${rotate}deg) translateY(${translateY}px)`,
-                        }}
-                      >
-                        <Card
-                          rank={card.rank}
-                          suit={card.suit}
-                          onClick={async () => {
-                            if (
-                              player.id !== mainPlayer &&
-                              currentPlayer !== player.id
-                            ) {
-                              return;
-                            }
-                            await playCard(player.id, cIndex);
-                          }}
-                          disabled={
-                            currentPlayer !== mainPlayer ||
-                            player.id !== mainPlayer
-                          }
-                          faceDown={player.id !== mainPlayer}
-                          className={clsx({
-                            "cursor-pointer":
-                              player.id === mainPlayer &&
-                              currentPlayer === player.id,
-                          })}
-                        />
-                      </div>
-                    </motion.div>
-                  );
-                })}
+                {player.hand.map((card, index) => (
+                  <PlayerHandCard
+                    card={card}
+                    index={index}
+                    mainPlayer={mainPlayer}
+                    currentPlayer={currentPlayer}
+                    player={player}
+                    key={card.suit + card.rank}
+                  />
+                ))}
               </div>
-
-              <div className="mr-26 md:top-8/12 top-12/12 absolute -right-full md:-mr-14 lg:-mr-20 landscape:mr-14 landscape:lg:-mr-14">
-                <div className="relative h-24 w-16 sm:h-28 sm:w-20 lg:h-32 lg:w-24">
-                  {player.collected.map((card, index) => (
-                    <CollectedCard
-                      key={player.id + card.suit + card.rank}
-                      card={card}
-                      index={index}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              {player.id === dealer && (
-                <div className="ml-22 landscape:lg:-ml-18 lg:-ml-18 md:top-9/12 top-11/12 absolute -left-full md:-ml-12 landscape:ml-14">
-                  <div className="relative h-24 w-16 sm:h-28 sm:w-20 lg:h-32 lg:w-24">
-                    {deck.map((card, index) => (
-                      <Card
-                        key={card.suit + card.rank + index}
-                        rank={card.rank}
-                        suit={card.suit}
-                        faceDown={true}
-                        disabled={true}
-                        style={{
-                          position: "absolute",
-                          top: 0,
-                          left: 0,
-                          transform: `translate(${index * 0.25}px, ${
-                            index * 0.25
-                          }px)`,
-                        }}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
-
-            <div className={clsx("relative", pos.chipOffset)}>
+            <div className={clsx("fixed", positions[index].chip)}>
               {displayDealerOptions && (
                 <DealerChoiceControls
                   isOpen={displayDealerOptions}
@@ -166,109 +81,139 @@ export const Players = () => {
                 isDealer={player.id === dealer}
               />
             </div>
-          </motion.div>
+
+            <div className={clsx("fixed", positions[index].collected)}>
+              {player.collected.map((card, index) => (
+                <CollectedCard
+                  key={player.id + card.suit + card.rank}
+                  card={card}
+                  index={index}
+                />
+              ))}
+            </div>
+            <div className={clsx("fixed", positions[index].deck)}>
+              {player.id === dealer &&
+                deck.map((card, index) => (
+                  <Card
+                    key={card.suit + card.rank + index}
+                    rank={card.rank}
+                    suit={card.suit}
+                    faceDown={true}
+                    disabled={true}
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      transform: `translate(${index * 0.25}px, ${index * 0.25}px)`,
+                    }}
+                  />
+                ))}
+            </div>
+          </div>
         );
       })}
     </>
   );
 };
 
+type PlayerHandCard = {
+  card: ICard;
+  index: number;
+  player: Player;
+  currentPlayer: string;
+  mainPlayer: string;
+};
+
+const PlayerHandCard = ({
+  card,
+  player,
+  index,
+  mainPlayer,
+  currentPlayer,
+}: PlayerHandCard) => {
+  const { playCard } = useGameStoreService();
+  const total = player.hand.length;
+  const middle = (total - 1) / 2;
+
+  const rotate = (index - middle) * 10;
+  const translateY = Math.abs(index - middle) * 12;
+  const layoutId = `card-${card.suit}-${card.rank}`;
+
+  return (
+    <motion.div key={layoutId} layout={true} layoutId={layoutId}>
+      <div
+        style={{
+          transform: `rotate(${rotate}deg) translateY(${translateY}px)`,
+        }}
+      >
+        <Card
+          rank={card.rank}
+          suit={card.suit}
+          onClick={async () => {
+            if (player.id !== mainPlayer && currentPlayer !== player.id) {
+              return;
+            }
+            await playCard(player.id, index);
+          }}
+          disabled={currentPlayer !== mainPlayer || player.id !== mainPlayer}
+          faceDown={player.id !== mainPlayer}
+          className={clsx({
+            "cursor-pointer":
+              player.id === mainPlayer && currentPlayer === player.id,
+          })}
+        />
+      </div>
+    </motion.div>
+  );
+};
+
 type Position = {
-  container: string;
-  rotation: string;
-  chipOffset: string;
-  collapseHand?: string;
+  hand: string;
+  chip: string;
+  collected?: string;
+  deck?: string;
 };
 
 function computePlayerPositions(playersCount: number): Position[] {
-  if (playersCount === 2) {
-    return [
-      {
-        container:
-          "bottom-[2%] lg:bottom-[8%] landscape:lg:bottom-[1%] left-1/2 -translate-x-1/2",
-        rotation: "rotate(0deg)",
-        chipOffset: "mt-2",
-      },
-      {
-        container:
-          "top-[2%] lg:top-[8%] landscape:lg:top-[1%] left-1/2 -translate-x-1/2",
-        rotation: "rotate(180deg)",
-        chipOffset: "mt-2",
-        collapseHand:
-          "landscape:bottom-[calc(-100%+35%)] landscape:lg:bottom-0",
-      },
-    ];
-  }
-
-  if (playersCount === 4) {
-    return [
-      {
-        container:
-          "bottom-[1%] md:bottom-[4%] landscape:bottom-[3%] left-1/2 -translate-x-1/2",
-        rotation: "rotate(0deg)",
-        chipOffset: "mt-0 md:mt-3",
-      },
-      {
-        container: "right-[5%] md:right-[3%] top-1/2 -translate-y-1/2",
-        rotation: "rotate(-90deg)",
-        chipOffset: "mt-2",
-        collapseHand: "bottom-[calc(-100%+30%)]",
-      },
-
-      {
-        container:
-          "top-[1%] md:top-[4%] landscape:top-[3%] left-1/2 -translate-x-1/2",
-        rotation: "rotate(180deg)",
-        chipOffset: "mt-0 md:mt-2",
-        collapseHand:
-          "landscape:bottom-[calc(-100%+55%)] landscape:lg:bottom-0",
-      },
-      {
-        container: "left-[5%] md:left-[3%] top-1/2 -translate-y-1/2",
-        rotation: "rotate(90deg)",
-        chipOffset: "mt-2",
-        collapseHand: "bottom-[calc(-100%+30%)]",
-      },
-    ];
-  }
-
   const bottom = {
-    container:
-      "bottom-[1%] md:bottom-[6%] lg:bottom-[8%] landscape:lg:bottom-[3%] left-1/2 -translate-x-1/2",
-    rotation: "rotate(0deg)",
-    chipOffset: "mt-2",
+    chip: "bottom-1 left-1/2 -translate-x-1/2",
+    hand: "bottom-25 left-1/2 -translate-x-1/2",
+    collected: "bottom-50 left-1/4 -translate-x-1/4",
+    deck: "bottom-50 right-1/4 -translate-x-1/4",
+  };
+
+  const top = {
+    chip: "left-1/2 top-1 -translate-x-1/2 rotate-180",
+    hand: "top-25 left-1/2 -translate-x-1/2 rotate-180",
+    collected: "left-1/4 top-10 -translate-x-1/4",
+    deck: "right-1/4 top-10 -translate-x-1/4",
   };
 
   const right = {
-    container: "right-[5%] landscape:lg:right-[3%] top-1/2 -translate-y-1/2",
-    rotation: "rotate(-90deg)",
-    chipOffset: "mt-2",
-    collapseHand: "bottom-[calc(-100%+30%)]",
+    chip: "right-1 top-1/2 -translate-y-1/2 -rotate-90",
+    hand: "top-1/2 -translate-y-1/2 -rotate-90 right-1",
+    collected: "bottom-1/3 -translate-y-1/3 right-50",
+    deck: "top-1/5 -translate-y-1/5 right-30 rotate-90",
   };
 
+  const left = {
+    chip: "left-1 top-1/2 -translate-y-1/2 rotate-90",
+    hand: "top-1/2 -translate-y-1/2 rotate-90",
+    collected: "top-1/6 -translate-y-1/6 left-30",
+    deck: "bottom-1/3 -translate-y-1/3 left-50 rotate-90",
+  };
+
+  if (playersCount === 2) {
+    return [bottom, top];
+  }
+
+  if (playersCount === 4) {
+    return [bottom, right, top, left];
+  }
+
   const layouts: Position[][] = [
-    [
-      bottom,
-      right,
-      {
-        container:
-          "top-[1%] md:top-[6%] lg:top-[8%] landscape:top-[3%] landscape:lg:top-[3%] left-1/2 -translate-x-1/2",
-        rotation: "rotate(180deg)",
-        chipOffset: "mt-2",
-        collapseHand:
-          "landscape:bottom-[calc(-100%+40%)] landscape:lg:bottom-0",
-      },
-    ],
-    [
-      bottom,
-      right,
-      {
-        container: "left-[5%] landscape:lg:left-[3%] top-1/2 -translate-y-1/2",
-        rotation: "rotate(90deg)",
-        chipOffset: "mt-2",
-        collapseHand: "bottom-[calc(-100%+30%)]",
-      },
-    ],
+    [bottom, right, top],
+    [bottom, right, left],
   ];
 
   return layouts[Math.random() > 0.5 ? 0 : 1];
