@@ -1,7 +1,6 @@
 import clsx from "clsx";
 import { useMemo } from "react";
 
-import { useGameStoreService } from "@/application/hooks/useGameStoreService";
 import { useGameStoreState } from "@/application/hooks/useGameStoreState";
 import {
   StorageKeys,
@@ -18,8 +17,6 @@ import { PlayerChip } from "./PlayerChip";
 export const Players = () => {
   const { players, dealer, mainPlayer, currentPlayer, scores, phase, deck } =
     useGameStoreState();
-
-  const { dealerChoose } = useGameStoreService();
 
   const storedUser = useMemo(() => {
     return StorageService.get<User>(StorageKeys.FALL_USER);
@@ -63,12 +60,7 @@ export const Players = () => {
             </div>
             <div className={clsx("fixed", positions[index].chip)}>
               {displayDealerOptions && (
-                <DealerChoiceControls
-                  isOpen={displayDealerOptions}
-                  onChoose={(dealOrder, tablePattern) =>
-                    dealerChoose(dealOrder, tablePattern)
-                  }
-                />
+                <DealerChoiceControls isOpen={displayDealerOptions} />
               )}
               <PlayerChip
                 name={displayUserName}
