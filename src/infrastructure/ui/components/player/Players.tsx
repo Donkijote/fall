@@ -116,30 +116,31 @@ type Position = {
 function computePlayerPositions(playersCount: number): Position[] {
   const bottom = {
     chip: "bottom-1 left-1/2 -translate-x-1/2",
-    hand: "bottom-25 left-1/2 -translate-x-1/2",
-    collected: "bottom-50 left-1/4 -translate-x-1/4",
-    deck: "bottom-50 right-1/4 -translate-x-1/4",
+    hand: "bottom-20 md:bottom-25 left-1/2 -translate-x-1/2",
+    collected: "bottom-40 md:bottom-50 left-4 md:left-1/4 md:-translate-x-1/4",
+    deck: "bottom-30 md:bottom-50 right-19 md:right-1/4 md:-translate-x-1/4",
   };
 
   const top = {
     chip: "left-1/2 top-1 -translate-x-1/2 rotate-180",
     hand: "top-25 left-1/2 -translate-x-1/2 rotate-180",
-    collected: "left-1/4 top-10 -translate-x-1/4",
-    deck: "right-1/4 top-10 -translate-x-1/4",
+    collected: "left-8 md:left-1/4 top-10 md:-translate-x-1/4",
+    deck: "right-19 md:right-1/4 top-10 md:-translate-x-1/4",
   };
 
   const right = {
-    chip: "right-1 top-1/2 -translate-y-1/2 -rotate-90",
-    hand: "top-1/2 -translate-y-1/2 -rotate-90 right-1",
-    collected: "bottom-1/3 -translate-y-1/3 right-50",
-    deck: "top-1/5 -translate-y-1/5 right-30 rotate-90",
+    chip: "right-7 md:right-1 top-1/2 -translate-y-1/2 -rotate-90",
+    hand: "top-1/2 -translate-y-1/2 -rotate-90 -right-20 md:right-1",
+    collected: "bottom-1/3 -translate-y-1/3 right-25 md:right-50",
+    deck: "top-1/4 -translate-y-1/4 md:top-1/5 md:-translate-y-1/5 right-6 md:right-30 rotate-90",
   };
 
   const left = {
-    chip: "left-1 top-1/2 -translate-y-1/2 rotate-90",
-    hand: "top-1/2 -translate-y-1/2 rotate-90",
-    collected: "top-1/6 -translate-y-1/6 left-30",
-    deck: "bottom-1/3 -translate-y-1/3 left-50 rotate-90",
+    chip: "left-7 md:left-1 top-1/2 -translate-y-1/2 rotate-90",
+    hand: "-left-20 md:left-0 top-1/2 -translate-y-1/2 rotate-90",
+    collected:
+      "top-1/4 -translate-y-1/4 md:top-1/6 md:-translate-y-1/6 left-8 md:left-30",
+    deck: "bottom-1/3 -translate-y-1/3 left-26 md:left-50 rotate-90",
   };
 
   if (playersCount === 2) {
