@@ -25,7 +25,7 @@ export const GameOverModal = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="inset-0 bg-black/60 fixed z-50 flex items-center justify-center backdrop-blur-[4px]"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-[4px]"
           data-testid={"gameOverModal"}
         >
           <motion.div
@@ -33,10 +33,10 @@ export const GameOverModal = () => {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.5, opacity: 0 }}
             transition={{ type: "spring", stiffness: 200, damping: 16 }}
-            className="max-w-lg rounded-2xl bg-white/10 p-6 sm:p-8 shadow-2xl backdrop-blur-md border-white/10 relative w-[92%] overflow-hidden border"
+            className="relative w-[92%] max-w-lg overflow-hidden rounded-2xl border border-white/10 bg-white/10 p-6 shadow-2xl backdrop-blur-md sm:p-8"
           >
             <div
-              className={clsx("left-0 right-0 top-0 h-1 absolute", {
+              className={clsx("absolute left-0 right-0 top-0 h-1", {
                 "bg-accent-green": gameResult === "win",
                 "bg-accent-red": gameResult === "lose",
               })}
@@ -47,7 +47,7 @@ export const GameOverModal = () => {
                 initial={{ y: 0, opacity: 0 }}
                 animate={{ y: [0, -6, 0], opacity: [1, 1] }}
                 transition={{ repeat: Infinity, duration: 2 }}
-                className="text-6xl text-text-primary"
+                className="text-text-primary text-6xl"
                 aria-hidden
               >
                 <FontAwesomeIcon icon={ICONS[gameResult]} />
@@ -56,47 +56,45 @@ export const GameOverModal = () => {
 
             <h2
               id="game-over-title"
-              className="mb-2 text-2xl font-bold text-text-primary text-center"
+              className="text-text-primary mb-2 text-center text-2xl font-bold"
               data-testid={`gameOverModal-title-${gameResult}`}
             >
               {TEXTS[gameResult].title}
             </h2>
             <p
               id="game-over-desc"
-              className="mb-6 text-text-secondary text-center"
+              className="text-text-secondary mb-6 text-center"
             >
               {TEXTS[gameResult].message}
             </p>
 
             {stats?.teamScore && (
-              <div className="mb-6 gap-3 text-sm grid grid-cols-1">
+              <div className="mb-6 grid grid-cols-1 gap-3 text-sm">
                 <StatPill label="Score" value={stats.teamScore} />
               </div>
             )}
 
-            <div className="mt-2 gap-3 sm:grid-cols-2 grid grid-cols-1">
+            <div className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-2">
               <button
                 onClick={onReplay}
-                className="rounded-lg bg-accent-green px-4 py-2 font-semibold text-text-primary shadow-lg focus:ring-accent-green/60 cursor-pointer transition hover:brightness-110 focus:ring-2 focus:outline-none"
+                className="bg-accent-green text-text-primary focus:ring-accent-green/60 cursor-pointer rounded-lg px-4 py-2 font-semibold shadow-lg transition hover:brightness-110 focus:outline-none focus:ring-2"
               >
-                Replay
-                <span className="sr-only"> (R)</span>
+                Replay <span className="sr-only"> (R)</span>
               </button>
 
               <button
                 onClick={onNewGame}
-                className="rounded-lg bg-accent-gold px-4 py-2 font-semibold text-background shadow-lg focus:ring-accent-gold/60 cursor-pointer transition hover:brightness-110 focus:ring-2 focus:outline-none"
+                className="bg-accent-gold text-background focus:ring-accent-gold/60 cursor-pointer rounded-lg px-4 py-2 font-semibold shadow-lg transition hover:brightness-110 focus:outline-none focus:ring-2"
                 title="Open game modes"
               >
-                New Game
-                <span className="sr-only"> (N)</span>
+                New Game <span className="sr-only"> (N)</span>
               </button>
             </div>
 
             <button
               aria-label="Close"
               onClick={onExit}
-              className="right-3 top-3 rounded-md border-white/10 bg-white/10 p-1.5 text-text-secondary hover:text-text-primary absolute cursor-pointer border transition"
+              className="text-text-secondary hover:text-text-primary absolute right-3 top-3 cursor-pointer rounded-md border border-white/10 bg-white/10 p-1.5 transition"
             >
               <svg
                 width="18"

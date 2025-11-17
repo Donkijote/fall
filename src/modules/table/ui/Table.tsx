@@ -1,5 +1,5 @@
 import { clsx } from "clsx";
-import { LayoutGroup } from "framer-motion";
+import { LayoutGroup, motion } from "framer-motion";
 import type { ReactNode } from "react";
 
 import { useGameStoreState } from "@/application/hooks/useGameStoreState";
@@ -17,7 +17,8 @@ export const Table = ({ children }: { children: ReactNode }) => {
     <div className={"relative h-[calc(100dvh)] w-full"}>
       <TableBackground />
       <LayoutGroup id={AnimationKeys.GAME_CARDS}>
-        <div
+        <motion.div
+          layout={true}
           className={clsx(
             "landscape:-translate-y-1/6 absolute left-1/2 top-1/2 h-[50%] -translate-x-1/2 -translate-y-1/2 transform lg:h-[45%] landscape:top-1/3 landscape:h-[40%] landscape:lg:top-1/2 landscape:lg:h-[45%] landscape:lg:-translate-y-1/2",
             {
@@ -27,7 +28,7 @@ export const Table = ({ children }: { children: ReactNode }) => {
           )}
         >
           <TableCards />
-        </div>
+        </motion.div>
         {children}
       </LayoutGroup>
     </div>

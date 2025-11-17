@@ -27,14 +27,19 @@ export const useMatchEnd = () => {
     return "1vs1";
   }, [players.length]);
 
+  const playerTeam = useMemo(() => {
+    const player = players.find(({ id }) => id === mainPlayer)!;
+    return player?.team ?? 0;
+  }, [players, mainPlayer]);
+
   const gameResult: GameResult | null = useMemo(() => {
     if (!isFinished) return null;
-    const points = scores.values[mainPlayer];
+    const points = scores.values[playerTeam];
     if (points >= 24) {
       return "win";
     }
     return "lose";
-  }, [mainPlayer, scores, isFinished]);
+  }, [playerTeam, scores, isFinished]);
 
   const stats: GameOverStats = useMemo(() => {
     return {
@@ -49,7 +54,7 @@ export const useMatchEnd = () => {
 
   const onReplay: () => void = useCallback(() => {
     resetGameState();
-    setupGame(mainPlayer, currentGameMode);
+    setupGame(mainPlayer, currentGameMode).then();
   }, [currentGameMode, mainPlayer, setupGame, resetGameState]);
 
   const onNewGame: () => void = useCallback(() => {

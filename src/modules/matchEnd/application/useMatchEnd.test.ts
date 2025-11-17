@@ -15,7 +15,7 @@ vi.mock("react-router", () => {
 });
 
 const resetGameState = vi.fn();
-const setupGame = vi.fn();
+const setupGame = vi.fn().mockResolvedValue({});
 
 vi.mock("@/application/hooks/useGameStoreService", () => {
   return {
@@ -30,9 +30,12 @@ vi.mock("@/application/hooks/useGameStoreState", () => {
   return {
     useGameStoreState: vi.fn(() => ({
       phase: "gameOver",
-      players: ["p1", "p2"],
+      players: [
+        { id: "p1", team: 1 },
+        { id: "p2", team: 2 },
+      ],
       mainPlayer: "p1",
-      scores: { values: { p1: 24, p2: 10 } },
+      scores: { values: { "1": 24, "2": 10 } },
     })),
   };
 });
@@ -47,9 +50,12 @@ const getNavigate = () =>
 const setStateMock = (state: Partial<ReturnType<typeof useGameStoreState>>) => {
   (useGameStoreState as Mock).mockReturnValue({
     phase: "gameOver",
-    players: ["p1", "p2"],
+    players: [
+      { id: "p1", team: 1 },
+      { id: "p2", team: 2 },
+    ],
     mainPlayer: "p1",
-    scores: { values: { p1: 24, p2: 10 } },
+    scores: { values: { "1": 24, "2": 10 } },
     ...state,
   });
 };
@@ -73,12 +79,6 @@ describe("useMatchEnd", () => {
 
   it("computes currentGameMode via players.length (1v1, 1v2, 2v2) through onReplay()", () => {
     // 1v1 -> length 2
-    setStateMock({
-      players: [
-        { id: "a", team: 1, hand: [], collected: [], score: 0 },
-        { id: "b", team: 1, hand: [], collected: [], score: 0 },
-      ],
-    });
     let { result, unmount } = renderHook(() => useMatchEnd());
 
     act(() => result.current.onReplay());
@@ -89,10 +89,11 @@ describe("useMatchEnd", () => {
     // 1v2 -> length 3
     setStateMock({
       players: [
-        { id: "a", team: 1, hand: [], collected: [], score: 0 },
-        { id: "b", team: 1, hand: [], collected: [], score: 0 },
-        { id: "c", team: 1, hand: [], collected: [], score: 0 },
+        { id: "p1", team: 1, hand: [], collected: [], score: 0 },
+        { id: "p2", team: 1, hand: [], collected: [], score: 0 },
+        { id: "3", team: 1, hand: [], collected: [], score: 0 },
       ],
+      mainPlayer: "p1",
     });
     ({ result, unmount } = renderHook(() => useMatchEnd()));
 
@@ -103,11 +104,12 @@ describe("useMatchEnd", () => {
     // 2v2 -> length 4
     setStateMock({
       players: [
-        { id: "a", team: 1, hand: [], collected: [], score: 0 },
-        { id: "b", team: 1, hand: [], collected: [], score: 0 },
-        { id: "c", team: 1, hand: [], collected: [], score: 0 },
-        { id: "d", team: 1, hand: [], collected: [], score: 0 },
+        { id: "p1", team: 1, hand: [], collected: [], score: 0 },
+        { id: "p2", team: 1, hand: [], collected: [], score: 0 },
+        { id: "p3", team: 1, hand: [], collected: [], score: 0 },
+        { id: "p4", team: 1, hand: [], collected: [], score: 0 },
       ],
+      mainPlayer: "p1",
     });
     ({ result, unmount } = renderHook(() => useMatchEnd()));
 
@@ -127,7 +129,7 @@ describe("useMatchEnd", () => {
     setStateMock({
       phase: "gameOver",
       mainPlayer: "p1",
-      scores: { type: "individual", values: { p1: 24, p2: 0 } },
+      scores: { type: "individual", values: { "1": 24, "2": 0 } },
     });
     ({ result, unmount } = renderHook(() => useMatchEnd()));
     expect(result.current.gameResult).toBe("win");
@@ -230,7 +232,13 @@ describe("useMatchEnd", () => {
     setStateMock({ phase: "playing" as never });
     const addSpy = vi.spyOn(window, "addEventListener");
 
-    renderHook(() => useMatchEnd());
+    const { rerender } = renderHook(() => useMatchEnd());
     expect(addSpy).not.toHaveBeenCalledWith("keydown", expect.any(Function));
+
+    setStateMock({ phase: "gameOver" as never });
+
+    rerender();
+
+    expect(addSpy).toHaveBeenCalledWith("keydown", expect.any(Function));
   });
 });

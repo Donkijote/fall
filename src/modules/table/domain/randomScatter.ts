@@ -22,8 +22,8 @@ export const randomScatter = (input: LayoutInput): LayoutOutput => {
     const jx = (rng() - 0.5) * 3;
     const jy = (rng() - 0.5) * 2;
 
-    const left = clamp(cx + jx, 5, 95);
-    const top = clamp(cy + jy, 10, 70);
+    const left = clamp(cx + jx, 5, 70);
+    const top = clamp(cy + jy, 10, 50);
 
     return {
       key,

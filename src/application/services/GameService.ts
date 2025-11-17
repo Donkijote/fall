@@ -3,36 +3,37 @@ import {
   animationService,
 } from "@/application/services/AnimationService";
 import { initialState } from "@/application/store/gameStore";
+import { useUIGameStore } from "@/application/store/uiGameStore";
 import type { Card } from "@/domain/entities/Card";
 import type { GameMode, GameState, Player } from "@/domain/entities/GameState";
+import { toCardKey } from "@/domain/helpers/card";
 import { dealRound } from "@/domain/services/deal";
 import {
   dealerCardSelection,
   setUpDealerSelection,
 } from "@/domain/services/dealer";
-import { playCard as domainPlayCard } from "@/domain/services/moves";
+import {
+  analyzePlay,
+  finalizeAfterPlay,
+  removeCardsFromHand,
+  updateTableAndHandCards,
+} from "@/domain/services/moves";
 import { resolveHands } from "@/domain/services/resolveHands";
 import { applyCountingRule } from "@/domain/services/scoring";
+
+const uiService = useUIGameStore.getState().service;
 
 export function createGameService(
   getState: () => GameState,
   setState: (s: GameState) => void,
 ) {
-  async function updateStateAndRunBotsAndContinueFlow(
-    nextState: GameState,
-    animationCallback?: () => Promise<void>,
-  ) {
+  async function updateStateAndRunBotsAndContinueFlow(nextState: GameState) {
     setState(nextState);
 
-    if (animationCallback) {
-      try {
-        await animationCallback();
-      } catch (err) {
-        console.warn("Animation callback failed or skipped:", err);
-      }
-    }
-
-    if (nextState?.currentPlayer?.startsWith("bot-")) {
+    if (
+      nextState.phase === "play" &&
+      nextState?.currentPlayer?.startsWith("bot-")
+    ) {
       await api.playBotTurn(nextState.currentPlayer);
     }
 
@@ -148,23 +149,110 @@ export function createGameService(
 
       const player = state.players.find((p) => p.id === playerId);
       if (!player) return;
+
       const card: Card | undefined = player.hand[cardIndex];
       if (!card) return;
 
-      let nextState = domainPlayCard(state, playerId, card);
-      const allHandsEmpty = nextState.players.every((p) => p.hand.length === 0);
-      if (allHandsEmpty && nextState.deck.length === 0) {
-        nextState = { ...nextState, phase: "roundEnd" };
+      const analysis = analyzePlay(state, playerId, card);
+      if (!analysis.ok) return;
+
+      const stateAfterRemoveCardsFromHand = removeCardsFromHand(
+        state,
+        playerId,
+        card,
+      );
+
+      const playedKey = toCardKey(card);
+      const firstTarget =
+        analysis.capturePlan.kind === "none"
+          ? null
+          : analysis.capturePlan.targets[0];
+
+      uiService.setPlayingCard(card);
+
+      if (firstTarget) {
+        uiService.setCaptureOverride({
+          fromKey: playedKey,
+          toKey: toCardKey(firstTarget),
+        });
+      } else {
+        uiService.setCaptureOverride(null);
       }
 
-      await updateStateAndRunBotsAndContinueFlow(nextState, async () => {
+      const stateAfterAddRemovedCardToTable = {
+        ...stateAfterRemoveCardsFromHand,
+        table: [...stateAfterRemoveCardsFromHand.table, card],
+      };
+      setState(stateAfterAddRemovedCardToTable);
+
+      if (analysis.capturePlan.kind !== "none") {
         await animationService.run([
           {
             key: AnimationKeys.GAME_CARDS,
             payload: { suit: card.suit, rank: card.rank },
           },
         ]);
-      });
+      }
+
+      if (analysis.capturePlan.kind !== "none") {
+        const targets = analysis.capturePlan.targets;
+        uiService.addCascadeFollower(targets[0].key);
+
+        for (let i = 1; i < targets.length; i++) {
+          const target = targets[i];
+
+          uiService.setCaptureOverride({
+            fromKey: playedKey,
+            toKey: target.key,
+          });
+
+          await animationService.run([
+            {
+              key: AnimationKeys.GAME_CARDS,
+              payload: { suit: card.suit, rank: card.rank },
+            },
+          ]);
+
+          uiService.addCascadeFollower(target.key);
+        }
+      }
+
+      const stateAfterUpdateTableAndHandCards = updateTableAndHandCards(
+        stateAfterAddRemovedCardToTable,
+        playerId,
+        card,
+        analysis.capturePlan,
+      );
+
+      setState(stateAfterUpdateTableAndHandCards);
+      uiService.clearUI();
+
+      if (analysis.capturePlan.kind !== "none") {
+        await animationService.run([
+          {
+            key: AnimationKeys.PILE_COLLECT,
+            payload: { suit: card.suit, rank: card.rank },
+          },
+        ]);
+      }
+
+      let stateAfterFinalizeAfterPlay = finalizeAfterPlay(
+        stateAfterUpdateTableAndHandCards,
+        playerId,
+        card,
+      );
+
+      const allHandsEmpty = stateAfterFinalizeAfterPlay.players.every(
+        (p) => p.hand.length === 0,
+      );
+      if (allHandsEmpty && stateAfterFinalizeAfterPlay.deck.length === 0) {
+        stateAfterFinalizeAfterPlay = {
+          ...stateAfterFinalizeAfterPlay,
+          phase: "roundEnd" as const,
+        };
+      }
+
+      await updateStateAndRunBotsAndContinueFlow(stateAfterFinalizeAfterPlay);
     },
 
     endRound: async () => {

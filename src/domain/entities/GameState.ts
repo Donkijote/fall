@@ -1,6 +1,6 @@
 import type { User } from "@/domain/entities/User";
 
-import type { Card } from "./Card";
+import type { Card, CardWithKey } from "./Card";
 
 export type Phase =
   | "init"
@@ -17,7 +17,7 @@ export interface Player {
   hand: Card[];
   collected: Card[];
   score: number;
-  team?: number; // for 2v2 (e.g., 0 or 1)
+  team: number; // for 2v2 (e.g., 0 or 1)
 }
 
 export type DealOrder = "playersThenTable" | "tableThenPlayers";
@@ -60,3 +60,20 @@ export interface GameState {
   config: GameConfig;
   dealerSelection?: DealerSelection;
 }
+
+export type CapturePlan =
+  | { kind: "none" }
+  | {
+      kind: "match" | "cascade";
+      playerId: Player["id"];
+      played: CardWithKey;
+      targets: Array<CardWithKey>;
+    };
+
+export type PlayAnalysis = {
+  ok: boolean;
+  reason?: "not-current-player" | "card-not-in-hand";
+  capturePlan: CapturePlan;
+  isFall: boolean;
+  isLastRound: boolean;
+};
