@@ -2,6 +2,7 @@ import clsx from "clsx";
 import { AnimatePresence, motion, type Variants } from "framer-motion";
 import { useState } from "react";
 
+import { useGameStoreService } from "@/application/hooks/useGameStoreService";
 import type { GameState } from "@/domain/entities/GameState";
 
 import {
@@ -15,16 +16,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 type DealerChoiceControlsProps = {
   isOpen: boolean;
-  onChoose: (
-    dealOrder: GameState["config"]["dealOrder"],
-    tablePattern: GameState["config"]["tablePattern"],
-  ) => void;
 };
 
-export const DealerChoiceControls = ({
-  isOpen,
-  onChoose,
-}: DealerChoiceControlsProps) => {
+export const DealerChoiceControls = ({ isOpen }: DealerChoiceControlsProps) => {
   const [dealOrder, setDealOrder] = useState<
     GameState["config"]["dealOrder"] | null
   >(null);
@@ -32,11 +26,13 @@ export const DealerChoiceControls = ({
     GameState["config"]["tablePattern"] | null
   >(null);
 
+  const { dealerChoose } = useGameStoreService();
+
   const ready = dealOrder !== null && tablePattern !== null;
 
   const handleConfirm = () => {
     if (!ready) return;
-    onChoose(dealOrder!, tablePattern!);
+    dealerChoose(dealOrder!, tablePattern!);
   };
 
   const bubbleVariants: Variants = {
@@ -69,17 +65,17 @@ export const DealerChoiceControls = ({
           initial="hidden"
           animate="visible"
           exit="exit"
-          className="-top-32 absolute left-1/2 z-50 flex -translate-x-1/2 items-end justify-center"
+          className="absolute -top-32 left-1/2 z-50 flex -translate-x-1/2 items-end justify-center"
         >
           <div className="relative flex h-[120px] w-[220px] items-end justify-center">
             <motion.button
               variants={itemVariants}
               onClick={() => setDealOrder("playersThenTable")}
               className={clsx(
-                "left-6 top-6 w-10 h-10 absolute flex transform cursor-pointer items-center justify-center rounded-full border transition hover:scale-110",
+                "absolute left-6 top-6 flex h-10 w-10 transform cursor-pointer items-center justify-center rounded-full border transition hover:scale-110",
                 dealOrder === "playersThenTable"
-                  ? "bg-accent-gold text-black border-yellow-400"
-                  : "bg-black/30 text-white border-white/20",
+                  ? "bg-accent-gold border-yellow-400 text-black"
+                  : "border-white/20 bg-black/30 text-white",
               )}
               title="Players → Table"
             >
@@ -90,10 +86,10 @@ export const DealerChoiceControls = ({
               variants={itemVariants}
               onClick={() => setDealOrder("tableThenPlayers")}
               className={clsx(
-                "left-16 top-2 w-10 h-10 absolute flex transform cursor-pointer items-center justify-center rounded-full border transition hover:scale-110",
+                "absolute left-16 top-2 flex h-10 w-10 transform cursor-pointer items-center justify-center rounded-full border transition hover:scale-110",
                 dealOrder === "tableThenPlayers"
-                  ? "bg-accent-gold text-black border-yellow-400"
-                  : "bg-black/30 text-white border-white/20",
+                  ? "bg-accent-gold border-yellow-400 text-black"
+                  : "border-white/20 bg-black/30 text-white",
               )}
               title="Table → Players"
             >
@@ -104,10 +100,10 @@ export const DealerChoiceControls = ({
               variants={itemVariants}
               onClick={() => setTablePattern("inc")}
               className={clsx(
-                "right-16 top-2 w-10 h-10 absolute flex transform cursor-pointer items-center justify-center rounded-full border transition hover:scale-110",
+                "absolute right-16 top-2 flex h-10 w-10 transform cursor-pointer items-center justify-center rounded-full border transition hover:scale-110",
                 tablePattern === "inc"
-                  ? "bg-accent-blue text-black border-blue-400"
-                  : "bg-black/30 text-white border-white/20",
+                  ? "bg-accent-blue border-blue-400 text-black"
+                  : "border-white/20 bg-black/30 text-white",
               )}
               title="Incremental"
             >
@@ -118,10 +114,10 @@ export const DealerChoiceControls = ({
               variants={itemVariants}
               onClick={() => setTablePattern("dec")}
               className={clsx(
-                "right-6 top-6 w-10 h-10 absolute flex transform cursor-pointer items-center justify-center rounded-full border transition hover:scale-110",
+                "absolute right-6 top-6 flex h-10 w-10 transform cursor-pointer items-center justify-center rounded-full border transition hover:scale-110",
                 tablePattern === "dec"
-                  ? "bg-accent-blue text-black border-blue-400"
-                  : "bg-black/30 text-white border-white/20",
+                  ? "bg-accent-blue border-blue-400 text-black"
+                  : "border-white/20 bg-black/30 text-white",
               )}
               title="Decremental"
             >
@@ -133,10 +129,10 @@ export const DealerChoiceControls = ({
               onClick={handleConfirm}
               disabled={!ready}
               className={clsx(
-                "top-14 w-12 h-12 text-2xl absolute flex cursor-pointer items-center justify-center rounded-full border transition",
+                "absolute top-14 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border text-2xl transition",
                 ready
-                  ? "bg-green-500 hover:bg-green-400 text-white border-green-600"
-                  : "bg-black/30 text-white/50 border-white/20 cursor-not-allowed",
+                  ? "border-green-600 bg-green-500 text-white hover:bg-green-400"
+                  : "cursor-not-allowed border-white/20 bg-black/30 text-white/50",
               )}
               title="Confirm"
             >

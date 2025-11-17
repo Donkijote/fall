@@ -29,7 +29,7 @@ export const useMatchEnd = () => {
 
   const playerTeam = useMemo(() => {
     const player = players.find(({ id }) => id === mainPlayer)!;
-    return player.team;
+    return player?.team ?? 0;
   }, [players, mainPlayer]);
 
   const gameResult: GameResult | null = useMemo(() => {
