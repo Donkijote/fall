@@ -75,7 +75,7 @@ export const Players = () => {
             <div className={clsx("fixed", positions[index].collected)}>
               {player.collected.map((card, index) => (
                 <CollectedCard
-                  key={player.id + card.suit + card.rank}
+                  key={player.id + card.suit + card.rank + index}
                   card={card}
                   index={index}
                 />
