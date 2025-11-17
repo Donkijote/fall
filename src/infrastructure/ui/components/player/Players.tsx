@@ -114,35 +114,151 @@ type Position = {
 };
 
 function computePlayerPositions(playersCount: number): Position[] {
+  const bottomHandMobile =
+    "bottom-1/12 left-1/2 -translate-x-1/2 -translate-y-1/12";
+  const bottomHandMobileLandscape =
+    "landscape:bottom-1/20 landscape:-translate-y-1/20";
+  const bottomHandTabletLandscape =
+    "landscape:lg:bottom-1/10 landscape:lg:-translate-y-1/10";
+  const bottomHandBigTabletLandscape =
+    "landscape:xl:bottom-1/10 landscape:xl:-translate-y-1/10";
+  const bottomCollectedMobile =
+    "bottom-1/6 left-1/30 -translate-x-1/30 -translate-y-1/6";
+  const bottomCollectedMobileLandscape =
+    "landscape:bottom-1/4 landscape:left-1/5";
+  const bottomCollectedTablet =
+    "md:bottom-1/6  md:left-1/8 md:-translate-x-1/8 md:-translate-y-1/6";
+  const bottomCollectedTabletLandscape =
+    "landscape:lg:bottom-1/4 landscape:lg:-translate-y-1/4";
+  const bottomCollectedBigTabletLandscape =
+    "landscape:xl:left-1/4 landscape:xl:-translate-x-1/4 landscape:xl:bottom-1/6 landscape:xl:-translate-y-1/6";
+  const bottomDeckMobile =
+    "bottom-1/8 -translate-y-1/8 right-1/5 -translate-x-1/5";
+  const bottomDeckMobileLandscape =
+    "landscape:bottom-1/4 landscape:-translate-y-1/4 landscape:right-1/3 landscape:-translate-x-1/3";
+  const bottomDeckTablet =
+    "md:bottom-1/6 md:-translate-y-1/6 md:right-1/4 md:-translate-x-1/4";
   const bottom = {
     chip: "bottom-1 left-1/2 -translate-x-1/2",
-    hand: "bottom-20 md:bottom-27 left-1/2 -translate-x-1/2 landscape:bottom-2",
-    collected:
-      "bottom-40 md:bottom-50 left-4 md:left-1/8 md:-translate-x-1/8 landscape:bottom-30 landscape:left-1/5",
-    deck: "bottom-30 md:bottom-50 right-19 md:right-1/4 md:-translate-x-1/4 landscape:bottom-24 landscape:right-1/3",
+    hand: clsx(
+      bottomHandMobile,
+      bottomHandMobileLandscape,
+      bottomHandTabletLandscape,
+      bottomHandBigTabletLandscape,
+    ),
+    collected: clsx(
+      bottomCollectedMobile,
+      bottomCollectedMobileLandscape,
+      bottomCollectedTablet,
+      bottomCollectedTabletLandscape,
+      bottomCollectedBigTabletLandscape,
+    ),
+    deck: clsx(bottomDeckMobile, bottomDeckMobileLandscape, bottomDeckTablet),
   };
 
+  const topHandMobile =
+    "top-1/10 -translate-y-1/10 left-1/2 -translate-x-1/2 rotate-180";
+  const topHandMobileLandscape =
+    "landscape:top-1/20 landscape:-translate-y-1/20";
+  const topHandTabletLandscape =
+    "landscape:lg:top-1/8 landscape:lg:-translate-y-1/8";
+  const topHandBigTabletLandscape =
+    "landscape:xl:top-1/8 landscape:xl:-translate-y-1/8";
+  const topCollectedMobile =
+    "left-1/25 -translate-x-1/25 top-1/20 -translate-y-1/25";
+  const topCollectedMobileLandscape =
+    "landscape:left-1/4 landscape:-translate-x-1/4 landscape:top-1/16 landscape:-translate-y-1/16";
+  const topCollectedTablet = "md:left-1/8 md:-translate-x-1/8";
+  const topCollectedTabletLandscape =
+    "landscape:lg:top-1/12 landscape:lg:-translate-y-1/12";
+  const topCollectedBigTabletLandscape =
+    "landscape:xl:top-1/14 landscape:xl:-translate-y-1/14";
+  const topDeckMobile = "right-1/5 -translate-x-1/5 top-1/14 -translate-y-1/14";
+  const topDeckMobileLandscape =
+    "landscape:top-1/20 landscape:-translate-y-1/20";
+  const topDeckTablet = "md:right-1/4 md:-translate-x-1/4";
+  const topDeckTabletLandscape =
+    "landscape:lg:right-1/3 landscape:lg:-translate-x-1/3";
+  const topDeckBigTabletLandscape =
+    "landscape:xl:top-1/12 landscape:xl:-translate-y-1/12 landscape:xl:right-1/3 landscape:xl:-translate-x-1/3";
   const top = {
     chip: "left-1/2 top-1 -translate-x-1/2 rotate-180",
-    hand: "top-26 left-1/2 -translate-x-1/2 rotate-180 landscape:top-2",
-    collected:
-      "left-8 md:left-1/8 top-10 md:-translate-x-1/8 landscape:left-1/4 landscape:top-6",
-    deck: "right-19 md:right-1/4 top-10 md:-translate-x-1/4",
+    hand: clsx(
+      topHandMobile,
+      topHandMobileLandscape,
+      topHandTabletLandscape,
+      topHandBigTabletLandscape,
+    ),
+    collected: clsx(
+      topCollectedMobile,
+      topCollectedTablet,
+      topCollectedMobileLandscape,
+      topCollectedTabletLandscape,
+      topCollectedBigTabletLandscape,
+    ),
+    deck: clsx(
+      topDeckMobile,
+      topDeckMobileLandscape,
+      topDeckTablet,
+      topDeckTabletLandscape,
+      topDeckBigTabletLandscape,
+    ),
   };
+
+  const rightHandMobile =
+    "top-1/2 -translate-y-1/2 -rotate-90 -right-1/8 translate-x-1/8";
+  const rightHandTablet = "md:right-1/30";
+  const rightHandBigTableLandscape =
+    "xl:right-1/38 landscape:xl:-translate-x-1/38";
+  const rightCollectedMobile = "bottom-1/3 -translate-y-1/3 right-1/5";
+  const rightCollectedMobileLandscape =
+    "landscape:bottom-1/4 landscape:-translate-y-1/4 landscape:right-1/6";
+  const rightCollectedTablet = "md:right-1/6 md:-translate-x-1/6";
+  const rightCollectedTabletLandscape =
+    "landscape:lg:right-1/8 md:-translate-x-1/8";
 
   const right = {
     chip: "right-7 md:right-8 top-1/2 -translate-y-1/2 -rotate-90",
-    hand: "top-1/2 -translate-y-1/2 -rotate-90 -right-20 md:right-2 2xl:right-8",
-    collected: "bottom-1/3 -translate-y-1/3 right-25 md:right-40",
+    hand: clsx(rightHandMobile, rightHandTablet, rightHandBigTableLandscape),
+    collected: clsx(
+      rightCollectedMobile,
+      rightCollectedMobileLandscape,
+      rightCollectedTablet,
+      rightCollectedTabletLandscape,
+    ),
     deck: "top-1/4 -translate-y-1/4 md:top-1/5 md:-translate-y-1/5 right-6 md:right-20 rotate-90",
   };
 
+  const leftHandMobile =
+    "-left-1/8 -translate-x-1/8 top-1/2 -translate-y-1/2 rotate-90";
+  const leftHandMobileLandscape = "-left-1/18 -translate-x-1/18";
+  const leftHandTablet = "md:left-1/22 md:-translate-x-1/6";
+  const leftHandBigTableLandscape = "xl:left-1/24 xl:-translate-x-1/24";
+  const leftCollectedMobile =
+    "top-1/4 -translate-y-1/4 left-1/12 -translate-x-1/12";
+  const leftCollectedMobileLandscape =
+    "landscape:top-1/8 landscape:-translate-y-1/8 landscape:left-1/16 landscape:-translate-x-1/16";
+  const leftCollectedTablet = "md:top-1/4 md:-translate-y-1/4 md:left-25";
+  const leftDeckMobile =
+    "bottom-1/3 -translate-y-1/3 left-1/4 -translate-x-1/4";
+  const leftDeckMobileLandscape =
+    "landscape:bottom-1/3 landscape:-translate-y-1/3 landscape:left-1/8 landscape:-translate-x-1/8";
+  const leftDeckTable = "md:left-1/5 md:-translate-x-1/5 rotate-90";
+
   const left = {
     chip: "left-7 md:left-8 top-1/2 -translate-y-1/2 rotate-90",
-    hand: "-left-20 md:left-2 2xl:left-8 top-1/2 -translate-y-1/2 rotate-90",
-    collected:
-      "top-1/4 -translate-y-1/4 md:top-1/4 md:-translate-y-1/4 left-8 md:left-25 landscape:top-1/6 landscape:left-18",
-    deck: "bottom-1/3 -translate-y-1/3 left-26 md:left-50 rotate-90",
+    hand: clsx(
+      leftHandMobile,
+      leftHandMobileLandscape,
+      leftHandTablet,
+      leftHandBigTableLandscape,
+    ),
+    collected: clsx(
+      leftCollectedMobile,
+      leftCollectedTablet,
+      leftCollectedMobileLandscape,
+    ),
+    deck: clsx(leftDeckMobile, leftDeckMobileLandscape, leftDeckTable),
   };
 
   if (playersCount === 2) {
