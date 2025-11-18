@@ -77,3 +77,11 @@ export type PlayAnalysis = {
   isFall: boolean;
   isLastRound: boolean;
 };
+
+export type FallKind = "basic" | "ten" | "eleven" | "twelve";
+
+export type FallInfo = {
+  card: Card;
+  kind: FallKind;
+  points: number;
+};
