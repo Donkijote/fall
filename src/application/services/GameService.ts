@@ -240,6 +240,7 @@ export function createGameService(
         stateAfterUpdateTableAndHandCards,
         playerId,
         card,
+        analysis.capturePlan.kind !== "none",
       );
 
       const allHandsEmpty = stateAfterFinalizeAfterPlay.players.every(

@@ -26,7 +26,12 @@ describe("Moves", () => {
       card,
       analysis.capturePlan,
     );
-    return finalizeAfterPlay(s2, playerId, card);
+    return finalizeAfterPlay(
+      s2,
+      playerId,
+      card,
+      analysis.capturePlan.kind !== "none",
+    );
   };
 
   it("should return state if not current player", () => {

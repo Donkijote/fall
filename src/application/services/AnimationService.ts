@@ -1,8 +1,10 @@
 import type { Card } from "@/domain/entities/Card";
+import type { FallInfo } from "@/domain/entities/GameState";
 
 export const AnimationKeys = {
   GAME_CARDS: "GAME_CARDS",
   PILE_COLLECT: "PILE_COLLECT",
+  FALL: "FALL",
 } as const;
 
 export type AnimationKey = (typeof AnimationKeys)[keyof typeof AnimationKeys];
@@ -10,6 +12,7 @@ export type AnimationKey = (typeof AnimationKeys)[keyof typeof AnimationKeys];
 type Payloads = {
   [AnimationKeys.GAME_CARDS]: Card;
   [AnimationKeys.PILE_COLLECT]: Card;
+  [AnimationKeys.FALL]: FallInfo;
 };
 
 type HandlerMap = {
@@ -18,14 +21,16 @@ type HandlerMap = {
 const listeners: HandlerMap = {
   [AnimationKeys.GAME_CARDS]: new Set(),
   [AnimationKeys.PILE_COLLECT]: new Set(),
+  [AnimationKeys.FALL]: new Set(),
 };
 
 type CorrelatorMap = {
   [K in AnimationKey]: (p: Payloads[K]) => string;
 };
 const correlate: CorrelatorMap = {
-  [AnimationKeys.GAME_CARDS]: (p) => `${p.suit}-${p.rank}`,
-  [AnimationKeys.PILE_COLLECT]: (p) => `${p.suit}-${p.rank}`,
+  [AnimationKeys.GAME_CARDS]: (card) => `${card.suit}-${card.rank}`,
+  [AnimationKeys.PILE_COLLECT]: (card) => `${card.suit}-${card.rank}`,
+  [AnimationKeys.FALL]: ({ card }) => `${card.suit}-${card.rank}`,
 };
 
 type PendingMap = {
@@ -34,6 +39,7 @@ type PendingMap = {
 const pending: PendingMap = {
   [AnimationKeys.GAME_CARDS]: new Map(),
   [AnimationKeys.PILE_COLLECT]: new Map(),
+  [AnimationKeys.FALL]: new Map(),
 };
 
 export const onAnimation = <K extends AnimationKey>(
