@@ -68,7 +68,9 @@ export const analyzePlay = (
   }
 
   const isFall =
-    !!state.lastPlayedCard && state.lastPlayedCard.rank === card.rank;
+    !!state.lastPlayedCard &&
+    state.lastPlayedCard.rank === card.rank &&
+    capturePlan.kind !== "none";
 
   return { ok: true, capturePlan, isFall, isLastRound };
 };
@@ -141,6 +143,7 @@ export const finalizeAfterPlay = (
   state: GameState,
   playerId: string,
   card: Card,
+  wasThereCapture: boolean,
 ): GameState => {
   let nextState = cloneState(state);
   const isLastRound = nextState.deck.length === 0;
@@ -163,7 +166,7 @@ export const finalizeAfterPlay = (
 
   // Fall rule scoring
   const lastCard = state.lastPlayedCard;
-  const isFall = !!lastCard && lastCard.rank === card.rank;
+  const isFall = !!lastCard && lastCard.rank === card.rank && wasThereCapture;
   if (isFall) {
     const pts = fallPoints(card.rank);
     nextState = awardPoints(nextState, playerId, pts);
