@@ -22,8 +22,10 @@
       "@application/*": ["src/application/*"],
       "@infrastructure/*": ["src/infrastructure/*"],
       "@ui/*": ["src/ui/*"],
-      "@shared/*": ["src/shared/*"]
+      "@shared/*": ["src/shared/*"],
+      "@routes/*": ["src/ui/routes/*"],
+      "@modules/*": ["src/ui/modules/*"]
     }
   },
-  "include": ["src", "vitest.config.ts", "vite.config.ts"]
+  "include": ["src", "setupTests.ts", "vitest.config.ts", "vite.config.ts"]
 }

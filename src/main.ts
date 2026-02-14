@@ -1,4 +1,4 @@
-import { mountApp } from "@ui/app";
+import { mountApp } from "@ui/App";
 
 const appNode = document.querySelector<HTMLElement>("#app");
 

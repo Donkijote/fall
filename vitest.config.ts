@@ -9,6 +9,8 @@ export default defineConfig({
       "@infrastructure": path.resolve(__dirname, "src/infrastructure"),
       "@ui": path.resolve(__dirname, "src/ui"),
       "@shared": path.resolve(__dirname, "src/shared"),
+      "@routes": path.resolve(__dirname, "src/ui/routes"),
+      "@modules": path.resolve(__dirname, "src/ui/modules"),
     },
   },
   test: {
@@ -16,6 +18,7 @@ export default defineConfig({
     clearMocks: true,
     mockReset: true,
     environment: "node",
+    setupFiles: ["./setupTests.ts"],
     include: ["src/**/*.{test,spec}.ts"],
   },
 });

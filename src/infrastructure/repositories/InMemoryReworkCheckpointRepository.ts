@@ -1,6 +1,6 @@
-import type { ReworkCheckpointRepository } from "@application/ports/ReworkCheckpointRepository";
+import type { ReworkCheckpointRepository } from "@application/repositories/ReworkCheckpointRepository";
 import type { ReworkCheckpoint } from "@domain/entities/ReworkCheckpoint";
-import { AnimationProfile } from "@domain/value-objects/AnimationProfile";
+import { createAnimationProfile } from "@domain/value-types/AnimationProfile";
 
 export class InMemoryReworkCheckpointRepository
   implements ReworkCheckpointRepository
@@ -8,7 +8,7 @@ export class InMemoryReworkCheckpointRepository
   getCurrent(): ReworkCheckpoint {
     return {
       phase: "v1-alpha",
-      animationProfile: AnimationProfile.create("balanced"),
+      animationProfile: createAnimationProfile("balanced"),
       logicObjective:
         "Rebuild logic and animation orchestration from a clean baseline",
     };

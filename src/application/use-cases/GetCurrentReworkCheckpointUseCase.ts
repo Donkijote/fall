@@ -1,7 +1,7 @@
-import type { ReworkCheckpointRepository } from "@application/ports/ReworkCheckpointRepository";
+import type { ReworkCheckpointRepository } from "@application/repositories/ReworkCheckpointRepository";
 import type { ReworkCheckpoint } from "@domain/entities/ReworkCheckpoint";
 
-export class GetCurrentReworkCheckpoint {
+export class GetCurrentReworkCheckpointUseCase {
   private readonly repository: ReworkCheckpointRepository;
 
   constructor(repository: ReworkCheckpointRepository) {

@@ -1,4 +1,4 @@
-import type { AnimationProfile } from "@domain/value-objects/AnimationProfile";
+import type { AnimationProfile } from "@domain/value-types/AnimationProfile";
 
 export type ReworkPhase = "v1-alpha";
 
