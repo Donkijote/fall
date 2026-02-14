@@ -6,4 +6,4 @@ if (!appNode) {
   throw new Error("Missing #app element");
 }
 
-mountApp(appNode);
+void mountApp(appNode);
