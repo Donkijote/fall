@@ -14,12 +14,12 @@ const bootAssetSources: Array<{ alias: string; src: string }> = [
     src: "/assets/lobby/background-afternoon.png",
   },
   {
-    alias: "home-bg-evening",
-    src: "/assets/lobby/background-evening.png",
-  },
-  {
     alias: "home-bg-night",
     src: "/assets/lobby/background-night.png",
+  },
+  {
+    alias: "home-overlay-platform",
+    src: "/assets/lobby/home-foreground-stage.png",
   },
 ];
 
