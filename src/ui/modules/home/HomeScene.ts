@@ -12,6 +12,7 @@ const defaultBackgroundOptions: HomeBackgroundOption[] = [
   { alias: "home-bg-dawn", label: "Dawn" },
   { alias: "home-bg-noon", label: "Noon" },
   { alias: "home-bg-afternoon", label: "Afternoon" },
+  { alias: "home-bg-evening", label: "Evening" },
   { alias: "home-bg-night", label: "Night" },
 ];
 
@@ -19,6 +20,7 @@ const sideFadeColorByAlias: Record<string, number> = {
   "home-bg-dawn": 0x7a5f63,
   "home-bg-noon": 0x86a8cf,
   "home-bg-afternoon": 0x88624f,
+  "home-bg-evening": 0x5b3f72,
   "home-bg-night": 0x1a2340,
 };
 
@@ -28,6 +30,7 @@ const atmosphereColorByAlias: Record<string, number> = {
   "home-bg-dawn": 0xf2d8ca,
   "home-bg-noon": 0xbfd7ef,
   "home-bg-afternoon": 0xe2b89a,
+  "home-bg-evening": 0xc8a0c9,
   "home-bg-night": 0x6b7ca8,
 };
 
@@ -180,33 +183,21 @@ const layoutBackground = (
   return textureWidth * finalScale;
 };
 
-const layoutForeground = (
-  foreground: Sprite,
-  width: number,
-  height: number,
-): void => {
-  const px = (value: number): number => Math.round(value);
-  const textureWidth = foreground.texture.width || width;
-  const textureHeight = foreground.texture.height || height;
-  const targetWidth = Math.min(width * 1.02, MAX_BACKGROUND_RENDER_WIDTH);
-  const scale = targetWidth / textureWidth;
-  const scaledHeight = textureHeight * scale;
-
-  foreground.position.set(px(width / 2), px(height + scaledHeight * 0.26));
-  foreground.scale.set(scale);
-};
-
 const getHomeBackgroundAliasForLocalHour = (hour: number): string => {
-  if (hour >= 5 && hour < 10) {
+  if (hour >= 6 && hour < 9) {
     return "home-bg-dawn";
   }
 
-  if (hour >= 10 && hour < 15) {
+  if (hour >= 9 && hour < 16) {
     return "home-bg-noon";
   }
 
-  if (hour >= 15 && hour < 20) {
+  if (hour >= 16 && hour < 18) {
     return "home-bg-afternoon";
+  }
+
+  if (hour >= 18 && hour < 20) {
+    return "home-bg-evening";
   }
 
   return "home-bg-night";
@@ -250,10 +241,6 @@ export const createHomeScene = (
   const atmosphereLayer = new Sprite(Texture.WHITE);
   atmosphereLayer.anchor.set(0);
   root.addChild(atmosphereLayer);
-
-  const foreground = new Sprite(Texture.WHITE);
-  foreground.anchor.set(0.5, 1);
-  root.addChild(foreground);
 
   const startMatchButton = createButton("Open Arena Scene");
   startMatchButton.button.on("pointertap", () => {
@@ -319,13 +306,6 @@ export const createHomeScene = (
     atmosphereLayer.texture = createAtmosphereTexture(atmosphereColor);
 
     currentBackgroundLabel.text = option.label;
-
-    const foregroundTextureCandidate = Assets.get("home-overlay-platform");
-    const foregroundTexture =
-      foregroundTextureCandidate instanceof Texture
-        ? foregroundTextureCandidate
-        : Texture.EMPTY;
-    foreground.texture = foregroundTexture;
   };
 
   previousButton.button.on("pointertap", () => {
@@ -358,8 +338,6 @@ export const createHomeScene = (
     atmosphereLayer.position.set(0, 0);
     atmosphereLayer.width = nextWidth;
     atmosphereLayer.height = nextHeight;
-
-    layoutForeground(foreground, nextWidth, nextHeight);
 
     controlPanel.position.set(px(nextWidth - 28), px(24));
     startMatchButton.button.position.set(px(-130), px(26));
