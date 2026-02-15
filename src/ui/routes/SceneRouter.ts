@@ -3,7 +3,8 @@ import { loadBootAssets } from "@infrastructure/assets/BootAssetsLoader";
 import { createArenaScene } from "@modules/Arena/ArenaScene";
 import { createHomeScene } from "@modules/Home/HomeScene";
 import { createLoadingOverlay } from "@modules/Loading/LoadingOverlay";
-import { SceneManager } from "@ui/state/SceneManager";
+import type { SceneManager } from "@ui/state/SceneManager";
+import { createSceneManager } from "@ui/state/SceneManager";
 import type { Application } from "pixi.js";
 
 export const bootstrapSceneRouter = async (
@@ -23,7 +24,7 @@ export const bootstrapSceneRouter = async (
   app.stage.removeChild(loadingOverlay.container);
   loadingOverlay.container.destroy({ children: true });
 
-  const sceneManager = new SceneManager(app.stage);
+  const sceneManager = createSceneManager(app.stage);
   sceneManager.register("home", (context) => {
     return createHomeScene(
       checkpoint,
