@@ -1,11 +1,7 @@
 import path from "node:path";
-import { defineConfig } from "vite";
+import { defineConfig } from "vitest/config";
 
 export default defineConfig({
-  server: {
-    port: 3000,
-    open: true,
-  },
   resolve: {
     alias: {
       "@domain": path.resolve(__dirname, "src/domain"),
@@ -16,5 +12,13 @@ export default defineConfig({
       "@routes": path.resolve(__dirname, "src/ui/routes"),
       "@modules": path.resolve(__dirname, "src/ui/modules"),
     },
+  },
+  test: {
+    globals: true,
+    clearMocks: true,
+    mockReset: true,
+    environment: "node",
+    setupFiles: ["./setupTests.ts"],
+    include: ["src/**/*.{test,spec}.ts"],
   },
 });
