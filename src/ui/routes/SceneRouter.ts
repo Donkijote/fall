@@ -1,7 +1,7 @@
 import type { ReworkCheckpoint } from "@domain/entities/ReworkCheckpoint";
 import { loadBootAssets } from "@infrastructure/assets/BootAssetsLoader";
 import { createArenaScene } from "@modules/Arena/ArenaScene";
-import { createHomeScene } from "@modules/Home/HomeScene";
+import { createHomeScene } from "@modules/home/HomeScene";
 import { createLoadingOverlay } from "@modules/Loading/LoadingOverlay";
 import type { SceneManager } from "@ui/state/SceneManager";
 import { createSceneManager } from "@ui/state/SceneManager";
