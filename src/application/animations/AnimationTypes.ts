@@ -20,12 +20,15 @@ export interface AnimationParameterDefinition {
   max: number;
   step: number;
   defaultValue: number;
+  valueLabels?: Readonly<Record<number, string>>;
 }
 
 export interface AnimationSampleInput {
   linearProgress: number;
   easedProgress: number;
   cycle: number;
+  previewWidth: number;
+  previewHeight: number;
   params: Readonly<Record<string, number>>;
 }
 

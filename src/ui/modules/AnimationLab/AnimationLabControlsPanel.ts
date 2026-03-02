@@ -10,6 +10,22 @@ import type { AnimationControlsPanelProps } from "@modules/AnimationLab/Animatio
 import { formatControlValue } from "@modules/AnimationLab/AnimationLabUtils";
 import { Container, Text } from "pixi.js";
 
+const formatParameterValue = (
+  value: number,
+  step: number,
+  valueLabels?: Readonly<Record<number, string>>,
+): string => {
+  if (valueLabels) {
+    const roundedValue = Math.round(value);
+    const label = valueLabels[roundedValue];
+    if (label) {
+      return label;
+    }
+  }
+
+  return formatControlValue(value, step);
+};
+
 export const renderAnimationLabControlsPanel = (
   controlsContent: Container,
   props: AnimationControlsPanelProps,
@@ -145,7 +161,11 @@ export const renderAnimationLabControlsPanel = (
   for (const parameter of props.selectedDefinition.parameters) {
     placeValueRow(
       parameter.label,
-      formatControlValue(props.animationParams[parameter.key], parameter.step),
+      formatParameterValue(
+        props.animationParams[parameter.key],
+        parameter.step,
+        parameter.valueLabels,
+      ),
       () => {
         props.onParameterAdjust(parameter.key, -parameter.step);
       },
