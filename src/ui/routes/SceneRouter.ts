@@ -1,5 +1,6 @@
 import type { ReworkCheckpoint } from "@domain/entities/ReworkCheckpoint";
 import { loadBootAssets } from "@infrastructure/assets/BootAssetsLoader";
+import { createAnimationLabScene } from "@modules/AnimationLab/AnimationLabScene";
 import { createArenaScene } from "@modules/Arena/ArenaScene";
 import { createHomeScene } from "@modules/home/HomeScene";
 import { createLoadingOverlay } from "@modules/Loading/LoadingOverlay";
@@ -24,6 +25,7 @@ export const bootstrapSceneRouter = async (
   app.stage.removeChild(loadingOverlay.container);
   loadingOverlay.container.destroy({ children: true });
 
+  const isDevMode = import.meta.env.DEV;
   const sceneManager = createSceneManager(app.stage);
   sceneManager.register("home", (context) => {
     return createHomeScene(
@@ -31,11 +33,21 @@ export const bootstrapSceneRouter = async (
       app.screen.width,
       app.screen.height,
       context,
+      isDevMode,
     );
   });
   sceneManager.register("arena", (context) => {
     return createArenaScene(app.screen.width, app.screen.height, context);
   });
+  if (isDevMode) {
+    sceneManager.register("animation-lab", (context) => {
+      return createAnimationLabScene(
+        app.screen.width,
+        app.screen.height,
+        context,
+      );
+    });
+  }
   sceneManager.goTo("home");
 
   return sceneManager;

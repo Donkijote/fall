@@ -1,6 +1,6 @@
 import type { ReworkCheckpoint } from "@domain/entities/ReworkCheckpoint";
 import type { AppScene, SceneContext } from "@ui/state/SceneManager";
-import { Assets, Container, Rectangle, Sprite, Texture } from "pixi.js";
+import { Assets, Container, Rectangle, Sprite, Text, Texture } from "pixi.js";
 
 const ARENA_MIN_WIDTH = 320;
 const ARENA_MAX_WIDTH = 520;
@@ -43,6 +43,33 @@ const setupInteractiveElement = (sprite: Sprite): void => {
   sprite.cursor = "pointer";
 };
 
+const createSceneNavButton = (label: string): Container => {
+  const button = new Container();
+  button.eventMode = "static";
+  button.cursor = "pointer";
+
+  const body = new Sprite(Texture.WHITE);
+  body.anchor.set(0.5);
+  body.width = 160;
+  body.height = 34;
+  body.tint = 0x0f172a;
+  button.addChild(body);
+
+  const text = new Text({
+    text: label,
+    style: {
+      fill: 0xf8fafc,
+      fontSize: 12,
+      fontWeight: "700",
+    },
+  });
+  text.anchor.set(0.5);
+  text.roundPixels = true;
+  button.addChild(text);
+
+  return button;
+};
+
 const setTrimmedHitArea = (
   sprite: Sprite,
   sideTrim: number,
@@ -65,6 +92,7 @@ export const createHomeScene = (
   width: number,
   height: number,
   context: SceneContext,
+  showAnimationLabEntry: boolean,
 ): AppScene => {
   const px = (value: number): number => Math.round(value);
   const root = new Container();
@@ -117,6 +145,16 @@ export const createHomeScene = (
   arenaSprite.on("pointertap", () => {
     context.goTo("arena");
   });
+
+  const animationLabButton = showAnimationLabEntry
+    ? createSceneNavButton("Animation Lab (DEV)")
+    : null;
+  if (animationLabButton) {
+    animationLabButton.on("pointertap", () => {
+      context.goTo("animation-lab");
+    });
+    root.addChild(animationLabButton);
+  }
 
   const update = (): void => {};
 
@@ -175,6 +213,10 @@ export const createHomeScene = (
       0,
       0,
     );
+
+    if (animationLabButton) {
+      animationLabButton.position.set(px(nextWidth - 108), px(32));
+    }
   };
 
   resize(width, height);
