@@ -1,49 +1,23 @@
-export const animationEasingOptions = [
-  "linear",
-  "easeInOutSine",
-  "easeOutCubic",
-] as const;
+import {
+  type AnimationDefinition,
+  type AnimationEasing,
+  type AnimationParameterDefinition,
+  type AnimationPlaybackSettings,
+  type AnimationSampleInput,
+  type AnimationTransformSample,
+  animationEasingOptions,
+} from "@application/animations/AnimationTypes";
+import { animationDefinitions } from "@application/animations/definitions";
 
-export type AnimationEasing = (typeof animationEasingOptions)[number];
-
-export interface AnimationPlaybackSettings {
-  durationMs: number;
-  delayMs: number;
-  loop: boolean;
-  easing: AnimationEasing;
-}
-
-export interface AnimationParameterDefinition {
-  key: string;
-  label: string;
-  min: number;
-  max: number;
-  step: number;
-  defaultValue: number;
-}
-
-export interface AnimationSampleInput {
-  linearProgress: number;
-  easedProgress: number;
-  cycle: number;
-  params: Readonly<Record<string, number>>;
-}
-
-export interface AnimationTransformSample {
-  x: number;
-  y: number;
-  scale: number;
-  alpha: number;
-  rotation: number;
-}
-
-export interface AnimationDefinition {
-  id: string;
-  displayName: string;
-  description: string;
-  parameters: ReadonlyArray<AnimationParameterDefinition>;
-  sample: (input: AnimationSampleInput) => AnimationTransformSample;
-}
+export {
+  animationEasingOptions,
+  type AnimationDefinition,
+  type AnimationEasing,
+  type AnimationParameterDefinition,
+  type AnimationPlaybackSettings,
+  type AnimationSampleInput,
+  type AnimationTransformSample,
+};
 
 const MIN_DURATION_MS = 200;
 const MAX_DURATION_MS = 6000;
@@ -71,135 +45,6 @@ const toDefaultParameters = (
   }
   return result;
 };
-
-const animationDefinitions: ReadonlyArray<AnimationDefinition> = [
-  {
-    id: "pulse-scale",
-    displayName: "Pulse Scale",
-    description: "Breathing pulse with alpha drift.",
-    parameters: [
-      {
-        key: "minScale",
-        label: "Min scale",
-        min: 0.3,
-        max: 1.2,
-        step: 0.05,
-        defaultValue: 0.75,
-      },
-      {
-        key: "maxScale",
-        label: "Max scale",
-        min: 0.6,
-        max: 1.8,
-        step: 0.05,
-        defaultValue: 1.2,
-      },
-    ],
-    sample: ({ easedProgress, params }) => {
-      const pulse = Math.sin(easedProgress * Math.PI);
-      const minScale = ensureNumber(params.minScale, 0.75);
-      const maxScale = ensureNumber(params.maxScale, 1.2);
-      const span = Math.max(0, maxScale - minScale);
-
-      return {
-        x: 0,
-        y: 0,
-        scale: minScale + span * pulse,
-        alpha: 0.72 + pulse * 0.28,
-        rotation: Math.sin(easedProgress * Math.PI * 2) * 0.04,
-      };
-    },
-  },
-  {
-    id: "slide-fade",
-    displayName: "Slide + Fade",
-    description: "Lateral move with vertical bounce and fade-in.",
-    parameters: [
-      {
-        key: "distanceX",
-        label: "Distance X",
-        min: 20,
-        max: 280,
-        step: 10,
-        defaultValue: 160,
-      },
-      {
-        key: "distanceY",
-        label: "Distance Y",
-        min: 0,
-        max: 140,
-        step: 5,
-        defaultValue: 50,
-      },
-      {
-        key: "startAlpha",
-        label: "Start alpha",
-        min: 0.05,
-        max: 1,
-        step: 0.05,
-        defaultValue: 0.2,
-      },
-    ],
-    sample: ({ easedProgress, params }) => {
-      const distanceX = ensureNumber(params.distanceX, 160);
-      const distanceY = ensureNumber(params.distanceY, 50);
-      const startAlpha = ensureNumber(params.startAlpha, 0.2);
-
-      return {
-        x: -distanceX / 2 + distanceX * easedProgress,
-        y: -Math.sin(easedProgress * Math.PI) * distanceY,
-        scale: 0.92 + easedProgress * 0.08,
-        alpha: startAlpha + (1 - startAlpha) * easedProgress,
-        rotation: (easedProgress - 0.5) * 0.16,
-      };
-    },
-  },
-  {
-    id: "orbit-wobble",
-    displayName: "Orbit Wobble",
-    description: "Circular orbit with wobble and gentle rotation.",
-    parameters: [
-      {
-        key: "radius",
-        label: "Radius",
-        min: 20,
-        max: 180,
-        step: 5,
-        defaultValue: 90,
-      },
-      {
-        key: "wobble",
-        label: "Wobble",
-        min: 0,
-        max: 80,
-        step: 5,
-        defaultValue: 24,
-      },
-      {
-        key: "rotationAmplitude",
-        label: "Rot amp",
-        min: 0,
-        max: 1.4,
-        step: 0.05,
-        defaultValue: 0.4,
-      },
-    ],
-    sample: ({ easedProgress, cycle, params }) => {
-      const radius = ensureNumber(params.radius, 90);
-      const wobble = ensureNumber(params.wobble, 24);
-      const rotationAmplitude = ensureNumber(params.rotationAmplitude, 0.4);
-      const angle = (cycle + easedProgress) * Math.PI * 2;
-
-      return {
-        x: Math.cos(angle) * radius,
-        y: Math.sin(angle) * radius + Math.sin(angle * 2) * wobble,
-        scale: 1 + Math.sin(angle * 2) * 0.1,
-        alpha: 0.8 + Math.cos(angle) * 0.2,
-        rotation: Math.sin(angle) * rotationAmplitude,
-      };
-    },
-  },
-];
 
 const isAnimationEasing = (value: string): value is AnimationEasing => {
   return animationEasingOptions.includes(value as AnimationEasing);

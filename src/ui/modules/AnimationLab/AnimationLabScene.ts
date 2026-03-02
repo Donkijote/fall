@@ -5,202 +5,26 @@ import {
   coerceAnimationParameters,
   createDefaultAnimationParameters,
   getAnimationDefinitionById,
-  getNextAnimationEasing,
   listAnimationDefinitions,
   normalizeAnimationPlaybackSettings,
 } from "@application/animations/AnimationRegistry";
+import { renderAnimationLabControlsPanel } from "@modules/AnimationLab/AnimationLabControlsPanel";
+import { getAnimationLabLayout } from "@modules/AnimationLab/AnimationLabLayout";
+import { renderAnimationLabListPanel } from "@modules/AnimationLab/AnimationLabListPanel";
+import { createCard } from "@modules/AnimationLab/AnimationLabPrimitives";
+import {
+  readAnimationLabStore,
+  writeAnimationLabStore,
+} from "@modules/AnimationLab/AnimationLabStorage";
+import type {
+  LayoutState,
+  PersistedStore,
+} from "@modules/AnimationLab/AnimationLabTypes";
+import { clamp, px } from "@modules/AnimationLab/AnimationLabUtils";
 import type { AppScene, SceneContext } from "@ui/state/SceneManager";
-import { Container, Sprite, Text, Texture } from "pixi.js";
+import { Container, Text } from "pixi.js";
 
-interface PanelRect {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
-
-interface LayoutState {
-  list: PanelRect;
-  preview: PanelRect;
-  controls: PanelRect;
-}
-
-interface PersistedLabState {
-  playback?: Partial<AnimationPlaybackSettings>;
-  params?: Record<string, number>;
-  fixedStepMode?: boolean;
-}
-
-type PersistedStore = Record<string, PersistedLabState>;
-
-const STORAGE_KEY = "fall.animation-lab.v1";
 const FIXED_STEP_MS = 1000 / 60;
-const TITLE_HEIGHT = 64;
-
-const clamp = (value: number, min: number, max: number): number => {
-  return Math.min(max, Math.max(min, value));
-};
-
-const px = (value: number): number => {
-  return Math.round(value);
-};
-
-const formatControlValue = (value: number, step: number): string => {
-  if (step >= 1) {
-    return String(Math.round(value));
-  }
-
-  return value.toFixed(2).replace(/\.?0+$/, "");
-};
-
-const createCard = (tint: number, alpha = 1): Sprite => {
-  const card = new Sprite(Texture.WHITE);
-  card.tint = tint;
-  card.alpha = alpha;
-  return card;
-};
-
-const clearContainer = (container: Container): void => {
-  const children = container.removeChildren();
-  for (const child of children) {
-    child.destroy({ children: true });
-  }
-};
-
-const readPersistedStore = (): PersistedStore => {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) {
-      return {};
-    }
-
-    const parsed = JSON.parse(raw) as unknown;
-    if (!parsed || typeof parsed !== "object") {
-      return {};
-    }
-
-    return parsed as PersistedStore;
-  } catch {
-    return {};
-  }
-};
-
-const writePersistedStore = (store: PersistedStore): void => {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
-  } catch {
-    // Ignore quota or private-mode failures in dev tools.
-  }
-};
-
-const createInteractiveButton = (
-  labelText: string,
-  onTap: () => void,
-  width: number,
-  height: number,
-): Container => {
-  const button = new Container();
-  button.eventMode = "static";
-  button.cursor = "pointer";
-
-  const body = createCard(0x334155);
-  body.width = width;
-  body.height = height;
-  body.anchor.set(0.5);
-  button.addChild(body);
-
-  const label = new Text({
-    text: labelText,
-    style: {
-      fill: 0xf8fafc,
-      fontSize: 13,
-      fontWeight: "700",
-    },
-  });
-  label.anchor.set(0.5);
-  label.roundPixels = true;
-  button.addChild(label);
-
-  button.on("pointertap", onTap);
-
-  return button;
-};
-
-const getLayout = (width: number, height: number): LayoutState => {
-  const padding = 16;
-  const top = TITLE_HEIGHT;
-  const desktopListWidth = clamp(width * 0.22, 220, 300);
-  const desktopControlsWidth = clamp(width * 0.3, 280, 380);
-  const desktopPreviewWidth =
-    width - desktopListWidth - desktopControlsWidth - padding * 4;
-
-  if (desktopPreviewWidth >= 260 && height >= 560) {
-    const panelHeight = height - top - padding;
-    return {
-      list: {
-        x: padding,
-        y: top,
-        width: desktopListWidth,
-        height: panelHeight,
-      },
-      preview: {
-        x: padding * 2 + desktopListWidth,
-        y: top,
-        width: desktopPreviewWidth,
-        height: panelHeight,
-      },
-      controls: {
-        x: width - desktopControlsWidth - padding,
-        y: top,
-        width: desktopControlsWidth,
-        height: panelHeight,
-      },
-    };
-  }
-
-  const compactWidth = width - padding * 2;
-  const availableHeight = height - top - padding * 2;
-  const listHeight = clamp(availableHeight * 0.22, 120, 170);
-  let controlsHeight = clamp(availableHeight * 0.4, 250, 340);
-  let previewHeight =
-    availableHeight - listHeight - controlsHeight - padding * 2;
-
-  if (previewHeight < 170) {
-    const required = 170 - previewHeight;
-    controlsHeight = Math.max(220, controlsHeight - required);
-    previewHeight = availableHeight - listHeight - controlsHeight - padding * 2;
-  }
-
-  return {
-    list: {
-      x: padding,
-      y: top,
-      width: compactWidth,
-      height: listHeight,
-    },
-    preview: {
-      x: padding,
-      y: top + listHeight + padding,
-      width: compactWidth,
-      height: Math.max(170, previewHeight),
-    },
-    controls: {
-      x: padding,
-      y: top + listHeight + padding + Math.max(170, previewHeight) + padding,
-      width: compactWidth,
-      height: Math.max(
-        200,
-        height -
-          (top +
-            listHeight +
-            padding +
-            Math.max(170, previewHeight) +
-            padding) -
-          padding,
-      ),
-    },
-  };
-};
 
 export const createAnimationLabScene = (
   width: number,
@@ -216,7 +40,9 @@ export const createAnimationLabScene = (
   const root = new Container();
 
   const canPersist = import.meta.env.DEV;
-  const persistedStore = canPersist ? readPersistedStore() : {};
+  const persistedStore: PersistedStore = canPersist
+    ? readAnimationLabStore()
+    : {};
 
   const background = createCard(0x020617);
   root.addChild(background);
@@ -306,9 +132,10 @@ export const createAnimationLabScene = (
   });
   root.addChild(debugOverlay);
 
-  let layout = getLayout(width, height);
+  let layout: LayoutState = getAnimationLabLayout(width, height);
   let selectedDefinition: AnimationDefinition = fallbackDefinition;
-  let playback = normalizeAnimationPlaybackSettings(null);
+  let playback: AnimationPlaybackSettings =
+    normalizeAnimationPlaybackSettings(null);
   let animationParams = createDefaultAnimationParameters(fallbackDefinition);
   let fixedStepMode = true;
   let isPlaying = true;
@@ -337,7 +164,7 @@ export const createAnimationLabScene = (
       params: animationParams,
       fixedStepMode,
     };
-    writePersistedStore(persistedStore);
+    writeAnimationLabStore(persistedStore);
   };
 
   const hydrateSelection = (definition: AnimationDefinition): void => {
@@ -395,258 +222,55 @@ export const createAnimationLabScene = (
   };
 
   const renderAnimationList = (): void => {
-    clearContainer(listContent);
-
-    const listPadding = 12;
-    const itemWidth = layout.list.width - listPadding * 2;
-    let cursorY = layout.list.y + 42;
-
-    for (const definition of animationDefinitions) {
-      const item = new Container();
-      item.eventMode = "static";
-      item.cursor = "pointer";
-
-      const body = createCard(
-        definition.id === selectedDefinition.id ? 0x0284c7 : 0x1e293b,
-      );
-      body.width = itemWidth;
-      body.height = 44;
-      body.position.set(layout.list.x + listPadding, cursorY);
-      item.addChild(body);
-
-      const label = new Text({
-        text: definition.displayName,
-        style: {
-          fill: 0xe2e8f0,
-          fontSize: 13,
-          fontWeight: "700",
-        },
-      });
-      label.position.set(layout.list.x + listPadding + 12, cursorY + 12);
-      label.roundPixels = true;
-      item.addChild(label);
-
-      item.on("pointertap", () => {
-        if (definition.id === selectedDefinition.id) {
-          return;
-        }
-
-        selectedDefinition = definition;
-        hydrateSelection(definition);
-        resetClock(true);
-        applyCurrentSample();
-        updateOverlay();
-        renderAnimationList();
-        renderControls();
-        persistSelection();
-      });
-
-      listContent.addChild(item);
-      cursorY += 52;
-    }
+    renderAnimationLabListPanel(listContent, {
+      animationDefinitions,
+      selectedAnimationId: selectedDefinition.id,
+      layout,
+      onSelect: (animationId) => {
+        setDefinitionById(animationId);
+      },
+    });
   };
 
   const renderControls = (): void => {
-    clearContainer(controlsContent);
-
-    const controlX = layout.controls.x + 12;
-    const contentWidth = layout.controls.width - 24;
-    let cursorY = layout.controls.y + 42;
-
-    const placeSection = (text: string): void => {
-      const heading = new Text({
-        text,
-        style: {
-          fill: 0x94a3b8,
-          fontSize: 12,
-          fontWeight: "700",
-        },
-      });
-      heading.roundPixels = true;
-      heading.position.set(controlX, cursorY);
-      controlsContent.addChild(heading);
-      cursorY += 24;
-    };
-
-    const placeValueRow = (
-      label: string,
-      value: string,
-      onDecrease: () => void,
-      onIncrease: () => void,
-    ): void => {
-      const row = new Container();
-
-      const rowLabel = new Text({
-        text: label,
-        style: {
-          fill: 0xe2e8f0,
-          fontSize: 12,
-        },
-      });
-      rowLabel.position.set(controlX, cursorY + 7);
-      rowLabel.roundPixels = true;
-      row.addChild(rowLabel);
-
-      const minusButton = createInteractiveButton("-", onDecrease, 24, 24);
-      minusButton.position.set(controlX + contentWidth - 116, cursorY + 16);
-      row.addChild(minusButton);
-
-      const valueLabel = new Text({
-        text: value,
-        style: {
-          fill: 0xf8fafc,
-          fontSize: 12,
-          fontWeight: "700",
-          align: "center",
-        },
-      });
-      valueLabel.anchor.set(0.5);
-      valueLabel.roundPixels = true;
-      valueLabel.position.set(controlX + contentWidth - 68, cursorY + 16);
-      row.addChild(valueLabel);
-
-      const plusButton = createInteractiveButton("+", onIncrease, 24, 24);
-      plusButton.position.set(controlX + contentWidth - 20, cursorY + 16);
-      row.addChild(plusButton);
-
-      controlsContent.addChild(row);
-      cursorY += 34;
-    };
-
-    const placeToggleRow = (
-      label: string,
-      value: string,
-      onToggle: () => void,
-    ): void => {
-      const rowLabel = new Text({
-        text: label,
-        style: {
-          fill: 0xe2e8f0,
-          fontSize: 12,
-        },
-      });
-      rowLabel.position.set(controlX, cursorY + 6);
-      rowLabel.roundPixels = true;
-      controlsContent.addChild(rowLabel);
-
-      const toggleButton = createInteractiveButton(value, onToggle, 120, 24);
-      toggleButton.position.set(controlX + contentWidth - 62, cursorY + 16);
-      controlsContent.addChild(toggleButton);
-      cursorY += 34;
-    };
-
-    const updatePlayback = (
-      next: Partial<AnimationPlaybackSettings>,
-      autoplay = isPlaying,
-    ): void => {
-      playback = normalizeAnimationPlaybackSettings({
-        ...playback,
-        ...next,
-      });
-      if (
-        !playback.loop &&
-        elapsedMs >= playback.delayMs + playback.durationMs
-      ) {
-        isPlaying = false;
-      } else {
-        isPlaying = autoplay;
-      }
-      applyCurrentSample();
-      updateOverlay();
-      renderControls();
-      persistSelection();
-    };
-
-    placeSection("Playback");
-    placeValueRow(
-      "Duration (ms)",
-      `${Math.round(playback.durationMs)}`,
-      () => {
-        updatePlayback({ durationMs: playback.durationMs - 100 });
+    renderAnimationLabControlsPanel(controlsContent, {
+      layout,
+      selectedDefinition,
+      playback,
+      fixedStepMode,
+      isPlaying,
+      animationParams,
+      onPlaybackChange: (next) => {
+        updatePlayback(next);
       },
-      () => {
-        updatePlayback({ durationMs: playback.durationMs + 100 });
+      onFixedStepToggle: () => {
+        fixedStepMode = !fixedStepMode;
+        fixedStepAccumulator = 0;
+        updateOverlay();
+        renderControls();
+        persistSelection();
       },
-    );
-    placeValueRow(
-      "Delay (ms)",
-      `${Math.round(playback.delayMs)}`,
-      () => {
-        updatePlayback({ delayMs: playback.delayMs - 50 });
+      onParameterAdjust: (key, delta) => {
+        animationParams = coerceAnimationParameters(selectedDefinition, {
+          ...animationParams,
+          [key]: animationParams[key] + delta,
+        });
+        applyCurrentSample();
+        updateOverlay();
+        renderControls();
+        persistSelection();
       },
-      () => {
-        updatePlayback({ delayMs: playback.delayMs + 50 });
-      },
-    );
-    placeToggleRow("Easing", playback.easing, () => {
-      updatePlayback({ easing: getNextAnimationEasing(playback.easing) });
-    });
-    placeToggleRow("Loop", playback.loop ? "ON" : "OFF", () => {
-      updatePlayback({ loop: !playback.loop });
-    });
-    placeToggleRow("Fixed timestep", fixedStepMode ? "ON" : "OFF", () => {
-      fixedStepMode = !fixedStepMode;
-      fixedStepAccumulator = 0;
-      updateOverlay();
-      renderControls();
-      persistSelection();
-    });
-
-    cursorY += 6;
-    placeSection("Animation Params");
-
-    for (const parameter of selectedDefinition.parameters) {
-      placeValueRow(
-        parameter.label,
-        formatControlValue(animationParams[parameter.key], parameter.step),
-        () => {
-          animationParams = coerceAnimationParameters(selectedDefinition, {
-            ...animationParams,
-            [parameter.key]: animationParams[parameter.key] - parameter.step,
-          });
-          applyCurrentSample();
-          updateOverlay();
-          renderControls();
-          persistSelection();
-        },
-        () => {
-          animationParams = coerceAnimationParameters(selectedDefinition, {
-            ...animationParams,
-            [parameter.key]: animationParams[parameter.key] + parameter.step,
-          });
-          applyCurrentSample();
-          updateOverlay();
-          renderControls();
-          persistSelection();
-        },
-      );
-    }
-
-    cursorY += 8;
-    const actionRow = new Container();
-    const playPause = createInteractiveButton(
-      isPlaying ? "Pause" : "Play",
-      () => {
+      onPlayPause: () => {
         isPlaying = !isPlaying;
         renderControls();
       },
-      96,
-      30,
-    );
-    const replay = createInteractiveButton(
-      "Replay",
-      () => {
+      onReplay: () => {
         resetClock(true);
         applyCurrentSample();
         updateOverlay();
         renderControls();
       },
-      96,
-      30,
-    );
-    const defaults = createInteractiveButton(
-      "Defaults",
-      () => {
+      onDefaults: () => {
         playback = normalizeAnimationPlaybackSettings(null);
         animationParams = createDefaultAnimationParameters(selectedDefinition);
         fixedStepMode = true;
@@ -656,106 +280,31 @@ export const createAnimationLabScene = (
         renderControls();
         persistSelection();
       },
-      96,
-      30,
-    );
-
-    if (contentWidth >= 340) {
-      playPause.position.set(controlX + 48, cursorY + 15);
-      replay.position.set(controlX + 152, cursorY + 15);
-      defaults.position.set(controlX + 256, cursorY + 15);
-      actionRow.addChild(playPause, replay, defaults);
-      cursorY += 44;
-    } else {
-      const compactButtonWidth = Math.max(
-        72,
-        Math.floor((contentWidth - 12) / 2),
-      );
-      const compactPlayPause = createInteractiveButton(
-        isPlaying ? "Pause" : "Play",
-        () => {
-          isPlaying = !isPlaying;
-          renderControls();
-        },
-        compactButtonWidth,
-        30,
-      );
-      compactPlayPause.position.set(
-        controlX + compactButtonWidth / 2,
-        cursorY + 15,
-      );
-      actionRow.addChild(compactPlayPause);
-
-      const compactReplay = createInteractiveButton(
-        "Replay",
-        () => {
-          resetClock(true);
-          applyCurrentSample();
-          updateOverlay();
-          renderControls();
-        },
-        compactButtonWidth,
-        30,
-      );
-      compactReplay.position.set(
-        controlX + compactButtonWidth + 12 + compactButtonWidth / 2,
-        cursorY + 15,
-      );
-      actionRow.addChild(compactReplay);
-
-      const compactDefaults = createInteractiveButton(
-        "Defaults",
-        () => {
-          playback = normalizeAnimationPlaybackSettings(null);
-          animationParams =
-            createDefaultAnimationParameters(selectedDefinition);
-          fixedStepMode = true;
-          resetClock(true);
-          applyCurrentSample();
-          updateOverlay();
-          renderControls();
-          persistSelection();
-        },
-        compactButtonWidth * 2 + 12,
-        30,
-      );
-      compactDefaults.position.set(
-        controlX + compactButtonWidth + 6,
-        cursorY + 52,
-      );
-      actionRow.addChild(compactDefaults);
-
-      cursorY += 82;
-    }
-
-    controlsContent.addChild(actionRow);
-
-    const back = createInteractiveButton(
-      "Back to Home",
-      () => {
+      onBackHome: () => {
         context.goTo("home");
       },
-      Math.min(contentWidth, 320),
-      34,
-    );
-    back.position.set(controlX + Math.min(contentWidth, 320) / 2, cursorY + 17);
-    controlsContent.addChild(back);
-
-    const description = new Text({
-      text: selectedDefinition.description,
-      style: {
-        fill: 0x94a3b8,
-        fontSize: 12,
-        wordWrap: true,
-        wordWrapWidth: contentWidth,
-      },
     });
-    description.position.set(
-      controlX,
-      layout.controls.y + layout.controls.height - 44,
-    );
-    description.roundPixels = true;
-    controlsContent.addChild(description);
+  };
+
+  const updatePlayback = (
+    next: Partial<AnimationPlaybackSettings>,
+    autoplay = isPlaying,
+  ): void => {
+    playback = normalizeAnimationPlaybackSettings({
+      ...playback,
+      ...next,
+    });
+
+    if (!playback.loop && elapsedMs >= playback.delayMs + playback.durationMs) {
+      isPlaying = false;
+    } else {
+      isPlaying = autoplay;
+    }
+
+    applyCurrentSample();
+    updateOverlay();
+    renderControls();
+    persistSelection();
   };
 
   const advanceClock = (stepMs: number): void => {
@@ -796,7 +345,7 @@ export const createAnimationLabScene = (
   };
 
   const resize = (nextWidth: number, nextHeight: number): void => {
-    layout = getLayout(nextWidth, nextHeight);
+    layout = getAnimationLabLayout(nextWidth, nextHeight);
 
     background.width = px(nextWidth);
     background.height = px(nextHeight);
@@ -847,7 +396,7 @@ export const createAnimationLabScene = (
   };
 
   hydrateSelection(selectedDefinition);
-  setDefinitionById(selectedDefinition.id);
+  resetClock(true);
   resize(width, height);
 
   const update = (deltaTime: number): void => {
