@@ -53,18 +53,19 @@ export const dealerAnimationDefinition: AnimationDefinition = {
   ],
   sample: ({ params, previewWidth, previewHeight }) => {
     const side = getDealerPositionFromRawValue(params.dealerPosition ?? 2);
-    const sideOffset = Math.round(Math.min(previewWidth, previewHeight) * 0.34);
+    const horizontalOffset = Math.round(previewWidth * 0.34);
+    const verticalOffset = Math.round(previewHeight * 0.34);
     let x = 0;
     let y = 0;
 
     if (side === "top") {
-      y = -sideOffset;
+      y = -verticalOffset;
     } else if (side === "left") {
-      x = -sideOffset;
+      x = -horizontalOffset;
     } else if (side === "bottom") {
-      y = sideOffset;
+      y = verticalOffset;
     } else {
-      x = sideOffset;
+      x = horizontalOffset;
     }
 
     return {

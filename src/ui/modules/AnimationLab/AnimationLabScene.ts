@@ -26,12 +26,13 @@ import type {
 import { clamp, px } from "@modules/AnimationLab/AnimationLabUtils";
 import {
   createDealerAnimationPreview,
-  DEALER_DEFAULT_DURATION_MS,
+  getDealerCycleDurationMs,
 } from "@modules/AnimationLab/DealerAnimationPreview";
 import type { AppScene, SceneContext } from "@ui/state/SceneManager";
 import { Container, Text } from "pixi.js";
 
 const FIXED_STEP_MS = 1000 / 60;
+const LEGACY_DEALER_DEFAULT_DURATION_MS = 2600;
 const CARD_BASE_WIDTH = 120;
 const CARD_BASE_HEIGHT = 168;
 const CARD_CORNER_RADIUS = 14;
@@ -173,6 +174,30 @@ export const createAnimationLabScene = (
     return definition.id !== "dealer";
   };
 
+  const getWrappedParameterValue = (
+    value: number,
+    min: number,
+    max: number,
+    step: number,
+  ): number => {
+    const safeStep = Math.max(step, 0.0001);
+    const spanSteps = Math.round((max - min) / safeStep) + 1;
+    const rawStepIndex = Math.round((value - min) / safeStep);
+    const wrappedStepIndex =
+      ((rawStepIndex % spanSteps) + spanSteps) % spanSteps;
+    return min + wrappedStepIndex * safeStep;
+  };
+
+  const shouldWrapParameter = (
+    definitionId: string,
+    parameterKey: string,
+  ): boolean => {
+    return (
+      definitionId === "dealer" &&
+      (parameterKey === "dealerPosition" || parameterKey === "totalPlayers")
+    );
+  };
+
   const resetClock = (autoplay: boolean): void => {
     elapsedMs = 0;
     cycleCount = 0;
@@ -197,15 +222,21 @@ export const createAnimationLabScene = (
 
   const hydrateSelection = (definition: AnimationDefinition): void => {
     const persisted = persistedStore[definition.id];
+    animationParams = coerceAnimationParameters(definition, persisted?.params);
     playback = normalizeAnimationPlaybackSettings(persisted?.playback);
-    if (definition.id === "dealer" && !persisted?.playback) {
+    if (definition.id === "dealer") {
+      const recommendedDurationMs = getDealerCycleDurationMs(animationParams);
+      const isLegacyDuration =
+        persisted?.playback?.durationMs === LEGACY_DEALER_DEFAULT_DURATION_MS;
       playback = {
         ...playback,
-        durationMs: DEALER_DEFAULT_DURATION_MS,
-        loop: false,
+        durationMs:
+          !persisted?.playback || isLegacyDuration
+            ? recommendedDurationMs
+            : playback.durationMs,
+        loop: persisted?.playback?.loop ?? false,
       };
     }
-    animationParams = coerceAnimationParameters(definition, persisted?.params);
     fixedStepMode =
       typeof persisted?.fixedStepMode === "boolean"
         ? persisted.fixedStepMode
@@ -314,10 +345,33 @@ export const createAnimationLabScene = (
         persistSelection();
       },
       onParameterAdjust: (key, delta) => {
+        const parameterDefinition = selectedDefinition.parameters.find(
+          (parameter) => parameter.key === key,
+        );
+        if (!parameterDefinition) {
+          return;
+        }
+
+        const rawNextValue = animationParams[key] + delta;
+        const nextValue = shouldWrapParameter(selectedDefinition.id, key)
+          ? getWrappedParameterValue(
+              rawNextValue,
+              parameterDefinition.min,
+              parameterDefinition.max,
+              parameterDefinition.step,
+            )
+          : rawNextValue;
+
         animationParams = coerceAnimationParameters(selectedDefinition, {
           ...animationParams,
-          [key]: animationParams[key] + delta,
+          [key]: nextValue,
         });
+        if (selectedDefinition.id === "dealer" && key === "totalPlayers") {
+          playback = normalizeAnimationPlaybackSettings({
+            ...playback,
+            durationMs: getDealerCycleDurationMs(animationParams),
+          });
+        }
         applyCurrentSample();
         updateOverlay();
         renderControls();
@@ -334,15 +388,15 @@ export const createAnimationLabScene = (
         renderControls();
       },
       onDefaults: () => {
+        animationParams = createDefaultAnimationParameters(selectedDefinition);
         playback = normalizeAnimationPlaybackSettings(null);
         if (selectedDefinition.id === "dealer") {
           playback = {
             ...playback,
-            durationMs: DEALER_DEFAULT_DURATION_MS,
+            durationMs: getDealerCycleDurationMs(animationParams),
             loop: false,
           };
         }
-        animationParams = createDefaultAnimationParameters(selectedDefinition);
         fixedStepMode = true;
         resetClock(shouldAutoplayDefinition(selectedDefinition));
         applyCurrentSample();

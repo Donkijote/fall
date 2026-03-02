@@ -8,8 +8,6 @@ import { clamp, px } from "@modules/AnimationLab/AnimationLabUtils";
 import { Container, type Graphics } from "pixi.js";
 
 const CARD_BASE_WIDTH = 120;
-const CARD_BASE_HEIGHT = 168;
-const CARD_CORNER_RADIUS = 14;
 const DECK_BASE_WIDTH = 96;
 const DECK_BASE_HEIGHT = 132;
 const DECK_CORNER_RADIUS = 12;
@@ -17,14 +15,39 @@ const DECK_RELATIVE_SCALE = 0.82;
 const DECK_STACK_COUNT = 12;
 const DECK_STACK_STEP = 2;
 const DEALER_DECK_CENTER_PULL = 0.28;
-const DEALER_MOVE_PHASE = 0.18;
-const DEALER_DEAL_PHASE = 0.68;
-const DEALER_RETURN_PHASE = 1 - DEALER_MOVE_PHASE - DEALER_DEAL_PHASE;
+const DEALER_MOVE_DURATION_MS = 280;
+const DEALER_DEAL_CARD_DURATION_MS = 240;
+const DEALER_RETURN_DURATION_MS = 280;
 const DEALER_OWN_CARD_LEFT_OFFSET_FACTOR = 0.7;
 const DEALER_DEAL_ROUNDS = 3;
 const DEALER_LIFT_Y_OFFSET = 22;
 
-export const DEALER_DEFAULT_DURATION_MS = 2600;
+const getTotalPlayers = (
+  animationParams: Readonly<Record<string, number>>,
+): number => {
+  return clamp(Math.round(animationParams.totalPlayers ?? 4), 2, 4);
+};
+
+const getTotalDealCards = (
+  animationParams: Readonly<Record<string, number>>,
+): number => {
+  return getTotalPlayers(animationParams) * DEALER_DEAL_ROUNDS;
+};
+
+export const getDealerCycleDurationMs = (
+  animationParams: Readonly<Record<string, number>>,
+): number => {
+  const dealCards = getTotalDealCards(animationParams);
+  return (
+    DEALER_MOVE_DURATION_MS +
+    dealCards * DEALER_DEAL_CARD_DURATION_MS +
+    DEALER_RETURN_DURATION_MS
+  );
+};
+
+export const DEALER_DEFAULT_DURATION_MS = getDealerCycleDurationMs({
+  totalPlayers: 4,
+});
 
 type Point = { x: number; y: number };
 
@@ -76,7 +99,7 @@ const getDealerRightDirection = (
   dealerPositionRaw: number | undefined,
 ): Point => {
   const positionIndex = getDealerSideIndex(dealerPositionRaw);
-  // Dealer faces center: right side depends on seating side.
+  // Dealer faces center: right-hand side changes with seat orientation.
   if (positionIndex === 0) {
     return { x: -1, y: 0 };
   }
@@ -118,6 +141,19 @@ const getOpponentSidesByDealerRightOrder = (
   return result;
 };
 
+const getInwardCardRotation = (dealerSideIndex: number): number => {
+  if (dealerSideIndex === 0) {
+    return Math.PI;
+  }
+  if (dealerSideIndex === 1) {
+    return Math.PI / 2;
+  }
+  if (dealerSideIndex === 3) {
+    return -Math.PI / 2;
+  }
+  return 0;
+};
+
 export const createDealerAnimationPreview = (
   world: Container,
 ): DealerAnimationPreviewController => {
@@ -145,12 +181,12 @@ export const createDealerAnimationPreview = (
   world.addChild(liftShadow);
 
   const dealCard = createRoundedCardGraphic(
-    CARD_BASE_WIDTH,
-    CARD_BASE_HEIGHT,
-    CARD_CORNER_RADIUS,
-    0xf8fafc,
+    DECK_BASE_WIDTH,
+    DECK_BASE_HEIGHT,
+    DECK_CORNER_RADIUS,
+    0x1d4ed8,
     0x0f172a,
-    0.4,
+    0.48,
   );
   dealCard.visible = false;
   world.addChild(dealCard);
@@ -175,6 +211,16 @@ export const createDealerAnimationPreview = (
       subjectBaseScale,
       normalizedScale,
     } = input;
+    const totalPlayers = getTotalPlayers(animationParams);
+    const totalDealCards = getTotalDealCards(animationParams);
+    const dealDurationMs = totalDealCards * DEALER_DEAL_CARD_DURATION_MS;
+    const timelineDurationMs =
+      DEALER_MOVE_DURATION_MS + dealDurationMs + DEALER_RETURN_DURATION_MS;
+    const movePhaseEnd = DEALER_MOVE_DURATION_MS / timelineDurationMs;
+    const dealPhaseStart = movePhaseEnd;
+    const dealPhaseEnd =
+      (DEALER_MOVE_DURATION_MS + dealDurationMs) / timelineDurationMs;
+    const returnPhaseStart = dealPhaseEnd;
 
     const dealerSideIndex = getDealerSideIndex(animationParams.dealerPosition);
     const rightDirection = getDealerRightDirection(
@@ -185,23 +231,21 @@ export const createDealerAnimationPreview = (
       y: -rightDirection.y,
     };
     const dealerRightSideIndex = getSideIndexFromUnitVector(rightDirection);
+    const inwardCardRotation = getInwardCardRotation(dealerSideIndex);
 
     const gap = CARD_BASE_WIDTH * subjectBaseScale * normalizedScale * 0.95;
     const deckStartX = sample.x + rightDirection.x * gap;
     const deckStartY = sample.y + rightDirection.y * gap;
     const deckHoldX = lerp(deckStartX, sample.x, DEALER_DECK_CENTER_PULL);
     const deckHoldY = lerp(deckStartY, sample.y, DEALER_DECK_CENTER_PULL);
-    const moveProgress = smoothstep(currentProgress / DEALER_MOVE_PHASE);
+    const moveProgress = smoothstep(
+      clamp(currentProgress / Math.max(movePhaseEnd, 0.0001), 0, 1),
+    );
 
     const seatOffset = Math.max(
       Math.abs(sample.x),
       Math.abs(sample.y),
       Math.min(layout.preview.width, layout.preview.height) * 0.34,
-    );
-    const totalPlayers = clamp(
-      Math.round(animationParams.totalPlayers ?? 4),
-      2,
-      4,
     );
     const opponentsCount = totalPlayers - 1;
     const opponentSides = getOpponentSidesByDealerRightOrder(
@@ -233,13 +277,14 @@ export const createDealerAnimationPreview = (
     seatPositions = [...dealTargets];
 
     const dealProgress = clamp(
-      (currentProgress - DEALER_MOVE_PHASE) / DEALER_DEAL_PHASE,
+      (currentProgress - dealPhaseStart) /
+        Math.max(dealPhaseEnd - dealPhaseStart, 0.0001),
       0,
       1,
     );
-    const returnPhaseStart = DEALER_MOVE_PHASE + DEALER_DEAL_PHASE;
     const returnProgress = clamp(
-      (currentProgress - returnPhaseStart) / DEALER_RETURN_PHASE,
+      (currentProgress - returnPhaseStart) /
+        Math.max(1 - returnPhaseStart, 0.0001),
       0,
       1,
     );
@@ -248,7 +293,7 @@ export const createDealerAnimationPreview = (
     let deckGroundY = lerp(deckStartY, deckHoldY, moveProgress);
     let liftProgress = moveProgress;
 
-    if (currentProgress >= DEALER_MOVE_PHASE) {
+    if (currentProgress >= dealPhaseStart) {
       deckCenterX = deckHoldX;
       deckGroundY = deckHoldY;
       liftProgress = 1;
@@ -272,7 +317,7 @@ export const createDealerAnimationPreview = (
       subjectBaseScale * normalizedScale * DECK_RELATIVE_SCALE,
     );
     deckStack.alpha = 0.98;
-    deckStack.rotation = sample.rotation;
+    deckStack.rotation = sample.rotation + inwardCardRotation;
 
     for (let index = 0; index < deckCards.length; index += 1) {
       const stackOffset = index * DECK_STACK_STEP;
@@ -292,7 +337,7 @@ export const createDealerAnimationPreview = (
     liftShadow.alpha = 0.3 - liftProgress * 0.12;
 
     if (
-      currentProgress >= DEALER_MOVE_PHASE &&
+      currentProgress >= dealPhaseStart &&
       currentProgress < returnPhaseStart &&
       dealProgress > 0 &&
       fullDealTargets.length > 0
@@ -318,7 +363,9 @@ export const createDealerAnimationPreview = (
       );
       dealCard.scale.set(subjectBaseScale * normalizedScale);
       dealCard.rotation =
-        sample.rotation + ((activeDealIndex % dealTargets.length) - 1.5) * 0.03;
+        sample.rotation +
+        inwardCardRotation +
+        ((activeDealIndex % dealTargets.length) - 1.5) * 0.03;
       dealCard.alpha = 0.96;
     }
 
