@@ -12,6 +12,15 @@ const readParam = (
   return value;
 };
 
+const toScalePercent = (value: number): number => {
+  // Backward compatibility: convert old 0..1 scale values to 0..100 percentages.
+  if (value <= 2) {
+    return value * 100;
+  }
+
+  return value;
+};
+
 export const pulseScaleAnimationDefinition: AnimationDefinition = {
   id: "pulse-scale",
   displayName: "Pulse Scale",
@@ -19,25 +28,25 @@ export const pulseScaleAnimationDefinition: AnimationDefinition = {
   parameters: [
     {
       key: "minScale",
-      label: "Min scale",
-      min: 0.3,
-      max: 1.2,
-      step: 0.05,
-      defaultValue: 0.75,
+      label: "Min scale (%)",
+      min: 20,
+      max: 100,
+      step: 5,
+      defaultValue: 40,
     },
     {
       key: "maxScale",
-      label: "Max scale",
-      min: 0.6,
-      max: 1.8,
-      step: 0.05,
-      defaultValue: 1.2,
+      label: "Max scale (%)",
+      min: 40,
+      max: 100,
+      step: 5,
+      defaultValue: 60,
     },
   ],
   sample: ({ easedProgress, params }) => {
     const pulse = Math.sin(easedProgress * Math.PI);
-    const minScale = readParam(params, "minScale", 0.75);
-    const maxScale = readParam(params, "maxScale", 1.2);
+    const minScale = toScalePercent(readParam(params, "minScale", 40));
+    const maxScale = toScalePercent(readParam(params, "maxScale", 60));
     const span = Math.max(0, maxScale - minScale);
 
     return {

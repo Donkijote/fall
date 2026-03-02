@@ -144,6 +144,10 @@ export const createAnimationLabScene = (
   let frameCount = 0;
   let fixedStepAccumulator = 0;
   let currentProgress = 0;
+  let currentScalePercent = 100;
+  let subjectBaseScale = 1;
+  let subjectShadowBaseScaleX = 1;
+  let subjectShadowBaseScaleY = 1;
 
   const resetClock = (autoplay: boolean): void => {
     elapsedMs = 0;
@@ -198,14 +202,19 @@ export const createAnimationLabScene = (
       cycle: cycleCount,
       params: animationParams,
     });
+    const normalizedScale = clamp(sample.scale / 100, 0.05, 2.5);
+    currentScalePercent = sample.scale;
 
     subject.position.set(px(sample.x), px(sample.y));
-    subject.scale.set(sample.scale);
+    subject.scale.set(subjectBaseScale * normalizedScale);
     subject.alpha = clamp(sample.alpha, 0.05, 1);
     subject.rotation = sample.rotation;
 
     subjectShadow.position.set(px(sample.x), px(sample.y + 18));
-    subjectShadow.scale.set(sample.scale * 0.88, sample.scale * 0.22);
+    subjectShadow.scale.set(
+      subjectShadowBaseScaleX * normalizedScale,
+      subjectShadowBaseScaleY * normalizedScale,
+    );
     subjectShadow.alpha = clamp(sample.alpha * 0.3, 0.08, 0.36);
     subjectShadow.rotation = sample.rotation * 0.15;
   };
@@ -216,6 +225,7 @@ export const createAnimationLabScene = (
       `Frame: ${Math.floor(frameCount)}`,
       `Time: ${Math.round(elapsedMs)}ms`,
       `Progress: ${(currentProgress * 100).toFixed(1)}%`,
+      `Scale: ${currentScalePercent.toFixed(1)}%`,
       `Mode: ${fixedStepMode ? "fixed-step (16.7ms)" : "real-time"}`,
       `Easing: ${playback.easing}`,
     ].join("\n");
@@ -382,10 +392,14 @@ export const createAnimationLabScene = (
       82,
       168,
     );
-    subject.width = px(subjectSize);
-    subject.height = px(subjectSize);
-    subjectShadow.width = px(subjectSize * 0.9);
-    subjectShadow.height = px(subjectSize * 0.24);
+    const subjectTextureWidth = subject.texture.width || 1;
+    const subjectTextureHeight = subject.texture.height || 1;
+    const subjectShadowTextureWidth = subjectShadow.texture.width || 1;
+    const subjectShadowTextureHeight = subjectShadow.texture.height || 1;
+    subjectBaseScale =
+      subjectSize / Math.max(subjectTextureWidth, subjectTextureHeight);
+    subjectShadowBaseScaleX = (subjectSize * 0.9) / subjectShadowTextureWidth;
+    subjectShadowBaseScaleY = (subjectSize * 0.24) / subjectShadowTextureHeight;
 
     debugOverlay.position.set(layout.preview.x + 10, layout.preview.y + 10);
 

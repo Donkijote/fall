@@ -50,7 +50,7 @@ export const slideFadeAnimationDefinition: AnimationDefinition = {
     return {
       x: -distanceX / 2 + distanceX * easedProgress,
       y: -Math.sin(easedProgress * Math.PI) * distanceY,
-      scale: 0.92 + easedProgress * 0.08,
+      scale: 20 + easedProgress * 10,
       alpha: startAlpha + (1 - startAlpha) * easedProgress,
       rotation: (easedProgress - 0.5) * 0.16,
     };

@@ -51,7 +51,7 @@ export const orbitWobbleAnimationDefinition: AnimationDefinition = {
     return {
       x: Math.cos(angle) * radius,
       y: Math.sin(angle) * radius + Math.sin(angle * 2) * wobble,
-      scale: 1 + Math.sin(angle * 2) * 0.1,
+      scale: 40 + Math.sin(angle * 2) * 15,
       alpha: 0.8 + Math.cos(angle) * 0.2,
       rotation: Math.sin(angle) * rotationAmplitude,
     };
