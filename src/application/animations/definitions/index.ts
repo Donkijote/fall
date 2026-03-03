@@ -7,6 +7,7 @@ import { playerCaptureSequenceAnimationDefinition } from "@application/animation
 import { playerToTableAnimationDefinition } from "@application/animations/definitions/PlayerToTableAnimation";
 import { pulseScaleAnimationDefinition } from "@application/animations/definitions/PulseScaleAnimation";
 import { slideFadeAnimationDefinition } from "@application/animations/definitions/SlideFadeAnimation";
+import { theFallAnimationDefinition } from "@application/animations/definitions/TheFallAnimation";
 
 export const animationDefinitions: ReadonlyArray<AnimationDefinition> = [
   dealerAnimationDefinition,
@@ -14,6 +15,7 @@ export const animationDefinitions: ReadonlyArray<AnimationDefinition> = [
   playerCaptureAnimationDefinition,
   playerCaptureSequenceAnimationDefinition,
   playerToTableAnimationDefinition,
+  theFallAnimationDefinition,
   pulseScaleAnimationDefinition,
   slideFadeAnimationDefinition,
   orbitWobbleAnimationDefinition,

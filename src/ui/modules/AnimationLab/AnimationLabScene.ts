@@ -41,6 +41,10 @@ import {
   getPlayerCaptureSequenceCycleDurationMs,
 } from "@modules/AnimationLab/PlayerCaptureSequenceAnimationPreview";
 import { createPlayerToTableAnimationPreview } from "@modules/AnimationLab/PlayerToTableAnimationPreview";
+import {
+  createTheFallAnimationPreview,
+  getTheFallCycleDurationMs,
+} from "@modules/AnimationLab/TheFallAnimationPreview";
 import type { AppScene, SceneContext } from "@ui/state/SceneManager";
 import { Container, Text } from "pixi.js";
 
@@ -49,6 +53,7 @@ const LEGACY_DEALER_DEFAULT_DURATION_MS = 2600;
 const LEGACY_DEALER_TO_TABLE_DEFAULT_DURATION_MS = 1200;
 const LEGACY_PLAYER_CAPTURE_DEFAULT_DURATION_MS = 1200;
 const LEGACY_PLAYER_CAPTURE_SEQUENCE_DEFAULT_DURATION_MS = 1200;
+const LEGACY_THE_FALL_DEFAULT_DURATION_MS = 1200;
 const CARD_BASE_WIDTH = 120;
 const CARD_BASE_HEIGHT = 168;
 const CARD_CORNER_RADIUS = 14;
@@ -159,6 +164,7 @@ export const createAnimationLabScene = (
   const playerCaptureSequencePreview =
     createPlayerCaptureSequenceAnimationPreview(world);
   const playerToTablePreview = createPlayerToTableAnimationPreview(world);
+  const theFallPreview = createTheFallAnimationPreview(world);
 
   const debugOverlay = new Text({
     text: "",
@@ -182,7 +188,8 @@ export const createAnimationLabScene = (
     selectedDefinition.id !== "dealerToTable" &&
     selectedDefinition.id !== "playerCapture" &&
     selectedDefinition.id !== "playerCaptureSequence" &&
-    selectedDefinition.id !== "playerToTable";
+    selectedDefinition.id !== "playerToTable" &&
+    selectedDefinition.id !== "theFall";
   let elapsedMs = 0;
   let cycleCount = 0;
   let frameCount = 0;
@@ -202,7 +209,8 @@ export const createAnimationLabScene = (
       definition.id !== "dealerToTable" &&
       definition.id !== "playerCapture" &&
       definition.id !== "playerCaptureSequence" &&
-      definition.id !== "playerToTable"
+      definition.id !== "playerToTable" &&
+      definition.id !== "theFall"
     );
   };
 
@@ -232,7 +240,8 @@ export const createAnimationLabScene = (
       (definitionId === "playerCapture" && parameterKey === "totalPlayers") ||
       (definitionId === "playerCaptureSequence" &&
         (parameterKey === "totalPlayers" || parameterKey === "tableCards")) ||
-      (definitionId === "playerToTable" && parameterKey === "totalPlayers")
+      (definitionId === "playerToTable" && parameterKey === "totalPlayers") ||
+      (definitionId === "theFall" && parameterKey === "power")
     );
   };
 
@@ -319,6 +328,18 @@ export const createAnimationLabScene = (
         ...playback,
         loop: persisted?.playback?.loop ?? false,
       };
+    } else if (definition.id === "theFall") {
+      const recommendedDurationMs = getTheFallCycleDurationMs(animationParams);
+      const isLegacyDuration =
+        persisted?.playback?.durationMs === LEGACY_THE_FALL_DEFAULT_DURATION_MS;
+      playback = {
+        ...playback,
+        durationMs:
+          !persisted?.playback || isLegacyDuration
+            ? recommendedDurationMs
+            : playback.durationMs,
+        loop: persisted?.playback?.loop ?? false,
+      };
     }
     fixedStepMode =
       typeof persisted?.fixedStepMode === "boolean"
@@ -371,12 +392,14 @@ export const createAnimationLabScene = (
     const isPlayerCaptureSequenceAnimation =
       selectedDefinition.id === "playerCaptureSequence";
     const isPlayerToTableAnimation = selectedDefinition.id === "playerToTable";
+    const isTheFallAnimation = selectedDefinition.id === "theFall";
     const showDealerDeck =
       isDealerAnimation ||
       isDealerToTableAnimation ||
       isPlayerCaptureAnimation ||
       isPlayerCaptureSequenceAnimation ||
-      isPlayerToTableAnimation;
+      isPlayerToTableAnimation ||
+      isTheFallAnimation;
     subject.visible = !showDealerDeck;
     subjectShadow.visible = !showDealerDeck;
     if (isDealerAnimation) {
@@ -384,6 +407,7 @@ export const createAnimationLabScene = (
       playerCapturePreview.hide();
       playerCaptureSequencePreview.hide();
       playerToTablePreview.hide();
+      theFallPreview.hide();
       invisibleDealSeatPositions = [
         ...dealerPreview.render({
           currentProgress,
@@ -400,6 +424,7 @@ export const createAnimationLabScene = (
       playerCapturePreview.hide();
       playerCaptureSequencePreview.hide();
       playerToTablePreview.hide();
+      theFallPreview.hide();
       dealerToTablePreview.render({
         currentProgress,
         sample,
@@ -413,6 +438,7 @@ export const createAnimationLabScene = (
       dealerToTablePreview.hide();
       playerCaptureSequencePreview.hide();
       playerToTablePreview.hide();
+      theFallPreview.hide();
       playerCapturePreview.render({
         currentProgress,
         sample,
@@ -427,6 +453,7 @@ export const createAnimationLabScene = (
       dealerToTablePreview.hide();
       playerCapturePreview.hide();
       playerToTablePreview.hide();
+      theFallPreview.hide();
       playerCaptureSequencePreview.render({
         currentProgress,
         sample,
@@ -441,8 +468,25 @@ export const createAnimationLabScene = (
       dealerToTablePreview.hide();
       playerCapturePreview.hide();
       playerCaptureSequencePreview.hide();
+      theFallPreview.hide();
       playerToTablePreview.render({
         currentProgress,
+        sample,
+        animationParams,
+        layout,
+        subjectBaseScale,
+        normalizedScale,
+      });
+    } else if (isTheFallAnimation) {
+      invisibleDealSeatPositions = [];
+      dealerPreview.hide();
+      dealerToTablePreview.hide();
+      playerCapturePreview.hide();
+      playerCaptureSequencePreview.hide();
+      playerToTablePreview.hide();
+      theFallPreview.render({
+        currentProgress,
+        cycle: cycleCount,
         sample,
         animationParams,
         layout,
@@ -456,6 +500,7 @@ export const createAnimationLabScene = (
       playerCapturePreview.hide();
       playerCaptureSequencePreview.hide();
       playerToTablePreview.hide();
+      theFallPreview.hide();
     }
   };
 
@@ -537,6 +582,11 @@ export const createAnimationLabScene = (
             durationMs:
               getPlayerCaptureSequenceCycleDurationMs(animationParams),
           });
+        } else if (selectedDefinition.id === "theFall" && key === "power") {
+          playback = normalizeAnimationPlaybackSettings({
+            ...playback,
+            durationMs: getTheFallCycleDurationMs(animationParams),
+          });
         }
         applyCurrentSample();
         updateOverlay();
@@ -584,6 +634,12 @@ export const createAnimationLabScene = (
         } else if (selectedDefinition.id === "playerToTable") {
           playback = {
             ...playback,
+            loop: false,
+          };
+        } else if (selectedDefinition.id === "theFall") {
+          playback = {
+            ...playback,
+            durationMs: getTheFallCycleDurationMs(animationParams),
             loop: false,
           };
         }
