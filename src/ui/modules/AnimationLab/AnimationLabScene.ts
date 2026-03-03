@@ -28,11 +28,16 @@ import {
   createDealerAnimationPreview,
   getDealerCycleDurationMs,
 } from "@modules/AnimationLab/DealerAnimationPreview";
+import {
+  createDealerToTableAnimationPreview,
+  getDealerToTableCycleDurationMs,
+} from "@modules/AnimationLab/DealerToTableAnimationPreview";
 import type { AppScene, SceneContext } from "@ui/state/SceneManager";
 import { Container, Text } from "pixi.js";
 
 const FIXED_STEP_MS = 1000 / 60;
 const LEGACY_DEALER_DEFAULT_DURATION_MS = 2600;
+const LEGACY_DEALER_TO_TABLE_DEFAULT_DURATION_MS = 1200;
 const CARD_BASE_WIDTH = 120;
 const CARD_BASE_HEIGHT = 168;
 const CARD_CORNER_RADIUS = 14;
@@ -138,6 +143,7 @@ export const createAnimationLabScene = (
   );
   world.addChild(subject);
   const dealerPreview = createDealerAnimationPreview(world);
+  const dealerToTablePreview = createDealerToTableAnimationPreview(world);
 
   const debugOverlay = new Text({
     text: "",
@@ -156,7 +162,9 @@ export const createAnimationLabScene = (
     normalizeAnimationPlaybackSettings(null);
   let animationParams = createDefaultAnimationParameters(fallbackDefinition);
   let fixedStepMode = true;
-  let isPlaying = selectedDefinition.id !== "dealer";
+  let isPlaying =
+    selectedDefinition.id !== "dealer" &&
+    selectedDefinition.id !== "dealerToTable";
   let elapsedMs = 0;
   let cycleCount = 0;
   let frameCount = 0;
@@ -171,7 +179,7 @@ export const createAnimationLabScene = (
   const shouldAutoplayDefinition = (
     definition: AnimationDefinition,
   ): boolean => {
-    return definition.id !== "dealer";
+    return definition.id !== "dealer" && definition.id !== "dealerToTable";
   };
 
   const getWrappedParameterValue = (
@@ -193,8 +201,10 @@ export const createAnimationLabScene = (
     parameterKey: string,
   ): boolean => {
     return (
-      definitionId === "dealer" &&
-      (parameterKey === "dealerPosition" || parameterKey === "totalPlayers")
+      (definitionId === "dealer" &&
+        (parameterKey === "dealerPosition" ||
+          parameterKey === "totalPlayers")) ||
+      (definitionId === "dealerToTable" && parameterKey === "dealerPosition")
     );
   };
 
@@ -228,6 +238,19 @@ export const createAnimationLabScene = (
       const recommendedDurationMs = getDealerCycleDurationMs(animationParams);
       const isLegacyDuration =
         persisted?.playback?.durationMs === LEGACY_DEALER_DEFAULT_DURATION_MS;
+      playback = {
+        ...playback,
+        durationMs:
+          !persisted?.playback || isLegacyDuration
+            ? recommendedDurationMs
+            : playback.durationMs,
+        loop: persisted?.playback?.loop ?? false,
+      };
+    } else if (definition.id === "dealerToTable") {
+      const recommendedDurationMs = getDealerToTableCycleDurationMs();
+      const isLegacyDuration =
+        persisted?.playback?.durationMs ===
+        LEGACY_DEALER_TO_TABLE_DEFAULT_DURATION_MS;
       playback = {
         ...playback,
         durationMs:
@@ -282,10 +305,13 @@ export const createAnimationLabScene = (
     subjectShadow.alpha = clamp(sample.alpha * 0.3, 0.08, 0.36);
     subjectShadow.rotation = sample.rotation * 0.15;
 
-    const showDealerDeck = selectedDefinition.id === "dealer";
+    const isDealerAnimation = selectedDefinition.id === "dealer";
+    const isDealerToTableAnimation = selectedDefinition.id === "dealerToTable";
+    const showDealerDeck = isDealerAnimation || isDealerToTableAnimation;
     subject.visible = !showDealerDeck;
     subjectShadow.visible = !showDealerDeck;
-    if (showDealerDeck) {
+    if (isDealerAnimation) {
+      dealerToTablePreview.hide();
       invisibleDealSeatPositions = [
         ...dealerPreview.render({
           currentProgress,
@@ -296,9 +322,20 @@ export const createAnimationLabScene = (
           normalizedScale,
         }).seatPositions,
       ];
+    } else if (isDealerToTableAnimation) {
+      invisibleDealSeatPositions = [];
+      dealerPreview.hide();
+      dealerToTablePreview.render({
+        currentProgress,
+        sample,
+        animationParams,
+        subjectBaseScale,
+        normalizedScale,
+      });
     } else {
       invisibleDealSeatPositions = [];
       dealerPreview.hide();
+      dealerToTablePreview.hide();
     }
   };
 
@@ -394,6 +431,12 @@ export const createAnimationLabScene = (
           playback = {
             ...playback,
             durationMs: getDealerCycleDurationMs(animationParams),
+            loop: false,
+          };
+        } else if (selectedDefinition.id === "dealerToTable") {
+          playback = {
+            ...playback,
+            durationMs: getDealerToTableCycleDurationMs(),
             loop: false,
           };
         }
