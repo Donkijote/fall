@@ -33,6 +33,7 @@ import {
   getDealerToTableCycleDurationMs,
 } from "@modules/AnimationLab/DealerToTableAnimationPreview";
 import { createFireAnimationPreview } from "@modules/AnimationLab/FireAnimationPreview";
+import { createFireCardAnimationPreview } from "@modules/AnimationLab/FireCardAnimationPreview";
 import {
   createPlayerCaptureAnimationPreview,
   getPlayerCaptureCycleDurationMs,
@@ -167,6 +168,7 @@ export const createAnimationLabScene = (
   const playerToTablePreview = createPlayerToTableAnimationPreview(world);
   const theFallPreview = createTheFallAnimationPreview(world);
   const firePreview = createFireAnimationPreview(world);
+  const fireCardPreview = createFireCardAnimationPreview(world);
 
   const debugOverlay = new Text({
     text: "",
@@ -403,6 +405,7 @@ export const createAnimationLabScene = (
     const isPlayerToTableAnimation = selectedDefinition.id === "playerToTable";
     const isTheFallAnimation = selectedDefinition.id === "theFall";
     const isFireAnimation = selectedDefinition.id === "fire";
+    const isFireCardAnimation = selectedDefinition.id === "fire-card";
     const showDealerDeck =
       isDealerAnimation ||
       isDealerToTableAnimation ||
@@ -410,7 +413,8 @@ export const createAnimationLabScene = (
       isPlayerCaptureSequenceAnimation ||
       isPlayerToTableAnimation ||
       isTheFallAnimation ||
-      isFireAnimation;
+      isFireAnimation ||
+      isFireCardAnimation;
     subject.visible = !showDealerDeck;
     subjectShadow.visible = !showDealerDeck;
     if (isDealerAnimation) {
@@ -420,6 +424,7 @@ export const createAnimationLabScene = (
       playerToTablePreview.hide();
       theFallPreview.hide();
       firePreview.hide();
+      fireCardPreview.hide();
       invisibleDealSeatPositions = [
         ...dealerPreview.render({
           currentProgress,
@@ -438,6 +443,7 @@ export const createAnimationLabScene = (
       playerToTablePreview.hide();
       theFallPreview.hide();
       firePreview.hide();
+      fireCardPreview.hide();
       dealerToTablePreview.render({
         currentProgress,
         sample,
@@ -453,6 +459,7 @@ export const createAnimationLabScene = (
       playerToTablePreview.hide();
       theFallPreview.hide();
       firePreview.hide();
+      fireCardPreview.hide();
       playerCapturePreview.render({
         currentProgress,
         sample,
@@ -469,6 +476,7 @@ export const createAnimationLabScene = (
       playerToTablePreview.hide();
       theFallPreview.hide();
       firePreview.hide();
+      fireCardPreview.hide();
       playerCaptureSequencePreview.render({
         currentProgress,
         sample,
@@ -485,6 +493,7 @@ export const createAnimationLabScene = (
       playerCaptureSequencePreview.hide();
       theFallPreview.hide();
       firePreview.hide();
+      fireCardPreview.hide();
       playerToTablePreview.render({
         currentProgress,
         sample,
@@ -501,6 +510,7 @@ export const createAnimationLabScene = (
       playerCaptureSequencePreview.hide();
       playerToTablePreview.hide();
       firePreview.hide();
+      fireCardPreview.hide();
       theFallPreview.render({
         currentProgress,
         cycle: cycleCount,
@@ -518,7 +528,26 @@ export const createAnimationLabScene = (
       playerCaptureSequencePreview.hide();
       playerToTablePreview.hide();
       theFallPreview.hide();
+      fireCardPreview.hide();
       firePreview.render({
+        currentProgress,
+        cycle: cycleCount,
+        sample,
+        animationParams,
+        layout,
+        subjectBaseScale,
+        normalizedScale,
+      });
+    } else if (isFireCardAnimation) {
+      invisibleDealSeatPositions = [];
+      dealerPreview.hide();
+      dealerToTablePreview.hide();
+      playerCapturePreview.hide();
+      playerCaptureSequencePreview.hide();
+      playerToTablePreview.hide();
+      theFallPreview.hide();
+      firePreview.hide();
+      fireCardPreview.render({
         currentProgress,
         cycle: cycleCount,
         sample,
@@ -536,6 +565,7 @@ export const createAnimationLabScene = (
       playerToTablePreview.hide();
       theFallPreview.hide();
       firePreview.hide();
+      fireCardPreview.hide();
     }
   };
 
