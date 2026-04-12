@@ -5,6 +5,7 @@ import {
 } from "@modules/AnimationLab/AnimationLabPrimitives";
 import type { LayoutState } from "@modules/AnimationLab/AnimationLabTypes";
 import { clamp, px } from "@modules/AnimationLab/AnimationLabUtils";
+import { createFireCardAnimationPreview } from "@modules/AnimationLab/FireCardAnimationPreview";
 import { getTheFallPowerProfileFromParams } from "@modules/AnimationLab/TheFallPowerProfiles";
 import { Container, Graphics } from "pixi.js";
 
@@ -33,9 +34,6 @@ const POWER_FOUR_LINGER_END = 0.76;
 const POWER_FOUR_LIFT_END = 0.9;
 const POWER_FOUR_SPLASH_WINDOW = 0.36;
 const POWER_FOUR_SHAKE_END = 0.76;
-const POWER_FOUR_CRACK_FADE_DELAY = 0.9;
-const POWER_FOUR_MIN_CRACK_FADE_WINDOW = 0.12;
-const POWER_FOUR_CRACK_FADE_EXPONENT = 0.8;
 
 const CAPTURE_STACK_LEFT_FACTOR = 2.15;
 const CAPTURE_STACK_Y_FACTOR = 0.04;
@@ -217,6 +215,9 @@ export const createTheFallAnimationPreview = (
   world.addChild(tableCard.container);
   const playedCard = createFlippableCard();
   world.addChild(playedCard.container);
+  const fireCardLayer = new Container();
+  world.addChild(fireCardLayer);
+  const fireCardPreview = createFireCardAnimationPreview(fireCardLayer);
   const impactFlash = createCard(0x38bdf8, 0.22);
   impactFlash.anchor.set(0.5);
   impactFlash.visible = false;
@@ -224,16 +225,6 @@ export const createTheFallAnimationPreview = (
   const impactRing = new Graphics();
   impactRing.visible = false;
   world.addChild(impactRing);
-  const meteorTrail = new Graphics();
-  meteorTrail.visible = false;
-  world.addChild(meteorTrail);
-  const meteorGlow = createCard(0xf97316, 0.48);
-  meteorGlow.anchor.set(0.5);
-  meteorGlow.visible = false;
-  world.addChild(meteorGlow);
-  const tableCracks = new Graphics();
-  tableCracks.visible = false;
-  world.addChild(tableCracks);
   const liftShadow = createCard(0x020617, 0.26);
   liftShadow.anchor.set(0.5);
   liftShadow.visible = false;
@@ -243,7 +234,6 @@ export const createTheFallAnimationPreview = (
   let lastCycle = -1;
   let tablePose: TablePose | null = null;
   let meteorStartOffsetX = 0;
-  let cracksAngleOffset = 0;
 
   const hide = (): void => {
     for (const handCard of handCards) {
@@ -256,15 +246,11 @@ export const createTheFallAnimationPreview = (
     playedCard.container.visible = false;
     playedCard.container.scale.set(1, 1);
     setFaceDown(playedCard);
+    fireCardPreview.hide();
 
     impactFlash.visible = false;
     impactRing.visible = false;
     impactRing.clear();
-    meteorTrail.visible = false;
-    meteorTrail.clear();
-    meteorGlow.visible = false;
-    tableCracks.visible = false;
-    tableCracks.clear();
 
     liftShadow.visible = false;
   };
@@ -315,7 +301,6 @@ export const createTheFallAnimationPreview = (
         -layout.preview.width * 0.14,
         layout.preview.width * 0.14,
       );
-      cracksAngleOffset = randomBetween(-0.28, 0.28);
       lastCycle = cycle;
     }
     lastProgress = currentProgress;
@@ -492,56 +477,7 @@ export const createTheFallAnimationPreview = (
       );
     }
 
-    if (power === 4 && currentProgress >= fallEnd) {
-      const crackProgress = clamp(
-        (currentProgress - fallEnd) / Math.max(1 - fallEnd, 0.0001),
-        0,
-        1,
-      );
-      const crackFadeStart = clamp(
-        lingerEnd + POWER_FOUR_CRACK_FADE_DELAY,
-        0,
-        1 - POWER_FOUR_MIN_CRACK_FADE_WINDOW,
-      );
-      const crackFadeProgress = clamp(
-        (currentProgress - crackFadeStart) /
-          Math.max(1 - crackFadeStart, 0.0001),
-        0,
-        1,
-      );
-      const crackAlpha =
-        0.62 *
-        (1 - crackProgress * 0.24) *
-        (1 - crackFadeProgress) ** POWER_FOUR_CRACK_FADE_EXPONENT;
-      tableCracks.visible = crackAlpha > 0.02;
-      tableCracks.clear();
-      if (tableCracks.visible) {
-        for (let index = 0; index < 8; index += 1) {
-          const angle =
-            cracksAngleOffset +
-            (index / 8) * Math.PI * 2 +
-            Math.sin(index * 1.8) * 0.11;
-          const length = CARD_WIDTH * cardScale * (0.62 + index * 0.08);
-          const midLength = length * 0.46;
-          const x1 = Math.cos(angle) * midLength;
-          const y1 = Math.sin(angle) * midLength;
-          const x2 =
-            Math.cos(angle) * length + Math.cos(angle + 0.6) * length * 0.18;
-          const y2 =
-            Math.sin(angle) * length + Math.sin(angle + 0.6) * length * 0.18;
-          tableCracks
-            .moveTo(0, 0)
-            .lineTo(x1, y1)
-            .lineTo(x2, y2)
-            .stroke({
-              color: 0x7f1d1d,
-              width: Math.max(1.2, cardScale * 1.8),
-              alpha: crackAlpha,
-            });
-        }
-        tableCracks.position.set(px(impactX + shakeX), px(impactY + shakeY));
-      }
-    }
+    // TODO: Reintroduce the power-4 crack effect here once the final crack UI asset/animation is ready.
 
     playedCard.container.visible = true;
     playedCard.container.alpha = 0.98;
@@ -610,63 +546,31 @@ export const createTheFallAnimationPreview = (
         const meteorStartY = sample.y - layout.preview.height * 0.86;
         const cardX = lerp(meteorStartX, impactX, phaseProgress);
         const cardY = lerp(meteorStartY, impactY, phaseProgress);
-        const cardRotation = lerp(-0.28, impactRotation + 0.08, phaseProgress);
         const dynamicScale = lerp(
           cardScale * 1.36,
           cardScale * 1.02,
           phaseProgress,
         );
 
-        playedCard.container.visible = true;
-        playedCard.container.position.set(
-          px(cardX + shakeX),
-          px(cardY + shakeY),
-        );
-        playedCard.container.scale.set(dynamicScale, dynamicScale);
-        playedCard.container.rotation = cardRotation;
-        setFaceUp(playedCard);
-
-        meteorGlow.visible = true;
-        meteorGlow.position.set(
-          px(cardX + shakeX),
-          px(cardY + CARD_HEIGHT * dynamicScale * 0.18 + shakeY),
-        );
-        meteorGlow.scale.set(dynamicScale * 1.9, dynamicScale * 0.85);
-        meteorGlow.alpha = 0.5 - phaseProgress * 0.15;
-
-        meteorTrail.visible = true;
-        meteorTrail.clear();
-        const trailLength =
-          CARD_HEIGHT * dynamicScale * (1.35 + phaseProgress * 0.4);
-        meteorTrail
-          .roundRect(
-            -CARD_WIDTH * dynamicScale * 0.19,
-            -trailLength,
-            CARD_WIDTH * dynamicScale * 0.38,
-            trailLength,
-            CARD_WIDTH * dynamicScale * 0.18,
-          )
-          .fill({
-            color: 0xf97316,
-            alpha: 0.74 - phaseProgress * 0.22,
-          });
-        meteorTrail
-          .roundRect(
-            -CARD_WIDTH * dynamicScale * 0.11,
-            -trailLength * 0.86,
-            CARD_WIDTH * dynamicScale * 0.22,
-            trailLength * 0.88,
-            CARD_WIDTH * dynamicScale * 0.12,
-          )
-          .fill({
-            color: 0xef4444,
-            alpha: 0.62 - phaseProgress * 0.2,
-          });
-        meteorTrail.position.set(
-          px(cardX + shakeX),
-          px(cardY + CARD_HEIGHT * dynamicScale * 0.14 + shakeY),
-        );
-        meteorTrail.rotation = cardRotation;
+        fireCardPreview.render({
+          currentProgress,
+          cycle,
+          sample: {
+            x: cardX + shakeX,
+            y: cardY + shakeY,
+            scale: 100,
+            alpha: 0.98,
+            rotation: 0,
+          },
+          animationParams,
+          layout,
+          subjectBaseScale,
+          normalizedScale: dynamicScale,
+          cardOffsetY: 0,
+          fireOffsetY: -8,
+          fireScaleMultiplier: 0.719,
+          renderFire: true,
+        });
         return;
       }
 
@@ -708,13 +612,35 @@ export const createTheFallAnimationPreview = (
       tableCard.container.rotation = impactRotation;
       setFaceUp(tableCard);
 
-      playedCard.container.position.set(
-        px(impactX + shakeX),
-        px(settleY + 2 + shakeY),
-      );
-      playedCard.container.scale.set(cardScale, cardScale);
-      playedCard.container.rotation = impactRotation;
-      setFaceUp(playedCard);
+      if (power === 4) {
+        fireCardPreview.render({
+          currentProgress,
+          cycle,
+          sample: {
+            x: impactX + shakeX,
+            y: settleY + 2 + shakeY,
+            scale: 100,
+            alpha: 0.98,
+            rotation: 0,
+          },
+          animationParams,
+          layout,
+          subjectBaseScale,
+          normalizedScale: cardScale,
+          cardOffsetY: 0,
+          fireOffsetY: -8,
+          fireScaleMultiplier: 0.719,
+          renderFire: false,
+        });
+      } else {
+        playedCard.container.position.set(
+          px(impactX + shakeX),
+          px(settleY + 2 + shakeY),
+        );
+        playedCard.container.scale.set(cardScale, cardScale);
+        playedCard.container.rotation = impactRotation;
+        setFaceUp(playedCard);
+      }
       return;
     }
 

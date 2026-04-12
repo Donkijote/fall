@@ -23,6 +23,10 @@ export interface FireCardAnimationPreviewInput {
   layout: LayoutState;
   subjectBaseScale: number;
   normalizedScale: number;
+  cardOffsetY?: number;
+  fireOffsetY?: number;
+  fireScaleMultiplier?: number;
+  renderFire?: boolean;
 }
 
 export interface FireCardAnimationPreviewController {
@@ -78,28 +82,36 @@ export const createFireCardAnimationPreview = (
       const cardHeight = CARD_HEIGHT * cardScale;
       const pulse = pulseState.normalized;
       const heat = 0.06 + pulse * 0.03;
-      const fireScale = input.normalizedScale * 0.719;
+      const fireScale =
+        input.normalizedScale * (input.fireScaleMultiplier ?? 0.719);
+      const cardOffsetY = input.cardOffsetY ?? -cardHeight * 0.06 + 50;
+      const fireOffsetY = input.fireOffsetY ?? -10;
+      const renderFire = input.renderFire ?? true;
 
       root.visible = true;
       root.position.set(sample.x, sample.y);
       root.rotation = 0;
       root.alpha = sample.alpha;
       cardRoot.scale.set(cardScale);
-      cardRoot.position.set(0, -cardHeight * 0.06 + 50);
+      cardRoot.position.set(0, cardOffsetY);
 
-      firePreview.render({
-        currentProgress,
-        cycle,
-        sample: {
-          ...sample,
-          x: 0,
-          y: -10,
-        },
-        animationParams,
-        layout,
-        subjectBaseScale: input.subjectBaseScale,
-        normalizedScale: fireScale,
-      });
+      if (renderFire) {
+        firePreview.render({
+          currentProgress,
+          cycle,
+          sample: {
+            ...sample,
+            x: 0,
+            y: fireOffsetY,
+          },
+          animationParams,
+          layout,
+          subjectBaseScale: input.subjectBaseScale,
+          normalizedScale: fireScale,
+        });
+      } else {
+        firePreview.hide();
+      }
 
       cardAura.clear();
       cardAura
