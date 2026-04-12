@@ -32,6 +32,7 @@ import {
   createDealerToTableAnimationPreview,
   getDealerToTableCycleDurationMs,
 } from "@modules/AnimationLab/DealerToTableAnimationPreview";
+import { createFireAnimationPreview } from "@modules/AnimationLab/FireAnimationPreview";
 import {
   createPlayerCaptureAnimationPreview,
   getPlayerCaptureCycleDurationMs,
@@ -165,6 +166,7 @@ export const createAnimationLabScene = (
     createPlayerCaptureSequenceAnimationPreview(world);
   const playerToTablePreview = createPlayerToTableAnimationPreview(world);
   const theFallPreview = createTheFallAnimationPreview(world);
+  const firePreview = createFireAnimationPreview(world);
 
   const debugOverlay = new Text({
     text: "",
@@ -189,7 +191,8 @@ export const createAnimationLabScene = (
     selectedDefinition.id !== "playerCapture" &&
     selectedDefinition.id !== "playerCaptureSequence" &&
     selectedDefinition.id !== "playerToTable" &&
-    selectedDefinition.id !== "theFall";
+    selectedDefinition.id !== "theFall" &&
+    selectedDefinition.id !== "fire";
   let elapsedMs = 0;
   let cycleCount = 0;
   let frameCount = 0;
@@ -210,7 +213,8 @@ export const createAnimationLabScene = (
       definition.id !== "playerCapture" &&
       definition.id !== "playerCaptureSequence" &&
       definition.id !== "playerToTable" &&
-      definition.id !== "theFall"
+      definition.id !== "theFall" &&
+      definition.id !== "fire"
     );
   };
 
@@ -340,6 +344,11 @@ export const createAnimationLabScene = (
             : playback.durationMs,
         loop: persisted?.playback?.loop ?? false,
       };
+    } else if (definition.id === "fire") {
+      playback = {
+        ...playback,
+        loop: persisted?.playback?.loop ?? false,
+      };
     }
     fixedStepMode =
       typeof persisted?.fixedStepMode === "boolean"
@@ -393,13 +402,15 @@ export const createAnimationLabScene = (
       selectedDefinition.id === "playerCaptureSequence";
     const isPlayerToTableAnimation = selectedDefinition.id === "playerToTable";
     const isTheFallAnimation = selectedDefinition.id === "theFall";
+    const isFireAnimation = selectedDefinition.id === "fire";
     const showDealerDeck =
       isDealerAnimation ||
       isDealerToTableAnimation ||
       isPlayerCaptureAnimation ||
       isPlayerCaptureSequenceAnimation ||
       isPlayerToTableAnimation ||
-      isTheFallAnimation;
+      isTheFallAnimation ||
+      isFireAnimation;
     subject.visible = !showDealerDeck;
     subjectShadow.visible = !showDealerDeck;
     if (isDealerAnimation) {
@@ -408,6 +419,7 @@ export const createAnimationLabScene = (
       playerCaptureSequencePreview.hide();
       playerToTablePreview.hide();
       theFallPreview.hide();
+      firePreview.hide();
       invisibleDealSeatPositions = [
         ...dealerPreview.render({
           currentProgress,
@@ -425,6 +437,7 @@ export const createAnimationLabScene = (
       playerCaptureSequencePreview.hide();
       playerToTablePreview.hide();
       theFallPreview.hide();
+      firePreview.hide();
       dealerToTablePreview.render({
         currentProgress,
         sample,
@@ -439,6 +452,7 @@ export const createAnimationLabScene = (
       playerCaptureSequencePreview.hide();
       playerToTablePreview.hide();
       theFallPreview.hide();
+      firePreview.hide();
       playerCapturePreview.render({
         currentProgress,
         sample,
@@ -454,6 +468,7 @@ export const createAnimationLabScene = (
       playerCapturePreview.hide();
       playerToTablePreview.hide();
       theFallPreview.hide();
+      firePreview.hide();
       playerCaptureSequencePreview.render({
         currentProgress,
         sample,
@@ -469,6 +484,7 @@ export const createAnimationLabScene = (
       playerCapturePreview.hide();
       playerCaptureSequencePreview.hide();
       theFallPreview.hide();
+      firePreview.hide();
       playerToTablePreview.render({
         currentProgress,
         sample,
@@ -484,7 +500,25 @@ export const createAnimationLabScene = (
       playerCapturePreview.hide();
       playerCaptureSequencePreview.hide();
       playerToTablePreview.hide();
+      firePreview.hide();
       theFallPreview.render({
+        currentProgress,
+        cycle: cycleCount,
+        sample,
+        animationParams,
+        layout,
+        subjectBaseScale,
+        normalizedScale,
+      });
+    } else if (isFireAnimation) {
+      invisibleDealSeatPositions = [];
+      dealerPreview.hide();
+      dealerToTablePreview.hide();
+      playerCapturePreview.hide();
+      playerCaptureSequencePreview.hide();
+      playerToTablePreview.hide();
+      theFallPreview.hide();
+      firePreview.render({
         currentProgress,
         cycle: cycleCount,
         sample,
@@ -501,6 +535,7 @@ export const createAnimationLabScene = (
       playerCaptureSequencePreview.hide();
       playerToTablePreview.hide();
       theFallPreview.hide();
+      firePreview.hide();
     }
   };
 
@@ -640,6 +675,11 @@ export const createAnimationLabScene = (
           playback = {
             ...playback,
             durationMs: getTheFallCycleDurationMs(animationParams),
+            loop: false,
+          };
+        } else if (selectedDefinition.id === "fire") {
+          playback = {
+            ...playback,
             loop: false,
           };
         }
