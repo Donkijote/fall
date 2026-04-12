@@ -13,6 +13,10 @@ export interface AppScene {
 
 export type SceneFactory = (context: SceneContext) => AppScene;
 
+interface SceneManagerOptions {
+  onSceneChange?: (sceneId: string) => void;
+}
+
 export interface SceneManager {
   register: (sceneId: string, factory: SceneFactory) => void;
   goTo: (sceneId: string) => void;
@@ -20,7 +24,10 @@ export interface SceneManager {
   resize: (width: number, height: number) => void;
 }
 
-export const createSceneManager = (stage: Container): SceneManager => {
+export const createSceneManager = (
+  stage: Container,
+  options: SceneManagerOptions = {},
+): SceneManager => {
   const sceneFactories = new Map<string, SceneFactory>();
   let activeScene: AppScene | null = null;
 
@@ -40,6 +47,7 @@ export const createSceneManager = (stage: Container): SceneManager => {
       goTo: (nextSceneId) => goTo(nextSceneId),
     });
     stage.addChild(activeScene.container);
+    options.onSceneChange?.(sceneId);
   };
 
   return {
