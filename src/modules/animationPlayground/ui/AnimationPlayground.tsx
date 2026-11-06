@@ -15,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { HOME_PATH } from "@/routes/Routes";
 
 import { createHowlerAudio } from "../adapters/audio/howlerAudio";
@@ -129,146 +130,157 @@ export function AnimationPlayground() {
             </div>
           </div>
         </header>
-        <nav aria-label="Animation studies" className="flex flex-wrap gap-2">
-          {studies.map((item) => (
-            <Button
-              key={item.value}
-              variant={study === item.value ? "default" : "outline"}
-              aria-pressed={study === item.value}
-              onClick={() => {
-                setStudy(item.value);
-                setSelected(lessonsByStudy[item.value][0].experiment);
-                setPreview((current) =>
-                  createPreview(audio, current.revision + 1, settings.effect),
-                );
-              }}
-            >
-              {item.label}
-              <Badge variant="secondary">{lessonsByStudy[item.value].length}</Badge>
-            </Button>
-          ))}
-        </nav>
-        <div className="grid items-start gap-6 lg:grid-cols-[15rem_minmax(0,1fr)_18rem]">
-          <Card>
-            <CardHeader>
-              <CardTitle>Animation catalog</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-1">
-              {lessons.map((item) => (
-                <Button
-                  key={item.experiment}
-                  variant={selected === item.experiment ? "secondary" : "ghost"}
-                  aria-pressed={selected === item.experiment}
-                  className="h-auto w-full justify-start py-3 text-left whitespace-normal"
-                  onClick={() => setSelected(item.experiment)}
-                >
-                  {item.label}
-                </Button>
-              ))}
-            </CardContent>
-          </Card>
-          <div className="min-w-0">
-            <MotionContext value={settings}>
-              <LabViewport
-                revision={preview.revision}
-                lab={lab}
-                state={state}
-                settings={settings}
-                study={study}
-                experiment={preview.autoplay}
-                footerActions={
-                  <>
-                    <Button onClick={play}>
-                      <Play /> Play / replay
-                    </Button>
+        <Tabs
+          value={study}
+          onValueChange={(value) => {
+            const nextStudy = value as Study;
+            setStudy(nextStudy);
+            setSelected(lessonsByStudy[nextStudy][0].experiment);
+            setPreview((current) => createPreview(audio, current.revision + 1, settings.effect));
+          }}
+          className="gap-6"
+        >
+          <TabsList
+            aria-label="Animation studies"
+            className="flex-wrap group-data-horizontal/tabs:h-auto"
+          >
+            {studies.map((item) => (
+              <TabsTrigger key={item.value} value={item.value}>
+                {item.label}
+                <Badge variant="outline">{lessonsByStudy[item.value].length}</Badge>
+              </TabsTrigger>
+            ))}
+          </TabsList>
+          <TabsContent value={study} keepMounted>
+            <div className="grid items-start gap-6 lg:grid-cols-[15rem_minmax(0,1fr)_18rem]">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Animation catalog</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-1">
+                  {lessons.map((item) => (
                     <Button
-                      variant="outline"
-                      onClick={() =>
-                        setPreview((current) =>
-                          createPreview(audio, current.revision + 1, settings.effect),
-                        )
-                      }
+                      key={item.experiment}
+                      variant={selected === item.experiment ? "secondary" : "ghost"}
+                      aria-pressed={selected === item.experiment}
+                      className="h-auto w-full justify-start py-3 text-left whitespace-normal"
+                      onClick={() => setSelected(item.experiment)}
                     >
-                      <RotateCcw /> Reset scene
+                      {item.label}
                     </Button>
-                  </>
-                }
-              />
-            </MotionContext>
-          </div>
-          <Card>
-            <CardHeader>
-              <CardTitle>Live tuning</CardTitle>
-              <p className="text-xs text-muted-foreground">Changes restart the current preview.</p>
-            </CardHeader>
-            <CardContent className="space-y-5">
-              <NumericControl
-                label="Timeline speed"
-                value={settings.speed}
-                min={0.25}
-                max={2}
-                step={0.25}
-                change={(speed) => updateSettings({ speed })}
-              />
-              <Choice
-                label="Motion easing"
-                value={settings.ease}
-                choices={[
-                  ["original", "Original choreography"],
-                  ["none", "Linear"],
-                  ["power2.inOut", "Smooth"],
-                  ["back.out", "Overshoot"],
-                ]}
-                change={(ease) => updateSettings({ ease })}
-              />
-              <p className="text-xs text-muted-foreground">
-                Speed adjusts GSAP timelines. Easing adjusts flips, deck motion, deals and plays.
-                Impact curves and physics keep their original motion.
-              </p>
-              {study === "card" && (
-                <NumericControl
-                  label="Embers per second"
-                  value={settings.rate}
-                  min={10}
-                  max={350}
-                  step={5}
-                  change={(rate) => updateSettings({ rate })}
-                />
-              )}
-              {study === "table" && selected === "fall-capture" && (
-                <Choice
-                  label="Capture impact"
-                  value={settings.effect}
-                  choices={[
-                    ["plain", "Card drop"],
-                    ["ice", "Ice shatter"],
-                    ["heat", "Heat transfer"],
-                    ["flame", "Flame impact"],
-                  ]}
-                  change={(effect) => updateSettings({ effect: effect as CardDropEffect })}
-                />
-              )}
-              <NumericControl
-                label="Pixel ratio cap"
-                value={settings.dpr}
-                min={1}
-                max={3}
-                step={0.25}
-                change={(dpr) => updateSettings({ dpr })}
-              />
-              <Label className="flex items-center gap-2">
-                <Checkbox
-                  checked={settings.perf}
-                  onCheckedChange={(perf) => updateSettings({ perf })}
-                />{" "}
-                Performance HUD
-              </Label>
-              <Button variant="outline" className="w-full" onClick={() => updateSettings(defaults)}>
-                Restore defaults
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
+                  ))}
+                </CardContent>
+              </Card>
+              <div className="min-w-0">
+                <MotionContext value={settings}>
+                  <LabViewport
+                    revision={preview.revision}
+                    lab={lab}
+                    state={state}
+                    settings={settings}
+                    study={study}
+                    experiment={preview.autoplay}
+                    footerActions={
+                      <>
+                        <Button onClick={play}>
+                          <Play /> Play / replay
+                        </Button>
+                        <Button
+                          variant="outline"
+                          onClick={() =>
+                            setPreview((current) =>
+                              createPreview(audio, current.revision + 1, settings.effect),
+                            )
+                          }
+                        >
+                          <RotateCcw /> Reset scene
+                        </Button>
+                      </>
+                    }
+                  />
+                </MotionContext>
+              </div>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Live tuning</CardTitle>
+                  <p className="text-xs text-muted-foreground">
+                    Changes restart the current preview.
+                  </p>
+                </CardHeader>
+                <CardContent className="space-y-5">
+                  <NumericControl
+                    label="Timeline speed"
+                    value={settings.speed}
+                    min={0.25}
+                    max={2}
+                    step={0.25}
+                    change={(speed) => updateSettings({ speed })}
+                  />
+                  <Choice
+                    label="Motion easing"
+                    value={settings.ease}
+                    choices={[
+                      ["original", "Original choreography"],
+                      ["none", "Linear"],
+                      ["power2.inOut", "Smooth"],
+                      ["back.out", "Overshoot"],
+                    ]}
+                    change={(ease) => updateSettings({ ease })}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Speed adjusts GSAP timelines. Easing adjusts flips, deck motion, deals and
+                    plays. Impact curves and physics keep their original motion.
+                  </p>
+                  {study === "card" && (
+                    <NumericControl
+                      label="Embers per second"
+                      value={settings.rate}
+                      min={10}
+                      max={350}
+                      step={5}
+                      change={(rate) => updateSettings({ rate })}
+                    />
+                  )}
+                  {study === "table" && selected === "fall-capture" && (
+                    <Choice
+                      label="Capture impact"
+                      value={settings.effect}
+                      choices={[
+                        ["plain", "Card drop"],
+                        ["ice", "Ice shatter"],
+                        ["heat", "Heat transfer"],
+                        ["flame", "Flame impact"],
+                      ]}
+                      change={(effect) => updateSettings({ effect: effect as CardDropEffect })}
+                    />
+                  )}
+                  <NumericControl
+                    label="Pixel ratio cap"
+                    value={settings.dpr}
+                    min={1}
+                    max={3}
+                    step={0.25}
+                    change={(dpr) => updateSettings({ dpr })}
+                  />
+                  <Label className="flex items-center gap-2">
+                    <Checkbox
+                      checked={settings.perf}
+                      onCheckedChange={(perf) => updateSettings({ perf })}
+                    />{" "}
+                    Performance HUD
+                  </Label>
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => updateSettings(defaults)}
+                  >
+                    Restore defaults
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </main>
   );

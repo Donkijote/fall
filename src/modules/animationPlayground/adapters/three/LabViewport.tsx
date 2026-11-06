@@ -5,7 +5,6 @@ import type { ReactNode } from "react";
 import { Grid, useTexture } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 
-import { deckCardCount } from "../../application/lab";
 import type { Experiment, Lab, LabState, Study } from "../../application/lab";
 import emberTexture from "../../assets/ember.svg";
 import { Card } from "./Card";
@@ -134,17 +133,17 @@ export function LabViewport({
 }) {
   const { dpr, perf } = settings;
   const deck = study === "deck";
-  const label = {
+  const hint = {
     card: state.cardFalls
       ? {
-          ice: "ICE IMPACT",
-          heat: "HEAT TRANSFER",
-          flame: "FLAME IMPACT",
-          plain: "CARD IMPACT",
+          ice: "Press Shatter frozen card to replay",
+          heat: "Press Drop hot card to replay",
+          flame: "Press Drop flame card to replay",
+          plain: "Press Drop card to replay",
         }[state.cardDropEffect]
-      : `${cardArtwork.label} / ${state.faceUp ? "FACE" : "BACK"}`,
-    deck: `DECK STACK / ${deckCardCount} CARDS`,
-    table: "TABLE / DEAL STUDY",
+      : "Hover to tilt · Tap to flip",
+    deck: `${state.deckFanned ? "Fan open" : "Stack closed"} · Drag to tilt`,
+    table: "Dealer + 3 players",
   }[study];
 
   useEffect(() => {
@@ -203,8 +202,8 @@ export function LabViewport({
         3D Preview
       </div>
       <footer className="flex flex-wrap items-center gap-3 border-t bg-background px-5 py-3">
-        <span className="text-xs text-muted-foreground">{label}</span>
-        <div className="ml-auto flex flex-wrap justify-end gap-2">{footerActions}</div>
+        <div className="flex flex-wrap gap-2">{footerActions}</div>
+        <span className="ml-auto text-right text-xs text-muted-foreground">{hint}</span>
       </footer>
     </section>
   );

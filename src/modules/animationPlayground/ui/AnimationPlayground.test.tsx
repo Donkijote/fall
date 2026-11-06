@@ -62,7 +62,7 @@ describe("Animation playground", () => {
     expect(scene().faceUp).toBe(true);
   });
 
-  it("keeps the viewport mounted across replay, tuning, and reset", () => {
+  it("keeps the viewport mounted across replay, tuning, reset, and study changes", () => {
     open();
     const canvasHost = screen.getByLabelText("Scene state");
     fireEvent.click(screen.getByRole("button", { name: "Play / replay" }));
@@ -71,6 +71,11 @@ describe("Animation playground", () => {
       target: { value: "0.5" },
     });
     fireEvent.click(screen.getByRole("button", { name: "Reset scene" }));
+    const tableTab = screen.getByRole("tab", { name: /Table/ });
+    fireEvent.click(tableTab);
+    expect(tableTab).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByRole("tabpanel")).toContainElement(canvasHost);
+    fireEvent.click(screen.getByRole("tab", { name: /^Card/ }));
     expect(screen.getByLabelText("Scene state")).toBe(canvasHost);
     expect(viewport.mount).toHaveBeenCalledTimes(1);
     expect(viewport.unmount).not.toHaveBeenCalled();
@@ -88,7 +93,7 @@ describe("Animation playground", () => {
 
   it("prepares the same dealt hand for standalone capture replays", () => {
     open();
-    fireEvent.click(screen.getByRole("button", { name: /Table/ }));
+    fireEvent.click(screen.getByRole("tab", { name: /Table/ }));
     fireEvent.click(screen.getByRole("button", { name: "Fall capture" }));
     fireEvent.click(screen.getByRole("button", { name: "Play / replay" }));
     expect(scene()).toMatchObject({ tableDeals: 1, tableCaptures: 1, tablePlays: 0 });
@@ -98,7 +103,7 @@ describe("Animation playground", () => {
 
   it("prepares an existing table card for ordinary capture and keeps replay mounted", () => {
     open();
-    fireEvent.click(screen.getByRole("button", { name: /Table/ }));
+    fireEvent.click(screen.getByRole("tab", { name: /Table/ }));
     expect(screen.getByRole("button", { name: "Fall capture" })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Capture card" }));
     expect(screen.queryByRole("combobox", { name: "Capture impact" })).not.toBeInTheDocument();
@@ -117,7 +122,7 @@ describe("Animation playground", () => {
 
   it("prepares the cascade board and replays without remounting the viewport", () => {
     open();
-    fireEvent.click(screen.getByRole("button", { name: /Table/ }));
+    fireEvent.click(screen.getByRole("tab", { name: /Table/ }));
     fireEvent.click(screen.getByRole("button", { name: "Cascade capture" }));
     fireEvent.click(screen.getByRole("button", { name: "Play / replay" }));
     expect(scene()).toMatchObject({
