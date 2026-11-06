@@ -156,6 +156,13 @@ const tableLessons: Lesson[] = [
       "Match the first table card, then move the growing pile across the remaining cards one at a time. Collect the whole cascade onto the player's stack to their right.",
   },
   {
+    experiment: "count-cards",
+    label: "Count cards",
+    libraries: "Three.js · React",
+    description:
+      "Count a captured pile after the deck runs out. Set aside the quota, then turn each extra card into another point in the centre of the table.",
+  },
+  {
     experiment: "reset-table",
     label: "Reset table",
     libraries: "GSAP",

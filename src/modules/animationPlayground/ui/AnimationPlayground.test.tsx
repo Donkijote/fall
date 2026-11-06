@@ -137,6 +137,25 @@ describe("Animation playground", () => {
     expect(viewport.mount).toHaveBeenCalledTimes(1);
   });
 
+  it("starts counting with an exhausted deck and replays or tunes without remounting", () => {
+    open();
+    fireEvent.click(screen.getByRole("tab", { name: /Table/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Count cards" }));
+    expect(screen.getByRole("spinbutton", { name: "Captured cards" })).toHaveValue(26);
+    expect(screen.getByRole("combobox", { name: "Counting quota" })).toHaveTextContent("20");
+    fireEvent.click(screen.getByRole("button", { name: "Play / replay" }));
+    expect(scene()).toMatchObject({ tableCounts: 1, tableDeals: 0, centerDeals: 0 });
+    fireEvent.change(screen.getByRole("spinbutton", { name: "Captured cards" }), {
+      target: { value: "18" },
+    });
+    expect(scene().tableCounts).toBe(1);
+    fireEvent.click(screen.getByRole("button", { name: "Play / replay" }));
+    expect(scene().tableCounts).toBe(1);
+    expect(viewport.mount).toHaveBeenCalledTimes(1);
+    fireEvent.click(screen.getByRole("button", { name: "Reset scene" }));
+    expect(scene().tableCounts).toBe(0);
+  });
+
   it("restarts the active preview when tuning changes and rejects out-of-range values", () => {
     open();
     fireEvent.click(screen.getByRole("button", { name: "Shake card" }));

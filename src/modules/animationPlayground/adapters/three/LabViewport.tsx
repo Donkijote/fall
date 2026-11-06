@@ -10,6 +10,7 @@ import emberTexture from "../../assets/ember.svg";
 import { Card } from "./Card";
 import { CardArtworkProvider, cardArtwork } from "./CardArtwork";
 import { CardDrop } from "./CardDrop";
+import { CountingStudy } from "./CountingStudy";
 import { DeckStack } from "./DeckStack";
 import { Fire } from "./Fire";
 import { TableStudy } from "./TableStudy";
@@ -31,6 +32,8 @@ export type SceneSettings = {
   rate: number;
   perf: boolean;
   dpr: number;
+  countTotal: number;
+  countQuota: number;
 };
 
 function Scene({
@@ -143,7 +146,7 @@ export function LabViewport({
         }[state.cardDropEffect]
       : "Hover to tilt · Tap to flip",
     deck: `${state.deckFanned ? "Fan open" : "Stack closed"} · Drag to tilt`,
-    table: "Dealer + 3 players",
+    table: state.tableCounts > 0 ? "Deck empty · Counting captured cards" : "Dealer + 3 players",
   }[study];
 
   useEffect(() => {
@@ -181,7 +184,14 @@ export function LabViewport({
                   <CardStudy lab={lab} state={state} settings={settings} revision={revision} />
                 )}
                 {deck && <DeckStack lab={lab} />}
-                {study === "table" && (
+                {study === "table" && state.tableCounts > 0 && (
+                  <CountingStudy
+                    lab={lab}
+                    total={settings.countTotal}
+                    quota={settings.countQuota}
+                  />
+                )}
+                {study === "table" && state.tableCounts === 0 && (
                   <TableStudy
                     lab={lab}
                     captureEffect={state.activeCaptureIntensity}

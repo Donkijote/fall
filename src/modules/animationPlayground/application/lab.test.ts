@@ -10,11 +10,11 @@ function setup() {
 }
 
 describe("ported animation engine", () => {
-  it("exposes each of the 21 commands exactly once in the catalog", () => {
+  it("exposes each of the 22 commands exactly once in the catalog", () => {
     const commands = Object.values(lessonsByStudy)
       .flat()
       .map((lesson) => lesson.experiment);
-    expect(commands).toHaveLength(21);
+    expect(commands).toHaveLength(22);
     expect(new Set(commands).size).toBe(commands.length);
     for (const experiment of commands) {
       const first = setup();
@@ -77,6 +77,25 @@ describe("ported animation engine", () => {
       activeCaptureMode: "cascade",
       activeCaptureIntensity: "plain",
     });
+  });
+
+  it("counts independently of dealt hands and clears counting when the table resets", () => {
+    const { lab } = setup();
+    lab.run("deal");
+    lab.run("deal-center");
+    lab.run("cascade-capture");
+    lab.run("count-cards");
+    expect(lab.getState()).toMatchObject({
+      tableCounts: 1,
+      tableDeals: 0,
+      centerDeals: 0,
+      tableCaptures: 0,
+      tablePlays: 0,
+    });
+    lab.run("count-cards");
+    expect(lab.getState().tableCounts).toBe(2);
+    lab.run("reset-table");
+    expect(lab.getState().tableCounts).toBe(0);
   });
 
   it("keeps each drop profile finite, repeatable, and cooled at the end", () => {

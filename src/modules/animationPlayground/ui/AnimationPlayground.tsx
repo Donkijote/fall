@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { RULES } from "@/domain/constants/rules";
 import { HOME_PATH } from "@/routes/Routes";
 
 import { createHowlerAudio } from "../adapters/audio/howlerAudio";
@@ -33,6 +34,8 @@ type Settings = {
   dpr: number;
   perf: boolean;
   effect: CardDropEffect;
+  countTotal: number;
+  countQuota: number;
 };
 const defaults: Settings = {
   speed: 1,
@@ -41,6 +44,8 @@ const defaults: Settings = {
   dpr: 2,
   perf: false,
   effect: "plain",
+  countTotal: 26,
+  countQuota: RULES.modeQuotas.duel.quota,
 };
 
 // State-driven effects can start in their target state before the next frame.
@@ -52,6 +57,7 @@ const stateDrivenExperiments = new Set<Experiment>([
   "drop-flame-card",
   "drop",
   "reset-table",
+  "count-cards",
 ]);
 
 // Reset the lab without replacing the viewport or its WebGL context.
@@ -228,7 +234,7 @@ export function AnimationPlayground() {
                     change={(ease) => updateSettings({ ease })}
                   />
                   <p className="text-xs text-muted-foreground">
-                    Speed adjusts GSAP timelines. Easing adjusts flips, deck motion, deals and
+                    Speed adjusts animation timing. Easing adjusts flips, deck motion, deals and
                     plays. Impact curves and physics keep their original motion.
                   </p>
                   {study === "card" && (
@@ -240,6 +246,30 @@ export function AnimationPlayground() {
                       step={5}
                       change={(rate) => updateSettings({ rate })}
                     />
+                  )}
+                  {study === "table" && selected === "count-cards" && (
+                    <>
+                      <NumericControl
+                        label="Captured cards"
+                        value={settings.countTotal}
+                        min={0}
+                        max={40}
+                        step={1}
+                        change={(countTotal) =>
+                          updateSettings({ countTotal: Math.round(countTotal) })
+                        }
+                      />
+                      <Choice
+                        label="Counting quota"
+                        value={String(settings.countQuota)}
+                        choices={[
+                          [String(RULES.modeQuotas.duel.quota), "20 · Duel / team"],
+                          [String(RULES.modeQuotas.ffa3.quota), "12 · Three players"],
+                          [String(RULES.modeQuotas.ffa3.dealerQuota), "13 · Three-player dealer"],
+                        ]}
+                        change={(quota) => updateSettings({ countQuota: Number(quota) })}
+                      />
+                    </>
                   )}
                   {study === "table" && selected === "fall-capture" && (
                     <Choice

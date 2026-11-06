@@ -25,6 +25,7 @@ export type Experiment =
   | "fall-capture"
   | "capture-card"
   | "cascade-capture"
+  | "count-cards"
   | "reset-table";
 
 export type LabState = Readonly<{
@@ -43,6 +44,7 @@ export type LabState = Readonly<{
   centerDeals: number;
   tablePlays: number;
   tableCaptures: number;
+  tableCounts: number;
   captureIntensity: CardDropEffect;
   activeCaptureIntensity: CardDropEffect;
   activeCaptureMode: "fall" | "card" | "cascade";
@@ -64,6 +66,7 @@ export const initialLabState: LabState = {
   centerDeals: 0,
   tablePlays: 0,
   tableCaptures: 0,
+  tableCounts: 0,
   captureIntensity: "plain",
   activeCaptureIntensity: "plain",
   activeCaptureMode: "fall",
@@ -171,6 +174,7 @@ export function createLab(state: LabStatePort, audio: AudioPort): Lab {
           state.update((current) => ({
             ...current,
             tableDeals: current.tableDeals + 1,
+            tableCounts: 0,
             tablePlays: 0,
             tableCaptures: 0,
           }));
@@ -210,6 +214,16 @@ export function createLab(state: LabStatePort, audio: AudioPort): Lab {
               : current,
           );
           break;
+        case "count-cards":
+          state.update((current) => ({
+            ...current,
+            tableDeals: 0,
+            centerDeals: 0,
+            tablePlays: 0,
+            tableCaptures: 0,
+            tableCounts: current.tableCounts + 1,
+          }));
+          break;
         case "reset-table":
           state.update((current) => ({
             ...current,
@@ -217,6 +231,7 @@ export function createLab(state: LabStatePort, audio: AudioPort): Lab {
             centerDeals: 0,
             tablePlays: 0,
             tableCaptures: 0,
+            tableCounts: 0,
           }));
           break;
         case "sound":
