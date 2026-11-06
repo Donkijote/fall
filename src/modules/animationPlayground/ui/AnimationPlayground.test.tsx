@@ -102,6 +102,23 @@ describe("Animation playground", () => {
     expect(viewport.mount).toHaveBeenCalledTimes(1);
   });
 
+  it("prepares the cascade board and replays without remounting the viewport", () => {
+    open();
+    fireEvent.click(screen.getByRole("button", { name: /Table/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Cascade capture" }));
+    fireEvent.click(screen.getByRole("button", { name: "Play / replay" }));
+    expect(scene()).toMatchObject({
+      tableDeals: 1,
+      centerDeals: 1,
+      tableCaptures: 1,
+      activeCaptureMode: "cascade",
+      activeCaptureIntensity: "plain",
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Play / replay" }));
+    expect(scene().tableCaptures).toBe(1);
+    expect(viewport.mount).toHaveBeenCalledTimes(1);
+  });
+
   it("restarts the active preview when tuning changes and rejects out-of-range values", () => {
     open();
     fireEvent.click(screen.getByRole("button", { name: "Shake card" }));

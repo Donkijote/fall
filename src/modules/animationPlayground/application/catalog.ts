@@ -149,6 +149,13 @@ const tableLessons: Lesson[] = [
       "Play a card onto one already on the table, pick up the pair, and place them face down on the player's captured-card stack to their right.",
   },
   {
+    experiment: "cascade-capture",
+    label: "Cascade capture",
+    libraries: "GSAP · Three.js",
+    description:
+      "Match the first table card, then move the growing pile across the remaining cards one at a time. Collect the whole cascade onto the player's stack to their right.",
+  },
+  {
     experiment: "reset-table",
     label: "Reset table",
     libraries: "GSAP",

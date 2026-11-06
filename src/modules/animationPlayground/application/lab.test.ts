@@ -10,11 +10,11 @@ function setup() {
 }
 
 describe("ported animation engine", () => {
-  it("exposes each of the 20 commands exactly once in the catalog", () => {
+  it("exposes each of the 21 commands exactly once in the catalog", () => {
     const commands = Object.values(lessonsByStudy)
       .flat()
       .map((lesson) => lesson.experiment);
-    expect(commands).toHaveLength(20);
+    expect(commands).toHaveLength(21);
     expect(new Set(commands).size).toBe(commands.length);
     for (const experiment of commands) {
       const first = setup();
@@ -61,6 +61,22 @@ describe("ported animation engine", () => {
     });
     lab.run("reset-table");
     expect(lab.getState()).toMatchObject({ tableCaptures: 0, centerDeals: 0, tableDeals: 0 });
+  });
+
+  it("requires a dealt board for cascade capture and snapshots its distinct mode", () => {
+    const { lab } = setup();
+    lab.run("cascade-capture");
+    lab.run("deal");
+    lab.run("cascade-capture");
+    expect(lab.getState().tableCaptures).toBe(0);
+    lab.run("deal-center");
+    lab.setCaptureIntensity("flame");
+    lab.run("cascade-capture");
+    expect(lab.getState()).toMatchObject({
+      tableCaptures: 1,
+      activeCaptureMode: "cascade",
+      activeCaptureIntensity: "plain",
+    });
   });
 
   it("keeps each drop profile finite, repeatable, and cooled at the end", () => {

@@ -178,7 +178,7 @@ excluded from production builds.
 All studies use the app’s Spanish card SVG artwork on the animated 3D mesh, with
 the same light face and dark striped back as the app card design.
 
-The Card, Deck stack, and Table catalogs contain the 20 experiments ported from
+The Card, Deck stack, and Table catalogs contain the 21 experiments ported from
 `threejs-game`. Select an experiment and press **Play / replay**. Replays reset
 isolated lab state while keeping the canvas and WebGL context mounted. Play-card
 and Fall capture previews start with a
@@ -197,3 +197,7 @@ or change game state.
 **Capture card** starts with a face-up card already on the table, plays a card onto
 it, then collects the pair onto the player’s stack to their right without an
 elemental impact. Each replay prepares the hands and center cards automatically.
+
+**Cascade capture** matches the first of four face-up table cards, then carries
+the growing pile around the grid, picking up each card in sequence before moving
+all five cards face down onto the player’s stack to their right.

@@ -16,6 +16,7 @@ import { cardCaptureDuration, sampleCardCapture } from "./cardCapture";
 import type { FrostUniform } from "./cardFrost";
 import type { HeatUniforms } from "./cardHeat";
 import { cardLandingPose, flameCooldownDuration, sampleCardImpact } from "./cardImpactMotion";
+import { cascadeCaptureDuration, cascadeOrder, sampleCascadeCapture } from "./cascadeCapture";
 import { FlameEnvelope } from "./FlameEnvelope";
 import { FlameImpact } from "./FlameImpact";
 import { HeatImpactWave } from "./HeatImpactWave";
@@ -74,6 +75,8 @@ export function TableStudy({
 }) {
   const motionSettings = useMotionSettings();
   const simpleCapture = lab.getState().activeCaptureMode === "card";
+  const cascadeCapture = lab.getState().activeCaptureMode === "cascade";
+  const ordinaryCapture = simpleCapture || cascadeCapture;
   const capturedCardIndex = simpleCapture ? handCardCount : matchedCardIndex;
   const tabletop = useRef<Group>(null);
   const heatWave = useRef({ value: 0 });
@@ -169,7 +172,7 @@ export function TableStudy({
       flameTrail.current.scale.setScalar(cardSize);
     }
     if (fallShadow.current)
-      fallShadow.current.visible = !simpleCapture && capture > 0.27 && capture < impactAt;
+      fallShadow.current.visible = !ordinaryCapture && capture > 0.27 && capture < impactAt;
 
     if (tabletop.current) {
       const tableShake = pose.tableShake * impactScale;
@@ -232,6 +235,27 @@ export function TableStudy({
 
       const topCard = index === playedCardIndex;
       if (topCard) card.scale.setScalar(1);
+      if (cascadeCapture) {
+        if (!topCard && !center) return;
+        const targets = cascadeOrder.map((centerIndex) => ({
+          x: ((centerIndex % 2) - 0.5) * centerSpacing,
+          y: (0.5 - Math.floor(centerIndex / 2)) * centerRowSpacing,
+          z: matchZ,
+        }));
+        const sample = sampleCascadeCapture(
+          capture,
+          topCard
+            ? -1
+            : cascadeOrder.indexOf((index - handCardCount) as (typeof cascadeOrder)[number]),
+          { x, y, z: landingZ, angle },
+          targets,
+          { x: sideX, y: 1.55, z: stackHeight(3 + centerCardCount) },
+          cardPitch,
+        );
+        card.position.set(sample.position[0], sample.position[1], sample.position[2]);
+        card.rotation.set(sample.rotation[0], sample.rotation[1], sample.rotation[2]);
+        return;
+      }
       if (simpleCapture && (topCard || index === capturedCardIndex)) {
         const sample = sampleCardCapture(
           capture,
@@ -360,10 +384,14 @@ export function TableStudy({
         .timeScale(motionSettings.speed)
         .to(captureMotion, {
           progress: 1,
-          duration: simpleCapture ? cardCaptureDuration : captureDuration("plain"),
+          duration: cascadeCapture
+            ? cascadeCaptureDuration
+            : simpleCapture
+              ? cardCaptureDuration
+              : captureDuration("plain"),
           ease: "none",
         });
-      if (!simpleCapture)
+      if (!ordinaryCapture)
         capture.to(captureMotion, {
           cooldown: flameCooldownDuration,
           duration: flameCooldownDuration,
@@ -378,7 +406,7 @@ export function TableStudy({
         ) {
           capture
             .timeScale(
-              simpleCapture
+              ordinaryCapture
                 ? motionSettings.speed
                 : (motionSettings.speed * captureDuration("plain")) /
                     captureDuration(lab.getState().activeCaptureIntensity),
@@ -486,7 +514,7 @@ export function TableStudy({
             />
           </mesh>
         )}
-        {simpleCapture &&
+        {ordinaryCapture &&
           Array.from({ length: 3 }, (_, index) => (
             <group key={`captured-${index}`} position={[sideX, 1.55, stackHeight(index)]}>
               <TableCard size={cardSize} />

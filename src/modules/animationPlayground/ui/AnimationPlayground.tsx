@@ -66,12 +66,17 @@ function createPreview(
   if (
     experiment === "play-card" ||
     experiment === "fall-capture" ||
-    experiment === "capture-card"
+    experiment === "capture-card" ||
+    experiment === "cascade-capture"
   ) {
     state.update((current) => ({ ...current, tableDeals: 1 }));
   }
-  if (experiment === "capture-card") {
-    state.update((current) => ({ ...current, centerDeals: 1, activeCaptureMode: "card" }));
+  if (experiment === "capture-card" || experiment === "cascade-capture") {
+    state.update((current) => ({
+      ...current,
+      centerDeals: 1,
+      activeCaptureMode: experiment === "cascade-capture" ? "cascade" : "card",
+    }));
   }
   const lab = createLab(state, audio);
   lab.setCaptureIntensity(effect);
