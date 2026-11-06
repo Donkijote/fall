@@ -1,4 +1,4 @@
-import type { Mock } from "vitest";
+import type { Mock } from "vite-plus/test";
 
 import { renderHook } from "@testing-library/react";
 

@@ -28,11 +28,8 @@ jobs:
       - name: Install
         run: pnpm install
 
-      - name: Lint
-        run: pnpm lint
-
-      - name: Check formatting
-        run: pnpm format:check
+      - name: Check formatting, lint, and types
+        run: pnpm check
 
       - name: Tests
         run: pnpm run test:coverage

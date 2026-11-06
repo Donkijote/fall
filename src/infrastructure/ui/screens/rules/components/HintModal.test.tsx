@@ -1,5 +1,5 @@
 import type { PropsWithChildren, ReactNode } from "react";
-import type { Mock } from "vitest";
+import type { Mock } from "vite-plus/test";
 
 import { StorageKeys } from "@/application/services/StorageService";
 

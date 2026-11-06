@@ -1,4 +1,4 @@
-import { afterEach, expect, type Mock } from "vitest";
+import { afterEach, expect, type Mock } from "vite-plus/test";
 
 import {
   type AnimationKey,

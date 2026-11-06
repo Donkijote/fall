@@ -1,4 +1,4 @@
-import type { Mock } from "vitest";
+import type { Mock } from "vite-plus/test";
 
 import type { Card } from "@/domain/entities/Card";
 import type { Placement } from "@/modules/table/entities/types";

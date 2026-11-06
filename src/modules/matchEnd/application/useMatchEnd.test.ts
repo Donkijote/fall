@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import type { Mock } from "vitest";
+import type { Mock } from "vite-plus/test";
 
 import { useGameStoreState } from "@/application/hooks/useGameStoreState";
 
