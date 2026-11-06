@@ -8,6 +8,10 @@ The UI uses the installed `base-luma` shadcn preset, backed by Base UI, with the
 palette. Spline Sans is the body font and Cinzel is the heading font. The primary brand red and
 its coordinated light/dark sidebar and focus-ring variations live in `src/index.css`.
 
+The app-wide `next-themes` provider applies the `light`/`dark` class on the document and
+initially follows the system preference. The bottom navigation's theme button overrides that
+preference and persists it under `fall-theme`. Theme changes apply to every route and portal.
+
 Use semantic tokens such as `bg-background`, `bg-card`, `text-foreground`,
 `text-muted-foreground`, `border-border`, and `ring-ring`. Do not reintroduce glass panels,
 backdrop blur, gold highlights, or hard-coded white interface text. Dialog and sheet backdrops

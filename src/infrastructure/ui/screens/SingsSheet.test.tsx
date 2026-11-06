@@ -26,7 +26,7 @@ test("filters by search, minimum points, and mandatory state", async () => {
   expect(screen.queryByRole("heading", { name: "Royal" })).not.toBeInTheDocument();
   await user.clear(screen.getByLabelText("Search combinations"));
   await user.click(screen.getByRole("combobox", { name: "Minimum points" }));
-  await user.click(screen.getByRole("option", { name: "≥ 5" }));
+  await user.click(await screen.findByRole("option", { name: "≥ 5" }));
   expect(screen.queryByRole("heading", { name: "Pair" })).not.toBeInTheDocument();
   expect(screen.getByRole("heading", { name: "Royal" })).toBeVisible();
   expect(screen.getByRole("combobox", { name: "Minimum points" })).toHaveTextContent("≥ 5");

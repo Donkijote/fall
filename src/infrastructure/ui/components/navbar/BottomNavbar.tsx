@@ -5,6 +5,7 @@ import { useNavigate, useSearchParams } from "react-router";
 
 import { Button } from "@/components/ui/button";
 import { BottomSidebar } from "@/infrastructure/ui/components/navbar/BottomSidebar";
+import { ThemeToggle } from "@/infrastructure/ui/components/theme/ThemeToggle";
 import { RULES_PATH, SINGS_SHEETS } from "@/routes/Routes";
 
 export const BottomNavbar = () => {
@@ -40,6 +41,7 @@ export const BottomNavbar = () => {
               active={active === "Daily"}
               onClick={() => setActive("Daily")}
             />
+            <ThemeToggle />
           </div>
           <Button
             size="icon"
