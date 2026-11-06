@@ -1,20 +1,38 @@
-import path from "node:path";
-import { defineConfig } from "vite";
+import path from "path";
+import { defineConfig, type UserConfig } from "vite";
 
+import tailwindcss from "@tailwindcss/vite";
+import react from "@vitejs/plugin-react";
+
+// https://vite.dev/config/
 export default defineConfig({
-  server: {
-    port: 3000,
-    open: true,
-  },
   resolve: {
     alias: {
-      "@domain": path.resolve(__dirname, "src/domain"),
-      "@application": path.resolve(__dirname, "src/application"),
-      "@infrastructure": path.resolve(__dirname, "src/infrastructure"),
-      "@ui": path.resolve(__dirname, "src/ui"),
-      "@shared": path.resolve(__dirname, "src/shared"),
-      "@routes": path.resolve(__dirname, "src/ui/routes"),
-      "@modules": path.resolve(__dirname, "src/ui/modules"),
+      "@": path.resolve(__dirname, "./src"),
     },
   },
-});
+  base: "/fall",
+  plugins: [
+    react({
+      babel: {
+        plugins: ["babel-plugin-react-compiler"],
+      },
+    }),
+    tailwindcss(),
+  ],
+  server: {
+    open: true,
+    port: 3000,
+  },
+  test: {
+    environment: "jsdom",
+    globals: true,
+    setupFiles: ["./vite.setup-tests.ts"],
+    include: ["./src/**/*.test.ts", "./src/**/*.test.tsx"],
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "json", "html"],
+      exclude: ["**/*.test.*", "./src/main.tsx", "./*.config.*", "./*.d.*"],
+    },
+  },
+} as UserConfig);
