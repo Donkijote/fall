@@ -128,7 +128,7 @@ jobs:
 
           echo "Bumping version with: ${{ steps.bump.outputs.bump }}"        
           pnpm version ${{ steps.bump.outputs.bump }} --no-git-tag-version --workspace-root --allow-same-version --silent
-          
+
           version=$(node -p "require('./package.json').version")
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
@@ -168,7 +168,7 @@ jobs:
           script: |
             const { owner, repo } = context.repo;
             const prNumber = Number('${{ steps.pr_main.outputs.pull-request-number }}');
-            
+
             const deadline = Date.now() + 10 * 60 * 1000; // 10 minutes
             let state = '';
             while (Date.now() < deadline) {

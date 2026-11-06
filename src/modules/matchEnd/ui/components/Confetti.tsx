@@ -20,7 +20,7 @@ export const ConfettiController: FC<{ active: boolean }> = ({ active }) => {
   return (
     <div
       aria-hidden
-      className="inset-0 pointer-events-none absolute overflow-hidden"
+      className="pointer-events-none absolute inset-0 overflow-hidden"
     >
       <ConfettiBurst
         key={`${side}-${burstId}`}

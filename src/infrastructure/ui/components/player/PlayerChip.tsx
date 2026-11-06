@@ -78,7 +78,7 @@ export const PlayerChip = ({
         {isDealer && (
           <div
             className={
-              "absolute -right-1 -top-1 flex items-center justify-center"
+              "absolute -top-1 -right-1 flex items-center justify-center"
             }
           >
             <motion.div
@@ -96,7 +96,7 @@ export const PlayerChip = ({
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="bg-accent-gold absolute h-5 w-5 rounded-full"
+              className="absolute h-5 w-5 rounded-full bg-accent-gold"
             />
 
             <span className="relative z-10 text-xs font-bold text-black">

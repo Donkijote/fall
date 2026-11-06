@@ -35,7 +35,7 @@ export const SingsModal = ({ isOpen, onClose }: SingsModalProps) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="inset-0 bg-black/20 fixed z-50 flex items-center justify-center backdrop-blur-[2px]"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-[2px]"
         >
           <motion.div
             ref={panelRef}
@@ -44,29 +44,29 @@ export const SingsModal = ({ isOpen, onClose }: SingsModalProps) => {
             exit={{ scale: 0.95, opacity: 0 }}
             transition={{ type: "spring", stiffness: 220, damping: 18 }}
             className={
-              "md:max-w-[95vw] lg:max-w-3xl xl:max-w-5xl rounded-2xl border-white/10 bg-white/10 shadow-2xl backdrop-blur-md relative w-[92vw] max-w-[min(1100px,95vw)] overflow-auto border"
+              "relative w-[92vw] max-w-[min(1100px,95vw)] overflow-auto rounded-2xl border border-white/10 bg-white/10 shadow-2xl backdrop-blur-md md:max-w-[95vw] lg:max-w-3xl xl:max-w-5xl"
             }
           >
             <div
-              className="inset-0 absolute h-full bg-cover mix-blend-overlay"
+              className="absolute inset-0 h-full bg-cover mix-blend-overlay"
               style={{
                 backgroundImage: `url(${bg})`,
               }}
             />
             <div className={"scrollbar-hide-y h-[85dvh] overflow-y-auto"}>
-              <div className="top-0 gap-4 border-white/10 bg-white/10 px-5 py-4 backdrop-blur-md sticky z-10 flex items-center justify-between border-b">
-                <h3 className="text-text-primary text-lg font-semibold">
+              <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-white/10 bg-white/10 px-5 py-4 backdrop-blur-md">
+                <h3 className="text-lg font-semibold text-text-primary">
                   Sings (Combinations)
                 </h3>
                 <button
                   onClick={onClose}
                   aria-label="Close"
-                  className="border-white/20 bg-white/10 px-2 py-1.5 text-text-primary hover:bg-white/15 cursor-pointer rounded-full border transition"
+                  className="cursor-pointer rounded-full border border-white/20 bg-white/10 px-2 py-1.5 text-text-primary transition hover:bg-white/15"
                 >
                   <FontAwesomeIcon icon={faClose} />
                 </button>
               </div>
-              <div className="pb-20 pt-4 px-5">
+              <div className="px-5 pt-4 pb-20">
                 <SingsList sings={getUiHands()} />
               </div>
             </div>

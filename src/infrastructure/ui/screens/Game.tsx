@@ -42,7 +42,7 @@ export const GameScreen = () => {
       />
       <button
         onClick={() => setIsSingsModalOpen(true)}
-        className="text-text-primary absolute right-4 top-4 cursor-pointer rounded-full border border-white/20 bg-white/10 px-3 py-2.5 transition hover:bg-white/15"
+        className="absolute top-4 right-4 cursor-pointer rounded-full border border-white/20 bg-white/10 px-3 py-2.5 text-text-primary transition hover:bg-white/15"
       >
         <FontAwesomeIcon icon={faScroll} />
       </button>

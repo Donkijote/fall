@@ -581,12 +581,10 @@ describe("Game Service", () => {
       toCardKey: (c: CardWithKey) => c.key ?? `${c.suit}-${c.rank}`,
     }));
 
-    const { createGameService } = await import(
-      "@/application/services/GameService"
-    );
-    const { animationService, AnimationKeys } = await import(
-      "@/application/services/AnimationService"
-    );
+    const { createGameService } =
+      await import("@/application/services/GameService");
+    const { animationService, AnimationKeys } =
+      await import("@/application/services/AnimationService");
 
     const setState = vi.fn();
     const state: GameState = {
@@ -685,12 +683,10 @@ describe("Game Service", () => {
       toCardKey: (c: CardWithKey) => c.key ?? `${c.suit}-${c.rank}`,
     }));
 
-    const { createGameService } = await import(
-      "@/application/services/GameService"
-    );
-    const { animationService, AnimationKeys } = await import(
-      "@/application/services/AnimationService"
-    );
+    const { createGameService } =
+      await import("@/application/services/GameService");
+    const { animationService, AnimationKeys } =
+      await import("@/application/services/AnimationService");
 
     const setState = vi.fn();
     const state = {

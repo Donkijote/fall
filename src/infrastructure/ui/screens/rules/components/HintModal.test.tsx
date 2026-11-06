@@ -31,9 +31,8 @@ vi.mock("@/application/services/StorageService", async () => {
   };
 });
 
-const { StorageService } = await import(
-  "@/application/services/StorageService"
-);
+const { StorageService } =
+  await import("@/application/services/StorageService");
 
 beforeEach(() => {
   vi.clearAllMocks();

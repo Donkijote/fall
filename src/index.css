@@ -6,7 +6,6 @@
 @import "tailwindcss/preflight.css" layer(base);
 @import "tailwindcss/utilities.css" layer(utilities);
 
-
 @theme {
   --breakpoint-3xl: 120rem;
 
@@ -26,16 +25,16 @@
   --color-shadow: rgba(0, 0, 0, 0.6);
 }
 @layer utilities {
-    .scrollbar-hide-y::-webkit-scrollbar {
-        display: none;
-    }
-    .scrollbar-hide-y {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-    }
+  .scrollbar-hide-y::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide-y {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
 
-
-html, body {
-    overflow: hidden;
+html,
+body {
+  overflow: hidden;
 }

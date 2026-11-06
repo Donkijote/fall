@@ -67,13 +67,13 @@ export const BottomSidebar = ({ isOpen, onClose }: BottomSidebarProps) => {
           animate={{ y: 0 }}
           exit={{ y: "100%" }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="bottom-0 left-0 right-0 top-0 bg-black/60 backdrop-blur-md fixed z-40 flex flex-col"
+          className="fixed top-0 right-0 bottom-0 left-0 z-40 flex flex-col bg-black/60 backdrop-blur-md"
         >
           {/* Close button */}
-          <div className="right-10 top-4 absolute z-100">
+          <div className="absolute top-4 right-10 z-100">
             <button
               onClick={() => onClose()}
-              className="text-white/70 hover:text-white active:text-white cursor-pointer transition"
+              className="cursor-pointer text-white/70 transition hover:text-white active:text-white"
             >
               <FontAwesomeIcon icon={faClose} className={"text-3xl"} />
             </button>
@@ -89,14 +89,14 @@ export const BottomSidebar = ({ isOpen, onClose }: BottomSidebarProps) => {
                 onClick={() => onSelectGameMode(mode.id)}
               >
                 <div
-                  className="inset-0 absolute bg-cover bg-center bg-no-repeat transition-transform duration-500 group-hover:scale-110 group-active:scale-110"
+                  className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-500 group-hover:scale-110 group-active:scale-110"
                   style={{ backgroundImage: `url(${mode.bg})` }}
                 />
 
-                <div className="inset-0 bg-black/60 group-hover:bg-black/30 group-active:bg-black/30 absolute transition" />
+                <div className="absolute inset-0 bg-black/60 transition group-hover:bg-black/30 group-active:bg-black/30" />
 
-                <div className="p-6 relative z-10 flex h-full flex-col items-center justify-center text-center">
-                  <h3 className="text-3xl md:text-4xl font-bold text-white drop-shadow transition-transform duration-300 group-hover:scale-110 group-active:scale-110">
+                <div className="relative z-10 flex h-full flex-col items-center justify-center p-6 text-center">
+                  <h3 className="text-3xl font-bold text-white drop-shadow transition-transform duration-300 group-hover:scale-110 group-active:scale-110 md:text-4xl">
                     {mode.title}
                   </h3>
                   <p className="mt-2 text-white/80 transition-transform duration-300 group-hover:scale-105 group-active:scale-105">

@@ -97,7 +97,7 @@ export const BouncingCardAnimation = ({
   }, [scope, animate, onComplete]);
 
   return (
-    <div className="inset-0 absolute">
+    <div className="absolute inset-0">
       <div
         ref={scope}
         className="absolute top-[60vh] left-1/2 -translate-x-1/2"

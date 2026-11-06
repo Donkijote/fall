@@ -5,8 +5,8 @@ import type { ReactNode } from "react";
 import { useGameStoreState } from "@/application/hooks/useGameStoreState";
 import { AnimationKeys } from "@/application/services/AnimationService";
 
-import { TableCards } from "./TableCards";
 import { TableBackground } from "./components/TableBackground";
+import { TableCards } from "./TableCards";
 
 export const Table = ({ children }: { children: ReactNode }) => {
   const { players } = useGameStoreState();

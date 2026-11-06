@@ -4,7 +4,7 @@ export const CardList = () => {
   return (
     <div
       className={
-        "gap-4 flex h-screen flex-row flex-wrap items-center overflow-auto"
+        "flex h-screen flex-row flex-wrap items-center gap-4 overflow-auto"
       }
     >
       <div>
