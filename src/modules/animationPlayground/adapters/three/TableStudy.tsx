@@ -12,6 +12,7 @@ import { deckCardCount } from "../../application/lab";
 import type { CardDropEffect, Lab } from "../../application/lab";
 import shadowTexture from "../../assets/ember.svg";
 import { CardMesh } from "./Card";
+import { cardCaptureDuration, sampleCardCapture } from "./cardCapture";
 import type { FrostUniform } from "./cardFrost";
 import type { HeatUniforms } from "./cardHeat";
 import { cardLandingPose, flameCooldownDuration, sampleCardImpact } from "./cardImpactMotion";
@@ -72,6 +73,8 @@ export function TableStudy({
   capturing: boolean;
 }) {
   const motionSettings = useMotionSettings();
+  const simpleCapture = lab.getState().activeCaptureMode === "card";
+  const capturedCardIndex = simpleCapture ? handCardCount : matchedCardIndex;
   const tabletop = useRef<Group>(null);
   const heatWave = useRef({ value: 0 });
   const shatter = useRef({ value: 0 });
@@ -165,7 +168,8 @@ export function TableStudy({
       flameTrail.current.visible = ember && flamePrime > 0 && flameOpacity.current.value > 0.002;
       flameTrail.current.scale.setScalar(cardSize);
     }
-    if (fallShadow.current) fallShadow.current.visible = capture > 0.27 && capture < impactAt;
+    if (fallShadow.current)
+      fallShadow.current.visible = !simpleCapture && capture > 0.27 && capture < impactAt;
 
     if (tabletop.current) {
       const tableShake = pose.tableShake * impactScale;
@@ -228,7 +232,20 @@ export function TableStudy({
 
       const topCard = index === playedCardIndex;
       if (topCard) card.scale.setScalar(1);
-      if (!capture || (!topCard && index !== matchedCardIndex)) return;
+      if (simpleCapture && (topCard || index === capturedCardIndex)) {
+        const sample = sampleCardCapture(
+          capture,
+          topCard,
+          { x, y, z: landingZ, angle },
+          { x: -centerSpacing / 2, y: centerRowSpacing / 2, z: matchZ },
+          { x: sideX, y: 1.55, z: stackHeight(4) },
+          cardPitch,
+        );
+        card.position.set(sample.position[0], sample.position[1], sample.position[2]);
+        card.rotation.set(sample.rotation[0], sample.rotation[1], sample.rotation[2]);
+        return;
+      }
+      if (!capture || (!topCard && index !== capturedCardIndex)) return;
 
       if (capture < collectAt) {
         if (topCard) {
@@ -341,8 +358,13 @@ export function TableStudy({
       const capture = gsap
         .timeline({ paused: true })
         .timeScale(motionSettings.speed)
-        .to(captureMotion, { progress: 1, duration: captureDuration("plain"), ease: "none" })
         .to(captureMotion, {
+          progress: 1,
+          duration: simpleCapture ? cardCaptureDuration : captureDuration("plain"),
+          ease: "none",
+        });
+      if (!simpleCapture)
+        capture.to(captureMotion, {
           cooldown: flameCooldownDuration,
           duration: flameCooldownDuration,
           ease: "none",
@@ -356,8 +378,10 @@ export function TableStudy({
         ) {
           capture
             .timeScale(
-              (motionSettings.speed * captureDuration("plain")) /
-                captureDuration(lab.getState().activeCaptureIntensity),
+              simpleCapture
+                ? motionSettings.speed
+                : (motionSettings.speed * captureDuration("plain")) /
+                    captureDuration(lab.getState().activeCaptureIntensity),
             )
             .restart();
         }
@@ -462,6 +486,12 @@ export function TableStudy({
             />
           </mesh>
         )}
+        {simpleCapture &&
+          Array.from({ length: 3 }, (_, index) => (
+            <group key={`captured-${index}`} position={[sideX, 1.55, stackHeight(index)]}>
+              <TableCard size={cardSize} />
+            </group>
+          ))}
         {Array.from({ length: remainingCards }, (_, index) => (
           <group key={index} position={[deckX, dealerY, stackHeight(index)]}>
             <TableCard size={cardSize} />
@@ -481,7 +511,7 @@ export function TableStudy({
               heat={
                 index === playedCardIndex
                   ? playedHeat
-                  : index === matchedCardIndex
+                  : index === capturedCardIndex
                     ? matchHeat
                     : undefined
               }

@@ -10,11 +10,11 @@ function setup() {
 }
 
 describe("ported animation engine", () => {
-  it("exposes each of the 19 commands exactly once in the catalog", () => {
+  it("exposes each of the 20 commands exactly once in the catalog", () => {
     const commands = Object.values(lessonsByStudy)
       .flat()
       .map((lesson) => lesson.experiment);
-    expect(commands).toHaveLength(19);
+    expect(commands).toHaveLength(20);
     expect(new Set(commands).size).toBe(commands.length);
     for (const experiment of commands) {
       const first = setup();
@@ -28,11 +28,11 @@ describe("ported animation engine", () => {
   it("guards dependent table actions and snapshots capture intensity", () => {
     const { lab } = setup();
     lab.run("play-card");
-    lab.run("capture-match");
+    lab.run("fall-capture");
     expect(lab.getState()).toMatchObject({ tablePlays: 0, tableCaptures: 0 });
     lab.run("deal");
     lab.setCaptureIntensity("flame");
-    lab.run("capture-match");
+    lab.run("fall-capture");
     lab.setCaptureIntensity("ice");
     expect(lab.getState()).toMatchObject({
       tableCaptures: 1,
@@ -43,6 +43,24 @@ describe("ported animation engine", () => {
     expect(lab.getState().tablePlays).toBe(0);
     lab.run("reset-table");
     expect(lab.getState()).toMatchObject({ tableDeals: 0, tablePlays: 0, tableCaptures: 0 });
+  });
+
+  it("requires a table card for ordinary capture and never adds an elemental impact", () => {
+    const { lab } = setup();
+    lab.run("capture-card");
+    lab.run("deal");
+    lab.run("capture-card");
+    expect(lab.getState().tableCaptures).toBe(0);
+    lab.run("deal-center");
+    lab.setCaptureIntensity("flame");
+    lab.run("capture-card");
+    expect(lab.getState()).toMatchObject({
+      tableCaptures: 1,
+      activeCaptureMode: "card",
+      activeCaptureIntensity: "plain",
+    });
+    lab.run("reset-table");
+    expect(lab.getState()).toMatchObject({ tableCaptures: 0, centerDeals: 0, tableDeals: 0 });
   });
 
   it("keeps each drop profile finite, repeatable, and cooled at the end", () => {

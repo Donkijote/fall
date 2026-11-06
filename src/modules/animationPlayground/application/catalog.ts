@@ -135,11 +135,18 @@ const tableLessons: Lesson[] = [
     description: "The player on the right plays their top card face up beside the center grid.",
   },
   {
-    experiment: "capture-match",
-    label: "Capture match",
+    experiment: "fall-capture",
+    label: "Fall capture",
     libraries: "GSAP · Three.js",
     description:
       "The far player sets down a card. The right player drops its match from their hand and collects the pair face down.",
+  },
+  {
+    experiment: "capture-card",
+    label: "Capture card",
+    libraries: "GSAP · Three.js",
+    description:
+      "Play a card onto one already on the table, pick up the pair, and place them face down on the player's captured-card stack to their right.",
   },
   {
     experiment: "reset-table",

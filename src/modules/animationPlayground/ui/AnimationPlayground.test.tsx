@@ -76,11 +76,30 @@ describe("Animation playground", () => {
   it("prepares the same dealt hand for standalone capture replays", () => {
     open();
     fireEvent.click(screen.getByRole("button", { name: /Table/ }));
-    fireEvent.click(screen.getByRole("button", { name: "Capture match" }));
+    fireEvent.click(screen.getByRole("button", { name: "Fall capture" }));
     fireEvent.click(screen.getByRole("button", { name: "Play / replay" }));
     expect(scene()).toMatchObject({ tableDeals: 1, tableCaptures: 1, tablePlays: 0 });
     fireEvent.click(screen.getByRole("button", { name: "Play / replay" }));
     expect(scene().tableCaptures).toBe(1);
+  });
+
+  it("prepares an existing table card for ordinary capture and keeps replay mounted", () => {
+    open();
+    fireEvent.click(screen.getByRole("button", { name: /Table/ }));
+    expect(screen.getByRole("button", { name: "Fall capture" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Capture card" }));
+    expect(screen.queryByRole("combobox", { name: "Capture impact" })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Play / replay" }));
+    expect(scene()).toMatchObject({
+      tableDeals: 1,
+      centerDeals: 1,
+      tableCaptures: 1,
+      activeCaptureMode: "card",
+      activeCaptureIntensity: "plain",
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Play / replay" }));
+    expect(scene().tableCaptures).toBe(1);
+    expect(viewport.mount).toHaveBeenCalledTimes(1);
   });
 
   it("restarts the active preview when tuning changes and rejects out-of-range values", () => {

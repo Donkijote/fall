@@ -22,7 +22,8 @@ export type Experiment =
   | "deal"
   | "deal-center"
   | "play-card"
-  | "capture-match"
+  | "fall-capture"
+  | "capture-card"
   | "reset-table";
 
 export type LabState = Readonly<{
@@ -43,6 +44,7 @@ export type LabState = Readonly<{
   tableCaptures: number;
   captureIntensity: CardDropEffect;
   activeCaptureIntensity: CardDropEffect;
+  activeCaptureMode: "fall" | "card";
 }>;
 
 export const initialLabState: LabState = {
@@ -63,6 +65,7 @@ export const initialLabState: LabState = {
   tableCaptures: 0,
   captureIntensity: "plain",
   activeCaptureIntensity: "plain",
+  activeCaptureMode: "fall",
 };
 
 type LabReader = {
@@ -181,13 +184,26 @@ export function createLab(state: LabStatePort, audio: AudioPort): Lab {
               : current,
           );
           break;
-        case "capture-match":
+        case "fall-capture":
           state.update((current) =>
             current.tableDeals > 0 && !current.tablePlays
               ? {
                   ...current,
                   tableCaptures: current.tableCaptures + 1,
                   activeCaptureIntensity: current.captureIntensity,
+                  activeCaptureMode: "fall",
+                }
+              : current,
+          );
+          break;
+        case "capture-card":
+          state.update((current) =>
+            current.tableDeals > 0 && current.centerDeals > 0 && !current.tablePlays
+              ? {
+                  ...current,
+                  tableCaptures: current.tableCaptures + 1,
+                  activeCaptureIntensity: "plain",
+                  activeCaptureMode: "card",
                 }
               : current,
           );

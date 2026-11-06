@@ -178,10 +178,10 @@ excluded from production builds.
 All studies use the app’s Spanish card SVG artwork on the animated 3D mesh, with
 the same light face and dark striped back as the app card design.
 
-The Card, Deck stack, and Table catalogs contain the 19 experiments ported from
+The Card, Deck stack, and Table catalogs contain the 20 experiments ported from
 `threejs-game`. Select an experiment and press **Play / replay**. Replays reset
 isolated lab state while keeping the canvas and WebGL context mounted. Play-card
-and capture previews start with a
+and Fall capture previews start with a
 settled dealt hand, so they can be previewed independently. **Reset scene** stops
 the preview and returns to its initial pose.
 
@@ -192,3 +192,8 @@ rate, capture impact, pixel ratio, and an optional FPS display are also availabl
 Card trajectories and state transitions use fixed starting conditions; decorative
 particles remain stochastic. These studies do not dispatch gameplay animations
 or change game state.
+
+**Fall capture** retains the full opponent-play, impact, and collection sequence.
+**Capture card** starts with a face-up card already on the table, plays a card onto
+it, then collects the pair onto the player’s stack to their right without an
+elemental impact. Each replay prepares the hands and center cards automatically.

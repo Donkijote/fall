@@ -63,8 +63,15 @@ function createPreview(
 ) {
   const state = createZustandLabState();
   // Dependent studies start from a settled dealt hand on every replay.
-  if (experiment === "play-card" || experiment === "capture-match") {
+  if (
+    experiment === "play-card" ||
+    experiment === "fall-capture" ||
+    experiment === "capture-card"
+  ) {
     state.update((current) => ({ ...current, tableDeals: 1 }));
+  }
+  if (experiment === "capture-card") {
+    state.update((current) => ({ ...current, centerDeals: 1, activeCaptureMode: "card" }));
   }
   const lab = createLab(state, audio);
   lab.setCaptureIntensity(effect);
@@ -239,7 +246,7 @@ export function AnimationPlayground() {
                   change={(rate) => updateSettings({ rate })}
                 />
               )}
-              {study === "table" && (
+              {study === "table" && selected === "fall-capture" && (
                 <Choice
                   label="Capture impact"
                   value={settings.effect}
