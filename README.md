@@ -175,6 +175,9 @@ Run `pnpm dev`, then choose **Animation playground** on the home screen or open
 `/fall/dev/animations`. The route, home link, scene modules, and demo assets are
 excluded from production builds.
 
+All studies use the app’s Spanish card SVG artwork on the animated 3D mesh, with
+the same light face and dark striped back as the app card design.
+
 The Card, Deck stack, and Table catalogs contain the 19 experiments ported from
 `threejs-game`. Select an experiment and press **Play / replay**. Replays reset
 isolated lab state while keeping the canvas and WebGL context mounted. Play-card

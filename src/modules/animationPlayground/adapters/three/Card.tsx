@@ -5,12 +5,11 @@ import { ExtrudeGeometry, MathUtils, Shape, SRGBColorSpace } from "three";
 import type { Group, MeshBasicMaterial } from "three";
 
 import { useGSAP } from "@gsap/react";
-import { useCursor, useTexture } from "@react-three/drei";
+import { useCursor } from "@react-three/drei";
 import { extend, useFrame } from "@react-three/fiber";
 
 import type { Lab } from "../../application/lab";
-import backArt from "../../assets/card-back.svg";
-import faceArt from "../../assets/card-face.svg";
+import { useCardArtwork } from "./CardArtwork";
 import { addCardFrost } from "./cardFrost";
 import type { FrostUniform } from "./cardFrost";
 import { addCardHeat } from "./cardHeat";
@@ -25,8 +24,8 @@ class CardGeometry extends ExtrudeGeometry {
     const width = 2.06;
     const height = 2.88;
     const depth = 0.09;
-    // Both SVGs use a 22px inset and a 22px corner radius on the printed frame.
-    const radius = ((22 + 22) * height) / 720;
+    // Match the rounded silhouette of the app card while retaining the 3D mesh.
+    const radius = width * (12 / 96);
     const x = width / 2 - radius;
     const y = height / 2 - radius;
     const outline = new Shape();
@@ -87,11 +86,11 @@ export function CardMesh({
       customProgramCacheKey: () => `card-surface:${Boolean(frost)}:${Boolean(heat)}`,
     };
   }, [frost, heat]);
-  const [face, back] = useTexture([faceArt, backArt]);
+  const [face, back] = useCardArtwork();
   return (
     <mesh>
       <CardSurface />
-      <meshStandardMaterial attach="material-0" color="#b8a78d" roughness={0.75} />
+      <meshStandardMaterial attach="material-0" color="#e4e4e7" roughness={0.75} />
       <meshBasicMaterial
         attach="material-1"
         map={face}

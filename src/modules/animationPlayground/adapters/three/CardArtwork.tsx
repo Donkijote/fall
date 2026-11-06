@@ -1,0 +1,50 @@
+import { createContext, useContext, useEffect, useMemo } from "react";
+import type { ReactNode } from "react";
+import { CanvasTexture, SRGBColorSpace } from "three";
+import type { Texture } from "three";
+
+import backArt from "@/assets/cards/back.svg";
+import faceArt from "@/assets/cards/coins/AceOfCoins.svg";
+
+import { useTexture } from "@react-three/drei";
+
+export const cardArtwork = { face: faceArt, back: backArt, label: "ACE OF COINS" };
+const CardArtworkContext = createContext<readonly [Texture, Texture] | null>(null);
+
+// The global SVGs contain transparent suit/rank artwork. Bake the same light
+// paper and inset as the app card into one shared texture, preserving its ratio.
+export function createCardFaceTexture(
+  image: CanvasImageSource & { width: number; height: number },
+) {
+  const canvas = document.createElement("canvas");
+  canvas.width = 512;
+  canvas.height = 720;
+  const context = canvas.getContext("2d");
+  if (!context) throw new Error("Card artwork requires a 2D canvas context.");
+  context.fillStyle = "#fafafa";
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  const inset = 40;
+  const scale = Math.min(
+    (canvas.width - inset * 2) / image.width,
+    (canvas.height - inset * 2) / image.height,
+  );
+  const width = image.width * scale;
+  const height = image.height * scale;
+  context.drawImage(image, (canvas.width - width) / 2, (canvas.height - height) / 2, width, height);
+  const texture = new CanvasTexture(canvas);
+  texture.colorSpace = SRGBColorSpace;
+  return texture;
+}
+
+export function CardArtworkProvider({ children }: { children: ReactNode }) {
+  const [art, back] = useTexture([cardArtwork.face, cardArtwork.back]);
+  const face = useMemo(() => createCardFaceTexture(art.image as HTMLImageElement), [art]);
+  useEffect(() => () => face.dispose(), [face]);
+  return <CardArtworkContext value={[face, back]}>{children}</CardArtworkContext>;
+}
+
+export function useCardArtwork() {
+  const textures = useContext(CardArtworkContext);
+  if (!textures) throw new Error("Card meshes must be inside CardArtworkProvider.");
+  return textures;
+}

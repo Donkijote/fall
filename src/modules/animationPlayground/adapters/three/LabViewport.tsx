@@ -6,10 +6,9 @@ import { Canvas, useFrame } from "@react-three/fiber";
 
 import { deckCardCount } from "../../application/lab";
 import type { Experiment, Lab, LabState, Study } from "../../application/lab";
-import backArt from "../../assets/card-back.svg";
-import faceArt from "../../assets/card-face.svg";
 import emberTexture from "../../assets/ember.svg";
 import { Card } from "./Card";
+import { CardArtworkProvider, cardArtwork } from "./CardArtwork";
 import { CardDrop } from "./CardDrop";
 import { DeckStack } from "./DeckStack";
 import { Fire } from "./Fire";
@@ -140,7 +139,7 @@ export function LabViewport({
           flame: ["FLAME IMPACT", "Press Drop flame card to replay"],
           plain: ["CARD IMPACT", "Press Drop card to replay"],
         }[state.cardDropEffect]
-      : [`ACE OF DIAMONDS / ${state.faceUp ? "FACE" : "BACK"}`, "Hover to tilt · Tap to flip"],
+      : [`${cardArtwork.label} / ${state.faceUp ? "FACE" : "BACK"}`, "Hover to tilt · Tap to flip"],
     deck: [
       `DECK STACK / ${deckCardCount} CARDS`,
       `${state.deckFanned ? "Fan open" : "Stack closed"} · Drag to tilt`,
@@ -149,7 +148,7 @@ export function LabViewport({
   }[study];
 
   useEffect(() => {
-    useTexture.preload([faceArt, backArt]);
+    useTexture.preload([cardArtwork.face, cardArtwork.back]);
     useTexture.preload(emberTexture);
   }, []);
 
@@ -178,18 +177,20 @@ export function LabViewport({
             }
           >
             <Suspense fallback={null}>
-              {study === "card" && (
-                <CardStudy lab={lab} state={state} settings={settings} revision={revision} />
-              )}
-              {deck && <DeckStack lab={lab} />}
-              {study === "table" && (
-                <TableStudy
-                  lab={lab}
-                  captureEffect={state.activeCaptureIntensity}
-                  capturing={state.tableCaptures > 0}
-                />
-              )}
-              <AutoRun lab={lab} experiment={experiment} />
+              <CardArtworkProvider>
+                {study === "card" && (
+                  <CardStudy lab={lab} state={state} settings={settings} revision={revision} />
+                )}
+                {deck && <DeckStack lab={lab} />}
+                {study === "table" && (
+                  <TableStudy
+                    lab={lab}
+                    captureEffect={state.activeCaptureIntensity}
+                    capturing={state.tableCaptures > 0}
+                  />
+                )}
+                <AutoRun lab={lab} experiment={experiment} />
+              </CardArtworkProvider>
             </Suspense>
           </Scene>
         </Canvas>
