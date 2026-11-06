@@ -3,3 +3,5 @@ export const GAME_PATH = "/game";
 export const CARDS_PATH = "/cards";
 export const SINGS_SHEETS = "/sings";
 export const RULES_PATH = "/rules";
+
+export const ANIMATION_PLAYGROUND_PATH = "/dev/animations";

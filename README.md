@@ -168,3 +168,23 @@ When all cards have been dealt and played:
 ## Specification
 
 The name Fall is a literal translation from the spanish word **Caída**
+
+## Animation playground (development only)
+
+Run `pnpm dev`, then choose **Animation playground** on the home screen or open
+`/fall/dev/animations`. The route, home link, scene modules, and demo assets are
+excluded from production builds.
+
+The Card, Deck stack, and Table catalogs contain the 19 experiments ported from
+`threejs-game`. Select an experiment and press **Play / replay**. Replays mount a
+fresh scene and isolated lab state. Play-card and capture previews start with a
+settled dealt hand, so they can be previewed independently. **Reset scene** stops
+the preview and returns to its initial pose.
+
+Live tuning restarts the current preview with the new settings. Timeline speed
+controls GSAP choreography; easing controls flips, deck motion, deals, and plays.
+Sampled impact motion and Rapier physics retain their original curves. Ember
+rate, capture impact, pixel ratio, and an optional FPS display are also available.
+Card trajectories and state transitions use fixed starting conditions; decorative
+particles remain stochastic. These studies do not dispatch gameplay animations
+or change game state.
