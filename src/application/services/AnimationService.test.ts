@@ -1,8 +1,9 @@
 import type { Card } from "@/domain/entities/Card";
 
+vi.unmock("@/application/services/AnimationService");
+
 const freshService = async () => {
   vi.resetModules();
-  vi.unmock("@/application/services/AnimationService");
   return await import("@/application/services/AnimationService");
 };
 

@@ -3,7 +3,7 @@ export default {
     "@trivago/prettier-plugin-sort-imports",
     "prettier-plugin-tailwindcss",
   ],
-  tailwindStylesheet: "./src/App.css",
+  tailwindStylesheet: "./src/index.css",
   importOrderSeparation: true,
   importOrder: ["^@react/(.*)$", "^@/(.*)$", "^@(.*)$", "^[.*]", "^[./]"],
 };

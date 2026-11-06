@@ -1,23 +1,21 @@
 import path from "path";
-import { defineConfig, type UserConfig } from "vite";
+import { defineConfig } from "vitest/config";
 
+import babel from "@rolldown/plugin-babel";
 import tailwindcss from "@tailwindcss/vite";
-import react from "@vitejs/plugin-react";
+import react, { reactCompilerPreset } from "@vitejs/plugin-react";
 
 // https://vite.dev/config/
 export default defineConfig({
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      "@": path.resolve(import.meta.dirname, "./src"),
     },
   },
   base: "/fall",
   plugins: [
-    react({
-      babel: {
-        plugins: ["babel-plugin-react-compiler"],
-      },
-    }),
+    react(),
+    babel({ presets: [reactCompilerPreset()] }),
     tailwindcss(),
   ],
   server: {
@@ -35,4 +33,4 @@ export default defineConfig({
       exclude: ["**/*.test.*", "./src/main.tsx", "./*.config.*", "./*.d.*"],
     },
   },
-} as UserConfig);
+});

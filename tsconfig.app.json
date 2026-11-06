@@ -25,7 +25,6 @@
     "types": ["vitest/globals", "@testing-library/jest-dom/vitest"],
 
     /* Paths */
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
     }

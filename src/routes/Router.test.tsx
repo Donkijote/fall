@@ -27,10 +27,13 @@ async function importRouter() {
 }
 
 describe("AppRouter", () => {
+  beforeEach(() => {
+    vi.stubEnv("BASE_URL", "/fall/");
+  });
   afterEach(() => {
     cleanup();
     vi.restoreAllMocks();
-    vi.unstubAllEnvs?.(); // if using Vitest env stubs
+    vi.unstubAllEnvs();
     vi.resetModules();
   });
 
@@ -64,7 +67,6 @@ describe("AppRouter", () => {
 
   it("honors basename from import.meta.env.BASE_URL (trims trailing slashes)", async () => {
     // Simulate a base path like /fall/
-    // NOTE: requires Vitest >= 1.4 for vi.stubEnv
     vi.stubEnv("BASE_URL", "/fall/");
     // navigate to /fall/<route>
     window.history.pushState({}, "", `/fall${GAME_PATH}`);

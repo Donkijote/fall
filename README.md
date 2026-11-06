@@ -1,5 +1,19 @@
 # 🎴 Fall* — Rules Specification
 
+## Development
+
+Use Node **26.12.1** (`nvm use`) and pnpm **12.15.0**, as pinned in `.nvmrc` and `package.json`. CI reads the same version pins.
+
+```sh
+nvm use
+pnpm install --frozen-lockfile
+pnpm dev
+```
+
+Run `pnpm build` for TypeScript checking and the production build, and `pnpm test:coverage` for the test suite and coverage report.
+
+The project uses TypeScript 7. The current `typescript-eslint` release only supports TypeScript versions below 6.1, so `pnpm lint` is currently blocked pending the planned migration to Oxlint.
+
 ## 📖 Overview
 Fall is a traditional Venezuelan card game played with the **Spanish 40-card deck**.  
 It can be played in **duel (1v1)**, **three-player free-for-all (1v1v1)**, or **team mode (2v2)**.  
