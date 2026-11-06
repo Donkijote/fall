@@ -31,29 +31,20 @@ export const SingsList = ({ sings }: { sings: Array<UiHand> }) => {
             }}
           />
           <header className="mb-2 flex items-start justify-between gap-3">
-            <h3 className="text-lg font-semibold text-text-primary">
-              {hand.name}
-            </h3>
+            <h3 className="text-lg font-semibold text-text-primary">{hand.name}</h3>
             <span className="rounded-full border border-white/20 bg-white/10 px-2 py-0.5 text-sm text-text-primary">
               {hand.points} pts
             </span>
           </header>
 
           {hand.description && (
-            <p className="mb-3 text-sm text-text-secondary">
-              {hand.description}
-            </p>
+            <p className="mb-3 text-sm text-text-secondary">{hand.description}</p>
           )}
 
           {hand.example?.length ? (
             <div className="mb-3 flex gap-2">
               {hand.example.map((c, idx) => (
-                <Card
-                  key={c.suit + c.rank + idx}
-                  rank={c.rank}
-                  suit={c.suit}
-                  size={"sm"}
-                />
+                <Card key={c.suit + c.rank + idx} rank={c.rank} suit={c.suit} size={"sm"} />
               ))}
             </div>
           ) : null}

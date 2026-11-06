@@ -5,11 +5,7 @@ import { createDeck } from "@/domain/rules/deck";
 
 import { Card } from "../card/Card";
 
-export const BouncingCardAnimation = ({
-  onComplete,
-}: {
-  onComplete: () => void;
-}) => {
+export const BouncingCardAnimation = ({ onComplete }: { onComplete: () => void }) => {
   const [scope, animate] = useAnimate();
   const deck = createDeck();
 
@@ -22,20 +18,11 @@ export const BouncingCardAnimation = ({
       let duration = 0.3;
       const growth = 1.25;
 
-      const bounce = async (
-        x: string,
-        y: string,
-        rotation: number,
-        duration: number,
-      ) => {
+      const bounce = async (x: string, y: string, rotation: number, duration: number) => {
         animate(card, { rotate: rotation }, { duration, ease: "linear" });
 
         await Promise.all([
-          animate(
-            card.firstElementChild,
-            { boxShadow: "none" },
-            { duration, ease: "easeInOut" },
-          ),
+          animate(card.firstElementChild, { boxShadow: "none" }, { duration, ease: "easeInOut" }),
 
           animate(
             card,
@@ -43,11 +30,7 @@ export const BouncingCardAnimation = ({
             { duration, ease: "easeInOut" },
           ),
 
-          animate(
-            card,
-            { scaleY: [0.85, 1], scaleX: [1.15, 1] },
-            { duration, ease: "easeInOut" },
-          ),
+          animate(card, { scaleY: [0.85, 1], scaleX: [1.15, 1] }, { duration, ease: "easeInOut" }),
         ]);
       };
 
@@ -85,11 +68,8 @@ export const BouncingCardAnimation = ({
       }
 
       const finalAngle = rotation + Math.random() * 180;
-      await animate(
-        card,
-        { rotate: finalAngle, top: "80vh" },
-        { duration: 0.8, ease: "easeOut" },
-      ).finished;
+      await animate(card, { rotate: finalAngle, top: "80vh" }, { duration: 0.8, ease: "easeOut" })
+        .finished;
 
       await animate(
         card,

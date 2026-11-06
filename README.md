@@ -12,13 +12,11 @@ pnpm dev
 
 The project uses Vite Plus (`vite-plus`), with its compatible Vite, Vitest, Oxlint, and Oxfmt toolchain pinned through the pnpm catalog. The existing pnpm commands invoke the local `vp` CLI; a global installation is not required.
 
-Run `pnpm check` for formatting, lint, and type checks, `pnpm build` for TypeScript project checking and the production build, and `pnpm test:coverage` for the test suite and coverage report. CI runs these same commands.
+Run `pnpm check` for formatting and lint checks, `pnpm build` for TypeScript project checking and the production build, and `pnpm test:coverage` for the test suite and coverage report. CI runs these same commands.
 
 Use `pnpm lint` to check code with Oxlint and `pnpm lint:fix` to apply safe fixes. Use `pnpm format` to format the project with Oxfmt, or `pnpm format:check` to check formatting without writing files.
 
-Formatting is configured in the `fmt` block of `vite.config.ts`: two spaces (no tabs), double quotes, semicolons, trailing commas, LF line endings, and an 80-column print width. Oxfmt also sorts Tailwind classes using `src/index.css` and sorts imports alphabetically with blank lines between groups: unscoped packages and Node built-ins, `@react/*`, `@/*` project aliases, other scoped packages, then relative imports. Side-effect imports keep their order to preserve initialization behavior. Generated output, assets, and the lockfile are excluded from formatting.
-
-The `lint` block of `vite.config.ts` explicitly maps the previous ESLint and TypeScript recommended rules, React Hooks checks, and Vite's Fast Refresh export check to native Oxlint rules. The React compiler's `config` and `gating` checks have no native Oxlint equivalents; legacy octal syntax is rejected by the TypeScript/module parser. TypeScript checking remains part of `pnpm build`. No ESLint or Prettier plugins are needed.
+Linting and formatting use Vite Plus defaults. The `lint` block in `vite.config.ts` adds browser globals; TypeScript checking runs as part of `pnpm build`. The `fmt` block preserves the custom Tailwind class sorting (using `src/index.css`) and import groups with blank-line separation: unscoped packages and Node built-ins, `@react/*`, `@/*` project aliases, other scoped packages, then relative imports. All other formatting options use the toolchain defaults, including the 100-column print width. Side-effect imports retain their default ordering behavior.
 
 ## 📖 Overview
 

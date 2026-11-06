@@ -1,7 +1,6 @@
 import { type Card, type CardKey, RANK_ORDER } from "@/domain/entities/Card";
 
-export const toCardKey = (card: Card): CardKey =>
-  `${card.suit}-${card.rank}` as const;
+export const toCardKey = (card: Card): CardKey => `${card.suit}-${card.rank}` as const;
 
 export const nextRank = (rank: number): number | null => {
   const idx = RANK_ORDER.indexOf(rank);

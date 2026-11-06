@@ -1,7 +1,4 @@
-import {
-  mockedState,
-  mockedStateWithPlayers,
-} from "@/application/store/gameStore";
+import { mockedState, mockedStateWithPlayers } from "@/application/store/gameStore";
 import type { Card } from "@/domain/entities/Card";
 import type { GameState } from "@/domain/entities/GameState";
 
@@ -27,12 +24,8 @@ describe("setUpDealerSelection", () => {
     expect(selectionState.table.length).toBe(16);
     expect(selectionState.dealerSelection).toBeTruthy();
     expect(selectionState.dealerSelection!.poolSize).toBe(16);
-    expect(selectionState.dealerSelection!.order.length).toBe(
-      selectionState.players.length,
-    );
-    expect(selectionState.currentPlayer).toBe(
-      selectionState.dealerSelection!.order[0],
-    );
+    expect(selectionState.dealerSelection!.order.length).toBe(selectionState.players.length);
+    expect(selectionState.currentPlayer).toBe(selectionState.dealerSelection!.order[0]);
 
     for (const playerId of selectionState.dealerSelection!.order) {
       expect(selectionState.dealerSelection!.pickedByKey[playerId]).toBeNull();
@@ -49,12 +42,8 @@ describe("dealerCardSelection without ties", () => {
 
     const nextState = dealerCardSelection(selectionState, selectedCardKey);
 
-    expect(nextState.dealerSelection!.pickedByKey[currentPlayerId]).toBe(
-      selectedCardKey,
-    );
-    expect(nextState.dealerSelection!.pickedKeys.has(selectedCardKey)).toBe(
-      true,
-    );
+    expect(nextState.dealerSelection!.pickedByKey[currentPlayerId]).toBe(selectedCardKey);
+    expect(nextState.dealerSelection!.pickedKeys.has(selectedCardKey)).toBe(true);
 
     const turnOrder = nextState.dealerSelection!.order;
     expect(nextState.currentPlayer).toBe(turnOrder[1 % turnOrder.length]);
@@ -132,17 +121,12 @@ describe("dealerCardSelection with ties", () => {
     }
     if (tieRank === undefined) tieRank = selectionState.table[0].rank;
 
-    const tieRankCards = selectionState.table
-      .filter((c) => c.rank === tieRank!)
-      .slice(0, 2);
+    const tieRankCards = selectionState.table.filter((c) => c.rank === tieRank!).slice(0, 2);
     const firstTiePickKey = cardKey(tieRankCards[0]);
     const secondTiePickKey = cardKey(tieRankCards[1]);
 
     const afterFirstPick = dealerCardSelection(selectionState, firstTiePickKey);
-    const afterSecondPick = dealerCardSelection(
-      afterFirstPick,
-      secondTiePickKey,
-    );
+    const afterSecondPick = dealerCardSelection(afterFirstPick, secondTiePickKey);
 
     const remainingCardsBeforeThirdPick = afterSecondPick.table.filter(
       (card) => !afterSecondPick.dealerSelection!.pickedKeys.has(cardKey(card)),
@@ -151,32 +135,20 @@ describe("dealerCardSelection with ties", () => {
       remainingCardsBeforeThirdPick.find((card) => card.rank < tieRank!) ??
       remainingCardsBeforeThirdPick[0];
 
-    const afterThirdPick = dealerCardSelection(
-      afterSecondPick,
-      cardKey(thirdPickCard),
-    );
+    const afterThirdPick = dealerCardSelection(afterSecondPick, cardKey(thirdPickCard));
 
     expect(afterThirdPick.phase).toBe("chooseDealer");
 
-    const restrictedPlayers = new Set(
-      afterThirdPick.dealerSelection!.tieOnlyPlayers!,
-    );
+    const restrictedPlayers = new Set(afterThirdPick.dealerSelection!.tieOnlyPlayers!);
     const turnOrder = afterThirdPick.dealerSelection!.order;
     const firstTurnPlayerId = turnOrder[0];
     const secondTurnPlayerId = turnOrder[1];
 
-    expect(restrictedPlayers).toEqual(
-      new Set([firstTurnPlayerId, secondTurnPlayerId]),
-    );
-    expect(
-      afterThirdPick.dealerSelection!.pickedByKey[firstTurnPlayerId],
-    ).toBeNull();
-    expect(
-      afterThirdPick.dealerSelection!.pickedByKey[secondTurnPlayerId],
-    ).toBeNull();
+    expect(restrictedPlayers).toEqual(new Set([firstTurnPlayerId, secondTurnPlayerId]));
+    expect(afterThirdPick.dealerSelection!.pickedByKey[firstTurnPlayerId]).toBeNull();
+    expect(afterThirdPick.dealerSelection!.pickedByKey[secondTurnPlayerId]).toBeNull();
 
-    const pickedKeysAfterRestriction =
-      afterThirdPick.dealerSelection!.pickedKeys;
+    const pickedKeysAfterRestriction = afterThirdPick.dealerSelection!.pickedKeys;
     const availableRedrawCards = afterThirdPick.table.filter(
       (card) => !pickedKeysAfterRestriction.has(cardKey(card)),
     );
@@ -185,29 +157,20 @@ describe("dealerCardSelection with ties", () => {
       availableRedrawCards.find((card) => card.rank !== firstRedrawCard.rank) ??
       availableRedrawCards[1];
 
-    const afterFourthPick = dealerCardSelection(
-      afterThirdPick,
-      cardKey(firstRedrawCard),
-    );
+    const afterFourthPick = dealerCardSelection(afterThirdPick, cardKey(firstRedrawCard));
 
     const secondTiedPlayerId =
-      afterThirdPick.currentPlayer === firstTurnPlayerId
-        ? secondTurnPlayerId
-        : firstTurnPlayerId;
+      afterThirdPick.currentPlayer === firstTurnPlayerId ? secondTurnPlayerId : firstTurnPlayerId;
 
     const stateWithSecondTiedTurn = {
       ...afterFourthPick,
       currentPlayer: secondTiedPlayerId,
     };
-    const afterFifthPick = dealerCardSelection(
-      stateWithSecondTiedTurn,
-      cardKey(secondRedrawCard),
-    );
+    const afterFifthPick = dealerCardSelection(stateWithSecondTiedTurn, cardKey(secondRedrawCard));
 
     expect(afterFifthPick.phase).toBe("dealerChoice");
 
-    const higherCardChosenByFirst =
-      firstRedrawCard.rank > secondRedrawCard.rank;
+    const higherCardChosenByFirst = firstRedrawCard.rank > secondRedrawCard.rank;
 
     const expectedDealerId = higherCardChosenByFirst
       ? (afterThirdPick.currentPlayer as string)
@@ -223,10 +186,7 @@ describe("guard conditions", () => {
     const duplicateKey = cardKey(selectionState.table[0]);
 
     const afterFirstPick = dealerCardSelection(selectionState, duplicateKey);
-    const afterDuplicatePick = dealerCardSelection(
-      afterFirstPick,
-      duplicateKey,
-    );
+    const afterDuplicatePick = dealerCardSelection(afterFirstPick, duplicateKey);
 
     expect(afterDuplicatePick).toBe(afterFirstPick);
   });

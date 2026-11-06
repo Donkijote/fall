@@ -51,12 +51,8 @@ export const HANDS: Hand[] = [
       }
 
       // Must be exactly two of one rank
-      const pairRank = Object.entries(rankCounts).find(
-        ([, count]) => count === 2,
-      )?.[0];
-      const singleRank = Object.entries(rankCounts).find(
-        ([, count]) => count === 1,
-      )?.[0];
+      const pairRank = Object.entries(rankCounts).find(([, count]) => count === 2)?.[0];
+      const singleRank = Object.entries(rankCounts).find(([, count]) => count === 1)?.[0];
 
       if (!pairRank || !singleRank) return false;
 
@@ -76,9 +72,7 @@ export const HANDS: Hand[] = [
     mandatory: true,
     pattern: (cards) => {
       // Sort cards by their order in SPANISH_RANK_ORDER
-      const indexes = cards
-        .map((c) => RANK_ORDER.indexOf(c.rank))
-        .sort((a, b) => a - b);
+      const indexes = cards.map((c) => RANK_ORDER.indexOf(c.rank)).sort((a, b) => a - b);
 
       return indexes[1] === indexes[0] + 1 && indexes[2] === indexes[1] + 1;
     },
@@ -90,8 +84,7 @@ export const HANDS: Hand[] = [
     mandatory: true,
     pattern: (cards) => {
       const counts: Record<number, number> = {};
-      for (const card of cards)
-        counts[card.rank] = (counts[card.rank] || 0) + 1;
+      for (const card of cards) counts[card.rank] = (counts[card.rank] || 0) + 1;
       return Object.values(counts).includes(2);
     },
     rankStrength: (c) => Math.max(...c.map((x) => x.rank)),
@@ -123,8 +116,7 @@ export const HANDS: Hand[] = [
     mandatory: true,
     pattern: (cards) => {
       const counts: Record<number, number> = {};
-      for (const card of cards)
-        counts[card.rank] = (counts[card.rank] || 0) + 1;
+      for (const card of cards) counts[card.rank] = (counts[card.rank] || 0) + 1;
       return Object.values(counts).includes(3);
     },
     rankStrength: (c) => c[0]?.rank || 0,

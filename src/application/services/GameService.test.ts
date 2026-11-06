@@ -1,15 +1,8 @@
 import { afterEach, expect, type Mock } from "vite-plus/test";
 
-import {
-  type AnimationKey,
-  animationService,
-} from "@/application/services/AnimationService";
+import { type AnimationKey, animationService } from "@/application/services/AnimationService";
 import { createGameService } from "@/application/services/GameService";
-import {
-  initialState,
-  mockedState,
-  mockedStateWithPlayers,
-} from "@/application/store/gameStore";
+import { initialState, mockedState, mockedStateWithPlayers } from "@/application/store/gameStore";
 import type { Card, CardWithKey } from "@/domain/entities/Card";
 import type { GameState } from "@/domain/entities/GameState";
 import { createDeck } from "@/domain/rules/deck";
@@ -31,10 +24,7 @@ describe("Game Service", () => {
   });
 
   it("should setup game", () => {
-    createGameService(
-      vi.fn().mockReturnValue(mockedState),
-      mockSetState,
-    ).setupGame("1", "1vs1");
+    createGameService(vi.fn().mockReturnValue(mockedState), mockSetState).setupGame("1", "1vs1");
 
     expect(mockSetState).toHaveBeenCalledWith({
       ...mockedStateWithPlayers,
@@ -43,10 +33,7 @@ describe("Game Service", () => {
   });
 
   it("should setup game 1vs2", () => {
-    createGameService(
-      vi.fn().mockReturnValue(mockedState),
-      mockSetState,
-    ).setupGame("1", "1vs2");
+    createGameService(vi.fn().mockReturnValue(mockedState), mockSetState).setupGame("1", "1vs2");
 
     const players = [...mockedStateWithPlayers.players];
     players.push({
@@ -63,10 +50,7 @@ describe("Game Service", () => {
   });
 
   it("should setup game 2vs2", () => {
-    createGameService(
-      vi.fn().mockReturnValue(mockedState),
-      mockSetState,
-    ).setupGame("1", "2vs2");
+    createGameService(vi.fn().mockReturnValue(mockedState), mockSetState).setupGame("1", "2vs2");
 
     const players = [...mockedStateWithPlayers.players];
     players.push(
@@ -189,10 +173,10 @@ describe("Game Service", () => {
     );
     state.players[0].hand = [deck[5], deck[7], deck[1]];
 
-    await createGameService(
-      vi.fn().mockReturnValue(state),
-      mockSetState,
-    ).playCard(mockedStateWithPlayers.players[0].id, 0);
+    await createGameService(vi.fn().mockReturnValue(state), mockSetState).playCard(
+      mockedStateWithPlayers.players[0].id,
+      0,
+    );
 
     expect(mockSetState).toHaveBeenCalledWith({
       ...state,
@@ -228,10 +212,10 @@ describe("Game Service", () => {
       i === 0 ? { ...p, hand: [deck[5]] } : { ...p, hand: [] },
     );
 
-    await createGameService(
-      vi.fn().mockReturnValue(state),
-      mockSetState,
-    ).playCard(mockedStateWithPlayers.players[0].id, 0);
+    await createGameService(vi.fn().mockReturnValue(state), mockSetState).playCard(
+      mockedStateWithPlayers.players[0].id,
+      0,
+    );
 
     const finalCall = mockSetState.mock.calls.at(-1)![0] as GameState;
 
@@ -368,10 +352,9 @@ describe("Game Service", () => {
   });
 
   it("should not be bot's turn because empty hand", () => {
-    createGameService(
-      vi.fn().mockReturnValue(mockedStateWithPlayers),
-      mockSetState,
-    ).playBotTurn(mockedStateWithPlayers.players[1].id);
+    createGameService(vi.fn().mockReturnValue(mockedStateWithPlayers), mockSetState).playBotTurn(
+      mockedStateWithPlayers.players[1].id,
+    );
 
     expect(mockSetState).not.toHaveBeenCalled();
   });
@@ -440,10 +423,7 @@ describe("Game Service", () => {
         { suit: "swords", rank: 3 },
       ],
       dealerSelection: {
-        order: [
-          mockedStateWithPlayers.players[0].id,
-          mockedStateWithPlayers.players[1].id,
-        ],
+        order: [mockedStateWithPlayers.players[0].id, mockedStateWithPlayers.players[1].id],
         turnIndex: 0,
         pickedByKey: {
           [mockedStateWithPlayers.players[0].id]: null,
@@ -465,17 +445,11 @@ describe("Game Service", () => {
     const updatedState = mockSetState.mock.calls[0][0] as GameState;
 
     expect(updatedState.phase).toBe("chooseDealer");
-    expect(
-      updatedState.dealerSelection!.pickedByKey[
-        mockedStateWithPlayers.players[0].id
-      ],
-    ).toBe(selectedKey);
-    expect(updatedState.dealerSelection!.pickedKeys.has(selectedKey)).toBe(
-      true,
+    expect(updatedState.dealerSelection!.pickedByKey[mockedStateWithPlayers.players[0].id]).toBe(
+      selectedKey,
     );
-    expect(updatedState.currentPlayer).toBe(
-      mockedStateWithPlayers.players[1].id,
-    );
+    expect(updatedState.dealerSelection!.pickedKeys.has(selectedKey)).toBe(true);
+    expect(updatedState.currentPlayer).toBe(mockedStateWithPlayers.players[1].id);
     expect(updatedState.dealerSelection!.turnIndex).toBe(1);
   });
 
@@ -493,10 +467,7 @@ describe("Game Service", () => {
         { suit: "swords", rank: 4 },
       ],
       dealerSelection: {
-        order: [
-          mockedStateWithPlayers.players[0].id,
-          mockedStateWithPlayers.players[1].id,
-        ],
+        order: [mockedStateWithPlayers.players[0].id, mockedStateWithPlayers.players[1].id],
         turnIndex: 1,
         pickedByKey: {
           [mockedStateWithPlayers.players[0].id]: null,
@@ -518,14 +489,9 @@ describe("Game Service", () => {
     const updatedState = mockSetState.mock.calls[0][0] as GameState;
 
     const botPickedKey =
-      updatedState.dealerSelection!.pickedByKey[
-        mockedStateWithPlayers.players[1].id
-      ];
+      updatedState.dealerSelection!.pickedByKey[mockedStateWithPlayers.players[1].id];
     expect(typeof botPickedKey).toBe("string");
-    expect(
-      botPickedKey &&
-        updatedState.dealerSelection!.pickedKeys.has(botPickedKey),
-    ).toBe(true);
+    expect(botPickedKey && updatedState.dealerSelection!.pickedKeys.has(botPickedKey)).toBe(true);
   });
 
   it("playCard performs capture cascade: sets UI overrides, runs GAME_CARDS twice, then PILE_COLLECT", async () => {
@@ -558,14 +524,12 @@ describe("Game Service", () => {
       },
     }));
 
-    const removeCardsFromHand = vi.fn(
-      (state: GameState, pid: string, card: Card) => ({
-        ...state,
-        players: state.players.map((p) =>
-          p.id === pid ? { ...p, hand: p.hand.filter((c) => c !== card) } : p,
-        ),
-      }),
-    );
+    const removeCardsFromHand = vi.fn((state: GameState, pid: string, card: Card) => ({
+      ...state,
+      players: state.players.map((p) =>
+        p.id === pid ? { ...p, hand: p.hand.filter((c) => c !== card) } : p,
+      ),
+    }));
 
     const updateTableAndHandCards = vi.fn((state) => state);
     const finalizeAfterPlay = vi.fn((state) => state);
@@ -581,8 +545,7 @@ describe("Game Service", () => {
       toCardKey: (c: CardWithKey) => c.key ?? `${c.suit}-${c.rank}`,
     }));
 
-    const { createGameService } =
-      await import("@/application/services/GameService");
+    const { createGameService } = await import("@/application/services/GameService");
     const { animationService, AnimationKeys } =
       await import("@/application/services/AnimationService");
 
@@ -630,9 +593,7 @@ describe("Game Service", () => {
 
     const keysRun = runCalls.flat().map((e) => e.key);
 
-    expect(
-      keysRun.filter((k: string) => k === AnimationKeys.GAME_CARDS),
-    ).toHaveLength(2);
+    expect(keysRun.filter((k: string) => k === AnimationKeys.GAME_CARDS)).toHaveLength(2);
     expect(keysRun.includes(AnimationKeys.PILE_COLLECT)).toBe(true);
   });
 
@@ -660,14 +621,12 @@ describe("Game Service", () => {
       capturePlan: { kind: "none", targets: [] },
     }));
 
-    const removeCardsFromHand = vi.fn(
-      (state: GameState, pid: string, card: Card) => ({
-        ...state,
-        players: state.players.map((p) =>
-          p.id === pid ? { ...p, hand: p.hand.filter((c) => c !== card) } : p,
-        ),
-      }),
-    );
+    const removeCardsFromHand = vi.fn((state: GameState, pid: string, card: Card) => ({
+      ...state,
+      players: state.players.map((p) =>
+        p.id === pid ? { ...p, hand: p.hand.filter((c) => c !== card) } : p,
+      ),
+    }));
 
     const updateTableAndHandCards = vi.fn((state) => state);
     const finalizeAfterPlay = vi.fn((state) => state);
@@ -683,8 +642,7 @@ describe("Game Service", () => {
       toCardKey: (c: CardWithKey) => c.key ?? `${c.suit}-${c.rank}`,
     }));
 
-    const { createGameService } =
-      await import("@/application/services/GameService");
+    const { createGameService } = await import("@/application/services/GameService");
     const { animationService, AnimationKeys } =
       await import("@/application/services/AnimationService");
 

@@ -12,9 +12,7 @@ export const QuickRef = ({ content }: QuickRefProps) => {
       animate={{ opacity: 1 }}
       className="sticky top-20 hidden h-fit rounded-2xl border border-white/10 bg-white/10 p-4 shadow-lg backdrop-blur xl:block"
     >
-      <div className="mb-2 text-base font-medium text-text-primary">
-        Quick Reference
-      </div>
+      <div className="mb-2 text-base font-medium text-text-primary">Quick Reference</div>
       <div className="mb-3 text-text-primary">
         <div className="font-medium">Goal</div>
         <div>First to {content.scoring.goal} points</div>

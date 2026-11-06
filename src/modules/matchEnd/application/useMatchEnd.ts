@@ -4,10 +4,7 @@ import { useNavigate } from "react-router";
 import { useGameStoreService } from "@/application/hooks/useGameStoreService";
 import { useGameStoreState } from "@/application/hooks/useGameStoreState";
 import type { GameMode } from "@/domain/entities/GameState";
-import type {
-  GameOverStats,
-  GameResult,
-} from "@/modules/matchEnd/entities/types";
+import type { GameOverStats, GameResult } from "@/modules/matchEnd/entities/types";
 import { HOME_PATH } from "@/routes/Routes";
 
 export const useMatchEnd = () => {

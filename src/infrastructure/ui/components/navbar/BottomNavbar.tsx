@@ -21,9 +21,7 @@ export const BottomNavbar = () => {
   const navigate = useNavigate();
 
   const [active, setActive] = useState("");
-  const [isOpen, setIsOpen] = useState(
-    Boolean(searchParams.get("bottomSidebar")),
-  );
+  const [isOpen, setIsOpen] = useState(Boolean(searchParams.get("bottomSidebar")));
 
   return (
     <>
@@ -67,10 +65,7 @@ export const BottomNavbar = () => {
                 },
               )}
             >
-              <FontAwesomeIcon
-                icon={faCirclePlay}
-                className="text-4xl text-white drop-shadow-xl"
-              />
+              <FontAwesomeIcon icon={faCirclePlay} className="text-4xl text-white drop-shadow-xl" />
             </button>
             <div className="absolute top-1/2 left-1/2 z-0 h-6 w-24 -translate-x-1/2 -translate-y-1/2 rounded-full bg-yellow-300/20 blur-xl" />
           </div>

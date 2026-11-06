@@ -1,9 +1,4 @@
-import {
-  CARDS_PATH,
-  GAME_PATH,
-  HOME_PATH,
-  SINGS_SHEETS,
-} from "@/routes/Routes";
+import { CARDS_PATH, GAME_PATH, HOME_PATH, SINGS_SHEETS } from "@/routes/Routes";
 
 import { cleanup, render, screen } from "@testing-library/react";
 

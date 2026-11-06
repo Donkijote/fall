@@ -20,12 +20,7 @@ export const HomeScreen = () => {
   let secondThreadLongitude = 420;
   let thirdThreadLongitude = 820;
 
-  if (
-    breakpoint &&
-    isMobile &&
-    orientation === "landscape" &&
-    breakpoint !== "sm"
-  ) {
+  if (breakpoint && isMobile && orientation === "landscape" && breakpoint !== "sm") {
     secondThreadLongitude = 330;
     thirdThreadLongitude = 230;
   }

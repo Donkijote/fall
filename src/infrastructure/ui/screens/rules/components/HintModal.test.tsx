@@ -31,8 +31,7 @@ vi.mock("@/application/services/StorageService", async () => {
   };
 });
 
-const { StorageService } =
-  await import("@/application/services/StorageService");
+const { StorageService } = await import("@/application/services/StorageService");
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -63,10 +62,7 @@ test("clicking the backdrop dismisses and sets FALL_RULES_SEEN=true", async () =
 
   await userEvent.click(screen.getByLabelText(/Close modal backdrop/i));
 
-  expect(StorageService.set).toHaveBeenCalledWith(
-    StorageKeys.FALL_RULES_SEEN,
-    true,
-  );
+  expect(StorageService.set).toHaveBeenCalledWith(StorageKeys.FALL_RULES_SEEN, true);
   expect(screen.queryByText(/Welcome to Fall Rules/i)).not.toBeInTheDocument();
 });
 
@@ -77,10 +73,7 @@ test("clicking 'Got it' dismisses and sets FALL_RULES_SEEN=true", async () => {
 
   await userEvent.click(screen.getByTestId("got-it-button"));
 
-  expect(StorageService.set).toHaveBeenCalledWith(
-    StorageKeys.FALL_RULES_SEEN,
-    true,
-  );
+  expect(StorageService.set).toHaveBeenCalledWith(StorageKeys.FALL_RULES_SEEN, true);
   expect(screen.queryByText(/Welcome to Fall Rules/i)).not.toBeInTheDocument();
 });
 

@@ -5,10 +5,7 @@ import { useMemo } from "react";
 import { useGameStoreService } from "@/application/hooks/useGameStoreService";
 import { useGameStoreState } from "@/application/hooks/useGameStoreState";
 import { useUIGameStoreState } from "@/application/hooks/useUIGameStoreState";
-import {
-  AnimationKeys,
-  animationService,
-} from "@/application/services/AnimationService";
+import { AnimationKeys, animationService } from "@/application/services/AnimationService";
 import type { Card, Rank, Suit } from "@/domain/entities/Card";
 import { Card as CardView } from "@/infrastructure/ui/components/card/Card";
 import type { Placement as TablePlacement } from "@/modules/table/entities/types";
@@ -21,12 +18,10 @@ const STACK_OFFSET = 2;
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 export const TableCards = () => {
-  const { table, phase, dealerSelection, currentPlayer, mainPlayer } =
-    useGameStoreState();
+  const { table, phase, dealerSelection, currentPlayer, mainPlayer } = useGameStoreState();
   const { pickDealerCard } = useGameStoreService();
 
-  const { playingCard, captureOverride, cascadeFollowers } =
-    useUIGameStoreState();
+  const { playingCard, captureOverride, cascadeFollowers } = useUIGameStoreState();
 
   const placements = useTableLayout(table);
 
@@ -108,16 +103,11 @@ const TableCardItem = ({
 
   const alreadyPicked = pickedKeys.has(key);
   const isEligible =
-    isChoose &&
-    myTurn &&
-    !alreadyPicked &&
-    (!tieOnly || tieOnly.includes(mainPlayer));
+    isChoose && myTurn && !alreadyPicked && (!tieOnly || tieOnly.includes(mainPlayer));
   const faceDown = isChoose ? !alreadyPicked : false;
 
   const isAnimatingCard =
-    !!playingCard &&
-    playingCard.suit === (suit as Suit) &&
-    playingCard.rank === rank;
+    !!playingCard && playingCard.suit === (suit as Suit) && playingCard.rank === rank;
 
   const useOverride =
     isAnimatingCard &&
@@ -125,16 +115,13 @@ const TableCardItem = ({
     captureOverride.fromKey === key &&
     cardsByKey.has(captureOverride.toKey);
 
-  const basePlacement = useOverride
-    ? cardsByKey.get(captureOverride.toKey)!
-    : placement;
+  const basePlacement = useOverride ? cardsByKey.get(captureOverride.toKey)! : placement;
 
   const anchorZ = captureOverride?.toKey
     ? (cardsByKey.get(captureOverride.toKey)?.z ?? placement.z)
     : placement.z;
 
-  const isLifted =
-    !!captureOverride && captureOverride.toKey === key && !!playingCard;
+  const isLifted = !!captureOverride && captureOverride.toKey === key && !!playingCard;
 
   let zIndex = Math.round(placement.z);
 
@@ -169,9 +156,7 @@ const TableCardItem = ({
         animate={{
           y: isLifted ? LIFT_Y : 0,
           scale: isLifted ? LIFT_SCALE : 1,
-          boxShadow: isLifted
-            ? "0 10px 20px rgba(0,0,0,0.25)"
-            : "0 0 0 rgba(0,0,0,0)",
+          boxShadow: isLifted ? "0 10px 20px rgba(0,0,0,0.25)" : "0 0 0 rgba(0,0,0,0)",
         }}
         transition={{ duration: 0.28, ease: EASE }}
         style={{
@@ -247,12 +232,7 @@ const FollowerStack = ({
                 transform: `translate(-50%, -50%) rotate(${base.rotationDeg}deg) translate(${offset}px, ${offset}px)`,
               }}
             >
-              <CardView
-                rank={rank}
-                suit={suit as Suit}
-                disabled
-                faceDown={false}
-              />
+              <CardView rank={rank} suit={suit as Suit} disabled faceDown={false} />
             </motion.div>
           </motion.div>
         );

@@ -2,17 +2,12 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-import {
-  StorageKeys,
-  StorageService,
-} from "@/application/services/StorageService";
+import { StorageKeys, StorageService } from "@/application/services/StorageService";
 import type { User } from "@/domain/entities/User";
 
 export const WelcomeModal = () => {
   const [username, setUsername] = useState("");
-  const [isOpen, setIsOpen] = useState(
-    () => !StorageService.get<User>(StorageKeys.FALL_USER),
-  );
+  const [isOpen, setIsOpen] = useState(() => !StorageService.get<User>(StorageKeys.FALL_USER));
 
   const handleSave = () => {
     if (!username.trim()) return;
@@ -59,12 +54,8 @@ export const WelcomeModal = () => {
               </motion.div>
             </div>
 
-            <h2 className="mb-2 text-center text-2xl font-bold text-white">
-              Welcome to Fall!
-            </h2>
-            <p className="mb-6 text-center text-white/70">
-              Enter your username to get started.
-            </p>
+            <h2 className="mb-2 text-center text-2xl font-bold text-white">Welcome to Fall!</h2>
+            <p className="mb-6 text-center text-white/70">Enter your username to get started.</p>
 
             <input
               type="text"

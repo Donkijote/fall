@@ -22,8 +22,7 @@ const placement = (key: string, z: number): Placement => ({
   z,
 });
 
-const mapFrom = (items: Placement[]) =>
-  new Map<string, Placement>(items.map((p) => [p.key, p]));
+const mapFrom = (items: Placement[]) => new Map<string, Placement>(items.map((p) => [p.key, p]));
 
 describe("useTableLayout", () => {
   beforeEach(() => {
@@ -31,11 +30,7 @@ describe("useTableLayout", () => {
   });
 
   it("returns placements sorted by z ascending", () => {
-    const placementsMap = mapFrom([
-      placement("a-1", 5),
-      placement("b-2", 1),
-      placement("c-3", 3),
-    ]);
+    const placementsMap = mapFrom([placement("a-1", 5), placement("b-2", 1), placement("c-3", 3)]);
     typedRandomScatter.mockReturnValueOnce({ placements: placementsMap });
 
     const table: Card[] = [{ suit: "coins", rank: 1 }];
@@ -64,10 +59,7 @@ describe("useTableLayout", () => {
 
   it("passes previous placements as existingPlacements when table changes", () => {
     const firstPlacements = mapFrom([placement("p-1", 4)]);
-    const secondPlacements = mapFrom([
-      placement("q-1", 6),
-      placement("r-2", 2),
-    ]);
+    const secondPlacements = mapFrom([placement("q-1", 6), placement("r-2", 2)]);
 
     typedRandomScatter
       .mockReturnValueOnce({ placements: firstPlacements })
@@ -83,10 +75,8 @@ describe("useTableLayout", () => {
     rerender({ t: updatedTable });
 
     expect(typedRandomScatter).toHaveBeenCalledTimes(2);
-    const firstCallExisting =
-      typedRandomScatter.mock.calls[0][0].existingPlacements;
-    const secondCallExisting =
-      typedRandomScatter.mock.calls[1][0].existingPlacements;
+    const firstCallExisting = typedRandomScatter.mock.calls[0][0].existingPlacements;
+    const secondCallExisting = typedRandomScatter.mock.calls[1][0].existingPlacements;
 
     expect(firstCallExisting).toBeInstanceOf(Map);
     expect(secondCallExisting).toBe(firstPlacements);
@@ -97,9 +87,6 @@ describe("useTableLayout", () => {
       }
     ).placements;
 
-    expect([...returnedSecond.values()].map((p) => p.key).sort()).toEqual([
-      "q-1",
-      "r-2",
-    ]);
+    expect([...returnedSecond.values()].map((p) => p.key).sort()).toEqual(["q-1", "r-2"]);
   });
 });

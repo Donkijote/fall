@@ -44,8 +44,7 @@ export const SingsSheetScreen = () => {
         <div
           className="absolute inset-0 bg-black/40"
           style={{
-            maskImage:
-              "radial-gradient(70% 60% at 50% 40%, black 60%, transparent 100%)",
+            maskImage: "radial-gradient(70% 60% at 50% 40%, black 60%, transparent 100%)",
           }}
         />
       </div>
@@ -64,9 +63,7 @@ export const SingsSheetScreen = () => {
               >
                 <FontAwesomeIcon icon={faArrowLeft} size={"xs"} />
               </button>
-              <h1 className="text-xl font-semibold text-text-primary">
-                Sings (Combinations)
-              </h1>
+              <h1 className="text-xl font-semibold text-text-primary">Sings (Combinations)</h1>
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
@@ -81,9 +78,7 @@ export const SingsSheetScreen = () => {
                 id={"filter-min-points"}
                 className="cursor-pointer rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-text-primary focus:ring-2 focus:ring-accent-gold/80 focus:outline-none"
                 value={String(minPoints ?? "")}
-                onChange={(e) =>
-                  setMinPoints(e.target.value ? Number(e.target.value) : null)
-                }
+                onChange={(e) => setMinPoints(e.target.value ? Number(e.target.value) : null)}
               >
                 <option value="">Min pts</option>
                 <option value="2">≥ 2</option>
@@ -105,9 +100,7 @@ export const SingsSheetScreen = () => {
           </div>
         </motion.div>
 
-        <div
-          className={"scrollbar-hide-y h-[100dvh] overflow-auto pb-80 md:pb-40"}
-        >
+        <div className={"scrollbar-hide-y h-[100dvh] overflow-auto pb-80 md:pb-40"}>
           <SingsList sings={list} />
         </div>
 

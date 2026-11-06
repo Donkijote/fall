@@ -26,9 +26,7 @@ describe("StorageService", () => {
     StorageService.set(StorageKeys.FALL_USER, payload);
 
     StorageService.remove(StorageKeys.FALL_USER);
-    expect(
-      StorageService.get<typeof payload>(StorageKeys.FALL_USER),
-    ).toBeNull();
+    expect(StorageService.get<typeof payload>(StorageKeys.FALL_USER)).toBeNull();
   });
 
   it("get<T>() works for primitive values too (strings, numbers, booleans)", () => {

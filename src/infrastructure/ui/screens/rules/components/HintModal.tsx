@@ -1,15 +1,10 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 
-import {
-  StorageKeys,
-  StorageService,
-} from "@/application/services/StorageService";
+import { StorageKeys, StorageService } from "@/application/services/StorageService";
 
 export const HintModal = () => {
-  const [open, setOpen] = useState(
-    () => !StorageService.get<boolean>(StorageKeys.FALL_RULES_SEEN),
-  );
+  const [open, setOpen] = useState(() => !StorageService.get<boolean>(StorageKeys.FALL_RULES_SEEN));
 
   const dismiss = () => {
     StorageService.set<boolean>(StorageKeys.FALL_RULES_SEEN, true);
@@ -39,29 +34,20 @@ export const HintModal = () => {
             exit={{ scale: 0.95, opacity: 0 }}
           >
             <div className="space-y-2">
-              <div className="text-lg font-semibold text-text-primary">
-                Welcome to Fall Rules
-              </div>
+              <div className="text-lg font-semibold text-text-primary">Welcome to Fall Rules</div>
               <div className="text-sm text-text-secondary">
-                A fast, readable guide. Use the tabs above; expand items for
-                examples.
+                A fast, readable guide. Use the tabs above; expand items for examples.
               </div>
               <div className="mt-2 grid grid-cols-1 gap-2">
                 <div className="rounded-xl border border-white/10 bg-white/10 p-3 backdrop-blur">
-                  <div className="font-medium text-text-primary">
-                    Quick start
-                  </div>
+                  <div className="font-medium text-text-primary">Quick start</div>
                   <p className="text-sm text-text-secondary">
-                    Go to{" "}
-                    <span className="font-medium text-text-primary">Setup</span>{" "}
-                    → Dealer choices, then{" "}
-                    <span className="font-medium text-text-primary">Turn</span>.
+                    Go to <span className="font-medium text-text-primary">Setup</span> → Dealer
+                    choices, then <span className="font-medium text-text-primary">Turn</span>.
                   </p>
                 </div>
                 <div className="rounded-xl border border-white/10 bg-white/10 p-3 backdrop-blur">
-                  <div className="font-medium text-text-primary">
-                    Sings sheet
-                  </div>
+                  <div className="font-medium text-text-primary">Sings sheet</div>
                   <p className="text-sm text-text-secondary">
                     Open the Sings tab for patterns and points.
                   </p>

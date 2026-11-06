@@ -52,35 +52,18 @@ export const PlayerChip = ({
           )}
         >
           {avatar ? (
-            <img
-              src={avatar}
-              alt={name}
-              className="h-full w-full object-cover"
-            />
+            <img src={avatar} alt={name} className="h-full w-full object-cover" />
           ) : (
-            <div
-              className={clsx(
-                "flex h-full w-full items-center justify-center",
-                bgColor,
-              )}
-            >
+            <div className={clsx("flex h-full w-full items-center justify-center", bgColor)}>
               <span className="text-sm text-white/70 xl:text-xl">
-                {isBot ? (
-                  <FontAwesomeIcon icon={faRobot} />
-                ) : (
-                  <FontAwesomeIcon icon={faUser} />
-                )}
+                {isBot ? <FontAwesomeIcon icon={faRobot} /> : <FontAwesomeIcon icon={faUser} />}
               </span>
             </div>
           )}
         </div>
 
         {isDealer && (
-          <div
-            className={
-              "absolute -top-1 -right-1 flex items-center justify-center"
-            }
-          >
+          <div className={"absolute -top-1 -right-1 flex items-center justify-center"}>
             <motion.div
               initial={{ scale: 1, boxShadow: "0 0 0 rgba(255, 215, 0, 0)" }}
               animate={{
@@ -99,9 +82,7 @@ export const PlayerChip = ({
               className="absolute h-5 w-5 rounded-full bg-accent-gold"
             />
 
-            <span className="relative z-10 text-xs font-bold text-black">
-              D
-            </span>
+            <span className="relative z-10 text-xs font-bold text-black">D</span>
           </div>
         )}
       </div>

@@ -60,8 +60,7 @@ export const Card = ({
           className="absolute inset-0"
           aria-hidden
           style={{
-            background:
-              "repeating-linear-gradient(135deg, #1f2937 0 6px, #111827 6px 12px)",
+            background: "repeating-linear-gradient(135deg, #1f2937 0 6px, #111827 6px 12px)",
           }}
         />
       ) : (

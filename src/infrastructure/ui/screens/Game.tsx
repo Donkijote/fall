@@ -36,10 +36,7 @@ export const GameScreen = () => {
         <Players />
       </Table>
       <GameOverModal />
-      <SingsModal
-        isOpen={isSingsModalOpen}
-        onClose={() => setIsSingsModalOpen(false)}
-      />
+      <SingsModal isOpen={isSingsModalOpen} onClose={() => setIsSingsModalOpen(false)} />
       <button
         onClick={() => setIsSingsModalOpen(true)}
         className="absolute top-4 right-4 cursor-pointer rounded-full border border-white/20 bg-white/10 px-3 py-2.5 text-text-primary transition hover:bg-white/15"

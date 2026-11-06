@@ -28,7 +28,7 @@ jobs:
       - name: Install
         run: pnpm install
 
-      - name: Check formatting, lint, and types
+      - name: Check formatting and lint
         run: pnpm check
 
       - name: Tests

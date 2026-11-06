@@ -2,11 +2,7 @@ import { Card } from "./Card";
 
 export const CardList = () => {
   return (
-    <div
-      className={
-        "flex h-screen flex-row flex-wrap items-center gap-4 overflow-auto"
-      }
-    >
+    <div className={"flex h-screen flex-row flex-wrap items-center gap-4 overflow-auto"}>
       <div>
         <Card rank={1} suit="coins" size={"sm"} />
         <Card rank={1} suit="coins" size={"md"} />

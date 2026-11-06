@@ -44,8 +44,7 @@ vi.mock("@/routes/Routes", () => {
   return { HOME_PATH: "/home" };
 });
 
-const getNavigate = () =>
-  (useNavigate as unknown as () => ReturnType<typeof vi.fn>)();
+const getNavigate = () => (useNavigate as unknown as () => ReturnType<typeof vi.fn>)();
 
 const setStateMock = (state: Partial<ReturnType<typeof useGameStoreState>>) => {
   (useGameStoreState as Mock).mockReturnValue({
@@ -207,8 +206,7 @@ describe("useMatchEnd", () => {
     renderHook(() => useMatchEnd());
     const navigate = getNavigate();
 
-    const fire = (key: string) =>
-      window.dispatchEvent(new KeyboardEvent("keydown", { key }));
+    const fire = (key: string) => window.dispatchEvent(new KeyboardEvent("keydown", { key }));
 
     act(() => fire("Escape"));
     expect(navigate).toHaveBeenCalledWith("/home"); // onExit

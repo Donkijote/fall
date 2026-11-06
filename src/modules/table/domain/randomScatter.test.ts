@@ -33,9 +33,7 @@ describe("randomScatter", () => {
     nowSpy = vi.spyOn(Date, "now").mockImplementation(() => (t += 10));
 
     // Stable Math.random sequence (values in [0,1))
-    randSpy = mockRandom([
-      0.13, 0.72, 0.91, 0.33, 0.55, 0.07, 0.44, 0.88, 0.21, 0.66, 0.39, 0.95,
-    ]);
+    randSpy = mockRandom([0.13, 0.72, 0.91, 0.33, 0.55, 0.07, 0.44, 0.88, 0.21, 0.66, 0.39, 0.95]);
   });
 
   afterEach(() => {
@@ -197,8 +195,7 @@ describe("randomScatter", () => {
 
     const [first, second] = Array.from(placements.values());
 
-    const samePosition =
-      first.leftPct === second.leftPct && first.topPct === second.topPct;
+    const samePosition = first.leftPct === second.leftPct && first.topPct === second.topPct;
 
     expect(samePosition).toBe(false);
 

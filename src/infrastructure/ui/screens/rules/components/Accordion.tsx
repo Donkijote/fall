@@ -26,11 +26,7 @@ export const SectionAccordion = ({ items }: SectionAccordionProps) => {
     setOpen((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
 
   return (
-    <motion.div
-      initial={{ y: -8, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      className="w-full"
-    >
+    <motion.div initial={{ y: -8, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="w-full">
       {items.map((it) => (
         <div
           key={it.id}
@@ -68,17 +64,11 @@ export const SectionAccordion = ({ items }: SectionAccordionProps) => {
                 aria-labelledby={`acc-btn-${it.id}`}
               >
                 <div className="px-4 pb-4">
-                  <p className="text-sm leading-relaxed text-text-primary">
-                    {it.body}
-                  </p>
+                  <p className="text-sm leading-relaxed text-text-primary">{it.body}</p>
                   {it.callouts?.length ? (
                     <div className="mt-3 space-y-2">
                       {it.callouts.map((c, index) => (
-                        <Callout
-                          key={c.type + c.text + index}
-                          type={c.type}
-                          text={c.text}
-                        />
+                        <Callout key={c.type + c.text + index} type={c.type} text={c.text} />
                       ))}
                     </div>
                   ) : null}

@@ -82,9 +82,7 @@ export const RULES: RulesContent = {
           id: "fall",
           title: "Special — Fall",
           body: "If a player throws a card and the next player immediately captures that exact rank, it’s a Fall.",
-          callouts: [
-            { type: "info", text: "Scoring varies by rank (see Scoring)." },
-          ],
+          callouts: [{ type: "info", text: "Scoring varies by rank (see Scoring)." }],
         },
         {
           id: "clean",

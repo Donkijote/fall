@@ -55,9 +55,7 @@ export const SingsModal = ({ isOpen, onClose }: SingsModalProps) => {
             />
             <div className={"scrollbar-hide-y h-[85dvh] overflow-y-auto"}>
               <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-white/10 bg-white/10 px-5 py-4 backdrop-blur-md">
-                <h3 className="text-lg font-semibold text-text-primary">
-                  Sings (Combinations)
-                </h3>
+                <h3 className="text-lg font-semibold text-text-primary">Sings (Combinations)</h3>
                 <button
                   onClick={onClose}
                   aria-label="Close"

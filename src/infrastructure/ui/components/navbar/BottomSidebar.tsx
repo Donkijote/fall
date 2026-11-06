@@ -3,10 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useNavigate } from "react-router";
 
 import { useGameStoreService } from "@/application/hooks/useGameStoreService";
-import {
-  StorageKeys,
-  StorageService,
-} from "@/application/services/StorageService";
+import { StorageKeys, StorageService } from "@/application/services/StorageService";
 import OneVsOne from "@/assets/lobby/1vs1.webp";
 import OneVsOneVsOne from "@/assets/lobby/1vs2.webp";
 import TwoVsTwo from "@/assets/lobby/2vs2.webp";

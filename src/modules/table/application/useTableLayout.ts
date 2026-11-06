@@ -5,10 +5,7 @@ import type { Card } from "@/domain/entities/Card";
 import { randomScatter } from "../domain/randomScatter";
 import type { Placement } from "../entities/types";
 
-const scatter = (
-  table: Card[],
-  existingPlacements = new Map<string, Placement>(),
-) =>
+const scatter = (table: Card[], existingPlacements = new Map<string, Placement>()) =>
   randomScatter({
     table,
     existingPlacements,

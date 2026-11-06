@@ -10,16 +10,7 @@ const images = import.meta.glob<string>("@/assets/cards/*/*.svg", {
 
 const RANK_NAME: Record<
   Rank,
-  | "Ace"
-  | "Two"
-  | "Three"
-  | "Four"
-  | "Five"
-  | "Six"
-  | "Seven"
-  | "Ten"
-  | "Eleven"
-  | "Twelve"
+  "Ace" | "Two" | "Three" | "Four" | "Five" | "Six" | "Seven" | "Ten" | "Eleven" | "Twelve"
 > = {
   1: "Ace",
   2: "Two",
@@ -40,12 +31,7 @@ type SuitGlyphProps = {
   imgProps?: Omit<ImgHTMLAttributes<HTMLImageElement>, "src" | "alt">;
 };
 
-export const SuitGlyph: FC<SuitGlyphProps> = ({
-  suit,
-  rank,
-  className,
-  imgProps,
-}) => {
+export const SuitGlyph: FC<SuitGlyphProps> = ({ suit, rank, className, imgProps }) => {
   const key = buildImageKey(suit, rank);
   const src = key ? images[key] : undefined;
 
@@ -56,14 +42,7 @@ export const SuitGlyph: FC<SuitGlyphProps> = ({
   const alt = `${RANK_NAME[rank]}Of${capitalize(suit)}`;
 
   return (
-    <img
-      src={src}
-      alt={alt}
-      className={className}
-      loading="lazy"
-      draggable={false}
-      {...imgProps}
-    />
+    <img src={src} alt={alt} className={className} loading="lazy" draggable={false} {...imgProps} />
   );
 };
 

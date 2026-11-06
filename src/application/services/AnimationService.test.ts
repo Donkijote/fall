@@ -15,8 +15,7 @@ describe("AnimationService", () => {
   });
 
   it("play calls registered handler with the correct payload", async () => {
-    const { onAnimation, animationService, AnimationKeys } =
-      await freshService();
+    const { onAnimation, animationService, AnimationKeys } = await freshService();
 
     const handler = vi.fn();
     const off = onAnimation(AnimationKeys.GAME_CARDS, handler);
@@ -31,8 +30,7 @@ describe("AnimationService", () => {
   });
 
   it("unsubscribe (off) stops the handler from being called", async () => {
-    const { onAnimation, animationService, AnimationKeys } =
-      await freshService();
+    const { onAnimation, animationService, AnimationKeys } = await freshService();
 
     const handler = vi.fn();
     const off = onAnimation(AnimationKeys.GAME_CARDS, handler);
@@ -47,8 +45,7 @@ describe("AnimationService", () => {
   });
 
   it("run (sequential) awaits each step until handler promise resolves", async () => {
-    const { onAnimation, animationService, AnimationKeys } =
-      await freshService();
+    const { onAnimation, animationService, AnimationKeys } = await freshService();
 
     const gates: Array<() => void> = [];
 
@@ -90,16 +87,11 @@ describe("AnimationService", () => {
   });
 
   it("run (parallel) waits for all steps to complete", async () => {
-    const { onAnimation, animationService, AnimationKeys } =
-      await freshService();
+    const { onAnimation, animationService, AnimationKeys } = await freshService();
 
     onAnimation(AnimationKeys.GAME_CARDS, (payload) => {
       return new Promise<void>((resolve) => {
-        animationService._registerWaiter(
-          AnimationKeys.GAME_CARDS,
-          payload,
-          resolve,
-        );
+        animationService._registerWaiter(AnimationKeys.GAME_CARDS, payload, resolve);
       });
     });
 
@@ -129,10 +121,7 @@ describe("AnimationService", () => {
     expect(done).toBe(false);
 
     // Resolve the second → overall run finishes
-    animationService.dispatch(
-      AnimationKeys.GAME_CARDS,
-      secondAnimation.payload,
-    );
+    animationService.dispatch(AnimationKeys.GAME_CARDS, secondAnimation.payload);
     await results;
     expect(done).toBe(true);
   });
@@ -143,18 +132,10 @@ describe("AnimationService", () => {
     const payload = { suit: "clubs", rank: 7 } as Card;
 
     const firstRegisteredAnimation = new Promise<void>((resolve) => {
-      animationService._registerWaiter(
-        AnimationKeys.GAME_CARDS,
-        payload,
-        resolve,
-      );
+      animationService._registerWaiter(AnimationKeys.GAME_CARDS, payload, resolve);
     });
     const secondRegisteredAnimation = new Promise<void>((resolve) => {
-      animationService._registerWaiter(
-        AnimationKeys.GAME_CARDS,
-        payload,
-        resolve,
-      );
+      animationService._registerWaiter(AnimationKeys.GAME_CARDS, payload, resolve);
     });
 
     let firstResolved = false,

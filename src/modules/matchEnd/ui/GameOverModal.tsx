@@ -11,8 +11,7 @@ import { ConfettiController } from "./components/Confetti";
 import { StatPill } from "./components/StatPill";
 
 export const GameOverModal = () => {
-  const { isFinished, gameResult, stats, onExit, onNewGame, onReplay } =
-    useMatchEnd();
+  const { isFinished, gameResult, stats, onExit, onNewGame, onReplay } = useMatchEnd();
 
   return (
     <AnimatePresence>
@@ -61,10 +60,7 @@ export const GameOverModal = () => {
             >
               {TEXTS[gameResult].title}
             </h2>
-            <p
-              id="game-over-desc"
-              className="mb-6 text-center text-text-secondary"
-            >
+            <p id="game-over-desc" className="mb-6 text-center text-text-secondary">
               {TEXTS[gameResult].message}
             </p>
 
@@ -113,9 +109,7 @@ export const GameOverModal = () => {
             </button>
 
             <AnimatePresence>
-              {gameResult === "win" && (
-                <ConfettiController active={isFinished} />
-              )}
+              {gameResult === "win" && <ConfettiController active={isFinished} />}
             </AnimatePresence>
           </motion.div>
         </motion.div>

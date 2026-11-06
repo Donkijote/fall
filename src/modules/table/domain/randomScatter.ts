@@ -43,10 +43,7 @@ export const randomScatter = (input: LayoutInput): LayoutOutput => {
     let candidate = toPlacement(key, counter++);
     let attempts = 0;
 
-    while (
-      attempts++ < maxAttempts &&
-      !isFarEnough(result, candidate, minDist)
-    ) {
+    while (attempts++ < maxAttempts && !isFarEnough(result, candidate, minDist)) {
       candidate = toPlacement(key, counter++);
     }
 
@@ -61,11 +58,7 @@ export const randomScatter = (input: LayoutInput): LayoutOutput => {
   return { placements: result };
 };
 
-const isFarEnough = (
-  placements: Map<string, Placement>,
-  candidate: Placement,
-  minDist: number,
-) => {
+const isFarEnough = (placements: Map<string, Placement>, candidate: Placement, minDist: number) => {
   const min2 = minDist * minDist;
   for (const p of placements.values()) {
     const dx = p.leftPct - candidate.leftPct;
