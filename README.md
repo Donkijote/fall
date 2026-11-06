@@ -201,3 +201,8 @@ elemental impact. Each replay prepares the hands and center cards automatically.
 **Cascade capture** matches the first of four face-up table cards, then carries
 the growing pile around the grid, picking up each card in sequence before moving
 all five cards face down onto the player’s stack to their right.
+
+Capture card and Cascade capture use curved, banking gestures with slight landing
+offsets and contact settling. Cascade pickups vary their cadence; collected cards
+square up during the lift and align on the final pile. Motion variation is fixed
+so replay remains repeatable.
