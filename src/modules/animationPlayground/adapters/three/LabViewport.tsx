@@ -1,5 +1,6 @@
 import { PerfHeadless, usePerf } from "r3f-perf";
 import { lazy, Suspense, useEffect, useRef } from "react";
+import type { ReactNode } from "react";
 
 import { Grid, useTexture } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
@@ -121,6 +122,7 @@ export function LabViewport({
   study,
   experiment,
   revision,
+  footerActions,
 }: {
   lab: Lab;
   state: LabState;
@@ -128,23 +130,21 @@ export function LabViewport({
   study: Study;
   experiment?: Experiment;
   revision: number;
+  footerActions: ReactNode;
 }) {
   const { dpr, perf } = settings;
   const deck = study === "deck";
-  const labels = {
+  const label = {
     card: state.cardFalls
       ? {
-          ice: ["ICE IMPACT", "Press Shatter frozen card to replay"],
-          heat: ["HEAT TRANSFER", "Press Drop hot card to replay"],
-          flame: ["FLAME IMPACT", "Press Drop flame card to replay"],
-          plain: ["CARD IMPACT", "Press Drop card to replay"],
+          ice: "ICE IMPACT",
+          heat: "HEAT TRANSFER",
+          flame: "FLAME IMPACT",
+          plain: "CARD IMPACT",
         }[state.cardDropEffect]
-      : [`${cardArtwork.label} / ${state.faceUp ? "FACE" : "BACK"}`, "Hover to tilt · Tap to flip"],
-    deck: [
-      `DECK STACK / ${deckCardCount} CARDS`,
-      `${state.deckFanned ? "Fan open" : "Stack closed"} · Drag to tilt`,
-    ],
-    table: ["TABLE / DEAL STUDY", "Dealer + 3 players"],
+      : `${cardArtwork.label} / ${state.faceUp ? "FACE" : "BACK"}`,
+    deck: `DECK STACK / ${deckCardCount} CARDS`,
+    table: "TABLE / DEAL STUDY",
   }[study];
 
   useEffect(() => {
@@ -154,10 +154,10 @@ export function LabViewport({
 
   return (
     <section
-      className="relative flex min-h-[28rem] flex-col overflow-hidden rounded-3xl border bg-card lg:min-h-[38rem]"
+      className="relative flex h-[36rem] flex-col overflow-hidden rounded-3xl border bg-card lg:h-[calc(100dvh-14rem)] lg:min-h-[44rem]"
       aria-label={`3D ${study} preview`}
     >
-      <div className="absolute inset-0">
+      <div className="relative min-h-0 flex-1">
         <Canvas
           camera={{ position: [0, 0.22, 6.9], fov: 43 }}
           dpr={[1, dpr]}
@@ -202,10 +202,10 @@ export function LabViewport({
       >
         3D Preview
       </div>
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-wrap justify-between gap-2 bg-background/90 px-5 py-3 text-xs text-muted-foreground">
-        <span>{labels[0]}</span>
-        <span>{labels[1]}</span>
-      </div>
+      <footer className="flex flex-wrap items-center gap-3 border-t bg-background px-5 py-3">
+        <span className="text-xs text-muted-foreground">{label}</span>
+        <div className="ml-auto flex flex-wrap justify-end gap-2">{footerActions}</div>
+      </footer>
     </section>
   );
 }

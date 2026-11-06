@@ -15,7 +15,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ThemeToggle } from "@/infrastructure/ui/components/theme/ThemeToggle";
 import { HOME_PATH } from "@/routes/Routes";
 
 import { createHowlerAudio } from "../adapters/audio/howlerAudio";
@@ -94,7 +93,6 @@ export function AnimationPlayground() {
   const { lab } = preview;
   const state = useSyncExternalStore(lab.subscribe, lab.getState);
   const lessons = lessonsByStudy[study];
-  const lesson = lessons.find((item) => item.experiment === selected) ?? lessons[0];
 
   useEffect(() => () => audio.dispose(), [audio]);
 
@@ -129,11 +127,7 @@ export function AnimationPlayground() {
               <h1 className="font-heading text-2xl font-bold sm:text-3xl">Animation playground</h1>
               <Badge variant="secondary">Development only</Badge>
             </div>
-            <p className="text-sm text-muted-foreground">
-              Explore card motion and effects before bringing them to the table.
-            </p>
           </div>
-          <ThemeToggle />
         </header>
         <nav aria-label="Animation studies" className="flex flex-wrap gap-2">
           {studies.map((item) => (
@@ -173,7 +167,7 @@ export function AnimationPlayground() {
               ))}
             </CardContent>
           </Card>
-          <div className="min-w-0 space-y-4">
+          <div className="min-w-0">
             <MotionContext value={settings}>
               <LabViewport
                 revision={preview.revision}
@@ -182,35 +176,25 @@ export function AnimationPlayground() {
                 settings={settings}
                 study={study}
                 experiment={preview.autoplay}
+                footerActions={
+                  <>
+                    <Button onClick={play}>
+                      <Play /> Play / replay
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() =>
+                        setPreview((current) =>
+                          createPreview(audio, current.revision + 1, settings.effect),
+                        )
+                      }
+                    >
+                      <RotateCcw /> Reset scene
+                    </Button>
+                  </>
+                }
               />
             </MotionContext>
-            <Card>
-              <CardHeader>
-                <CardTitle>{lesson.label}</CardTitle>
-                <p className="text-sm text-muted-foreground">{lesson.description}</p>
-              </CardHeader>
-              <CardContent className="flex flex-wrap gap-2">
-                <Button onClick={play}>
-                  <Play /> Play / replay
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() =>
-                    setPreview((current) =>
-                      createPreview(audio, current.revision + 1, settings.effect),
-                    )
-                  }
-                >
-                  <RotateCcw /> Reset scene
-                </Button>
-                <p role="status" className="w-full text-xs text-muted-foreground">
-                  {preview.experiment
-                    ? `Previewing ${lessons.find((item) => item.experiment === preview.experiment)?.label ?? preview.experiment}`
-                    : "Ready to preview"}
-                  . Each replay starts from the initial animation state.
-                </p>
-              </CardContent>
-            </Card>
           </div>
           <Card>
             <CardHeader>

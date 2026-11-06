@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import type { ReactNode } from "react";
 import { MemoryRouter } from "react-router";
 
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
@@ -9,9 +10,16 @@ import { AnimationPlayground } from "./AnimationPlayground";
 const viewport = vi.hoisted(() => ({ mount: vi.fn(), unmount: vi.fn() }));
 const audio = vi.hoisted(() => ({ play: vi.fn(), playDealCard: vi.fn(), dispose: vi.fn() }));
 vi.mock("../adapters/audio/howlerAudio", () => ({ createHowlerAudio: () => audio }));
-vi.mock("@/infrastructure/ui/components/theme/ThemeToggle", () => ({ ThemeToggle: () => null }));
 vi.mock("../adapters/three/LabViewport", () => ({
-  LabViewport: ({ lab, experiment }: { lab: Lab; experiment?: Experiment }) => {
+  LabViewport: ({
+    lab,
+    experiment,
+    footerActions,
+  }: {
+    lab: Lab;
+    experiment?: Experiment;
+    footerActions: ReactNode;
+  }) => {
     useEffect(() => {
       viewport.mount();
       return () => viewport.unmount();
@@ -19,7 +27,12 @@ vi.mock("../adapters/three/LabViewport", () => ({
     useEffect(() => {
       if (experiment) lab.run(experiment);
     }, [lab, experiment]);
-    return <output aria-label="Scene state">{JSON.stringify(lab.getState())}</output>;
+    return (
+      <section>
+        <output aria-label="Scene state">{JSON.stringify(lab.getState())}</output>
+        <footer>{footerActions}</footer>
+      </section>
+    );
   },
 }));
 
