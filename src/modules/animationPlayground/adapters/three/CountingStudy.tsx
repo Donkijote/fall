@@ -57,7 +57,9 @@ export function CountingStudy({ lab, total, quota }: { lab: Lab; total: number; 
       if (bonusLabel.current) {
         bonusLabel.current.textContent =
           progress.points > 0
-            ? `${progress.points === 1 ? "BONUS POINT" : "BONUS POINTS"}${progress.complete ? " · ADDED" : ""}`
+            ? progress.points === 1
+              ? "BONUS POINT"
+              : "BONUS POINTS"
             : progress.complete
               ? "NO BONUS POINTS"
               : "";
