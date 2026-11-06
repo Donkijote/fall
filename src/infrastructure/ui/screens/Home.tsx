@@ -1,30 +1,10 @@
 import { motion } from "framer-motion";
-import { useCallback, useState } from "react";
 
 import bg from "@/assets/lobby/home_2.png";
-import { BouncingCardAnimation } from "@/infrastructure/ui/components/animations/BounceCardAnimation";
-import { FlipCardAnimation } from "@/infrastructure/ui/components/animations/FlipCardAnimation";
-import { HangingCardAnimation } from "@/infrastructure/ui/components/animations/HangingCardAnimation";
 import { WelcomeModal } from "@/infrastructure/ui/components/modal/WelcomeModal";
 import { BottomNavbar } from "@/infrastructure/ui/components/navbar/BottomNavbar";
-import { useBreakpoint } from "@/infrastructure/ui/hooks/useBreakpoint";
 
 export const HomeScreen = () => {
-  const [animation, setAnimation] = useState<"flip" | "bounce">("flip");
-  const { breakpoint, isMobile, orientation } = useBreakpoint();
-
-  const handleComplete = useCallback(() => {
-    setAnimation((prev) => (prev === "flip" ? "bounce" : "flip"));
-  }, []);
-
-  let secondThreadLongitude = 420;
-  let thirdThreadLongitude = 820;
-
-  if (breakpoint && isMobile && orientation === "landscape" && breakpoint !== "sm") {
-    secondThreadLongitude = 330;
-    thirdThreadLongitude = 230;
-  }
-
   return (
     <>
       <div
@@ -46,27 +26,6 @@ export const HomeScreen = () => {
           </motion.h1>
           <p className="text-sm opacity-80">Modern Edition</p>
         </header>
-
-        {animation === "flip" ? (
-          <FlipCardAnimation onComplete={handleComplete} />
-        ) : (
-          <BouncingCardAnimation onComplete={handleComplete} />
-        )}
-        <HangingCardAnimation
-          positionClassName={"left-30 md:left-20"}
-          threadLongitude={100}
-          card={{ rank: 1, suit: "swords" }}
-        />
-        <HangingCardAnimation
-          positionClassName={"left-90 md:left-40"}
-          threadLongitude={secondThreadLongitude}
-          card={{ rank: 11, suit: "swords" }}
-        />
-        <HangingCardAnimation
-          positionClassName={"right-90 md:right-40"}
-          threadLongitude={thirdThreadLongitude}
-          card={{ rank: 12, suit: "swords" }}
-        />
 
         <BottomNavbar />
       </div>
