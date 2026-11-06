@@ -1,8 +1,8 @@
 import { Howl } from "howler";
 
-import dealCardSound from "../../../assets/deal-card.mp3";
-import emberSound from "../../../assets/ember.wav";
 import type { AudioPort } from "../../application/lab";
+import dealCardSound from "../../assets/deal-card.mp3";
+import emberSound from "../../assets/ember.wav";
 
 export function createHowlerAudio(): AudioPort & { preloadDeal: () => void; dispose: () => void } {
   let sound: Howl | undefined;

@@ -4,11 +4,11 @@ import { lazy, Suspense, useEffect, useRef } from "react";
 import { Grid, useTexture } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 
-import backArt from "../../../assets/card-back.svg";
-import faceArt from "../../../assets/card-face.svg";
-import emberTexture from "../../../assets/ember.svg";
 import { deckCardCount } from "../../application/lab";
 import type { Experiment, Lab, LabState, Study } from "../../application/lab";
+import backArt from "../../assets/card-back.svg";
+import faceArt from "../../assets/card-face.svg";
+import emberTexture from "../../assets/ember.svg";
 import { Card } from "./Card";
 import { CardDrop } from "./CardDrop";
 import { DeckStack } from "./DeckStack";

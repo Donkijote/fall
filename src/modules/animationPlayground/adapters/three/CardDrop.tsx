@@ -7,8 +7,8 @@ import { useGSAP } from "@gsap/react";
 import { PerspectiveCamera, RoundedBox, useTexture } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 
-import shadowTexture from "../../../assets/ember.svg";
 import type { CardDropEffect } from "../../application/lab";
+import shadowTexture from "../../assets/ember.svg";
 import { CardMesh } from "./Card";
 import type { HeatUniforms } from "./cardHeat";
 import {

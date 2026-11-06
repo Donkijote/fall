@@ -8,9 +8,9 @@ import { useGSAP } from "@gsap/react";
 import { useCursor, useTexture } from "@react-three/drei";
 import { extend, useFrame } from "@react-three/fiber";
 
-import backArt from "../../../assets/card-back.svg";
-import faceArt from "../../../assets/card-face.svg";
 import type { Lab } from "../../application/lab";
+import backArt from "../../assets/card-back.svg";
+import faceArt from "../../assets/card-face.svg";
 import { addCardFrost } from "./cardFrost";
 import type { FrostUniform } from "./cardFrost";
 import { addCardHeat } from "./cardHeat";
