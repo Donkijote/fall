@@ -26,12 +26,7 @@ vi.mock("framer-motion", () => {
       onLayoutAnimationComplete?.();
     }, [onLayoutAnimationComplete]);
     return (
-      <div
-        data-layoutid={layoutId}
-        {...rest}
-        data-layout={layout}
-        data-initial={initial}
-      >
+      <div data-layoutid={layoutId} {...rest} data-layout={layout} data-initial={initial}>
         {children}
       </div>
     );

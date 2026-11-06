@@ -18,16 +18,8 @@ export const ConfettiController: FC<{ active: boolean }> = ({ active }) => {
 
   if (!active) return null;
   return (
-    <div
-      aria-hidden
-      className="inset-0 pointer-events-none absolute overflow-hidden"
-    >
-      <ConfettiBurst
-        key={`${side}-${burstId}`}
-        side={side}
-        seed={burstId}
-        count={28}
-      />
+    <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+      <ConfettiBurst key={`${side}-${burstId}`} side={side} seed={burstId} count={28} />
     </div>
   );
 };
@@ -60,12 +52,7 @@ const ConfettiPiece: FC<{
   const rotate = Math.floor(pr(index + 5) * 360);
   const spin = rotate + (side === "left" ? 180 : -180);
   const size = 6 + Math.floor(pr(index + 6) * 10);
-  const hues = [
-    "bg-accent-gold",
-    "bg-accent-green",
-    "bg-accent-blue",
-    "bg-accent-red",
-  ];
+  const hues = ["bg-accent-gold", "bg-accent-green", "bg-accent-blue", "bg-accent-red"];
   const hue = hues[index % hues.length];
   const startTop = -10;
   const endTop = 110;

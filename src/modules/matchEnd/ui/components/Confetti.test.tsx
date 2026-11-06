@@ -10,7 +10,7 @@ afterEach(() => {
 describe("ConfettiController", () => {
   it("renders nothing when inactive and sets no interval", () => {
     vi.useFakeTimers();
-    const spy = vi.spyOn(global, "setInterval");
+    const spy = vi.spyOn(globalThis, "setInterval");
 
     const { container } = render(<ConfettiController active={false} />);
     expect(container.firstChild).toBeNull();
@@ -19,7 +19,7 @@ describe("ConfettiController", () => {
 
   it("starts an interval when active and alternates side each tick", async () => {
     vi.useFakeTimers();
-    const spy = vi.spyOn(global, "setInterval");
+    const spy = vi.spyOn(globalThis, "setInterval");
 
     render(<ConfettiController active={true} />);
 
@@ -43,7 +43,7 @@ describe("ConfettiController", () => {
 
   it("cleans up the interval when deactivated", () => {
     vi.useFakeTimers();
-    const spyClear = vi.spyOn(global, "clearInterval");
+    const spyClear = vi.spyOn(globalThis, "clearInterval");
 
     const { rerender } = render(<ConfettiController active={true} />);
     rerender(<ConfettiController active={false} />);
@@ -58,7 +58,7 @@ describe("ConfettiController", () => {
 
   it("cleans up the interval on unmount", () => {
     vi.useFakeTimers();
-    const spyClear = vi.spyOn(global, "clearInterval");
+    const spyClear = vi.spyOn(globalThis, "clearInterval");
 
     const { unmount } = render(<ConfettiController active={true} />);
     unmount();

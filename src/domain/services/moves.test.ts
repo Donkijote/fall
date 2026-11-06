@@ -12,20 +12,11 @@ import {
 const deck = createDeck();
 
 describe("Moves", () => {
-  const runPlay = (
-    state: GameState,
-    playerId: string,
-    card = state.players[0].hand[0],
-  ) => {
+  const runPlay = (state: GameState, playerId: string, card = state.players[0].hand[0]) => {
     const analysis = analyzePlay(state, playerId, card);
     if (!analysis.ok) return state;
     const s1 = removeCardsFromHand(state, playerId, card);
-    const s2 = updateTableAndHandCards(
-      s1,
-      playerId,
-      card,
-      analysis.capturePlan,
-    );
+    const s2 = updateTableAndHandCards(s1, playerId, card, analysis.capturePlan);
     return finalizeAfterPlay(s2, playerId, card);
   };
 
@@ -45,11 +36,7 @@ describe("Moves", () => {
       currentPlayer: mockedStateWithPlayers.players[0].id,
     };
     state.players[0].hand = [deck[1], deck[2], deck[3]];
-    const analysis = analyzePlay(
-      state,
-      mockedStateWithPlayers.players[0].id,
-      deck[0],
-    );
+    const analysis = analyzePlay(state, mockedStateWithPlayers.players[0].id, deck[0]);
     expect(analysis.ok).toBe(false);
     expect(analysis.reason).toBe("card-not-in-hand");
   });
@@ -61,16 +48,10 @@ describe("Moves", () => {
       currentPlayer: mockedStateWithPlayers.players[0].id,
     };
     state.players[0].hand = [deck[0], deck[2], deck[3]];
-    const newState = runPlay(
-      state,
-      mockedStateWithPlayers.players[0].id,
-      deck[0],
+    const newState = runPlay(state, mockedStateWithPlayers.players[0].id, deck[0]);
+    expect(newState.table.some((c) => c.suit === deck[0].suit && c.rank === deck[0].rank)).toBe(
+      true,
     );
-    expect(
-      newState.table.some(
-        (c) => c.suit === deck[0].suit && c.rank === deck[0].rank,
-      ),
-    ).toBe(true);
   });
 
   it("should capture last table card, get clean table points", () => {
@@ -82,16 +63,10 @@ describe("Moves", () => {
       lastPlayedCard: deck[1],
     };
     state.players[0].hand = [deck[10], deck[2], deck[3]];
-    const newState = runPlay(
-      state,
-      mockedStateWithPlayers.players[0].id,
-      deck[10],
-    );
+    const newState = runPlay(state, mockedStateWithPlayers.players[0].id, deck[10]);
     expect(newState.table).toHaveLength(0);
     expect(newState.players[0].collected).toHaveLength(2);
-    expect(newState.scores.values[mockedStateWithPlayers.players[0].id]).toBe(
-      4,
-    );
+    expect(newState.scores.values[mockedStateWithPlayers.players[0].id]).toBe(4);
   });
 
   it("should capture last played card, get fall points", () => {
@@ -104,16 +79,10 @@ describe("Moves", () => {
     };
     state.players[0].hand = [deck[10], deck[11], deck[6]];
     state.players[0].collected = [];
-    const newState = runPlay(
-      state,
-      mockedStateWithPlayers.players[0].id,
-      deck[11],
-    );
+    const newState = runPlay(state, mockedStateWithPlayers.players[0].id, deck[11]);
     expect(newState.table.length).toBeGreaterThanOrEqual(1);
     expect(newState.players[0].collected.length).toBeGreaterThanOrEqual(2);
-    expect(newState.scores.values[mockedStateWithPlayers.players[0].id]).toBe(
-      1,
-    );
+    expect(newState.scores.values[mockedStateWithPlayers.players[0].id]).toBe(1);
   });
 
   it("should capture last 10 played card, get 2 fall points", () => {
@@ -125,15 +94,9 @@ describe("Moves", () => {
       lastPlayedCard: deck[7],
     };
     state.players[0].hand = [deck[10], deck[17], deck[6]];
-    const newState = runPlay(
-      state,
-      mockedStateWithPlayers.players[0].id,
-      deck[17],
-    );
+    const newState = runPlay(state, mockedStateWithPlayers.players[0].id, deck[17]);
     expect(newState.players[0].collected.length).toBeGreaterThanOrEqual(2);
-    expect(newState.scores.values[mockedStateWithPlayers.players[0].id]).toBe(
-      2,
-    );
+    expect(newState.scores.values[mockedStateWithPlayers.players[0].id]).toBe(2);
   });
 
   it("should capture last 11 played card, get 3 fall points", () => {
@@ -145,15 +108,9 @@ describe("Moves", () => {
       lastPlayedCard: deck[8],
     };
     state.players[0].hand = [deck[10], deck[18], deck[6]];
-    const newState = runPlay(
-      state,
-      mockedStateWithPlayers.players[0].id,
-      deck[18],
-    );
+    const newState = runPlay(state, mockedStateWithPlayers.players[0].id, deck[18]);
     expect(newState.players[0].collected.length).toBeGreaterThanOrEqual(2);
-    expect(newState.scores.values[mockedStateWithPlayers.players[0].id]).toBe(
-      3,
-    );
+    expect(newState.scores.values[mockedStateWithPlayers.players[0].id]).toBe(3);
   });
 
   it("should capture last 12 played card, get 4 fall points", () => {
@@ -165,15 +122,9 @@ describe("Moves", () => {
       lastPlayedCard: deck[9],
     };
     state.players[0].hand = [deck[10], deck[19], deck[6]];
-    const newState = runPlay(
-      state,
-      mockedStateWithPlayers.players[0].id,
-      deck[19],
-    );
+    const newState = runPlay(state, mockedStateWithPlayers.players[0].id, deck[19]);
     expect(newState.players[0].collected.length).toBeGreaterThanOrEqual(2);
-    expect(newState.scores.values[mockedStateWithPlayers.players[0].id]).toBe(
-      4,
-    );
+    expect(newState.scores.values[mockedStateWithPlayers.players[0].id]).toBe(4);
   });
 
   it("should capture in cascade", () => {
@@ -185,11 +136,7 @@ describe("Moves", () => {
       lastPlayedCard: deck[7],
     };
     state.players[0].hand = [deck[0], deck[7], deck[4]];
-    const newState = runPlay(
-      state,
-      mockedStateWithPlayers.players[0].id,
-      deck[0],
-    );
+    const newState = runPlay(state, mockedStateWithPlayers.players[0].id, deck[0]);
     expect(newState.table).toHaveLength(1);
     expect(newState.players[0].collected.length).toBeGreaterThanOrEqual(2);
   });
@@ -203,11 +150,7 @@ describe("Moves", () => {
       lastPlayedCard: deck[7],
     };
     state.players[0].hand = [deck[0]];
-    const newState = runPlay(
-      state,
-      mockedStateWithPlayers.players[0].id,
-      deck[0],
-    );
+    const newState = runPlay(state, mockedStateWithPlayers.players[0].id, deck[0]);
     newState.players.forEach((player) => {
       expect(player.hand.length).toBeGreaterThan(0);
     });
@@ -222,16 +165,10 @@ describe("Moves", () => {
       lastPlayedCard: deck[1],
     };
     state.players[0].hand = [deck[0], deck[2], deck[3]];
-    const newState = runPlay(
-      state,
-      mockedStateWithPlayers.players[0].id,
-      deck[0],
-    );
+    const newState = runPlay(state, mockedStateWithPlayers.players[0].id, deck[0]);
     expect(newState.table).toHaveLength(0);
     expect(newState.players[0].collected.length).toBe(2);
-    expect(
-      newState.scores.values[mockedStateWithPlayers.players[0].id] ?? 0,
-    ).toBe(0);
+    expect(newState.scores.values[mockedStateWithPlayers.players[0].id] ?? 0).toBe(0);
   });
 
   it("should give leftover table to the last capturer at the true end (deck empty, all hands empty)", () => {

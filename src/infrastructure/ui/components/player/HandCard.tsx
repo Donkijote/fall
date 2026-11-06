@@ -14,13 +14,7 @@ type HandCard = {
   mainPlayer: string;
 };
 
-export const HandCard = ({
-  card,
-  player,
-  index,
-  mainPlayer,
-  currentPlayer,
-}: HandCard) => {
+export const HandCard = ({ card, player, index, mainPlayer, currentPlayer }: HandCard) => {
   const { playCard } = useGameStoreService();
   const total = player.hand.length;
   const middle = (total - 1) / 2;
@@ -48,8 +42,7 @@ export const HandCard = ({
           disabled={currentPlayer !== mainPlayer || player.id !== mainPlayer}
           faceDown={player.id !== mainPlayer}
           className={clsx({
-            "cursor-pointer":
-              player.id === mainPlayer && currentPlayer === player.id,
+            "cursor-pointer": player.id === mainPlayer && currentPlayer === player.id,
           })}
         />
       </div>

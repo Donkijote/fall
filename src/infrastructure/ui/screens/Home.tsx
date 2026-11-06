@@ -20,12 +20,7 @@ export const HomeScreen = () => {
   let secondThreadLongitude = 420;
   let thirdThreadLongitude = 820;
 
-  if (
-    breakpoint &&
-    isMobile &&
-    orientation === "landscape" &&
-    breakpoint !== "sm"
-  ) {
+  if (breakpoint && isMobile && orientation === "landscape" && breakpoint !== "sm") {
     secondThreadLongitude = 330;
     thirdThreadLongitude = 230;
   }
@@ -33,14 +28,14 @@ export const HomeScreen = () => {
   return (
     <>
       <div
-        className="text-text-primary relative flex h-screen w-screen flex-col items-center justify-between bg-cover bg-center"
+        className="relative flex h-screen w-screen flex-col items-center justify-between bg-cover bg-center text-text-primary"
         style={{
           backgroundImage: `url(${bg})`,
         }}
       >
-        <div className="inset-0 bg-black/20 absolute" />
+        <div className="absolute inset-0 bg-black/20" />
 
-        <header className="mt-8 relative text-center">
+        <header className="relative mt-8 text-center">
           <motion.h1
             initial={{ opacity: 0, y: -40 }}
             animate={{ opacity: 1, y: 0 }}

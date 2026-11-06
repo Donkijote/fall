@@ -22,24 +22,24 @@ export const RulesScreen = () => {
   const [tab, setTab] = useState(sectionIds[0] ?? "overview");
 
   return (
-    <div className="text-text-primary max-w-5xl px-4 relative mx-auto min-h-screen">
-      <div className="inset-0 fixed -z-10">
+    <div className="relative mx-auto min-h-screen max-w-5xl px-4 text-text-primary">
+      <div className="fixed inset-0 -z-10">
         <div
-          className="inset-0 absolute bg-cover mix-blend-overlay"
+          className="absolute inset-0 bg-cover mix-blend-overlay"
           style={{ backgroundImage: `url(${bg})` }}
         />
       </div>
 
-      <div className="max-w-6xl px-4 py-10 mx-auto">
+      <div className="mx-auto max-w-6xl px-4 py-10">
         <motion.div
           initial={{ y: -8, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="mb-6 gap-4 rounded-2xl border-white/10 bg-white/10 backdrop-blur p-4 shadow-sm flex items-start justify-between border"
+          className="mb-6 flex items-start justify-between gap-4 rounded-2xl border border-white/10 bg-white/10 p-4 shadow-sm backdrop-blur"
         >
-          <div className={"gap-4 flex items-center"}>
+          <div className={"flex items-center gap-4"}>
             <button
               onClick={() => navigate(-1)}
-              className="border-white/20 bg-white/10 px-3 py-2 text-text-primary hover:bg-white/15 goBack cursor-pointer rounded-full border transition"
+              className="goBack cursor-pointer rounded-full border border-white/20 bg-white/10 px-3 py-2 text-text-primary transition hover:bg-white/15"
             >
               <FontAwesomeIcon icon={faArrowLeft} size={"xs"} />
             </button>
@@ -47,18 +47,18 @@ export const RulesScreen = () => {
               <h1 className="text-2xl font-semibold tracking-tight text-text-primary">
                 {RULES.hero.title}
               </h1>
-              <p className="text-text-secondary mt-1">{RULES.hero.subtitle}</p>
+              <p className="mt-1 text-text-secondary">{RULES.hero.subtitle}</p>
             </div>
           </div>
-          <div className="md:inline-flex rounded-xl border-white/10 bg-white/10 backdrop-blur px-3 py-1.5 text-sm text-text-primary hidden cursor-pointer items-center border">
+          <div className="hidden cursor-pointer items-center rounded-xl border border-white/10 bg-white/10 px-3 py-1.5 text-sm text-text-primary backdrop-blur md:inline-flex">
             How to use
           </div>
         </motion.div>
 
-        <div className="xl:grid-cols-[1fr_320px] gap-6 grid grid-cols-1">
+        <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1fr_320px]">
           <div>
             <div
-              className="sm:grid-cols-4 xl:grid-cols-8 gap-2 grid w-full grid-cols-2"
+              className="grid w-full grid-cols-2 gap-2 sm:grid-cols-4 xl:grid-cols-8"
               role="tablist"
             >
               {RULES.sections.map((s, i) => (
@@ -90,7 +90,7 @@ export const RulesScreen = () => {
               ))}
             </div>
 
-            <div className="mt-4 xl:h-[calc(100vh-220px)] pb-28 md:pb-10 pr-1 scrollbar-hide-y h-[calc(100vh-300px)] overflow-y-auto">
+            <div className="scrollbar-hide-y mt-4 h-[calc(100vh-300px)] overflow-y-auto pr-1 pb-28 md:pb-10 xl:h-[calc(100vh-220px)]">
               {RULES.sections.map((s) => (
                 <div
                   key={s.id}

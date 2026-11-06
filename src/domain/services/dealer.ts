@@ -1,9 +1,5 @@
 import type { Card } from "@/domain/entities/Card";
-import type {
-  DealerSelection,
-  GameState,
-  Player,
-} from "@/domain/entities/GameState";
+import type { DealerSelection, GameState, Player } from "@/domain/entities/GameState";
 import { createDeck, shuffle } from "@/domain/rules/deck";
 
 export const setUpDealerSelection = (state: GameState): GameState => {
@@ -33,10 +29,7 @@ export const setUpDealerSelection = (state: GameState): GameState => {
   };
 };
 
-export const dealerCardSelection = (
-  state: GameState,
-  cardKey: string,
-): GameState => {
+export const dealerCardSelection = (state: GameState, cardKey: string): GameState => {
   const sel = state.dealerSelection!;
   const pid = state.currentPlayer;
 
@@ -44,9 +37,7 @@ export const dealerCardSelection = (
   if (!isEligible) return state;
   if (sel.pickedByKey[pid]) return state;
 
-  const existsInTable = state.table.some(
-    (c) => `${c.suit}-${c.rank}` === cardKey,
-  );
+  const existsInTable = state.table.some((c) => `${c.suit}-${c.rank}` === cardKey);
   if (!existsInTable) return state;
   if (sel.pickedKeys.has(cardKey)) return state;
 
@@ -119,9 +110,9 @@ export const dealerCardSelection = (
 const chooseDealer = (
   pickedByKey: DealerSelection["pickedByKey"],
 ): { winnerId?: string; ties: string[] } => {
-  const entries = Object.entries(pickedByKey).filter(
-    ([, key]) => key && key.length > 0,
-  ) as Array<[string, string]>;
+  const entries = Object.entries(pickedByKey).filter(([, key]) => key && key.length > 0) as Array<
+    [string, string]
+  >;
 
   if (entries.length === 0) return { winnerId: undefined, ties: [] };
 
@@ -134,10 +125,7 @@ const chooseDealer = (
   return { winnerId: undefined, ties: top.map(([playerId]) => playerId) };
 };
 
-const finalizeDealerSelection = (
-  state: GameState,
-  winnerId: string,
-): GameState => {
+const finalizeDealerSelection = (state: GameState, winnerId: string): GameState => {
   const players = state.players;
 
   const dealerIdx = players.findIndex((p) => p.id === winnerId);

@@ -7,12 +7,7 @@ type IconButtonProps = {
   icon: ReactNode;
 };
 
-export const IconButton = ({
-  icon,
-  className,
-  onClick,
-  ...rest
-}: IconButtonProps) => {
+export const IconButton = ({ icon, className, onClick, ...rest }: IconButtonProps) => {
   return (
     <button
       className={clsx(

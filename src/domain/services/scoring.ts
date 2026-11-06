@@ -2,11 +2,7 @@ import type { GameState } from "../entities/GameState";
 
 export const TARGET_SCORE = 24;
 
-export function awardPoints(
-  state: GameState,
-  playerId: string,
-  pts: number,
-): GameState {
+export function awardPoints(state: GameState, playerId: string, pts: number): GameState {
   if (pts <= 0) return state;
 
   const player = state.players.find((p) => p.id === playerId);
@@ -28,13 +24,8 @@ export function awardPoints(
 /**
  * If any side reaches TARGET_SCORE, flip phase to 'gameOver' and set winner.
  */
-export function checkGameOver(
-  state: GameState,
-  target = TARGET_SCORE,
-): GameState {
-  const winnerEntry = Object.entries(state.scores.values).find(
-    ([, score]) => score >= target,
-  );
+export function checkGameOver(state: GameState, target = TARGET_SCORE): GameState {
+  const winnerEntry = Object.entries(state.scores.values).find(([, score]) => score >= target);
   if (!winnerEntry) return state;
 
   const [winnerKey] = winnerEntry;

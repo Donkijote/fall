@@ -19,12 +19,10 @@ type DealerChoiceControlsProps = {
 };
 
 export const DealerChoiceControls = ({ isOpen }: DealerChoiceControlsProps) => {
-  const [dealOrder, setDealOrder] = useState<
-    GameState["config"]["dealOrder"] | null
-  >(null);
-  const [tablePattern, setTablePattern] = useState<
-    GameState["config"]["tablePattern"] | null
-  >(null);
+  const [dealOrder, setDealOrder] = useState<GameState["config"]["dealOrder"] | null>(null);
+  const [tablePattern, setTablePattern] = useState<GameState["config"]["tablePattern"] | null>(
+    null,
+  );
 
   const { dealerChoose } = useGameStoreService();
 

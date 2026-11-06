@@ -1,7 +1,4 @@
-import {
-  initialState,
-  mockedStateWithPlayers,
-} from "@/application/store/gameStore";
+import { initialState, mockedStateWithPlayers } from "@/application/store/gameStore";
 import type { GameState } from "@/domain/entities/GameState";
 
 import { resolveHands } from "./resolveHands";

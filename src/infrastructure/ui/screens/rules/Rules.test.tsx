@@ -1,9 +1,4 @@
-import {
-  createElement,
-  type JSX,
-  type PropsWithChildren,
-  type ReactNode,
-} from "react";
+import { createElement, type JSX, type PropsWithChildren, type ReactNode } from "react";
 
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -22,8 +17,7 @@ vi.mock("framer-motion", () => {
     motion: new Proxy(
       {},
       {
-        get: (_, tag: string) =>
-          passthrough(tag as keyof JSX.IntrinsicElements),
+        get: (_, tag: string) => passthrough(tag as keyof JSX.IntrinsicElements),
       },
     ),
     AnimatePresence: ({ children }: { children: ReactNode }) => <>{children}</>,
@@ -56,9 +50,7 @@ beforeEach(() => {
 test("renders header with title and subtitle, and the 'How to use' hint", () => {
   render(<RulesScreen />);
 
-  expect(
-    screen.getByRole("heading", { level: 1, name: /fall/i }),
-  ).toBeInTheDocument();
+  expect(screen.getByRole("heading", { level: 1, name: /fall/i })).toBeInTheDocument();
 
   expect(screen.getByText(/how to use/i)).toBeInTheDocument();
 });
@@ -97,14 +89,8 @@ test("switching tabs updates aria-selected and shows the correct panel", async (
 
   await userEvent.click(second);
 
-  expect(screen.getAllByRole("tab")[1]).toHaveAttribute(
-    "aria-selected",
-    "true",
-  );
-  expect(screen.getAllByRole("tab")[0]).toHaveAttribute(
-    "aria-selected",
-    "false",
-  );
+  expect(screen.getAllByRole("tab")[1]).toHaveAttribute("aria-selected", "true");
+  expect(screen.getAllByRole("tab")[0]).toHaveAttribute("aria-selected", "false");
 
   const secondPanel = document.getElementById(secondPanelId)!;
   const firstPanel = document.getElementById(firstPanelId)!;

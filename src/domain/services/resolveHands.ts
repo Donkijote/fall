@@ -31,10 +31,7 @@ function bestHand(hand: Card[]) {
  */
 export function orderFromDealerRight(state: GameState): string[] {
   const dealerIdx = state.players.findIndex((p) => p.id === state.dealer);
-  const arr = [
-    ...state.players.slice(dealerIdx + 1),
-    ...state.players.slice(0, dealerIdx + 1),
-  ];
+  const arr = [...state.players.slice(dealerIdx + 1), ...state.players.slice(0, dealerIdx + 1)];
   return arr.map((p) => p.id);
 }
 

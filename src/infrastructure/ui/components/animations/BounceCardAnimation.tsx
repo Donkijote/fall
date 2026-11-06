@@ -5,11 +5,7 @@ import { createDeck } from "@/domain/rules/deck";
 
 import { Card } from "../card/Card";
 
-export const BouncingCardAnimation = ({
-  onComplete,
-}: {
-  onComplete: () => void;
-}) => {
+export const BouncingCardAnimation = ({ onComplete }: { onComplete: () => void }) => {
   const [scope, animate] = useAnimate();
   const deck = createDeck();
 
@@ -22,17 +18,11 @@ export const BouncingCardAnimation = ({
       let duration = 0.3;
       const growth = 1.25;
 
-      const bounce = async (x: string, y: string) => {
-        rotation += 360;
-
+      const bounce = async (x: string, y: string, rotation: number, duration: number) => {
         animate(card, { rotate: rotation }, { duration, ease: "linear" });
 
         await Promise.all([
-          animate(
-            card.firstElementChild,
-            { boxShadow: "none" },
-            { duration, ease: "easeInOut" },
-          ),
+          animate(card.firstElementChild, { boxShadow: "none" }, { duration, ease: "easeInOut" }),
 
           animate(
             card,
@@ -40,14 +30,8 @@ export const BouncingCardAnimation = ({
             { duration, ease: "easeInOut" },
           ),
 
-          animate(
-            card,
-            { scaleY: [0.85, 1], scaleX: [1.15, 1] },
-            { duration, ease: "easeInOut" },
-          ),
+          animate(card, { scaleY: [0.85, 1], scaleX: [1.15, 1] }, { duration, ease: "easeInOut" }),
         ]);
-
-        duration *= growth;
       };
 
       await Promise.all([
@@ -71,18 +55,21 @@ export const BouncingCardAnimation = ({
       ]);
 
       while (duration < 1.2) {
-        await bounce("1vw", "45vh");
-        await bounce("45vw", "1vh");
-        await bounce("93vw", "45vh");
-        await bounce("50vw", "80vh");
+        for (const [x, y] of [
+          ["1vw", "45vh"],
+          ["45vw", "1vh"],
+          ["93vw", "45vh"],
+          ["50vw", "80vh"],
+        ]) {
+          rotation += 360;
+          await bounce(x, y, rotation, duration);
+          duration *= growth;
+        }
       }
 
       const finalAngle = rotation + Math.random() * 180;
-      await animate(
-        card,
-        { rotate: finalAngle, top: "80vh" },
-        { duration: 0.8, ease: "easeOut" },
-      ).finished;
+      await animate(card, { rotate: finalAngle, top: "80vh" }, { duration: 0.8, ease: "easeOut" })
+        .finished;
 
       await animate(
         card,
@@ -97,7 +84,7 @@ export const BouncingCardAnimation = ({
   }, [scope, animate, onComplete]);
 
   return (
-    <div className="inset-0 absolute">
+    <div className="absolute inset-0">
       <div
         ref={scope}
         className="absolute top-[60vh] left-1/2 -translate-x-1/2"

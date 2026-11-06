@@ -90,10 +90,7 @@ export function applyTablePatternBonus(
 }
 
 // ensure unique card in the 4 table cards
-function drawUniqueTableCards(
-  deck: Card[],
-  count = 4,
-): { table: Card[]; deck: Card[] } {
+function drawUniqueTableCards(deck: Card[], count = 4): { table: Card[]; deck: Card[] } {
   const table: Card[] = [];
   const pool = [...deck];
 

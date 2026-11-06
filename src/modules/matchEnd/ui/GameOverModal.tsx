@@ -11,8 +11,7 @@ import { ConfettiController } from "./components/Confetti";
 import { StatPill } from "./components/StatPill";
 
 export const GameOverModal = () => {
-  const { isFinished, gameResult, stats, onExit, onNewGame, onReplay } =
-    useMatchEnd();
+  const { isFinished, gameResult, stats, onExit, onNewGame, onReplay } = useMatchEnd();
 
   return (
     <AnimatePresence>
@@ -47,7 +46,7 @@ export const GameOverModal = () => {
                 initial={{ y: 0, opacity: 0 }}
                 animate={{ y: [0, -6, 0], opacity: [1, 1] }}
                 transition={{ repeat: Infinity, duration: 2 }}
-                className="text-text-primary text-6xl"
+                className="text-6xl text-text-primary"
                 aria-hidden
               >
                 <FontAwesomeIcon icon={ICONS[gameResult]} />
@@ -56,15 +55,12 @@ export const GameOverModal = () => {
 
             <h2
               id="game-over-title"
-              className="text-text-primary mb-2 text-center text-2xl font-bold"
+              className="mb-2 text-center text-2xl font-bold text-text-primary"
               data-testid={`gameOverModal-title-${gameResult}`}
             >
               {TEXTS[gameResult].title}
             </h2>
-            <p
-              id="game-over-desc"
-              className="text-text-secondary mb-6 text-center"
-            >
+            <p id="game-over-desc" className="mb-6 text-center text-text-secondary">
               {TEXTS[gameResult].message}
             </p>
 
@@ -77,14 +73,14 @@ export const GameOverModal = () => {
             <div className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-2">
               <button
                 onClick={onReplay}
-                className="bg-accent-green text-text-primary focus:ring-accent-green/60 cursor-pointer rounded-lg px-4 py-2 font-semibold shadow-lg transition hover:brightness-110 focus:outline-none focus:ring-2"
+                className="cursor-pointer rounded-lg bg-accent-green px-4 py-2 font-semibold text-text-primary shadow-lg transition hover:brightness-110 focus:ring-2 focus:ring-accent-green/60 focus:outline-none"
               >
                 Replay <span className="sr-only"> (R)</span>
               </button>
 
               <button
                 onClick={onNewGame}
-                className="bg-accent-gold text-background focus:ring-accent-gold/60 cursor-pointer rounded-lg px-4 py-2 font-semibold shadow-lg transition hover:brightness-110 focus:outline-none focus:ring-2"
+                className="cursor-pointer rounded-lg bg-accent-gold px-4 py-2 font-semibold text-background shadow-lg transition hover:brightness-110 focus:ring-2 focus:ring-accent-gold/60 focus:outline-none"
                 title="Open game modes"
               >
                 New Game <span className="sr-only"> (N)</span>
@@ -94,7 +90,7 @@ export const GameOverModal = () => {
             <button
               aria-label="Close"
               onClick={onExit}
-              className="text-text-secondary hover:text-text-primary absolute right-3 top-3 cursor-pointer rounded-md border border-white/10 bg-white/10 p-1.5 transition"
+              className="absolute top-3 right-3 cursor-pointer rounded-md border border-white/10 bg-white/10 p-1.5 text-text-secondary transition hover:text-text-primary"
             >
               <svg
                 width="18"
@@ -113,9 +109,7 @@ export const GameOverModal = () => {
             </button>
 
             <AnimatePresence>
-              {gameResult === "win" && (
-                <ConfettiController active={isFinished} />
-              )}
+              {gameResult === "win" && <ConfettiController active={isFinished} />}
             </AnimatePresence>
           </motion.div>
         </motion.div>

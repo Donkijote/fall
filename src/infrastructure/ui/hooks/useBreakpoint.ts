@@ -39,9 +39,7 @@ export function useBreakpoint() {
       }
       setBreakpoint(active);
 
-      setOrientation(
-        window.innerWidth > window.innerHeight ? "landscape" : "portrait",
-      );
+      setOrientation(window.innerWidth > window.innerHeight ? "landscape" : "portrait");
     };
 
     update();
@@ -51,9 +49,7 @@ export function useBreakpoint() {
 
     return () => {
       window.removeEventListener("resize", update);
-      queries.forEach(({ query }) =>
-        query.removeEventListener("change", update),
-      );
+      queries.forEach(({ query }) => query.removeEventListener("change", update));
     };
   }, [screens]);
 

@@ -58,8 +58,7 @@ vi.mock("@/domain/rules/handMeta", () => {
   return { HAND_META };
 });
 
-const byName = (arr: UiHand[], name: string) =>
-  arr.find((x) => x.name === name)!;
+const byName = (arr: UiHand[], name: string) => arr.find((x) => x.name === name)!;
 
 describe("handWithMeta.getUiHands", () => {
   it("merges HANDS with HAND_META by name and preserves array length", () => {

@@ -9,9 +9,7 @@ export const Callout = ({ type, text }: CalloutProps) => {
   }
 
   return (
-    <div
-      className={`rounded-xl backdrop-blur px-3 py-2 text-sm text-text-primary border ${tone}`}
-    >
+    <div className={`rounded-xl border px-3 py-2 text-sm text-text-primary backdrop-blur ${tone}`}>
       {text}
     </div>
   );

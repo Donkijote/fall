@@ -10,19 +10,17 @@ export const QuickRef = ({ content }: QuickRefProps) => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="xl:block top-20 rounded-2xl border-white/10 bg-white/10 backdrop-blur p-4 shadow-lg sticky hidden h-fit border"
+      className="sticky top-20 hidden h-fit rounded-2xl border border-white/10 bg-white/10 p-4 shadow-lg backdrop-blur xl:block"
     >
-      <div className="text-base font-medium text-text-primary mb-2">
-        Quick Reference
-      </div>
+      <div className="mb-2 text-base font-medium text-text-primary">Quick Reference</div>
       <div className="mb-3 text-text-primary">
         <div className="font-medium">Goal</div>
         <div>First to {content.scoring.goal} points</div>
       </div>
-      <div className="bg-white/20 my-3 h-px" />
+      <div className="my-3 h-px bg-white/20" />
       <div className="text-text-primary">
-        <div className="font-medium mb-1">Fall points</div>
-        <ul className="gap-x-4 gap-y-1 text-sm grid grid-cols-2">
+        <div className="mb-1 font-medium">Fall points</div>
+        <ul className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
           {Object.entries(ranks).map(([k, v]) => (
             <li key={k} className="flex justify-between">
               <span className="text-text-secondary">Rank {k}</span>
@@ -31,14 +29,14 @@ export const QuickRef = ({ content }: QuickRefProps) => {
           ))}
         </ul>
       </div>
-      <div className="bg-white/20 my-3 h-px" />
+      <div className="my-3 h-px bg-white/20" />
       <div className="text-sm text-text-primary">
-        <div className="font-medium mb-1">Clean Table</div>
+        <div className="mb-1 font-medium">Clean Table</div>
         <div>+{content.scoring.cleanTable.points} (disabled in last round)</div>
       </div>
-      <div className="bg-white/20 my-3 h-px" />
+      <div className="my-3 h-px bg-white/20" />
       <div className="text-sm text-text-primary">
-        <div className="font-medium mb-1">Round quotas</div>
+        <div className="mb-1 font-medium">Round quotas</div>
         <ul className="space-y-1">
           <li>
             1v1: {content.modeQuotas.duel.quota}{" "}

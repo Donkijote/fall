@@ -1,4 +1,4 @@
-import type { Mock } from "vitest";
+import type { Mock } from "vite-plus/test";
 
 import { renderHook } from "@testing-library/react";
 
@@ -35,18 +35,12 @@ describe("useGameStoreService", () => {
 
     typedUseGameStore
       .mockImplementationOnce(
-        (
-          selector: (s: {
-            service: typeof firstService;
-          }) => typeof firstService,
-        ) => selector({ service: firstService }),
+        (selector: (s: { service: typeof firstService }) => typeof firstService) =>
+          selector({ service: firstService }),
       )
       .mockImplementationOnce(
-        (
-          selector: (s: {
-            service: typeof updatedService;
-          }) => typeof updatedService,
-        ) => selector({ service: updatedService }),
+        (selector: (s: { service: typeof updatedService }) => typeof updatedService) =>
+          selector({ service: updatedService }),
       );
 
     const { result, rerender } = renderHook(() => useGameStoreService());

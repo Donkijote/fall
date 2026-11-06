@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import type { RuleItem } from "@/domain/entities/Rules";
 
@@ -16,24 +16,24 @@ export const SectionAccordion = ({ items }: SectionAccordionProps) => {
 
   const [open, setOpen] = useState<string[]>(allIds);
 
-  useEffect(() => setOpen(allIds), [allIds]);
+  const [previousIds, setPreviousIds] = useState(allIds);
+  if (previousIds !== allIds) {
+    setPreviousIds(allIds);
+    setOpen(allIds);
+  }
 
   const toggle = (id: string) =>
     setOpen((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
 
   return (
-    <motion.div
-      initial={{ y: -8, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      className="w-full"
-    >
+    <motion.div initial={{ y: -8, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="w-full">
       {items.map((it) => (
         <div
           key={it.id}
-          className="rounded-2xl border-white/10 bg-white/10 backdrop-blur mb-2 shadow-sm overflow-hidden border"
+          className="mb-2 overflow-hidden rounded-2xl border border-white/10 bg-white/10 shadow-sm backdrop-blur"
         >
           <button
-            className="px-4 py-3 font-medium text-text-primary flex w-full cursor-pointer items-center justify-between text-left"
+            className="flex w-full cursor-pointer items-center justify-between px-4 py-3 text-left font-medium text-text-primary"
             onClick={() => toggle(it.id)}
             aria-expanded={open.includes(it.id)}
             aria-controls={`acc-${it.id}`}
@@ -41,8 +41,8 @@ export const SectionAccordion = ({ items }: SectionAccordionProps) => {
             data-testid={`acc-btn-${it.id}`}
           >
             <span className="mr-2 truncate">{it.title}</span>
-            <div className="gap-2 flex items-center">
-              <div className="gap-1 flex">
+            <div className="flex items-center gap-2">
+              <div className="flex gap-1">
                 {it.badges?.map((b) => (
                   <Pill key={b}>{b}</Pill>
                 ))}
@@ -64,26 +64,20 @@ export const SectionAccordion = ({ items }: SectionAccordionProps) => {
                 aria-labelledby={`acc-btn-${it.id}`}
               >
                 <div className="px-4 pb-4">
-                  <p className="text-sm leading-relaxed text-text-primary">
-                    {it.body}
-                  </p>
+                  <p className="text-sm leading-relaxed text-text-primary">{it.body}</p>
                   {it.callouts?.length ? (
                     <div className="mt-3 space-y-2">
                       {it.callouts.map((c, index) => (
-                        <Callout
-                          key={c.type + c.text + index}
-                          type={c.type}
-                          text={c.text}
-                        />
+                        <Callout key={c.type + c.text + index} type={c.type} text={c.text} />
                       ))}
                     </div>
                   ) : null}
                   {it.examples?.length ? (
                     <div className="mt-3">
-                      <div className="text-xs tracking-wide text-text-secondary mb-1 uppercase">
+                      <div className="mb-1 text-xs tracking-wide text-text-secondary uppercase">
                         Example
                       </div>
-                      <ul className="pl-5 text-sm space-y-1 text-text-primary list-disc">
+                      <ul className="list-disc space-y-1 pl-5 text-sm text-text-primary">
                         {it.examples.map((e, i) => (
                           <li key={e + i}>{e}</li>
                         ))}

@@ -56,12 +56,9 @@ export const HangingCardAnimation = ({
   return (
     <div className={clsx("absolute", positionClassName)}>
       <motion.div ref={scope} className="flex origin-top flex-col items-center">
-        <div
-          className="bg-gray-400"
-          style={{ width: "2px", height: `${threadLongitude}px` }}
-        />
+        <div className="bg-gray-400" style={{ width: "2px", height: `${threadLongitude}px` }} />
 
-        <div className="w-3 h-3 bg-gray-500 shadow-md -mt-1 z-10 rounded-full" />
+        <div className="z-10 -mt-1 h-3 w-3 rounded-full bg-gray-500 shadow-md" />
 
         <motion.div
           animate={{ rotateY: [0, 360] }}

@@ -32,58 +32,53 @@ export const SingsSheetScreen = () => {
 
   return (
     <div className="relative">
-      <div className="inset-0 pointer-events-none absolute -z-10 h-full">
-        <div className="-top-24 -left-24 h-72 w-72 bg-accent-blue/20 blur-3xl absolute rounded-full" />
-        <div className="-bottom-24 -right-24 h-72 w-72 bg-accent-gold/20 blur-3xl absolute rounded-full" />
+      <div className="pointer-events-none absolute inset-0 -z-10 h-full">
+        <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-accent-blue/20 blur-3xl" />
+        <div className="absolute -right-24 -bottom-24 h-72 w-72 rounded-full bg-accent-gold/20 blur-3xl" />
         <div
-          className="inset-0 absolute bg-cover mix-blend-overlay"
+          className="absolute inset-0 bg-cover mix-blend-overlay"
           style={{
             backgroundImage: `url(${bg})`,
           }}
         />
         <div
-          className="inset-0 bg-black/40 absolute"
+          className="absolute inset-0 bg-black/40"
           style={{
-            maskImage:
-              "radial-gradient(70% 60% at 50% 40%, black 60%, transparent 100%)",
+            maskImage: "radial-gradient(70% 60% at 50% 40%, black 60%, transparent 100%)",
           }}
         />
       </div>
 
-      <div className="max-w-5xl gap-6 px-4 py-10 mx-auto flex flex-col">
+      <div className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-10">
         <motion.div
           initial={{ y: -8, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="rounded-2xl border-white/10 bg-white/10 p-4 backdrop-blur-sm shadow-2xl border"
+          className="rounded-2xl border border-white/10 bg-white/10 p-4 shadow-2xl backdrop-blur-sm"
         >
-          <div className="gap-3 flex flex-wrap items-center justify-between">
-            <div className="gap-3 flex items-center">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
               <button
                 onClick={() => navigate(-1)}
-                className="border-white/20 bg-white/10 px-3 py-2 text-text-primary hover:bg-white/15 goBack cursor-pointer rounded-full border transition"
+                className="goBack cursor-pointer rounded-full border border-white/20 bg-white/10 px-3 py-2 text-text-primary transition hover:bg-white/15"
               >
                 <FontAwesomeIcon icon={faArrowLeft} size={"xs"} />
               </button>
-              <h1 className="text-xl font-semibold text-text-primary">
-                Sings (Combinations)
-              </h1>
+              <h1 className="text-xl font-semibold text-text-primary">Sings (Combinations)</h1>
             </div>
 
-            <div className="gap-2 flex flex-wrap items-center">
+            <div className="flex flex-wrap items-center gap-2">
               <input
                 id={"search-sings"}
-                className="rounded-lg border-white/20 bg-white/10 px-3 py-2 text-text-primary placeholder-text-secondary focus:ring-accent-gold/80 border focus:ring-2 focus:outline-none"
+                className="rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-text-primary placeholder-text-secondary focus:ring-2 focus:ring-accent-gold/80 focus:outline-none"
                 placeholder="Search by name or tag…"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
               />
               <select
                 id={"filter-min-points"}
-                className="rounded-lg border-white/20 bg-white/10 px-3 py-2 text-text-primary focus:ring-accent-gold/80 cursor-pointer border focus:ring-2 focus:outline-none"
+                className="cursor-pointer rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-text-primary focus:ring-2 focus:ring-accent-gold/80 focus:outline-none"
                 value={String(minPoints ?? "")}
-                onChange={(e) =>
-                  setMinPoints(e.target.value ? Number(e.target.value) : null)
-                }
+                onChange={(e) => setMinPoints(e.target.value ? Number(e.target.value) : null)}
               >
                 <option value="">Min pts</option>
                 <option value="2">≥ 2</option>
@@ -91,13 +86,13 @@ export const SingsSheetScreen = () => {
                 <option value="8">≥ 8</option>
                 <option value="10">≥ 10</option>
               </select>
-              <label className="gap-2 rounded-lg border-white/20 bg-white/10 px-3 py-2 text-text-primary flex cursor-pointer items-center border">
+              <label className="flex cursor-pointer items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-text-primary">
                 <input
                   id={"only-mandatory"}
                   type="checkbox"
                   checked={onlyMandatory}
                   onChange={(e) => setOnlyMandatory(e.target.checked)}
-                  className="accent-accent-gold cursor-pointer"
+                  className="cursor-pointer accent-accent-gold"
                 />{" "}
                 Mandatory only
               </label>
@@ -105,14 +100,12 @@ export const SingsSheetScreen = () => {
           </div>
         </motion.div>
 
-        <div
-          className={"pb-80 md:pb-40 scrollbar-hide-y h-[100dvh] overflow-auto"}
-        >
+        <div className={"scrollbar-hide-y h-[100dvh] overflow-auto pb-80 md:pb-40"}>
           <SingsList sings={list} />
         </div>
 
         {list.length === 0 && (
-          <div className="mt-10 max-w-xl rounded-2xl border-white/10 bg-white/10 p-8 text-text-secondary backdrop-blur-md mx-auto w-full border text-center">
+          <div className="mx-auto mt-10 w-full max-w-xl rounded-2xl border border-white/10 bg-white/10 p-8 text-center text-text-secondary backdrop-blur-md">
             No sings match your filters.
           </div>
         )}

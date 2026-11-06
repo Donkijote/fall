@@ -21,9 +21,7 @@ export const BottomNavbar = () => {
   const navigate = useNavigate();
 
   const [active, setActive] = useState("");
-  const [isOpen, setIsOpen] = useState(
-    Boolean(searchParams.get("bottomSidebar")),
-  );
+  const [isOpen, setIsOpen] = useState(Boolean(searchParams.get("bottomSidebar")));
 
   return (
     <>
@@ -35,10 +33,10 @@ export const BottomNavbar = () => {
         }}
       />
 
-      <div className="bottom-0 px-4 pb-3 pt-2 bg-white/5 backdrop-blur-md border-white/10 fixed z-50 w-full border-t shadow-[0_-4px_20px_rgba(0,0,0,0.4)]">
-        <div className="max-w-2xl relative mx-auto flex items-center justify-between">
+      <div className="fixed bottom-0 z-50 w-full border-t border-white/10 bg-white/5 px-4 pt-2 pb-3 shadow-[0_-4px_20px_rgba(0,0,0,0.4)] backdrop-blur-md">
+        <div className="relative mx-auto flex max-w-2xl items-center justify-between">
           {/* Left Items */}
-          <div className="gap-4 sm:gap-12 flex items-center">
+          <div className="flex items-center gap-4 sm:gap-12">
             <NavItem
               icon={<FontAwesomeIcon icon={faUser} />}
               label="Profile"
@@ -54,7 +52,7 @@ export const BottomNavbar = () => {
           </div>
 
           {/* Center Play Button */}
-          <div className="-top-12 absolute left-1/2 -translate-x-1/2 transform">
+          <div className="absolute -top-12 left-1/2 -translate-x-1/2 transform">
             <button
               onClick={() => {
                 setActive("Play");
@@ -67,16 +65,13 @@ export const BottomNavbar = () => {
                 },
               )}
             >
-              <FontAwesomeIcon
-                icon={faCirclePlay}
-                className="text-white text-4xl drop-shadow-xl"
-              />
+              <FontAwesomeIcon icon={faCirclePlay} className="text-4xl text-white drop-shadow-xl" />
             </button>
-            <div className="w-24 h-6 bg-yellow-300/20 blur-xl absolute top-1/2 left-1/2 z-0 -translate-x-1/2 -translate-y-1/2 rounded-full" />
+            <div className="absolute top-1/2 left-1/2 z-0 h-6 w-24 -translate-x-1/2 -translate-y-1/2 rounded-full bg-yellow-300/20 blur-xl" />
           </div>
 
           {/* Right Items */}
-          <div className="gap-4 sm:gap-12 flex items-center">
+          <div className="flex items-center gap-4 sm:gap-12">
             <NavItem
               icon={<FontAwesomeIcon icon={faScaleBalanced} />}
               label="Rules"
@@ -122,20 +117,20 @@ const NavItem = ({
   return (
     <button
       onClick={onClick}
-      className={`text-xs relative flex cursor-pointer flex-col items-center transition duration-200 ${
+      className={`relative flex cursor-pointer flex-col items-center text-xs transition duration-200 ${
         active ? "text-white" : "text-white/70 hover:text-white"
       }`}
     >
       <div
-        className={`px-2.5 lg:px-3 py-2 shadow-inner backdrop-blur-sm rounded-full border transition-transform duration-200 ${
+        className={`rounded-full border px-2.5 py-2 shadow-inner backdrop-blur-sm transition-transform duration-200 lg:px-3 ${
           active
-            ? "bg-white/20 border-white/40 shadow-md scale-110"
-            : "bg-white/10 border-white/10 hover:scale-105"
+            ? "scale-110 border-white/40 bg-white/20 shadow-md"
+            : "border-white/10 bg-white/10 hover:scale-105"
         }`}
       >
         <span className="text-sm landscape:lg:text-lg">{icon}</span>
       </div>
-      <span className="mt-1 landscape:lg:block hidden">{label}</span>
+      <span className="mt-1 hidden landscape:lg:block">{label}</span>
     </button>
   );
 };

@@ -2,22 +2,12 @@ import { nextRank, toCardKey } from "@/domain/helpers/card";
 import { cloneState } from "@/domain/helpers/state";
 
 import { type Card, type CardWithKey } from "../entities/Card";
-import type {
-  CapturePlan,
-  GameState,
-  PlayAnalysis,
-} from "../entities/GameState";
+import type { CapturePlan, GameState, PlayAnalysis } from "../entities/GameState";
 import { dealRound } from "./deal";
 import { awardPoints, checkGameOver } from "./scoring";
 
-export const analyzePlay = (
-  state: GameState,
-  playerId: string,
-  card: Card,
-): PlayAnalysis => {
-  const player = state.players.find(
-    (p) => p.id === playerId && p.id === state.currentPlayer,
-  );
+export const analyzePlay = (state: GameState, playerId: string, card: Card): PlayAnalysis => {
+  const player = state.players.find((p) => p.id === playerId && p.id === state.currentPlayer);
   if (!player)
     return {
       ok: false,
@@ -27,9 +17,7 @@ export const analyzePlay = (
       isLastRound: state.deck.length === 0,
     };
 
-  const inHand = player.hand.some(
-    (c) => c.suit === card.suit && c.rank === card.rank,
-  );
+  const inHand = player.hand.some((c) => c.suit === card.suit && c.rank === card.rank);
   if (!inHand)
     return {
       ok: false,
@@ -67,23 +55,16 @@ export const analyzePlay = (
     };
   }
 
-  const isFall =
-    !!state.lastPlayedCard && state.lastPlayedCard.rank === card.rank;
+  const isFall = !!state.lastPlayedCard && state.lastPlayedCard.rank === card.rank;
 
   return { ok: true, capturePlan, isFall, isLastRound };
 };
 
-export const removeCardsFromHand = (
-  state: GameState,
-  playerId: string,
-  card: Card,
-): GameState => {
+export const removeCardsFromHand = (state: GameState, playerId: string, card: Card): GameState => {
   const next = cloneState(state);
   const me = next.players.find((p) => p.id === playerId);
   if (!me) return state;
-  me.hand = me.hand.filter(
-    (c) => !(c.rank === card.rank && c.suit === card.suit),
-  );
+  me.hand = me.hand.filter((c) => !(c.rank === card.rank && c.suit === card.suit));
   return next;
 };
 
@@ -105,9 +86,7 @@ export const updateTableAndHandCards = (
   // Remove matched + cascade targets from table (by rank occurrences in order)
   const tableAfter = [...next.table];
 
-  const playedIdx = tableAfter.findIndex(
-    (c) => c.rank === card.rank && c.suit === card.suit,
-  );
+  const playedIdx = tableAfter.findIndex((c) => c.rank === card.rank && c.suit === card.suit);
   if (playedIdx !== -1) tableAfter.splice(playedIdx, 1);
 
   for (const t of plan.targets) {
@@ -125,9 +104,7 @@ export const updateTableAndHandCards = (
   }
 
   for (const t of plan.targets) {
-    const idx = tableAfter.findIndex(
-      (c) => c.rank === t.rank && c.suit === t.suit,
-    );
+    const idx = tableAfter.findIndex((c) => c.rank === t.rank && c.suit === t.suit);
     if (idx !== -1) tableAfter.splice(idx, 1);
   }
 
@@ -137,19 +114,13 @@ export const updateTableAndHandCards = (
   return next;
 };
 
-export const finalizeAfterPlay = (
-  state: GameState,
-  playerId: string,
-  card: Card,
-): GameState => {
+export const finalizeAfterPlay = (state: GameState, playerId: string, card: Card): GameState => {
   let nextState = cloneState(state);
   const isLastRound = nextState.deck.length === 0;
 
   // Rotate to next player
   const playerCount = nextState.players.length;
-  const currentIndex = nextState.players.findIndex(
-    (p) => p.id === nextState.currentPlayer,
-  );
+  const currentIndex = nextState.players.findIndex((p) => p.id === nextState.currentPlayer);
   const nextIndex = (currentIndex + 1) % playerCount;
   nextState.currentPlayer = nextState.players[nextIndex].id;
 
@@ -175,9 +146,7 @@ export const finalizeAfterPlay = (
   if (allHandsEmpty) {
     if (nextState.deck.length > 0) {
       nextState = dealRound(nextState, { isDealerFirstDeal: false });
-      const dealerIndex = nextState.players.findIndex(
-        (p) => p.id === nextState.dealer,
-      );
+      const dealerIndex = nextState.players.findIndex((p) => p.id === nextState.dealer);
       const firstToPlay = (dealerIndex + 1 + playerCount) % playerCount;
       nextState.currentPlayer = nextState.players[firstToPlay].id;
     } else {
@@ -189,9 +158,7 @@ export const finalizeAfterPlay = (
           nextState.table = [];
         }
       } else {
-        const dealer = nextState.players.find(
-          (p) => p.id === nextState.dealer,
-        )!;
+        const dealer = nextState.players.find((p) => p.id === nextState.dealer)!;
         dealer.collected.push(...nextState.table);
         nextState.table = [];
       }

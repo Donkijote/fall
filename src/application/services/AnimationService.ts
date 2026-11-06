@@ -73,11 +73,7 @@ export const animationService = {
     pending[key].delete(id);
   },
 
-  _registerWaiter: <K extends AnimationKey>(
-    key: K,
-    payload: Payloads[K],
-    resolve: () => void,
-  ) => {
+  _registerWaiter: <K extends AnimationKey>(key: K, payload: Payloads[K], resolve: () => void) => {
     const id = correlate[key](payload);
     const arr = pending[key].get(id) ?? [];
     arr.push(resolve);

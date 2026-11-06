@@ -1,25 +1,52 @@
 import path from "path";
-import { defineConfig, type UserConfig } from "vite";
+import { defineConfig, lazyPlugins } from "vite-plus";
 
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 
-// https://vite.dev/config/
+// https://viteplus.dev/config/
 export default defineConfig({
+  fmt: {
+    sortTailwindcss: {
+      stylesheet: "./src/index.css",
+    },
+    sortImports: {
+      customGroups: [
+        {
+          groupName: "react-scope",
+          elementNamePattern: ["@react/**"],
+        },
+        {
+          groupName: "app-alias",
+          elementNamePattern: ["@/**"],
+        },
+        {
+          groupName: "scoped-packages",
+          elementNamePattern: ["@*/**"],
+        },
+      ],
+      groups: [
+        ["builtin", "external"],
+        "react-scope",
+        "app-alias",
+        "scoped-packages",
+        ["parent", "sibling", "index"],
+        "unknown",
+      ],
+    },
+  },
+  lint: {
+    env: {
+      browser: true,
+    },
+  },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      "@": path.resolve(import.meta.dirname, "./src"),
     },
   },
   base: "/fall",
-  plugins: [
-    react({
-      babel: {
-        plugins: ["babel-plugin-react-compiler"],
-      },
-    }),
-    tailwindcss(),
-  ],
+  plugins: lazyPlugins(() => [react({ compiler: true }), tailwindcss()]),
   server: {
     open: true,
     port: 3000,
@@ -35,4 +62,4 @@ export default defineConfig({
       exclude: ["**/*.test.*", "./src/main.tsx", "./*.config.*", "./*.d.*"],
     },
   },
-} as UserConfig);
+});

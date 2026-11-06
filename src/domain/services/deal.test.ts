@@ -1,4 +1,4 @@
-import { expect } from "vitest";
+import { expect } from "vite-plus/test";
 
 import { mockedStateWithPlayers } from "@/application/store/gameStore";
 import { createDeck } from "@/domain/rules/deck";

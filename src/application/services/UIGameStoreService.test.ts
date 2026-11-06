@@ -13,7 +13,7 @@ describe("createUIGameStoreService", () => {
   let state: UIState;
   let getState: () => UIState;
   let setState: (next: UIState) => void;
-  let setSpy: ReturnType<typeof vi.fn>;
+  let setSpy: ReturnType<typeof vi.fn<(next: UIState) => void>>;
   let service: ReturnType<typeof createUIGameStoreService>;
 
   beforeEach(() => {

@@ -6,11 +6,7 @@ import { Card } from "@/infrastructure/ui/components/card/Card";
 
 const numCards = 3;
 
-export const FlipCardAnimation = ({
-  onComplete,
-}: {
-  onComplete: () => void;
-}) => {
+export const FlipCardAnimation = ({ onComplete }: { onComplete: () => void }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [faceDown, setFaceDown] = useState<boolean[]>(Array(3).fill(true));
   const deck = createDeck();
@@ -72,11 +68,7 @@ export const FlipCardAnimation = ({
       await Promise.all(collapseBackAnimations);
 
       const flipBackAnimations = lastThreeCards.map((card) =>
-        animate(
-          card,
-          { rotateY: [-180, 0] },
-          { duration: 0.5, ease: "easeInOut" },
-        ),
+        animate(card, { rotateY: [-180, 0] }, { duration: 0.5, ease: "easeInOut" }),
       );
 
       setTimeout(() => setFaceDown([true, true, true]), 0.5 * 500);
@@ -92,10 +84,7 @@ export const FlipCardAnimation = ({
           { duration: 0.3, ease: "easeOut" },
         ),
         animate(cards[0].firstElementChild!, {
-          boxShadow: [
-            "0px 0px 0px rgba(0,0,0,0)",
-            "15px 20px 20px rgba(0,0,0,0.5)",
-          ],
+          boxShadow: ["0px 0px 0px rgba(0,0,0,0)", "15px 20px 20px rgba(0,0,0,0.5)"],
         }),
       ]);
 
@@ -118,10 +107,7 @@ export const FlipCardAnimation = ({
           { duration: 0.3, ease: "easeOut" },
         ),
         animate(cards[0].firstElementChild!, {
-          boxShadow: [
-            "15px 20px 20px rgba(0,0,0,0.5)",
-            "0px 0px 0px rgba(0,0,0,0)",
-          ],
+          boxShadow: ["15px 20px 20px rgba(0,0,0,0.5)", "0px 0px 0px rgba(0,0,0,0)"],
         }),
       ]);
 
@@ -130,10 +116,7 @@ export const FlipCardAnimation = ({
   }, [onComplete]);
 
   return (
-    <div
-      ref={containerRef}
-      className="absolute top-[60vh] left-1/2 -translate-x-1/2"
-    >
+    <div ref={containerRef} className="absolute top-[60vh] left-1/2 -translate-x-1/2">
       <div className={"cardContainer"}>
         {deck.map((card, index) => (
           <div
@@ -145,9 +128,7 @@ export const FlipCardAnimation = ({
               rank={card.rank}
               suit={card.suit}
               faceDown={
-                index === deck.length - 1 ||
-                index === deck.length - 2 ||
-                index === deck.length - 3
+                index === deck.length - 1 || index === deck.length - 2 || index === deck.length - 3
                   ? faceDown[deck.length - index - 1]
                   : true
               }

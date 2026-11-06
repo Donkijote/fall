@@ -19,11 +19,7 @@ export const useAnimationLayer = () => {
           resolve();
         };
 
-        animationService._registerWaiter(
-          AnimationKeys.GAME_CARDS,
-          payload,
-          wrappedResolve,
-        );
+        animationService._registerWaiter(AnimationKeys.GAME_CARDS, payload, wrappedResolve);
       });
     });
 
@@ -38,11 +34,7 @@ export const useAnimationLayer = () => {
           resolve();
         };
 
-        animationService._registerWaiter(
-          AnimationKeys.PILE_COLLECT,
-          payload,
-          wrappedResolve,
-        );
+        animationService._registerWaiter(AnimationKeys.PILE_COLLECT, payload, wrappedResolve);
       });
     });
 

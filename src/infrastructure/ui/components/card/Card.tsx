@@ -57,21 +57,20 @@ export const Card = ({
     >
       {faceDown ? (
         <div
-          className="inset-0 absolute"
+          className="absolute inset-0"
           aria-hidden
           style={{
-            background:
-              "repeating-linear-gradient(135deg, #1f2937 0 6px, #111827 6px 12px)",
+            background: "repeating-linear-gradient(135deg, #1f2937 0 6px, #111827 6px 12px)",
           }}
         />
       ) : (
-        <div className="p-2 landscape:p-1.5 landscape:lg:p-2 h-full w-full [&_img]:h-full">
+        <div className="h-full w-full p-2 landscape:p-1.5 landscape:lg:p-2 [&_img]:h-full">
           <SuitGlyph suit={suit} rank={rank} />
         </div>
       )}
 
       {/* subtle vignette */}
-      <div className="inset-0 from-black/5 to-white/0 pointer-events-none absolute bg-gradient-to-br" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-black/5 to-white/0" />
     </button>
   );
 };

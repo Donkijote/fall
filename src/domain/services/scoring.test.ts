@@ -1,7 +1,4 @@
-import {
-  mockedState,
-  mockedStateWithPlayers,
-} from "@/application/store/gameStore";
+import { mockedState, mockedStateWithPlayers } from "@/application/store/gameStore";
 import type { GameState } from "@/domain/entities/GameState";
 import { createDeck } from "@/domain/rules/deck";
 
@@ -9,11 +6,7 @@ import { applyCountingRule, awardPoints, checkGameOver } from "./scoring";
 
 describe("Scoring", () => {
   it("should award points correctly", () => {
-    const score = awardPoints(
-      mockedStateWithPlayers,
-      mockedStateWithPlayers.players[0].id,
-      4,
-    );
+    const score = awardPoints(mockedStateWithPlayers, mockedStateWithPlayers.players[0].id, 4);
     expect(score.scores.values[mockedStateWithPlayers.players[0].id]).toBe(4);
   });
   it("should award points correctly for teams", () => {
