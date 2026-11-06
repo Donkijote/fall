@@ -74,17 +74,20 @@ export function CardMesh({
   frost?: RefObject<FrostUniform>;
   heat?: RefObject<HeatUniforms>;
 }) {
-  const surfaceShader = useMemo(() => {
-    if (!frost && !heat) return undefined;
-    const addFrost = frost && addCardFrost(frost);
-    const addHeat = heat && addCardHeat(heat);
-    return {
-      onBeforeCompile: (...args: Parameters<MeshBasicMaterial["onBeforeCompile"]>) => {
-        addFrost?.(...args);
-        addHeat?.(...args);
-      },
-      customProgramCacheKey: () => `card-surface:${Boolean(frost)}:${Boolean(heat)}`,
-    };
+  const surfaceShaders = useMemo(() => {
+    function createSurfaceShader(surface: "front" | "back") {
+      if (!frost && !heat) return undefined;
+      const addFrost = frost && addCardFrost(frost);
+      const addHeat = heat && addCardHeat(heat, surface);
+      return {
+        onBeforeCompile: (...args: Parameters<MeshBasicMaterial["onBeforeCompile"]>) => {
+          addFrost?.(...args);
+          addHeat?.(...args);
+        },
+        customProgramCacheKey: () => `card-surface:${surface}:${Boolean(frost)}:${Boolean(heat)}`,
+      };
+    }
+    return { front: createSurfaceShader("front"), back: createSurfaceShader("back") };
   }, [frost, heat]);
   const [face, back] = useCardArtwork();
   return (
@@ -95,13 +98,13 @@ export function CardMesh({
         attach="material-1"
         map={face}
         map-colorSpace={SRGBColorSpace}
-        {...surfaceShader}
+        {...surfaceShaders.front}
       />
       <meshBasicMaterial
         attach="material-2"
         map={back}
         map-colorSpace={SRGBColorSpace}
-        {...surfaceShader}
+        {...surfaceShaders.back}
       />
     </mesh>
   );

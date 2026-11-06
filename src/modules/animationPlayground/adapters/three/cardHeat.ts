@@ -9,7 +9,41 @@ export type HeatUniforms = {
   impact?: { value: [number, number, number] };
 };
 
-export function addCardHeat(heat: RefObject<HeatUniforms>): MeshBasicMaterial["onBeforeCompile"] {
+// The dark striped back makes periodic heat waves especially visible. Use
+// irregular, layered noise there while retaining the original front treatment.
+const backFlameNoise = `
+      float backHeatHash(vec2 p) {
+        vec3 q = fract(vec3(p.xyx) * 0.1031);
+        q += dot(q, q.yzx + 33.33);
+        return fract((q.x + q.y) * q.z);
+      }
+
+      float backHeatNoise(vec2 p) {
+        vec2 cell = floor(p);
+        vec2 f = fract(p);
+        f = f * f * (3.0 - 2.0 * f);
+        return mix(
+          mix(backHeatHash(cell), backHeatHash(cell + vec2(1.0, 0.0)), f.x),
+          mix(backHeatHash(cell + vec2(0.0, 1.0)), backHeatHash(cell + 1.0), f.x),
+          f.y
+        );
+      }
+
+      float backHeatField(vec2 p) {
+        mat2 turn = mat2(0.8, 0.6, -0.6, 0.8);
+        vec2 curl = vec2(backHeatNoise(p * 0.43), backHeatNoise(p * 0.43 + 19.7));
+        p += (curl - 0.5) * 1.6;
+        float value = backHeatNoise(p) * 0.57;
+        p = turn * p * 2.13 + 7.9;
+        value += backHeatNoise(p) * 0.29;
+        return (value + backHeatNoise(turn * p * 2.07 - 3.4) * 0.14) * 2.0 - 1.0;
+      }
+`;
+
+export function addCardHeat(
+  heat: RefObject<HeatUniforms>,
+  surface: "front" | "back" = "front",
+): MeshBasicMaterial["onBeforeCompile"] {
   return (shader) => {
     shader.uniforms.cardHeat = heat.current.strength;
     shader.uniforms.cardHeatTime = heat.current.time;
@@ -27,8 +61,10 @@ export function addCardHeat(heat: RefObject<HeatUniforms>): MeshBasicMaterial["o
       uniform float cardScorch;
       uniform float cardIgnition;
 
+      ${surface === "back" ? backFlameNoise : ""}
       float heatNoise(vec2 p) {
-        return sin(p.x * 2.6 + sin(p.y * 3.4)) * sin(p.y * 2.1 - p.x * 1.8);
+        float waves = sin(p.x * 2.6 + sin(p.y * 3.4)) * sin(p.y * 2.1 - p.x * 1.8);
+        ${surface === "back" ? "return mix(waves, backHeatField(p), smoothstep(0.0, 0.35, cardScorch));" : "return waves;"}
       }
     `,
       )
@@ -55,6 +91,7 @@ export function addCardHeat(heat: RefObject<HeatUniforms>): MeshBasicMaterial["o
         float rim = (1.0 - smoothstep(0.007, 0.065, edge + 0.009 * ripple)) * localHeat * pulse;
         float band = (1.0 - smoothstep(0.028, 0.22, edge + 0.025 * ripple)) * localHeat;
         float center = 1.0 - smoothstep(0.1, 0.64, length((uv - 0.5) * vec2(1.0, 1.35)));
+        ${surface === "back" ? "center *= mix(1.0, 0.25, smoothstep(0.0, 0.35, cardScorch));" : ""}
         if (cardHeatImpact.z > 0.0) band = max(band, localHeat * 0.72);
         vec3 orange = mix(vec3(0.64, 0.022, 0.006), vec3(1.0, 0.32, 0.025), 0.5 + ripple * 0.5);
         diffuseColor.rgb = mix(diffuseColor.rgb, orange, clamp(band * 0.75 + center * localHeat * 0.28, 0.0, 1.0));
