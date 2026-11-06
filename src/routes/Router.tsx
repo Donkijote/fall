@@ -7,12 +7,31 @@ import { HomeScreen } from "@/infrastructure/ui/screens/Home";
 import { RulesScreen } from "@/infrastructure/ui/screens/rules/Rules";
 import { SingsSheetScreen } from "@/infrastructure/ui/screens/SingsSheet";
 
-import { CARDS_PATH, GAME_PATH, HOME_PATH, RULES_PATH, SINGS_SHEETS } from "./Routes";
+import {
+  ANIMATION_PLAYGROUND_PATH,
+  CARDS_PATH,
+  GAME_PATH,
+  HOME_PATH,
+  RULES_PATH,
+  SINGS_SHEETS,
+} from "./Routes";
 
 const basename = (import.meta.env.BASE_URL ?? "/").replace(/\/+$/, "");
 
 const router = createBrowserRouter(
   [
+    ...(import.meta.env.DEV
+      ? [
+          {
+            path: ANIMATION_PLAYGROUND_PATH,
+            lazy: async () => {
+              const { AnimationPlayground } =
+                await import("@/modules/animationPlayground/ui/AnimationPlayground");
+              return { Component: AnimationPlayground };
+            },
+          },
+        ]
+      : []),
     {
       path: HOME_PATH,
       element: <HomeScreen />,

@@ -168,3 +168,41 @@ When all cards have been dealt and played:
 ## Specification
 
 The name Fall is a literal translation from the spanish word **Caída**
+
+## Animation playground (development only)
+
+Run `pnpm dev`, then choose **Animation playground** on the home screen or open
+`/fall/dev/animations`. The route, home link, scene modules, and demo assets are
+excluded from production builds.
+
+All studies use the app’s Spanish card SVG artwork on the animated 3D mesh, with
+the same light face and dark striped back as the app card design.
+
+The Card, Deck stack, and Table catalogs contain the 21 experiments ported from
+`threejs-game`. Select an experiment and press **Play / replay**. Replays reset
+isolated lab state while keeping the canvas and WebGL context mounted. Play-card
+and Fall capture previews start with a
+settled dealt hand, so they can be previewed independently. **Reset scene** stops
+the preview and returns to its initial pose.
+
+Live tuning restarts the current preview with the new settings. Timeline speed
+controls GSAP choreography; easing controls flips, deck motion, deals, and plays.
+Sampled impact motion and Rapier physics retain their original curves. Ember
+rate, capture impact, pixel ratio, and an optional FPS display are also available.
+Card trajectories and state transitions use fixed starting conditions; decorative
+particles remain stochastic. These studies do not dispatch gameplay animations
+or change game state.
+
+**Fall capture** retains the full opponent-play, impact, and collection sequence.
+**Capture card** starts with a face-up card already on the table, plays a card onto
+it, then collects the pair onto the player’s stack to their right without an
+elemental impact. Each replay prepares the hands and center cards automatically.
+
+**Cascade capture** matches the first of four face-up table cards, then carries
+the growing pile around the grid, picking up each card in sequence before moving
+all five cards face down onto the player’s stack to their right.
+
+Capture card and Cascade capture use curved, banking gestures with slight landing
+offsets and contact settling. Cascade pickups vary their cadence; collected cards
+square up during the lift and align on the final pile. Motion variation is fixed
+so replay remains repeatable.

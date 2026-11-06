@@ -1,4 +1,10 @@
-import { CARDS_PATH, GAME_PATH, HOME_PATH, SINGS_SHEETS } from "@/routes/Routes";
+import {
+  ANIMATION_PLAYGROUND_PATH,
+  CARDS_PATH,
+  GAME_PATH,
+  HOME_PATH,
+  SINGS_SHEETS,
+} from "@/routes/Routes";
 
 import { cleanup, render, screen } from "@testing-library/react";
 
@@ -13,6 +19,10 @@ vi.mock("@/infrastructure/ui/components/card/CardList", () => ({
 }));
 vi.mock("@/infrastructure/ui/screens/SingsSheet", () => ({
   SingsSheetScreen: () => <div data-testid="sings">Sings</div>,
+}));
+
+vi.mock("@/modules/animationPlayground/ui/AnimationPlayground", () => ({
+  AnimationPlayground: () => <div data-testid="animations">Animations</div>,
 }));
 
 // helper to import the router AFTER setting location/env
@@ -58,6 +68,25 @@ describe("AppRouter", () => {
     const AppRouter = await importRouter();
     render(<AppRouter />);
     expect(screen.getByTestId("sings")).toBeInTheDocument();
+  });
+
+  it("loads the animation playground in development", async () => {
+    vi.stubEnv("DEV", true);
+    window.history.pushState({}, "", "/fall" + ANIMATION_PLAYGROUND_PATH);
+    const AppRouter = await importRouter();
+    render(<AppRouter />);
+    expect(await screen.findByTestId("animations")).toBeInTheDocument();
+  });
+
+  it("does not register the animation playground in production", async () => {
+    vi.stubEnv("DEV", false);
+    window.history.pushState({}, "", "/fall" + ANIMATION_PLAYGROUND_PATH);
+    const AppRouter = await importRouter();
+    const error = vi.spyOn(console, "error").mockImplementation(() => {});
+    render(<AppRouter />);
+    expect(screen.queryByTestId("animations")).not.toBeInTheDocument();
+    expect(screen.getByText("404 Not Found")).toBeInTheDocument();
+    error.mockRestore();
   });
 
   it("honors basename from import.meta.env.BASE_URL (trims trailing slashes)", async () => {

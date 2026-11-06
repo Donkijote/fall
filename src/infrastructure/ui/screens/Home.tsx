@@ -1,6 +1,9 @@
+import { Link } from "react-router";
+
 import { Badge } from "@/components/ui/badge";
 import { WelcomeModal } from "@/infrastructure/ui/components/modal/WelcomeModal";
 import { BottomNavbar } from "@/infrastructure/ui/components/navbar/BottomNavbar";
+import { ANIMATION_PLAYGROUND_PATH } from "@/routes/Routes";
 
 export const HomeScreen = () => (
   <main className="h-dvh overflow-y-auto bg-background text-foreground">
@@ -12,6 +15,14 @@ export const HomeScreen = () => (
           A classic Venezuelan card game. Choose your mode and be the first to reach 24 points.
         </p>
       </header>
+      {import.meta.env.DEV && (
+        <Link
+          to={ANIMATION_PLAYGROUND_PATH}
+          className="rounded-full border px-4 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+        >
+          Animation playground
+        </Link>
+      )}
     </div>
     <BottomNavbar />
     <WelcomeModal />
