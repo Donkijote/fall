@@ -36,6 +36,10 @@ pnpm exec shadcn add <component>
 Do not reinitialize the preset or replace `src/index.css` when adding components. Customize
 component variants in their local source and shared colors/fonts in the global theme.
 
+The registry menu color is `default` (opaque), so future generated menus do not reintroduce
+the old translucent styling. Google Fonts supplies the font-face declarations; do not import
+binary WOFF2 files as stylesheets.
+
 ## Migration inventory
 
 | Existing component or area                               | Replacement or retained composition                                                        |
@@ -84,3 +88,17 @@ pnpm test:coverage
 Before marking the draft PR ready for review, manually inspect narrow and landscape layouts,
 light/dark appearance, keyboard focus, card interactions, and animations. Automated DOM tests and
 the production build do not replace that visual/gameplay review.
+
+## Post-commit migration audit
+
+All existing general-purpose interface controls use shadcn primitives or feature-specific
+compositions of them. No legacy glass/gold interface tokens, custom modal/tab/accordion
+implementations, native selects, or Font Awesome imports remain.
+
+The only native button outside the shared primitives is the specialized playing card. Its
+paper face, deck artwork, card-back pattern, table surfaces, and motion remain deliberately
+custom, as recorded above; these are gameplay presentation rather than missing migrations.
+
+The navbar theme toggle is covered for preference persistence, restoration, and system changes.
+Visual and hands-on gameplay review remain a release-readiness step, not an outstanding
+component replacement.
