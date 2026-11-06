@@ -1,8 +1,17 @@
-import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import { StorageKeys, StorageService } from "@/application/services/StorageService";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import type { User } from "@/domain/entities/User";
 
 export const WelcomeModal = () => {
@@ -11,7 +20,6 @@ export const WelcomeModal = () => {
 
   const handleSave = () => {
     if (!username.trim()) return;
-
     const user: User = {
       id: uuidv4(),
       name: username.trim(),
@@ -19,61 +27,40 @@ export const WelcomeModal = () => {
       email: "",
       avatar: "",
     };
-
     StorageService.set(StorageKeys.FALL_USER, user);
     setIsOpen(false);
   };
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+    <Dialog open={isOpen} disablePointerDismissal>
+      <DialogContent showCloseButton={false}>
+        <DialogHeader>
+          <DialogTitle>Welcome to Fall!</DialogTitle>
+          <DialogDescription>Enter your username to get started.</DialogDescription>
+        </DialogHeader>
+        <form
+          className="grid gap-4"
+          onSubmit={(event) => {
+            event.preventDefault();
+            handleSave();
+          }}
         >
-          <motion.div
-            initial={{ scale: 0.5, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.5, opacity: 0 }}
-            transition={{
-              type: "spring",
-              stiffness: 200,
-              damping: 15,
-            }}
-            className="relative w-[90%] max-w-md rounded-2xl border border-white/10 bg-white/10 p-8 shadow-2xl backdrop-blur-md"
-          >
-            <div className="mb-6 flex justify-center">
-              <motion.div
-                animate={{ y: [0, -6, 0] }}
-                transition={{ repeat: Infinity, duration: 2 }}
-                className="text-6xl"
-              >
-                🃏
-              </motion.div>
-            </div>
-
-            <h2 className="mb-2 text-center text-2xl font-bold text-white">Welcome to Fall!</h2>
-            <p className="mb-6 text-center text-white/70">Enter your username to get started.</p>
-
-            <input
-              type="text"
+          <div className="grid gap-2">
+            <Label htmlFor="welcome-username">Username</Label>
+            <Input
+              id="welcome-username"
+              autoComplete="nickname"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(event) => setUsername(event.target.value)}
               placeholder="Your username"
-              className="mb-4 w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-white placeholder-white/40 focus:ring-2 focus:ring-accent-gold focus:outline-none"
+              required
             />
-
-            <button
-              onClick={handleSave}
-              className="w-full cursor-pointer rounded-lg bg-accent-green px-4 py-2 font-semibold text-text-primary shadow-lg transition hover:bg-green-500"
-            >
-              Save
-            </button>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+          </div>
+          <Button type="submit" disabled={!username.trim()}>
+            Save
+          </Button>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 };

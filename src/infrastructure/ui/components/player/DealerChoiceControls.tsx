@@ -1,144 +1,77 @@
-import clsx from "clsx";
-import { AnimatePresence, motion, type Variants } from "framer-motion";
+import { ArrowDown10, ArrowUp10, Play, Table, Users } from "lucide-react";
 import { useState } from "react";
 
 import { useGameStoreService } from "@/application/hooks/useGameStoreService";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import type { GameState } from "@/domain/entities/GameState";
 
-import {
-  faArrowDown91,
-  faArrowUp91,
-  faCirclePlay,
-  faTable,
-  faUsers,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
-type DealerChoiceControlsProps = {
-  isOpen: boolean;
-};
+type DealerChoiceControlsProps = { isOpen: boolean };
 
 export const DealerChoiceControls = ({ isOpen }: DealerChoiceControlsProps) => {
   const [dealOrder, setDealOrder] = useState<GameState["config"]["dealOrder"] | null>(null);
   const [tablePattern, setTablePattern] = useState<GameState["config"]["tablePattern"] | null>(
     null,
   );
-
   const { dealerChoose } = useGameStoreService();
-
   const ready = dealOrder !== null && tablePattern !== null;
-
-  const handleConfirm = () => {
-    if (!ready) return;
-    dealerChoose(dealOrder!, tablePattern!);
-  };
-
-  const bubbleVariants: Variants = {
-    hidden: { opacity: 0, y: 20, scale: 0.8 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: { ease: "easeInOut" },
-    },
-    exit: { opacity: 0, y: 20, scale: 0.8, transition: { duration: 0.2 } },
-  };
-
-  const itemVariants: Variants = {
-    hidden: { opacity: 0, scale: 0.5, y: 10 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      transition: { ease: "easeInOut" },
-    },
-  };
+  if (!isOpen) return null;
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          variants={bubbleVariants}
-          transition={{ staggerChildren: -0.2, staggerDirection: -1 }}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-          className="absolute -top-32 left-1/2 z-50 flex -translate-x-1/2 items-end justify-center"
+    <Card size="sm" className="absolute -top-36 left-1/2 z-40 w-60 -translate-x-1/2">
+      <CardContent className="grid gap-2">
+        <div role="group" aria-label="Deal order" className="flex justify-center gap-2">
+          <Button
+            size="icon-sm"
+            variant={dealOrder === "playersThenTable" ? "default" : "outline"}
+            aria-label="Players → Table"
+            title="Players → Table"
+            aria-pressed={dealOrder === "playersThenTable"}
+            onClick={() => setDealOrder("playersThenTable")}
+          >
+            <Users />
+          </Button>
+          <Button
+            size="icon-sm"
+            variant={dealOrder === "tableThenPlayers" ? "default" : "outline"}
+            aria-label="Table → Players"
+            title="Table → Players"
+            aria-pressed={dealOrder === "tableThenPlayers"}
+            onClick={() => setDealOrder("tableThenPlayers")}
+          >
+            <Table />
+          </Button>
+          <Button
+            size="icon-sm"
+            variant={tablePattern === "inc" ? "default" : "outline"}
+            aria-label="Incremental"
+            title="Incremental"
+            aria-pressed={tablePattern === "inc"}
+            onClick={() => setTablePattern("inc")}
+          >
+            <ArrowUp10 />
+          </Button>
+          <Button
+            size="icon-sm"
+            variant={tablePattern === "dec" ? "default" : "outline"}
+            aria-label="Decremental"
+            title="Decremental"
+            aria-pressed={tablePattern === "dec"}
+            onClick={() => setTablePattern("dec")}
+          >
+            <ArrowDown10 />
+          </Button>
+        </div>
+        <Button
+          disabled={!ready}
+          onClick={() => {
+            if (dealOrder && tablePattern) dealerChoose(dealOrder, tablePattern);
+          }}
         >
-          <div className="relative flex h-[120px] w-[220px] items-end justify-center">
-            <motion.button
-              variants={itemVariants}
-              onClick={() => setDealOrder("playersThenTable")}
-              className={clsx(
-                "absolute left-6 top-6 flex h-10 w-10 transform cursor-pointer items-center justify-center rounded-full border transition hover:scale-110",
-                dealOrder === "playersThenTable"
-                  ? "bg-accent-gold border-yellow-400 text-black"
-                  : "border-white/20 bg-black/30 text-white",
-              )}
-              title="Players → Table"
-            >
-              <FontAwesomeIcon icon={faUsers} />
-            </motion.button>
-
-            <motion.button
-              variants={itemVariants}
-              onClick={() => setDealOrder("tableThenPlayers")}
-              className={clsx(
-                "absolute left-16 top-2 flex h-10 w-10 transform cursor-pointer items-center justify-center rounded-full border transition hover:scale-110",
-                dealOrder === "tableThenPlayers"
-                  ? "bg-accent-gold border-yellow-400 text-black"
-                  : "border-white/20 bg-black/30 text-white",
-              )}
-              title="Table → Players"
-            >
-              <FontAwesomeIcon icon={faTable} />
-            </motion.button>
-
-            <motion.button
-              variants={itemVariants}
-              onClick={() => setTablePattern("inc")}
-              className={clsx(
-                "absolute right-16 top-2 flex h-10 w-10 transform cursor-pointer items-center justify-center rounded-full border transition hover:scale-110",
-                tablePattern === "inc"
-                  ? "bg-accent-blue border-blue-400 text-black"
-                  : "border-white/20 bg-black/30 text-white",
-              )}
-              title="Incremental"
-            >
-              <FontAwesomeIcon icon={faArrowUp91} />
-            </motion.button>
-
-            <motion.button
-              variants={itemVariants}
-              onClick={() => setTablePattern("dec")}
-              className={clsx(
-                "absolute right-6 top-6 flex h-10 w-10 transform cursor-pointer items-center justify-center rounded-full border transition hover:scale-110",
-                tablePattern === "dec"
-                  ? "bg-accent-blue border-blue-400 text-black"
-                  : "border-white/20 bg-black/30 text-white",
-              )}
-              title="Decremental"
-            >
-              <FontAwesomeIcon icon={faArrowDown91} />
-            </motion.button>
-
-            <motion.button
-              variants={itemVariants}
-              onClick={handleConfirm}
-              disabled={!ready}
-              className={clsx(
-                "absolute top-14 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border text-2xl transition",
-                ready
-                  ? "border-green-600 bg-green-500 text-white hover:bg-green-400"
-                  : "cursor-not-allowed border-white/20 bg-black/30 text-white/50",
-              )}
-              title="Confirm"
-            >
-              <FontAwesomeIcon icon={faCirclePlay} />
-            </motion.button>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+          <Play />
+          Confirm
+        </Button>
+      </CardContent>
+    </Card>
   );
 };

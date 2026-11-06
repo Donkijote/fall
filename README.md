@@ -18,6 +18,13 @@ Use `pnpm lint` to check code with Oxlint and `pnpm lint:fix` to apply safe fixe
 
 Linting and formatting use Vite Plus defaults. The `lint` block in `vite.config.ts` adds browser globals; TypeScript checking runs as part of `pnpm build`. The `fmt` block preserves the custom Tailwind class sorting (using `src/index.css`) and import groups with blank-line separation: unscoped packages and Node built-ins, `@react/*`, `@/*` project aliases, other scoped packages, then relative imports. All other formatting options use the toolchain defaults, including the 100-column print width. Side-effect imports retain their default ordering behavior.
 
+## UI Components
+
+The interface uses the installed shadcn/ui `base-luma` preset with Base UI and Lucide icons.
+Shared primitives live in `src/components/ui`; add components with `pnpm exec shadcn add <component>`.
+Use semantic theme colors from `src/index.css` rather than custom glass or gold styles.
+See [the design-system and migration guide](docs/shadcn-migration.md) for conventions and the component inventory.
+
 ## 📖 Overview
 
 Fall is a traditional Venezuelan card game played with the **Spanish 40-card deck**.  

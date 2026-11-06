@@ -1,87 +1,51 @@
-import type { PropsWithChildren, ReactNode } from "react";
-import type { Mock } from "vite-plus/test";
+import { StorageKeys, StorageService } from "@/application/services/StorageService";
 
-import { StorageKeys } from "@/application/services/StorageService";
-
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { HintModal } from "./HintModal";
 
-vi.mock("framer-motion", () => {
-  return {
-    motion: new Proxy(
-      {},
-      {
-        get: () => (props: PropsWithChildren) => <div {...props} />,
-      },
-    ),
-    AnimatePresence: ({ children }: { children: ReactNode }) => <>{children}</>,
-  };
-});
+vi.mock("@/application/services/StorageService", () => ({
+  StorageKeys: { FALL_RULES_SEEN: "FALL_RULES_SEEN" },
+  StorageService: { get: vi.fn(), set: vi.fn() },
+}));
 
-vi.mock("@/application/services/StorageService", async () => {
-  const actual = await vi.importActual("@/application/services/StorageService");
-  return {
-    ...actual,
-    StorageService: {
-      get: vi.fn(),
-      set: vi.fn(),
-    },
-  };
-});
+beforeEach(() => vi.clearAllMocks());
 
-const { StorageService } = await import("@/application/services/StorageService");
-
-beforeEach(() => {
-  vi.clearAllMocks();
-});
-
-test("opens the modal when StorageService.get returns falsy", () => {
-  (StorageService.get as Mock).mockReturnValue(false);
-
+test("opens an accessible dialog with quick hints for first-time visitors", () => {
+  vi.mocked(StorageService.get).mockReturnValue(false);
   render(<HintModal />);
-
-  expect(screen.getByText(/Welcome to Fall Rules/i)).toBeInTheDocument();
-  expect(screen.getByLabelText(/Close modal backdrop/i)).toBeInTheDocument();
-  expect(screen.getByTestId("got-it-button")).toBeInTheDocument();
+  expect(screen.getByRole("dialog", { name: "Welcome to Fall Rules" })).toBeVisible();
+  expect(screen.getByText("Quick start")).toBeVisible();
+  expect(screen.getByText("Sings sheet")).toBeVisible();
 });
 
-test("does not render when FALL_RULES_SEEN is true", () => {
-  (StorageService.get as Mock).mockReturnValue(true);
-
+test("does not render after the rules hint has been seen", () => {
+  vi.mocked(StorageService.get).mockReturnValue(true);
   render(<HintModal />);
-
-  expect(screen.queryByText(/Welcome to Fall Rules/i)).not.toBeInTheDocument();
+  expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 });
 
-test("clicking the backdrop dismisses and sets FALL_RULES_SEEN=true", async () => {
-  (StorageService.get as Mock).mockReturnValue(false);
-
+test("Got it dismisses the dialog and persists the seen flag", async () => {
+  vi.mocked(StorageService.get).mockReturnValue(false);
   render(<HintModal />);
-
-  await userEvent.click(screen.getByLabelText(/Close modal backdrop/i));
-
+  await userEvent.click(screen.getByRole("button", { name: "Got it" }));
   expect(StorageService.set).toHaveBeenCalledWith(StorageKeys.FALL_RULES_SEEN, true);
-  expect(screen.queryByText(/Welcome to Fall Rules/i)).not.toBeInTheDocument();
+  await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
 });
 
-test("clicking 'Got it' dismisses and sets FALL_RULES_SEEN=true", async () => {
-  (StorageService.get as Mock).mockReturnValue(false);
-
+test("Escape dismisses the dialog and persists the seen flag", async () => {
+  vi.mocked(StorageService.get).mockReturnValue(false);
   render(<HintModal />);
-
-  await userEvent.click(screen.getByTestId("got-it-button"));
-
+  await userEvent.keyboard("{Escape}");
   expect(StorageService.set).toHaveBeenCalledWith(StorageKeys.FALL_RULES_SEEN, true);
-  expect(screen.queryByText(/Welcome to Fall Rules/i)).not.toBeInTheDocument();
+  await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
 });
 
-test("contains quick hints content", () => {
-  (StorageService.get as Mock).mockReturnValue(false);
-
+test("the shadcn backdrop dismisses the dialog", async () => {
+  vi.mocked(StorageService.get).mockReturnValue(false);
   render(<HintModal />);
-
-  expect(screen.getByText(/Quick start/i)).toBeInTheDocument();
-  expect(screen.getByText(/Sings sheet/i)).toBeInTheDocument();
+  await userEvent.click(document.querySelector('[data-slot="dialog-overlay"]')!);
+  expect(StorageService.set).toHaveBeenCalledWith(StorageKeys.FALL_RULES_SEEN, true);
+  await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
 });
