@@ -2,11 +2,12 @@ import { PerfHeadless, usePerf } from "r3f-perf";
 import { lazy, Suspense, useEffect, useRef } from "react";
 import type { ReactNode } from "react";
 
+import emberTexture from "@/assets/effects/ember.svg";
+
 import { Grid, useTexture } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 
 import type { Experiment, Lab, LabState, Study } from "../../application/lab";
-import emberTexture from "../../assets/ember.svg";
 import { Card } from "./Card";
 import { CardArtworkProvider, cardArtwork } from "./CardArtwork";
 import { CardDrop } from "./CardDrop";

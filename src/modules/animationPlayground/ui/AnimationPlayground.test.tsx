@@ -8,7 +8,12 @@ import type { Experiment, Lab } from "../application/lab";
 import { AnimationPlayground } from "./AnimationPlayground";
 
 const viewport = vi.hoisted(() => ({ mount: vi.fn(), unmount: vi.fn() }));
-const audio = vi.hoisted(() => ({ play: vi.fn(), playDealCard: vi.fn(), dispose: vi.fn() }));
+const audio = vi.hoisted(() => ({
+  play: vi.fn(),
+  playDealCard: vi.fn(),
+  playCard: vi.fn(),
+  dispose: vi.fn(),
+}));
 vi.mock("../adapters/audio/howlerAudio", () => ({ createHowlerAudio: () => audio }));
 vi.mock("../adapters/three/LabViewport", () => ({
   LabViewport: ({

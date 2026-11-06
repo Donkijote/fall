@@ -81,11 +81,12 @@ export type LabStatePort = LabReader & {
   update: (transition: (state: LabState) => LabState) => void;
 };
 
-export type AudioPort = { play: () => void; playDealCard: () => void };
+export type AudioPort = { play: () => void; playDealCard: () => void; playCard: () => void };
 
 export type Lab = LabReader & {
   run: (experiment: Experiment) => void;
   playDealCard: () => void;
+  playCard: () => void;
   setCaptureIntensity: (effect: CardDropEffect) => void;
 };
 
@@ -94,6 +95,7 @@ export function createLab(state: LabStatePort, audio: AudioPort): Lab {
     getState: state.getState,
     subscribe: state.subscribe,
     playDealCard: audio.playDealCard,
+    playCard: audio.playCard,
     setCaptureIntensity(effect) {
       state.update((current) => ({ ...current, captureIntensity: effect }));
     },

@@ -4,13 +4,14 @@ import type { RefObject } from "react";
 import { MathUtils } from "three";
 import type { Group, Mesh, MeshBasicMaterial } from "three";
 
+import shadowTexture from "@/assets/effects/ember.svg";
+
 import { useGSAP } from "@gsap/react";
 import { OrthographicCamera, RoundedBox, useTexture } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 
 import { deckCardCount } from "../../application/lab";
 import type { CardDropEffect, Lab } from "../../application/lab";
-import shadowTexture from "../../assets/ember.svg";
 import { CardMesh } from "./Card";
 import { cardCaptureDuration, sampleCardCapture } from "./cardCapture";
 import type { FrostUniform } from "./cardFrost";
@@ -376,6 +377,7 @@ export function TableStudy({
         .to(playMotion, {
           progress: 1,
           duration: 0.75,
+          onStart: lab.playCard,
           ease: motionSettings.ease === "original" ? "power1.inOut" : motionSettings.ease,
         });
 
@@ -384,6 +386,7 @@ export function TableStudy({
         .timeScale(motionSettings.speed)
         .to(captureMotion, {
           progress: 1,
+          onStart: lab.playCard,
           duration: cascadeCapture
             ? cascadeCaptureDuration
             : simpleCapture
@@ -391,12 +394,15 @@ export function TableStudy({
               : captureDuration("plain"),
           ease: "none",
         });
-      if (!ordinaryCapture)
+      if (!ordinaryCapture) {
+        // Fall capture plays two cards before collecting the pair.
+        capture.call(lab.playCard, [], captureDuration("plain") * 0.27);
         capture.to(captureMotion, {
           cooldown: flameCooldownDuration,
           duration: flameCooldownDuration,
           ease: "none",
         });
+      }
 
       function startCapture(replay = false) {
         if (

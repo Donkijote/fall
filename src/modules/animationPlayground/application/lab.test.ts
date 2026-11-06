@@ -5,7 +5,7 @@ import { createLab } from "./lab";
 import type { CardDropEffect } from "./lab";
 
 function setup() {
-  const audio = { play: vi.fn(), playDealCard: vi.fn() };
+  const audio = { play: vi.fn(), playDealCard: vi.fn(), playCard: vi.fn() };
   return { lab: createLab(createZustandLabState(), audio), audio };
 }
 

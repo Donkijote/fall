@@ -3,12 +3,13 @@ import { useRef } from "react";
 import { MathUtils } from "three";
 import type { Group, MeshBasicMaterial, PointLight } from "three";
 
+import shadowTexture from "@/assets/effects/ember.svg";
+
 import { useGSAP } from "@gsap/react";
 import { PerspectiveCamera, RoundedBox, useTexture } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 
 import type { CardDropEffect } from "../../application/lab";
-import shadowTexture from "../../assets/ember.svg";
 import { CardMesh } from "./Card";
 import type { HeatUniforms } from "./cardHeat";
 import {

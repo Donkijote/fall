@@ -5,9 +5,17 @@ import {
   animationService,
   onAnimation,
 } from "@/application/services/AnimationService";
+import { useUIGameStore } from "@/application/store/uiGameStore";
+import { createCardAudio } from "@/infrastructure/adapters/audio/cardAudio";
 
 export const useAnimationLayer = () => {
   useEffect(() => {
+    const audio = createCardAudio();
+    const offCardSound = useUIGameStore.subscribe((current, previous) => {
+      if (current.state.playingCard && current.state.playingCard !== previous.state.playingCard) {
+        audio.playCard();
+      }
+    });
     const offGameCards = onAnimation(AnimationKeys.GAME_CARDS, (payload) => {
       return new Promise<void>((resolve) => {
         const to = setTimeout(() => {
@@ -41,6 +49,8 @@ export const useAnimationLayer = () => {
     return () => {
       offGameCards();
       offCapture();
+      offCardSound();
+      audio.dispose();
     };
   }, []);
 };
