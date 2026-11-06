@@ -43,7 +43,18 @@ const defaults: Settings = {
   effect: "plain",
 };
 
-// A preview owns a fresh store, not a memoized derivation of the selected command.
+// State-driven effects can start in their target state before the next frame.
+// Timelines start after their subscribers have attached to the new lab.
+const stateDrivenExperiments = new Set<Experiment>([
+  "drop-card",
+  "shatter-card",
+  "drop-hot-card",
+  "drop-flame-card",
+  "drop",
+  "reset-table",
+]);
+
+// Reset the lab without replacing the viewport or its WebGL context.
 function createPreview(
   audio: ReturnType<typeof createHowlerAudio>,
   revision: number,
@@ -57,7 +68,9 @@ function createPreview(
   }
   const lab = createLab(state, audio);
   lab.setCaptureIntensity(effect);
-  return { revision, experiment, lab };
+  const immediate = experiment !== undefined && stateDrivenExperiments.has(experiment);
+  if (immediate) lab.run(experiment);
+  return { revision, experiment, autoplay: immediate ? undefined : experiment, lab };
 }
 
 export function AnimationPlayground() {
@@ -151,12 +164,12 @@ export function AnimationPlayground() {
           <div className="min-w-0 space-y-4">
             <MotionContext value={settings}>
               <LabViewport
-                key={preview.revision}
+                revision={preview.revision}
                 lab={lab}
                 state={state}
                 settings={settings}
                 study={study}
-                experiment={preview.experiment}
+                experiment={preview.autoplay}
               />
             </MotionContext>
             <Card>
@@ -182,7 +195,7 @@ export function AnimationPlayground() {
                   {preview.experiment
                     ? `Previewing ${lessons.find((item) => item.experiment === preview.experiment)?.label ?? preview.experiment}`
                     : "Ready to preview"}
-                  . Each replay starts from a fresh scene.
+                  . Each replay starts from the initial animation state.
                 </p>
               </CardContent>
             </Card>

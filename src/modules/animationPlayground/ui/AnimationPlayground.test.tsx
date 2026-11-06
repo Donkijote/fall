@@ -6,11 +6,16 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import type { Experiment, Lab } from "../application/lab";
 import { AnimationPlayground } from "./AnimationPlayground";
 
+const viewport = vi.hoisted(() => ({ mount: vi.fn(), unmount: vi.fn() }));
 const audio = vi.hoisted(() => ({ play: vi.fn(), playDealCard: vi.fn(), dispose: vi.fn() }));
 vi.mock("../adapters/audio/howlerAudio", () => ({ createHowlerAudio: () => audio }));
 vi.mock("@/infrastructure/ui/components/theme/ThemeToggle", () => ({ ThemeToggle: () => null }));
 vi.mock("../adapters/three/LabViewport", () => ({
   LabViewport: ({ lab, experiment }: { lab: Lab; experiment?: Experiment }) => {
+    useEffect(() => {
+      viewport.mount();
+      return () => viewport.unmount();
+    }, []);
     useEffect(() => {
       if (experiment) lab.run(experiment);
     }, [lab, experiment]);
@@ -19,6 +24,7 @@ vi.mock("../adapters/three/LabViewport", () => ({
 }));
 
 afterEach(cleanup);
+beforeEach(() => vi.clearAllMocks());
 
 function scene() {
   return JSON.parse(screen.getByLabelText("Scene state").textContent!);
@@ -41,6 +47,30 @@ describe("Animation playground", () => {
     expect(scene().faceUp).toBe(false);
     fireEvent.click(screen.getByRole("button", { name: "Reset scene" }));
     expect(scene().faceUp).toBe(true);
+  });
+
+  it("keeps the viewport mounted across replay, tuning, and reset", () => {
+    open();
+    const canvasHost = screen.getByLabelText("Scene state");
+    fireEvent.click(screen.getByRole("button", { name: "Play / replay" }));
+    fireEvent.click(screen.getByRole("button", { name: "Play / replay" }));
+    fireEvent.change(screen.getByRole("spinbutton", { name: "Timeline speed" }), {
+      target: { value: "0.5" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Reset scene" }));
+    expect(screen.getByLabelText("Scene state")).toBe(canvasHost);
+    expect(viewport.mount).toHaveBeenCalledTimes(1);
+    expect(viewport.unmount).not.toHaveBeenCalled();
+  });
+
+  it("restarts drops directly without an intermediate empty scene", () => {
+    open();
+    fireEvent.click(screen.getByRole("button", { name: "Shatter frozen card" }));
+    fireEvent.click(screen.getByRole("button", { name: "Play / replay" }));
+    expect(scene()).toMatchObject({ cardFalls: 1, cardDropEffect: "ice" });
+    fireEvent.click(screen.getByRole("button", { name: "Play / replay" }));
+    expect(scene()).toMatchObject({ cardFalls: 1, cardDropEffect: "ice" });
+    expect(viewport.mount).toHaveBeenCalledTimes(1);
   });
 
   it("prepares the same dealt hand for standalone capture replays", () => {

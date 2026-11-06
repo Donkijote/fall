@@ -16,10 +16,10 @@ import { Fire } from "./Fire";
 import { TableStudy } from "./TableStudy";
 
 function AutoRun({ lab, experiment }: { lab: Lab; experiment?: Experiment }) {
-  const started = useRef(false);
+  const started = useRef<Lab | null>(null);
   useFrame(() => {
-    if (!started.current) {
-      started.current = true;
+    if (started.current !== lab) {
+      started.current = lab;
       if (experiment) lab.run(experiment);
     }
   });
@@ -83,16 +83,18 @@ function CardStudy({
   lab,
   state,
   settings,
+  revision,
 }: {
   lab: Lab;
   state: LabState;
   settings: SceneSettings;
+  revision: number;
 }) {
   const { fire, drops, cardFalls } = state;
   const { rate } = settings;
 
   if (cardFalls) {
-    return <CardDrop attempt={cardFalls} effect={state.cardDropEffect} />;
+    return <CardDrop attempt={revision} effect={state.cardDropEffect} />;
   }
 
   return (
@@ -106,7 +108,7 @@ function CardStudy({
       )}
       {drops > 0 && (
         <Suspense fallback={null}>
-          <PhysicsDrop attempt={drops} />
+          <PhysicsDrop key={revision} attempt={drops} />
         </Suspense>
       )}
     </>
@@ -119,12 +121,14 @@ export function LabViewport({
   settings,
   study,
   experiment,
+  revision,
 }: {
   lab: Lab;
   state: LabState;
   settings: SceneSettings;
   study: Study;
   experiment?: Experiment;
+  revision: number;
 }) {
   const { dpr, perf } = settings;
   const deck = study === "deck";
@@ -174,7 +178,9 @@ export function LabViewport({
             }
           >
             <Suspense fallback={null}>
-              {study === "card" && <CardStudy lab={lab} state={state} settings={settings} />}
+              {study === "card" && (
+                <CardStudy lab={lab} state={state} settings={settings} revision={revision} />
+              )}
               {deck && <DeckStack lab={lab} />}
               {study === "table" && (
                 <TableStudy

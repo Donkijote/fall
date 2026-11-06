@@ -135,6 +135,10 @@ export function Card({
   useGSAP(
     () => {
       if (!turn.current || !hit.current) return;
+      // A new preview restarts shader envelopes without replacing the card mesh.
+      frost.current.value = 0;
+      heat.current.strength.value = 0;
+      heat.current.scorch.value = 0;
       const flip = gsap
         .timeline({ paused: true })
         .timeScale(motionSettings.speed)

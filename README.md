@@ -176,8 +176,9 @@ Run `pnpm dev`, then choose **Animation playground** on the home screen or open
 excluded from production builds.
 
 The Card, Deck stack, and Table catalogs contain the 19 experiments ported from
-`threejs-game`. Select an experiment and press **Play / replay**. Replays mount a
-fresh scene and isolated lab state. Play-card and capture previews start with a
+`threejs-game`. Select an experiment and press **Play / replay**. Replays reset
+isolated lab state while keeping the canvas and WebGL context mounted. Play-card
+and capture previews start with a
 settled dealt hand, so they can be previewed independently. **Reset scene** stops
 the preview and returns to its initial pose.
 
