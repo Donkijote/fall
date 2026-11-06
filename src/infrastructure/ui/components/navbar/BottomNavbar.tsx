@@ -1,25 +1,16 @@
-import { clsx } from "clsx";
+import { CirclePlay, Gift, Scale, ScrollText, Settings, UserRound } from "lucide-react";
 import type { ReactNode } from "react";
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 
+import { Button } from "@/components/ui/button";
 import { BottomSidebar } from "@/infrastructure/ui/components/navbar/BottomSidebar";
+import { ThemeToggle } from "@/infrastructure/ui/components/theme/ThemeToggle";
 import { RULES_PATH, SINGS_SHEETS } from "@/routes/Routes";
-
-import {
-  faCirclePlay,
-  faGear,
-  faGift,
-  faScaleBalanced,
-  faScroll,
-  faUser,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const BottomNavbar = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-
   const [active, setActive] = useState("");
   const [isOpen, setIsOpen] = useState(Boolean(searchParams.get("bottomSidebar")));
 
@@ -32,73 +23,49 @@ export const BottomNavbar = () => {
           setActive("");
         }}
       />
-
-      <div className="fixed bottom-0 z-50 w-full border-t border-white/10 bg-white/5 px-4 pt-2 pb-3 shadow-[0_-4px_20px_rgba(0,0,0,0.4)] backdrop-blur-md">
-        <div className="relative mx-auto flex max-w-2xl items-center justify-between">
-          {/* Left Items */}
-          <div className="flex items-center gap-4 sm:gap-12">
+      <nav
+        aria-label="Main navigation"
+        className="fixed inset-x-0 bottom-0 z-30 border-t border-sidebar-border bg-sidebar px-2 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] text-sidebar-foreground"
+      >
+        <div className="mx-auto grid max-w-2xl grid-cols-[1fr_auto_1fr] items-center gap-2">
+          <div className="flex items-center justify-around gap-1">
             <NavItem
-              icon={<FontAwesomeIcon icon={faUser} />}
+              icon={<UserRound />}
               label="Profile"
               active={active === "Profile"}
               onClick={() => setActive("Profile")}
             />
             <NavItem
-              icon={<FontAwesomeIcon icon={faGift} />}
+              icon={<Gift />}
               label="Daily"
               active={active === "Daily"}
               onClick={() => setActive("Daily")}
             />
+            <ThemeToggle />
           </div>
-
-          {/* Center Play Button */}
-          <div className="absolute -top-12 left-1/2 -translate-x-1/2 transform">
-            <button
-              onClick={() => {
-                setActive("Play");
-                setIsOpen(true);
-              }}
-              className={clsx(
-                "px-4 py-5 bg-accent-gold hover:bg-yellow-500 shadow-xl border-white relative z-10 cursor-pointer rounded-full border-4 transition-all duration-300",
-                {
-                  "shadow-yellow-400/40 scale-110": active === "Play",
-                },
-              )}
-            >
-              <FontAwesomeIcon icon={faCirclePlay} className="text-4xl text-white drop-shadow-xl" />
-            </button>
-            <div className="absolute top-1/2 left-1/2 z-0 h-6 w-24 -translate-x-1/2 -translate-y-1/2 rounded-full bg-yellow-300/20 blur-xl" />
-          </div>
-
-          {/* Right Items */}
-          <div className="flex items-center gap-4 sm:gap-12">
+          <Button
+            size="icon"
+            className="-mt-8 size-20 rounded-full shadow-lg"
+            aria-label="Play"
+            onClick={() => {
+              setActive("Play");
+              setIsOpen(true);
+            }}
+          >
+            <CirclePlay className="size-10" />
+          </Button>
+          <div className="flex items-center justify-around gap-1">
+            <NavItem icon={<Scale />} label="Rules" onClick={() => navigate(RULES_PATH)} />
+            <NavItem icon={<ScrollText />} label="Sings" onClick={() => navigate(SINGS_SHEETS)} />
             <NavItem
-              icon={<FontAwesomeIcon icon={faScaleBalanced} />}
-              label="Rules"
-              active={active === "Rules"}
-              onClick={() => {
-                setActive("Rules");
-                navigate(RULES_PATH);
-              }}
-            />
-            <NavItem
-              icon={<FontAwesomeIcon icon={faScroll} />}
-              label="Sings"
-              active={active === "Sings"}
-              onClick={() => {
-                setActive("Sings");
-                navigate(SINGS_SHEETS);
-              }}
-            />
-            <NavItem
-              icon={<FontAwesomeIcon icon={faGear} />}
+              icon={<Settings />}
               label="Settings"
               active={active === "Settings"}
               onClick={() => setActive("Settings")}
             />
           </div>
         </div>
-      </div>
+      </nav>
     </>
   );
 };
@@ -113,24 +80,15 @@ const NavItem = ({
   label: string;
   active?: boolean;
   onClick: () => void;
-}) => {
-  return (
-    <button
-      onClick={onClick}
-      className={`relative flex cursor-pointer flex-col items-center text-xs transition duration-200 ${
-        active ? "text-white" : "text-white/70 hover:text-white"
-      }`}
-    >
-      <div
-        className={`rounded-full border px-2.5 py-2 shadow-inner backdrop-blur-sm transition-transform duration-200 lg:px-3 ${
-          active
-            ? "scale-110 border-white/40 bg-white/20 shadow-md"
-            : "border-white/10 bg-white/10 hover:scale-105"
-        }`}
-      >
-        <span className="text-sm landscape:lg:text-lg">{icon}</span>
-      </div>
-      <span className="mt-1 hidden landscape:lg:block">{label}</span>
-    </button>
-  );
-};
+}) => (
+  <Button
+    variant={active ? "secondary" : "ghost"}
+    aria-label={label}
+    aria-pressed={active}
+    onClick={onClick}
+    className="h-auto flex-col gap-1 px-2 py-2 sm:px-4"
+  >
+    {icon}
+    <span className="hidden text-xs sm:block">{label}</span>
+  </Button>
+);

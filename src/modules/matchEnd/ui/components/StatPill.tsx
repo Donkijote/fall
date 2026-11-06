@@ -1,8 +1,12 @@
-import type { FC, ReactNode } from "react";
+import type { ReactNode } from "react";
 
-export const StatPill: FC<{ label: string; value?: ReactNode }> = ({ label, value }) => (
-  <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-center">
-    <div className="text-xs tracking-wide text-text-disabled uppercase">{label}</div>
-    <div className="text-base font-semibold text-text-primary">{value ?? "—"}</div>
-  </div>
+import { Card, CardContent } from "@/components/ui/card";
+
+export const StatPill = ({ label, value }: { label: string; value?: ReactNode }) => (
+  <Card size="sm">
+    <CardContent className="text-center">
+      <div className="text-xs tracking-wide text-muted-foreground uppercase">{label}</div>
+      <div className="text-base font-semibold">{value ?? "—"}</div>
+    </CardContent>
+  </Card>
 );

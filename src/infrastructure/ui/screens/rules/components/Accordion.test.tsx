@@ -1,21 +1,9 @@
-import type { PropsWithChildren, ReactNode } from "react";
+import type { RuleItem } from "@/domain/entities/Rules";
 
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { SectionAccordion } from "./Accordion";
-
-vi.mock("framer-motion", () => {
-  return {
-    motion: new Proxy(
-      {},
-      {
-        get: () => (props: PropsWithChildren) => <div {...props} />,
-      },
-    ),
-    AnimatePresence: ({ children }: { children: ReactNode }) => <>{children}</>,
-  };
-});
 
 const items = [
   {
@@ -34,88 +22,66 @@ const items = [
     callouts: [{ type: "warning", text: "Warn B" }],
     examples: ["Example B"],
   },
-] satisfies Array<import("@/domain/entities/Rules").RuleItem>;
+] satisfies RuleItem[];
 
-const getTabButton = (id: string) => screen.getByTestId(`acc-btn-${id}`);
-
-test("renders all items and they are open by default", () => {
+test("renders all rules expanded with badges, examples, and callouts", () => {
   render(<SectionAccordion items={items} />);
-
-  for (const it of items) {
-    const btn = getTabButton(it.id);
-    expect(btn).toHaveAttribute("aria-expanded", "true");
-    expect(screen.getByText(it.body)).toBeInTheDocument();
-    expect(screen.getByText(it.examples![0])).toBeInTheDocument();
-    expect(screen.getByText(it.callouts![0].text)).toBeInTheDocument();
-    const chevronUp = btn.querySelector('[data-icon="chevron-up"]');
-    expect(chevronUp).toBeTruthy();
+  for (const item of items) {
+    expect(screen.getByRole("button", { name: new RegExp(item.title) })).toHaveAttribute(
+      "aria-expanded",
+      "true",
+    );
+    expect(screen.getByText(item.body)).toBeVisible();
+    expect(screen.getByText(item.examples[0])).toBeVisible();
+    expect(screen.getByText(item.callouts[0].text)).toBeVisible();
+    expect(screen.getByText(item.badges[0])).toBeVisible();
   }
 });
 
-test("toggle collapses and expands a single item, updating aria and chevron", async () => {
-  render(<SectionAccordion items={items} />);
-
-  const btnA = getTabButton("a");
-  expect(btnA).toHaveAttribute("aria-expanded", "true");
-  expect(screen.getByText("Body A")).toBeInTheDocument();
-
-  await userEvent.click(btnA);
-
-  expect(getTabButton("a")).toHaveAttribute("aria-expanded", "false");
-  expect(screen.queryByText("Body A")).not.toBeInTheDocument();
-});
-
-test("badges render for each item", () => {
-  render(<SectionAccordion items={items} />);
-  for (const it of items) {
-    for (const b of it.badges ?? []) {
-      expect(screen.getAllByText(b)[0]).toBeInTheDocument();
-    }
-  }
-});
-
-test("aria-controls and region linkage exist", () => {
-  render(<SectionAccordion items={items} />);
-  for (const it of items) {
-    const btn = getTabButton(it.id);
-    const controlsId = btn.getAttribute("aria-controls")!;
-    expect(controlsId).toBe(`acc-${it.id}`);
-  }
-});
-
-test("when items prop changes, all panels reset to open", async () => {
-  const { rerender } = render(<SectionAccordion items={items} />);
+test("a rule can collapse and expand without closing other rules", async () => {
   const user = userEvent.setup();
+  render(<SectionAccordion items={items} />);
+  const trigger = screen.getByRole("button", { name: /Rule A/ });
+  await user.click(trigger);
+  expect(trigger).toHaveAttribute("aria-expanded", "false");
+  await waitFor(() => expect(screen.queryByText("Body A")).not.toBeInTheDocument());
+  expect(screen.getByText("Body B")).toBeVisible();
+  await user.click(trigger);
+  expect(trigger).toHaveAttribute("aria-expanded", "true");
+  expect(screen.getByText("Body A")).toBeVisible();
+});
 
-  const btnA = getTabButton("a");
-  await user.click(btnA);
-  expect(btnA).toHaveAttribute("aria-expanded", "true");
-
-  const newItems = [
-    ...items,
-    {
-      id: "c",
-      title: "Rule C",
-      body: "Body C",
-    } as import("@/domain/entities/Rules").RuleItem,
-  ];
-  rerender(<SectionAccordion items={newItems} />);
-
-  for (const it of newItems) {
-    const btn = getTabButton(it.id);
-    expect(btn).toHaveAttribute("aria-expanded", "true");
-    expect(screen.getByText(it.body)).toBeInTheDocument();
+test("triggers link to their labelled panels", () => {
+  render(<SectionAccordion items={items} />);
+  for (const item of items) {
+    const trigger = screen.getByRole("button", { name: new RegExp(item.title) });
+    const panel = document.getElementById(trigger.getAttribute("aria-controls")!);
+    expect(panel).toHaveAttribute("aria-labelledby", trigger.id);
+    expect(panel).toHaveTextContent(item.body);
   }
 });
 
-test("chevron sits in the far-right group inside the button", () => {
-  render(<SectionAccordion items={items} />);
-
-  for (const it of items) {
-    const btn = getTabButton(it.id);
-    const chevronSvg =
-      btn.querySelector('[data-icon="chevron-up"]') ||
-      btn.querySelector('[data-icon="chevron-down"]');
-    expect(chevronSvg).toBeTruthy();
+test("new items reset all rules to expanded", async () => {
+  const user = userEvent.setup();
+  const { rerender } = render(<SectionAccordion items={items} />);
+  await user.click(screen.getByRole("button", { name: /Rule A/ }));
+  expect(screen.getByRole("button", { name: /Rule A/ })).toHaveAttribute("aria-expanded", "false");
+  const nextItems = [...items, { id: "c", title: "Rule C", body: "Body C" }];
+  rerender(<SectionAccordion items={nextItems} />);
+  for (const item of nextItems) {
+    expect(screen.getByRole("button", { name: new RegExp(item.title) })).toHaveAttribute(
+      "aria-expanded",
+      "true",
+    );
+    expect(screen.getByText(item.body)).toBeVisible();
   }
+});
+
+test("keyboard activation toggles the focused rule", async () => {
+  const user = userEvent.setup();
+  render(<SectionAccordion items={items} />);
+  screen.getByRole("button", { name: /Rule A/ }).focus();
+  await user.keyboard("{Enter}");
+  expect(screen.getByRole("button", { name: /Rule A/ })).toHaveAttribute("aria-expanded", "false");
+  expect(screen.getByRole("button", { name: /Rule B/ })).toHaveAttribute("aria-expanded", "true");
 });

@@ -1,4 +1,4 @@
-import { clsx } from "clsx";
+import { cn } from "cn";
 import type { CSSProperties } from "react";
 
 import { type Rank, type Suit } from "@/domain/entities/Card";
@@ -38,12 +38,12 @@ export const Card = ({
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className={clsx(
+      className={cn(
         "rounded-xl relative isolate aspect-[63/88]",
         "bg-zinc-50 ring-zinc-200 shadow-sm ring-1",
         "transition-transform duration-150 will-change-transform",
         !disabled && "hover:-translate-y-0.5 active:translate-y-0",
-        selected && "ring-amber-400 ring-2 ring-offset-2",
+        selected && "ring-ring ring-2 ring-offset-2 ring-offset-background",
         "overflow-hidden",
         className,
         {
@@ -54,6 +54,8 @@ export const Card = ({
         },
       )}
       style={style}
+      aria-label={faceDown ? "Face-down card" : `${rank} of ${suit}`}
+      aria-pressed={selected}
     >
       {faceDown ? (
         <div

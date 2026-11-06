@@ -52,7 +52,7 @@ const ConfettiPiece: FC<{
   const rotate = Math.floor(pr(index + 5) * 360);
   const spin = rotate + (side === "left" ? 180 : -180);
   const size = 6 + Math.floor(pr(index + 6) * 10);
-  const hues = ["bg-accent-gold", "bg-accent-green", "bg-accent-blue", "bg-accent-red"];
+  const hues = ["bg-primary", "bg-secondary", "bg-muted-foreground", "bg-ring"];
   const hue = hues[index % hues.length];
   const startTop = -10;
   const endTop = 110;

@@ -1,5 +1,3 @@
-import { clsx } from "clsx";
-import { AnimatePresence, motion } from "framer-motion";
 import { useNavigate } from "react-router";
 
 import { useGameStoreService } from "@/application/hooks/useGameStoreService";
@@ -7,111 +5,85 @@ import { StorageKeys, StorageService } from "@/application/services/StorageServi
 import OneVsOne from "@/assets/lobby/1vs1.webp";
 import OneVsOneVsOne from "@/assets/lobby/1vs2.webp";
 import TwoVsTwo from "@/assets/lobby/2vs2.webp";
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import type { GameMode } from "@/domain/entities/GameState";
 import type { User } from "@/domain/entities/User";
 import { GAME_PATH } from "@/routes/Routes";
 
-import { faClose } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
-type BottomSidebarProps = {
-  isOpen: boolean;
-  onClose: () => void;
-};
+type BottomSidebarProps = { isOpen: boolean; onClose: () => void };
 
 const gameModes = [
-  {
-    id: "1vs1" as GameMode,
-    title: "1 vs 1",
-    description: "Classic duel",
-    bg: OneVsOne,
-    hover: "from-accent-gold/40 to-yellow-500/40",
-  },
-  {
-    id: "1vs2" as GameMode,
-    title: "1 vs 2",
-    description: "Battle royale style",
-    bg: OneVsOneVsOne,
-    hover: "from-accent-red/40 to-red-500/40",
-  },
-  {
-    id: "2vs2" as GameMode,
-    title: "2 vs 2",
-    description: "Team match",
-    bg: TwoVsTwo,
-    hover: "from-accent-blue to-blue-500/40",
-  },
-];
+  { id: "1vs1", title: "1 vs 1", description: "Classic duel", bg: OneVsOne },
+  { id: "1vs2", title: "1 vs 2", description: "Battle royale style", bg: OneVsOneVsOne },
+  { id: "2vs2", title: "2 vs 2", description: "Team match", bg: TwoVsTwo },
+] satisfies Array<{ id: GameMode; title: string; description: string; bg: string }>;
 
 export const BottomSidebar = ({ isOpen, onClose }: BottomSidebarProps) => {
   const gameStoreService = useGameStoreService();
   const navigate = useNavigate();
-
   const onSelectGameMode = (gameMode: GameMode) => {
     const user = StorageService.get<User>(StorageKeys.FALL_USER);
-    if (!user) {
-      throw new Error("User not found in storage");
-    }
+    if (!user) throw new Error("User not found in storage");
     gameStoreService.setupGame(user.id, gameMode);
+    onClose();
     navigate(GAME_PATH);
   };
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          initial={{ y: "100%" }}
-          animate={{ y: 0 }}
-          exit={{ y: "100%" }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-          className="fixed top-0 right-0 bottom-0 left-0 z-40 flex flex-col bg-black/60 backdrop-blur-md"
-        >
-          {/* Close button */}
-          <div className="absolute top-4 right-10 z-100">
-            <button
-              onClick={() => onClose()}
-              className="cursor-pointer text-white/70 transition hover:text-white active:text-white"
+    <Sheet
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) onClose();
+      }}
+    >
+      <SheetContent side="bottom" className="rounded-none data-[side=bottom]:h-dvh">
+        <SheetHeader className="sr-only">
+          <SheetTitle>Choose your game</SheetTitle>
+          <SheetDescription>Play a duel, a free-for-all, or a team match.</SheetDescription>
+        </SheetHeader>
+        <div className="grid min-h-0 flex-1 grid-cols-3">
+          {gameModes.map((mode) => (
+            <Button
+              key={mode.id}
+              variant="ghost"
+              aria-label={`Play ${mode.title}`}
+              aria-describedby={`mode-description-${mode.id}`}
+              className="group relative h-full w-full overflow-hidden rounded-none border-0 px-3 py-6 whitespace-normal focus-visible:z-10 focus-visible:ring-inset"
+              onClick={() => onSelectGameMode(mode.id)}
             >
-              <FontAwesomeIcon icon={faClose} className={"text-3xl"} />
-            </button>
-          </div>
-
-          <div className="flex flex-1">
-            {gameModes.map((mode) => (
-              <button
-                key={mode.id}
-                className={clsx(
-                  "group border-white/20 shadow-lg relative flex-1 cursor-pointer overflow-hidden border-r last:border-r-0",
-                )}
-                onClick={() => onSelectGameMode(mode.id)}
-              >
-                <div
-                  className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-500 group-hover:scale-110 group-active:scale-110"
-                  style={{ backgroundImage: `url(${mode.bg})` }}
-                />
-
-                <div className="absolute inset-0 bg-black/60 transition group-hover:bg-black/30 group-active:bg-black/30" />
-
-                <div className="relative z-10 flex h-full flex-col items-center justify-center p-6 text-center">
-                  <h3 className="text-3xl font-bold text-white drop-shadow transition-transform duration-300 group-hover:scale-110 group-active:scale-110 md:text-4xl">
-                    {mode.title}
-                  </h3>
-                  <p className="mt-2 text-white/80 transition-transform duration-300 group-hover:scale-105 group-active:scale-105">
-                    {mode.description}
-                  </p>
-                </div>
-
-                <div
-                  className={clsx(
-                    "rounded-lg blur-2xl group-hover:active-100 absolute top-1/2 left-1/2 h-[120%] w-[120%] -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r opacity-0 transition group-hover:opacity-100",
-                    mode.hover,
-                  )}
-                />
-              </button>
-            ))}
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+              <img
+                src={mode.bg}
+                alt=""
+                className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-110 group-focus-visible:scale-110 motion-reduce:transition-none"
+              />
+              <span aria-hidden="true" className="absolute inset-0 bg-black/60" />
+              <span
+                aria-hidden="true"
+                className="absolute inset-0 bg-primary/15 opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+              />
+              <span className="relative flex flex-col items-center gap-3 text-white">
+                <span className="font-heading text-2xl font-bold sm:text-4xl lg:text-6xl">
+                  {mode.title}
+                </span>
+                <span aria-hidden="true" className="h-1 w-12 rounded-full bg-primary" />
+                <span
+                  id={`mode-description-${mode.id}`}
+                  className="text-sm font-normal sm:text-base"
+                >
+                  {mode.description}
+                </span>
+              </span>
+            </Button>
+          ))}
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 };

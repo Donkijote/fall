@@ -1,115 +1,112 @@
-import { motion } from "framer-motion";
+import { ArrowLeft } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 
-import bg from "@/assets/lobby/home_2.png";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { getUiHands } from "@/infrastructure/adapters/handWithMeta";
 import { SingsList } from "@/infrastructure/ui/components/singins/SingsList";
 
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+const pointOptions = [
+  { value: "any", label: "Any points" },
+  ...[2, 5, 8, 10].map((points) => ({ value: String(points), label: `≥ ${points}` })),
+];
 
 export const SingsSheetScreen = () => {
   const [query, setQuery] = useState("");
   const [onlyMandatory, setOnlyMandatory] = useState(false);
   const [minPoints, setMinPoints] = useState<number | null>(null);
-
   const navigate = useNavigate();
-
   const list = useMemo(() => {
-    const q = query.trim().toLowerCase();
+    const search = query.trim().toLowerCase();
     return getUiHands()
-      .filter((hand) => (onlyMandatory ? hand.mandatory : true))
-      .filter((hand) => (minPoints ? hand.points >= minPoints : true))
+      .filter((hand) => !onlyMandatory || hand.mandatory)
+      .filter((hand) => !minPoints || hand.points >= minPoints)
       .filter(
         (hand) =>
-          !q ||
-          hand.name.toLowerCase().includes(q) ||
-          hand.tags?.some((t) => t.toLowerCase().includes(q)),
+          !search ||
+          hand.name.toLowerCase().includes(search) ||
+          hand.tags?.some((tag) => tag.toLowerCase().includes(search)),
       )
-      .sort((a, b) => b.points - a.points || a.name.localeCompare(b.name));
+      .sort(
+        (first, second) => second.points - first.points || first.name.localeCompare(second.name),
+      );
   }, [query, onlyMandatory, minPoints]);
 
   return (
-    <div className="relative">
-      <div className="pointer-events-none absolute inset-0 -z-10 h-full">
-        <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-accent-blue/20 blur-3xl" />
-        <div className="absolute -right-24 -bottom-24 h-72 w-72 rounded-full bg-accent-gold/20 blur-3xl" />
-        <div
-          className="absolute inset-0 bg-cover mix-blend-overlay"
-          style={{
-            backgroundImage: `url(${bg})`,
-          }}
-        />
-        <div
-          className="absolute inset-0 bg-black/40"
-          style={{
-            maskImage: "radial-gradient(70% 60% at 50% 40%, black 60%, transparent 100%)",
-          }}
-        />
-      </div>
-
-      <div className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-10">
-        <motion.div
-          initial={{ y: -8, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          className="rounded-2xl border border-white/10 bg-white/10 p-4 shadow-2xl backdrop-blur-sm"
-        >
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => navigate(-1)}
-                className="goBack cursor-pointer rounded-full border border-white/20 bg-white/10 px-3 py-2 text-text-primary transition hover:bg-white/15"
-              >
-                <FontAwesomeIcon icon={faArrowLeft} size={"xs"} />
-              </button>
-              <h1 className="text-xl font-semibold text-text-primary">Sings (Combinations)</h1>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-2">
-              <input
-                id={"search-sings"}
-                className="rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-text-primary placeholder-text-secondary focus:ring-2 focus:ring-accent-gold/80 focus:outline-none"
+    <main className="h-dvh overflow-y-auto bg-background text-foreground">
+      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8">
+        <header className="flex items-center gap-3">
+          <Button
+            variant="outline"
+            size="icon"
+            aria-label="Go back"
+            className="goBack"
+            onClick={() => navigate(-1)}
+          >
+            <ArrowLeft />
+          </Button>
+          <h1 className="font-heading text-2xl font-semibold">Sings (Combinations)</h1>
+        </header>
+        <Card>
+          <CardContent className="flex flex-wrap items-end gap-4">
+            <div className="grid flex-1 gap-2">
+              <Label htmlFor="search-sings">Search combinations</Label>
+              <Input
+                id="search-sings"
                 placeholder="Search by name or tag…"
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(event) => setQuery(event.target.value)}
               />
-              <select
-                id={"filter-min-points"}
-                className="cursor-pointer rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-text-primary focus:ring-2 focus:ring-accent-gold/80 focus:outline-none"
-                value={String(minPoints ?? "")}
-                onChange={(e) => setMinPoints(e.target.value ? Number(e.target.value) : null)}
-              >
-                <option value="">Min pts</option>
-                <option value="2">≥ 2</option>
-                <option value="5">≥ 5</option>
-                <option value="8">≥ 8</option>
-                <option value="10">≥ 10</option>
-              </select>
-              <label className="flex cursor-pointer items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-text-primary">
-                <input
-                  id={"only-mandatory"}
-                  type="checkbox"
-                  checked={onlyMandatory}
-                  onChange={(e) => setOnlyMandatory(e.target.checked)}
-                  className="cursor-pointer accent-accent-gold"
-                />{" "}
-                Mandatory only
-              </label>
             </div>
-          </div>
-        </motion.div>
-
-        <div className={"scrollbar-hide-y h-[100dvh] overflow-auto pb-80 md:pb-40"}>
-          <SingsList sings={list} />
-        </div>
-
+            <div className="grid gap-2">
+              <Label htmlFor="filter-min-points">Minimum points</Label>
+              <Select
+                items={pointOptions}
+                value={String(minPoints ?? "any")}
+                onValueChange={(value) =>
+                  setMinPoints(value && value !== "any" ? Number(value) : null)
+                }
+              >
+                <SelectTrigger id="filter-min-points">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent align="start" alignItemWithTrigger={false}>
+                  {pointOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <Label className="min-h-9 cursor-pointer" htmlFor="only-mandatory">
+              <Checkbox
+                id="only-mandatory"
+                checked={onlyMandatory}
+                onCheckedChange={setOnlyMandatory}
+              />
+              Mandatory only
+            </Label>
+          </CardContent>
+        </Card>
+        <SingsList sings={list} />
         {list.length === 0 && (
-          <div className="mx-auto mt-10 w-full max-w-xl rounded-2xl border border-white/10 bg-white/10 p-8 text-center text-text-secondary backdrop-blur-md">
+          <p role="status" className="py-12 text-center text-muted-foreground">
             No sings match your filters.
-          </div>
+          </p>
         )}
       </div>
-    </div>
+    </main>
   );
 };

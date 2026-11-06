@@ -1,28 +1,30 @@
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { RulesContent } from "@/domain/entities/Rules";
-import { Pill } from "@/infrastructure/ui/screens/rules/components/Pill";
 
 type SingsGridProps = { content: RulesContent };
 
 export const SingsGrid = ({ content }: SingsGridProps) => (
-  <div className="rounded-2xl border border-white/10 bg-white/10 p-4 shadow-sm backdrop-blur">
-    <div className="mb-2 text-base font-medium text-text-primary">Sings ranking</div>
-    <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
-      {content.singsRanking.map((s) => (
-        <div
-          key={s.name}
-          className="rounded-xl border border-white/10 bg-white/10 p-3 backdrop-blur"
-        >
-          <div className="flex items-center justify-between">
-            <div className="font-medium text-text-primary">{s.name}</div>
-            <Pill>{s.optional ? "Optional" : "Mandatory"}</Pill>
-          </div>
-          <div className="mt-1 text-sm text-text-secondary">Pattern: {s.pattern}</div>
-          <div className="mt-1 text-sm text-text-primary">
-            Points: <span className="font-medium">{s.points}</span>
-          </div>
-          {s.notes ? <div className="mt-1 text-xs text-text-secondary">{s.notes}</div> : null}
-        </div>
+  <Card>
+    <CardHeader>
+      <CardTitle>Sings ranking</CardTitle>
+    </CardHeader>
+    <CardContent className="grid gap-3 md:grid-cols-2">
+      {content.singsRanking.map((sing) => (
+        <Card key={sing.name} size="sm">
+          <CardHeader>
+            <CardTitle>{sing.name}</CardTitle>
+            <Badge variant="secondary">{sing.optional ? "Optional" : "Mandatory"}</Badge>
+          </CardHeader>
+          <CardContent className="space-y-1">
+            <p className="text-muted-foreground">Pattern: {sing.pattern}</p>
+            <p>
+              Points: <span className="font-medium">{sing.points}</span>
+            </p>
+            {sing.notes && <p className="text-xs text-muted-foreground">{sing.notes}</p>}
+          </CardContent>
+        </Card>
       ))}
-    </div>
-  </div>
+    </CardContent>
+  </Card>
 );
