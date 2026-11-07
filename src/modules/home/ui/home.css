@@ -311,47 +311,7 @@
   box-shadow: 0 0 0 1px var(--hud-edge);
 }
 
-.home-arrival {
-  position: relative;
-  isolation: isolate;
-}
-
-.home-arrival::before {
-  position: absolute;
-  z-index: -1;
-  inset: -1rem -1.5rem;
-  border: 1px solid color-mix(in oklch, var(--hud-edge), transparent 55%);
-  border-radius: 1.5rem;
-  background: color-mix(in oklch, var(--background), transparent 8%);
-  box-shadow: 0 8px 32px #0000001a;
-  content: "";
-}
-
-.home-arrival-mark {
-  color: var(--hud-metal);
-  border: 1px solid color-mix(in oklch, var(--hud-metal), transparent 65%);
-  background: radial-gradient(
-    circle,
-    color-mix(in oklch, var(--hud-bronze), transparent 90%),
-    transparent 75%
-  );
-}
-
-.home-play {
-  background: oklch(from var(--primary) calc(l - 0.06) calc(c - 0.03) h);
-  border-radius: 0.5rem 1.25rem 0.5rem 1.25rem;
-  border: 1px solid color-mix(in oklch, var(--primary), var(--hud-metal) 35%);
-  box-shadow:
-    inset 0 1px color-mix(in oklch, var(--primary-foreground), transparent 80%),
-    0 3px 15px color-mix(in oklch, var(--primary), transparent 90%);
-}
-
-.home-play:hover {
-  background: oklch(from var(--primary) calc(l - 0.035) calc(c - 0.03) h);
-}
-
-.hud-settings-trigger:focus-visible,
-.home-play:focus-visible {
+.hud-settings-trigger:focus-visible {
   outline: 2px solid var(--ring);
   outline-offset: 4px;
 }
@@ -486,9 +446,5 @@
   .hud-shortcuts {
     --dock-emblem-size: 3.25rem;
     padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
-  }
-
-  .home-arrival > p {
-    display: none;
   }
 }

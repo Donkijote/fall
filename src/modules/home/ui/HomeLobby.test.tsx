@@ -63,9 +63,10 @@ afterEach(() => {
 
 test("replaces the old navigation with the game HUD while retaining a usable Play entry", () => {
   renderLobby();
-  expect(screen.getByRole("heading", { name: "The Hearth" })).toBeVisible();
+  expect(screen.queryByRole("heading", { name: "The Hearth" })).not.toBeInTheDocument();
+  expect(screen.queryByText("A moment of rest. Another hand awaits.")).not.toBeInTheDocument();
   expect(screen.getByText("Player One")).toBeVisible();
-  expect(screen.getByRole("button", { name: "Play" })).toBeEnabled();
+  expect(screen.getByRole("button", { name: "Play at the tavern" })).toBeEnabled();
   expect(screen.queryByRole("navigation", { name: "Main navigation" })).not.toBeInTheDocument();
   expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 });
@@ -76,26 +77,29 @@ test("composes the decorative Living Town scenery beneath the existing HUD and P
   const town = container.querySelector('[data-slot="living-town-scene"]');
 
   expect(sceneSlot).toContainElement(town as HTMLElement);
-  expect(town).toHaveAttribute("aria-hidden", "true");
+  expect(town).not.toHaveAttribute("aria-hidden");
   expect(town?.querySelector('[data-slot="living-town-sky"]')).toBeInTheDocument();
   expect(town?.querySelector('[data-slot="living-town-mountains"]')).toBeInTheDocument();
   expect(town?.querySelector('[data-slot="living-town-tavern"]')).toBeInTheDocument();
-  expect(town?.querySelector("button, a, [tabindex], canvas")).toBeNull();
-  expect(town?.querySelectorAll('img[alt=""]')).toHaveLength(5);
+  expect(town?.querySelectorAll("button")).toHaveLength(1);
+  expect(town?.querySelector("a, [tabindex], canvas")).toBeNull();
+  expect(town?.querySelectorAll('img[alt=""]')).toHaveLength(4);
+  expect(town?.querySelector('[data-slot="living-town-plaza"]')).toBeInTheDocument();
   expect(sceneSlot).not.toContainElement(screen.getByRole("banner", { name: "Player HUD" }));
-  expect(sceneSlot).not.toContainElement(screen.getByRole("button", { name: "Play" }));
+  expect(sceneSlot).toContainElement(screen.getByRole("button", { name: "Play at the tavern" }));
+  expect(container.querySelector('[data-slot="home-scene-space"]')).toBeEmptyDOMElement();
 });
 
 test("onboarding updates the HUD immediately and only then allows play", async () => {
   localStorage.clear();
   const user = userEvent.setup();
   const { container } = renderLobby();
-  expect(container.querySelector('[aria-label="Play"]')).toBeDisabled();
+  expect(container.querySelector('[aria-label="Play at the tavern"]')).toBeDisabled();
   await user.type(screen.getByLabelText("Username"), "  New Traveller  {Enter}");
 
   await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
   expect(screen.getByText("New Traveller")).toBeVisible();
-  expect(screen.getByRole("button", { name: "Play" })).toBeEnabled();
+  expect(screen.getByRole("button", { name: "Play at the tavern" })).toBeEnabled();
   expect(setupGame).not.toHaveBeenCalled();
 });
 
@@ -106,7 +110,7 @@ test.each([
 ])("Play preserves the $label game setup and route", async ({ label, mode }) => {
   const user = userEvent.setup();
   renderLobby();
-  await user.click(screen.getByRole("button", { name: "Play" }));
+  await user.click(screen.getByRole("button", { name: "Play at the tavern" }));
   await user.click(screen.getByRole("button", { name: `Play ${label}` }));
   expect(setupGame).toHaveBeenCalledExactlyOnceWith("player", mode);
   expect(await screen.findByRole("heading", { name: "Game scene" })).toBeVisible();
@@ -153,11 +157,21 @@ test("Settings preserves appearance switching and returns keyboard focus on Esca
 test("Escape closes the mode picker and returns focus to Play", async () => {
   const user = userEvent.setup();
   renderLobby();
-  const play = screen.getByRole("button", { name: "Play" });
+  const play = screen.getByRole("button", { name: "Play at the tavern" });
   await user.click(play);
   await user.keyboard("{Escape}");
   await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
   await waitFor(() => expect(play).toHaveFocus());
+});
+
+test.each(["{Enter}", " "])("the tavern opens the existing mode picker with %s", async (key) => {
+  const user = userEvent.setup();
+  renderLobby();
+  const tavern = screen.getByRole("button", { name: "Play at the tavern" });
+  tavern.focus();
+  await user.keyboard(key);
+  expect(await screen.findByRole("dialog", { name: "Choose your game" })).toBeVisible();
+  expect(setupGame).not.toHaveBeenCalled();
 });
 
 test("the presentational HUD never writes an economy or performs network requests", () => {

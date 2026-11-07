@@ -1,4 +1,5 @@
 .living-town-scene {
+  --town-world-width: min(100cqw, 177.778cqh);
   position: absolute;
   inset: 0;
   overflow: hidden;
@@ -28,8 +29,7 @@
   visibility: hidden;
 }
 
-.living-town-sky,
-.living-town-plaza {
+.living-town-sky {
   inset: 0;
   width: 100%;
   height: 100%;
@@ -60,6 +60,7 @@
 
 .living-town-mountain-haze,
 .living-town-ground,
+.living-town-plaza,
 .living-town-webgl,
 .living-town-atmosphere {
   position: absolute;
@@ -75,15 +76,28 @@
 }
 
 .living-town-plaza {
+  top: 58%;
+  background-position: center bottom;
+  background-size: calc(var(--town-world-width) * 0.65) auto;
+  background-repeat: repeat;
   filter: saturate(0.65) brightness(0.7);
-  mask-image: linear-gradient(transparent 59%, #000 74%);
+  mask-image: linear-gradient(transparent, #000 42%);
+}
+
+.living-town-world {
+  position: absolute;
+  left: 50%;
+  bottom: max(14cqh, 8rem);
+  width: var(--town-world-width);
+  aspect-ratio: 16 / 9;
+  transform: translateX(-50%);
 }
 
 .living-town-tavern-anchor {
   position: absolute;
-  left: -3cqw;
-  bottom: 14cqh;
-  width: min(47cqw, 85cqh);
+  left: max(1%, 2.75rem);
+  bottom: 0;
+  width: 32%;
   aspect-ratio: 3 / 2;
 }
 
@@ -91,6 +105,64 @@
   inset: 0;
   width: 100%;
   filter: saturate(0.83) brightness(0.88);
+  transform: scaleX(-1);
+  transition: filter 180ms ease;
+}
+
+.living-town-tavern-trigger {
+  position: absolute;
+  inset: 0;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 0.75rem;
+  background: transparent;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.living-town-tavern-trigger:disabled {
+  cursor: default;
+}
+
+.living-town-tavern-trigger:not(:disabled):is(:hover, :focus-visible) .living-town-tavern {
+  filter: saturate(0.95) brightness(1.06) drop-shadow(0 0 6px #edb96699)
+    drop-shadow(0 0 16px #d2914055);
+}
+
+.living-town-tavern-trigger:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+}
+
+.living-town-tavern-label {
+  position: absolute;
+  bottom: calc(100% + 0.25rem);
+  left: 50%;
+  width: max-content;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--hud-metal);
+  border-radius: 0.5rem;
+  color: var(--foreground);
+  background: var(--hud-surface);
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  transform: translateX(-50%);
+}
+
+.living-town-tavern-trigger:has([data-status="ready"]) .living-town-tavern-label {
+  opacity: 0;
+}
+
+.living-town-tavern-trigger:not(:disabled):is(:hover, :focus-visible) .living-town-tavern-label {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .living-town-tavern {
+    transition: none;
+  }
 }
 
 .living-town-contact {
@@ -117,10 +189,8 @@
     radial-gradient(ellipse at 42% 50%, transparent 35%, #201b2b55);
 }
 
-@media (orientation: portrait) {
-  .living-town-tavern-anchor {
-    left: -15cqw;
-    bottom: 14cqh;
-    width: min(90cqw, 52cqh);
+@media (max-width: 360px) {
+  .living-town-world {
+    bottom: max(14cqh, 10.5rem);
   }
 }

@@ -11,8 +11,10 @@ flagstone plaza and timber-and-stone tavern share the HUD's restrained charcoal,
 oxblood and bronze direction. Optimized WebP images remain visible independently
 of the optional, lazy React Three Fiber mist. Motion/data preferences, hidden-tab
 pause and renderer failures affect only that enhancement. The HUD layout, theme
-and gameplay controls are unchanged. The tavern is decorative; destination
-interactions and the future castle are not implemented. See
+and game-mode behavior are unchanged. The central arrival panel is removed; the
+inward-facing tavern now opens the existing mode picker with hover/focus glow and
+keyboard/touch activation. Tavern and paving share a contained world scale instead
+of oversized mobile/cover zoom. The future castle is not implemented. See
 `docs/design/home-lobby/living-town.md` for the incremental scope, layer manifest
 and remaining art/visual review requirements.
 
@@ -35,8 +37,9 @@ and remaining art/visual review requirements.
   spend, recharge, purchase, timer, or persistence actions.
 - Settings contains the working theme toggle, Rules and Sings links, and the
   development-only animation playground link. No speculative settings are added.
-- The neutral center keeps the current Caída mode picker reachable. It is a
-  temporary entry, not the final town illustration or a new game mode.
+- The center remains open for future town landmarks. The tavern is the single
+  Caída entry, disabled until onboarding completes. It has a visible label if the
+  art fails and opens the unchanged mode picker; it does not start a match directly.
 
 ## Scene/HUD integration contract for #99
 
@@ -51,9 +54,9 @@ the shared primitives’ portal layering above both.
 - The HUD also defaults to pointer passthrough. Its player/resource regions and
   Settings control opt in. The top row and bottom shortcut cluster reserve their
   own layout space; do not put town destinations beneath those occupied regions.
-- `children` occupies the middle row (`data-slot="home-scene-space"`). Replace
-  the temporary arrival/Play section when the town owns the game entry point;
-  do not leave two competing Play actions or move artwork through HUD rows.
+- `children` occupies the middle row (`data-slot="home-scene-space"`), currently
+  empty now that the town owns the game entry. Do not add a competing central
+  Play action or move artwork through HUD rows.
 - The stage uses dynamic viewport sizing and safe-area padding. Landscape is
   the primary composition; compact landscapes reduce the center decoration.
   Portrait reflows rather than forcing orientation or blocking navigation.

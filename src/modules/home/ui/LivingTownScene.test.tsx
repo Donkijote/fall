@@ -70,22 +70,25 @@ afterEach(() => {
 
 test("keeps ordered decorative artwork independently of the lazily enhanced mist", async () => {
   const { container } = render(<LivingTownScene />);
-  expect(container.querySelector('[data-slot="living-town-scene"]')).toHaveAttribute(
+  expect(container.querySelector('[data-slot="living-town-scene"]')).not.toHaveAttribute(
     "aria-hidden",
-    "true",
   );
+  expect(container.querySelector(".living-town-frame")).toHaveAttribute("aria-hidden", "true");
   const mountains = container.querySelector('[data-slot="living-town-mountains"]');
   expect(mountains?.querySelectorAll("img")).toHaveLength(2);
   const images = [...container.querySelectorAll("img")];
-  expect(images.map((image) => image.dataset.artwork)).toEqual(
-    townArtwork.map((artwork) => artwork.id),
-  );
+  expect(
+    [...container.querySelectorAll<HTMLElement>("[data-artwork]")].map(
+      (layer) => layer.dataset.artwork,
+    ),
+  ).toEqual(townArtwork.map((artwork) => artwork.id));
+  const imageArtwork = townArtwork.filter((artwork) => artwork.id !== "plaza");
   images.forEach((image, index) => {
     expect(image).toHaveAttribute("alt", "");
     expect(image).toHaveAttribute("draggable", "false");
-    expect(image).toHaveAttribute("width", String(townArtwork[index].width));
-    expect(image).toHaveAttribute("height", String(townArtwork[index].height));
-    expect(image).toHaveAttribute("src", townArtwork[index].source);
+    expect(image).toHaveAttribute("width", String(imageArtwork[index].width));
+    expect(image).toHaveAttribute("height", String(imageArtwork[index].height));
+    expect(image).toHaveAttribute("src", imageArtwork[index].source);
     fireEvent.load(image);
     expect(image).toHaveAttribute("data-status", "ready");
   });
@@ -107,7 +110,7 @@ test.each(["reduced motion", "data saving", "missing WebGL"])(
     const { container } = render(<LivingTownScene />);
     expect(screen.queryByTestId("mountain-renderer")).not.toBeInTheDocument();
     expect(container.querySelector('[data-slot="living-town-sky"]')).toBeInTheDocument();
-    expect(container.querySelectorAll("img")).toHaveLength(5);
+    expect(container.querySelectorAll("img")).toHaveLength(4);
     expect(container.querySelector('[data-slot="living-town-tavern"]')).toBeInTheDocument();
   },
 );
@@ -136,7 +139,7 @@ test("retains the fallback permanently after a renderer or context failure", asy
   const { container } = render(<LivingTownScene />);
   fireEvent.click(await screen.findByTestId("mountain-renderer"));
   expect(container.querySelector(".living-town-webgl")).not.toBeInTheDocument();
-  expect(container.querySelectorAll("img")).toHaveLength(5);
+  expect(container.querySelectorAll("img")).toHaveLength(4);
   expect(container.querySelector('[data-slot="living-town-tavern"]')).toBeInTheDocument();
   act(() => compact.set(true));
   expect(screen.queryByTestId("mountain-renderer")).not.toBeInTheDocument();
@@ -149,7 +152,7 @@ test("contains renderer initialization errors without removing the artwork", asy
   await waitFor(() =>
     expect(container.querySelector(".living-town-webgl")).not.toBeInTheDocument(),
   );
-  expect(container.querySelectorAll("img")).toHaveLength(5);
+  expect(container.querySelectorAll("img")).toHaveLength(4);
   expect(error).toHaveBeenCalled();
 });
 
@@ -158,8 +161,8 @@ test("isolates image failures and keeps a CSS backdrop when all artwork fails", 
   const { container } = render(<LivingTownScene />);
   const images = [...container.querySelectorAll("img")];
   images.forEach((image) => fireEvent.load(image));
-  fireEvent.error(images[4]);
-  expect(images[4]).toHaveAttribute("data-status", "failed");
+  fireEvent.error(images[3]);
+  expect(images[3]).toHaveAttribute("data-status", "failed");
   expect(images[0]).toHaveAttribute("data-status", "ready");
   for (const image of images) {
     fireEvent.error(image);
@@ -167,5 +170,33 @@ test("isolates image failures and keeps a CSS backdrop when all artwork fails", 
   }
   expect(container.querySelector(".living-town-ground")).toBeInTheDocument();
   expect(container.querySelector('[data-slot="living-town-scene"]')).toBeInTheDocument();
-  expect(container.querySelector("button, a, [tabindex]")).toBeNull();
+  expect(screen.getByRole("button", { name: "Play at the tavern" })).toBeDisabled();
+  expect(container.querySelector("a, [tabindex]")).toBeNull();
+});
+
+test("places the inward-facing tavern and tiled plaza outside the cover-cropped backdrop", () => {
+  motion.matches = true;
+  const { container } = render(<LivingTownScene />);
+  const world = container.querySelector('[data-slot="living-town-world"]');
+  const tavern = container.querySelector('[data-slot="living-town-tavern"]');
+  const plaza = container.querySelector('[data-slot="living-town-plaza"]');
+  expect(world).toContainElement(tavern as HTMLElement);
+  expect(tavern?.closest("[data-facing]")).toHaveAttribute("data-facing", "inward");
+  expect(container.querySelector(".living-town-frame")).not.toContainElement(world as HTMLElement);
+  expect(container.querySelector(".living-town-frame")).not.toContainElement(plaza as HTMLElement);
+  expect((plaza as HTMLElement).style.backgroundImage).toContain(townArtwork[3].source);
+  expect(townArtwork[3]).toMatchObject({ width: 3344, height: 602 });
+});
+
+test("keeps the tavern action available when images fail without adding a second Play entry", () => {
+  motion.matches = true;
+  const onPlay = vi.fn();
+  const { container } = render(<LivingTownScene canPlay onPlay={onPlay} />);
+  for (const image of container.querySelectorAll("img")) fireEvent.error(image);
+  const tavern = screen.getByRole("button", { name: "Play at the tavern" });
+  expect(tavern).toBeEnabled();
+  expect(tavern).toHaveTextContent("Play Caída");
+  expect(screen.getAllByRole("button")).toHaveLength(1);
+  fireEvent.click(tavern);
+  expect(onPlay).toHaveBeenCalledOnce();
 });

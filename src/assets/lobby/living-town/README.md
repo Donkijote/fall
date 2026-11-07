@@ -12,17 +12,21 @@ reference. The layers below are ordered from back to front.
 | `plaza.png`          | 1672 × 941  | Yes    | Align to the bottom of the stage. Keep the open flagstone square continuous behind the lower HUD. |
 | `tavern.png`         | 1536 × 1024 | Yes    | Anchor the foot of the steps in the left foreground.                                              |
 
-Use the existing centered-cover 1600 × 900 reference frame. For desktop, start
-the tavern around x = 45 with a width of 510 reference pixels and set the foot
-of the steps around y = 740. In portrait, place the tavern relative to the
-visible left edge so the facade survives the centered landscape crop. These
-are starting placements for integration.
+Sky/mountains use a centered-cover backdrop. Foreground destinations use a separate
+contained 1600 × 900 frame. The tavern occupies 512 reference pixels (32% width),
+retains its native 3:2 aspect and is horizontally mirrored to face inward. That
+same scale applies on mobile; there is no portrait-specific landmark enlargement.
 
 ## Runtime exports
 
 The PNG masters above are preserved unchanged. The application imports only
-same-sized `.webp` exports (about 453 KiB combined), exported with Pillow from
-RGBA images using `quality=88, method=6`. Re-export after changing a master.
+`.webp` exports (about 522 KiB combined), using `quality=88, method=6`. Sky,
+mountains and tavern retain source dimensions, with alpha for cutouts.
+The plaza instead uses a solid RGB crop `(0, 640, 1672, 941)` mirrored into a
+3344 × 602 repeatable tile. Rebuild it with
+`python scripts/export-living-town-plaza.py` (Pillow required only for export).
+CSS repeats it at 65% of contained world width to keep paving small and its scale
+relative to landmarks consistent. Re-export after changing a master.
 The current implementation uses positioned HTML images for the primary artwork,
 not textured WebGL planes, so reduced-motion and missing-WebGL presentations
 keep exactly the same art. R3F supplies only optional mist behind the foreground.

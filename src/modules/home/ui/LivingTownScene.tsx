@@ -22,10 +22,23 @@ function ArtworkLayer({ artwork }: { artwork: TownArtwork }) {
       width={artwork.width}
       height={artwork.height}
       alt=""
+      aria-hidden="true"
       draggable={false}
       decoding="async"
       onLoad={() => setStatus("ready")}
       onError={() => setStatus("failed")}
+    />
+  );
+}
+
+function PlazaSurface() {
+  return (
+    <div
+      className="living-town-plaza"
+      data-artwork="plaza"
+      data-slot="living-town-plaza"
+      aria-hidden="true"
+      style={{ backgroundImage: `url("${townArtwork[3].source}")` }}
     />
   );
 }
@@ -77,14 +90,20 @@ function SceneEnhancement({
   );
 }
 
-export function LivingTownScene() {
+export function LivingTownScene({
+  canPlay = false,
+  onPlay,
+}: {
+  canPlay?: boolean;
+  onPlay?: () => void;
+}) {
   const { animate, compact, visible } = useAtmospherePreferences();
   const [failed, setFailed] = useState(false);
   const onFailure = useCallback(() => setFailed(true), []);
 
   return (
-    <div className="living-town-scene" data-slot="living-town-scene" aria-hidden="true">
-      <div className="living-town-frame">
+    <div className="living-town-scene" data-slot="living-town-scene">
+      <div className="living-town-frame" aria-hidden="true">
         <ArtworkLayer artwork={townArtwork[0]} />
         <div data-slot="living-town-mountains">
           <ArtworkLayer artwork={townArtwork[1]} />
@@ -94,14 +113,27 @@ export function LivingTownScene() {
         {animate && !failed && (
           <SceneEnhancement compact={compact} visible={visible} onFailure={onFailure} />
         )}
-        <div className="living-town-ground" />
-        <ArtworkLayer artwork={townArtwork[3]} />
       </div>
-      <div className="living-town-tavern-anchor">
-        <div className="living-town-contact" />
-        <ArtworkLayer artwork={townArtwork[4]} />
+      <div className="living-town-ground" aria-hidden="true" />
+      <PlazaSurface />
+      <div className="living-town-world" data-slot="living-town-world">
+        <div className="living-town-tavern-anchor" data-facing="inward">
+          <div className="living-town-contact" aria-hidden="true" />
+          <button
+            type="button"
+            className="living-town-tavern-trigger"
+            aria-label="Play at the tavern"
+            disabled={!canPlay}
+            onClick={onPlay}
+          >
+            <ArtworkLayer artwork={townArtwork[4]} />
+            <span className="living-town-tavern-label" aria-hidden="true">
+              Play Caída
+            </span>
+          </button>
+        </div>
       </div>
-      <div className="living-town-atmosphere" />
+      <div className="living-town-atmosphere" aria-hidden="true" />
     </div>
   );
 }
