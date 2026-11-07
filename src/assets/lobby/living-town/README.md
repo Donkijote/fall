@@ -24,7 +24,7 @@ The PNG masters above are preserved unchanged. The application imports only
 All seven exports retain source dimensions, with alpha for cutouts. Merchant and
 quest-board exports use the supplied 1536 × 1024 masters unchanged, placed beside
 the tavern and on the right respectively. The plaza is
-shown once at contained world width and feathered into the terrain, not repeated
+shown once at full stage width and feathered into the terrain, not repeated
 or reflected. The discarded mirrored tile caused dark bands; its offline helper
 `export-living-town-plaza.py` has been removed. Re-export after changing a master.
 The current implementation uses positioned HTML images for the primary artwork,

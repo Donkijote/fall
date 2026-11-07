@@ -84,7 +84,7 @@
 .living-town-plaza {
   bottom: var(--town-floor-offset);
   background-position: center bottom;
-  background-size: var(--town-world-width) auto;
+  background-size: 100cqw auto;
   background-repeat: no-repeat;
   filter: saturate(0.65) brightness(0.7);
   mask-image:
@@ -94,13 +94,7 @@
       #000 calc(100% - var(--town-world-width) * 0.025),
       transparent
     ),
-    linear-gradient(
-      90deg,
-      transparent calc(50% - var(--town-world-width) * 0.5),
-      #000 calc(50% - var(--town-world-width) * 0.44),
-      #000 calc(50% + var(--town-world-width) * 0.44),
-      transparent calc(50% + var(--town-world-width) * 0.5)
-    );
+    linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
   mask-composite: intersect;
 }
 
@@ -262,10 +256,10 @@
   position: absolute;
   left: 17%;
   right: 12%;
-  bottom: 1%;
-  height: 10%;
-  background: radial-gradient(ellipse, #191416bd, transparent 70%);
-  filter: blur(5px);
+  bottom: 3.2%;
+  height: 4%;
+  background: radial-gradient(ellipse, #191416e6 15%, #19141677 45%, transparent 72%);
+  filter: blur(clamp(1px, 0.2cqw, 3px));
 }
 
 .living-town-landmark {
@@ -275,13 +269,27 @@
 }
 
 .living-town-merchant-anchor {
-  left: 33%;
-  width: 22%;
+  left: -4.7%;
+  bottom: -8%;
+  width: 24%;
 }
 
 .living-town-quest-board-anchor {
-  left: 75%;
+  right: calc(var(--town-world-width) - 98cqw - var(--town-world-width) * 0.057);
+  bottom: -4%;
   width: 25%;
+}
+
+.living-town-merchant-anchor .living-town-contact {
+  left: 20%;
+  right: 19%;
+  bottom: 6.3%;
+}
+
+.living-town-quest-board-anchor .living-town-contact {
+  left: 23%;
+  right: 23%;
+  bottom: -0.5%;
 }
 
 .living-town-planned-landmark {
@@ -306,8 +314,15 @@
 }
 
 .living-town-landmark .living-town-nameplate {
-  top: 32%;
+  top: 55%;
   left: 50%;
+  padding: 0.25em 0.55em;
+  font-size: clamp(0.5rem, 1.1cqw, 0.875rem);
+}
+
+.living-town-merchant-anchor .living-town-nameplate {
+  top: 64%;
+  margin-left: max(0px, calc(2rem - var(--town-world-width) * 0.073));
 }
 
 .living-town-webgl {
