@@ -3,6 +3,7 @@ import {
   CARDS_PATH,
   GAME_PATH,
   HOME_PATH,
+  LOGIN_PATH,
   SINGS_SHEETS,
 } from "@/routes/Routes";
 
@@ -23,6 +24,10 @@ vi.mock("@/infrastructure/ui/screens/SingsSheet", () => ({
 
 vi.mock("@/modules/animationPlayground/ui/AnimationPlayground", () => ({
   AnimationPlayground: () => <div data-testid="animations">Animations</div>,
+}));
+
+vi.mock("@/modules/login/ui/LoginScreen", () => ({
+  LoginScreen: () => <div data-testid="login">Login</div>,
 }));
 
 // helper to import the router AFTER setting location/env
@@ -55,6 +60,18 @@ describe("AppRouter", () => {
     render(<AppRouter />);
     expect(screen.getByTestId("game")).toBeInTheDocument();
   });
+
+  it.each([true, false])(
+    "loads the login screen with DEV=%s and the configured basename",
+    async (development) => {
+      vi.stubEnv("DEV", development);
+      window.history.pushState({}, "", "/fall" + LOGIN_PATH);
+      const AppRouter = await importRouter();
+      render(<AppRouter />);
+      expect(await screen.findByTestId("login")).toBeInTheDocument();
+      expect(screen.queryByTestId("home")).not.toBeInTheDocument();
+    },
+  );
 
   it("renders CardList at CARDS_PATH", async () => {
     window.history.pushState({}, "", "/fall" + CARDS_PATH);
