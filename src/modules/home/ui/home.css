@@ -311,6 +311,22 @@
   box-shadow: 0 0 0 1px var(--hud-edge);
 }
 
+.home-arrival {
+  position: relative;
+  isolation: isolate;
+}
+
+.home-arrival::before {
+  position: absolute;
+  z-index: -1;
+  inset: -1rem -1.5rem;
+  border: 1px solid color-mix(in oklch, var(--hud-edge), transparent 55%);
+  border-radius: 1.5rem;
+  background: color-mix(in oklch, var(--background), transparent 8%);
+  box-shadow: 0 8px 32px #0000001a;
+  content: "";
+}
+
 .home-arrival-mark {
   color: var(--hud-metal);
   border: 1px solid color-mix(in oklch, var(--hud-metal), transparent 65%);

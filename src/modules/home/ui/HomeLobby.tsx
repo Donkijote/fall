@@ -10,6 +10,7 @@ import { BottomSidebar } from "@/infrastructure/ui/components/navbar/BottomSideb
 
 import { HomeHud } from "./HomeHud";
 import { HomeSettings } from "./HomeSettings";
+import { LivingTownScene } from "./LivingTownScene";
 import "./home.css";
 
 export function HomeLobby() {
@@ -27,6 +28,7 @@ export function HomeLobby() {
           avatarUrl: player?.avatar,
         }}
         onSettings={() => setPanel("settings")}
+        scene={<LivingTownScene />}
       >
         <section
           aria-labelledby="home-title"

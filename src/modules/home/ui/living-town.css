@@ -1,0 +1,76 @@
+.living-town-scene {
+  --town-sky-zenith: #252035;
+  --town-sky-dusk: #704759;
+  --town-sky-ember: #c27b68;
+  --town-sky-horizon: #edb780;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--town-sky-zenith);
+}
+
+.living-town-sky {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 57% 64%, #ffd59b70, transparent 42%),
+    linear-gradient(
+      180deg,
+      var(--town-sky-zenith),
+      var(--town-sky-dusk) 34%,
+      var(--town-sky-ember) 56%,
+      var(--town-sky-horizon) 72%,
+      #845260 90%,
+      #3b2c40
+    );
+}
+
+.living-town-clouds {
+  position: absolute;
+  left: -10%;
+  width: 120%;
+  height: 48%;
+  background-repeat: no-repeat;
+}
+
+.living-town-clouds-distant {
+  top: 21%;
+  opacity: 0.65;
+  background-image:
+    radial-gradient(ellipse at 14% 46%, #65455ddd 0%, #795369a6 19%, transparent 40%),
+    radial-gradient(ellipse at 36% 58%, #895b70c9 0%, #a46a7370 14%, transparent 29%),
+    radial-gradient(ellipse at 76% 40%, #6e4b65cc 0%, #99647380 22%, transparent 42%),
+    radial-gradient(ellipse at 92% 67%, #9e6876c9 0%, transparent 30%);
+  transform: rotate(-7deg);
+}
+
+.living-town-clouds-near {
+  top: -13%;
+  height: 63%;
+  background-image:
+    radial-gradient(ellipse at 8% 32%, #211e32 0%, #30263de6 29%, transparent 52%),
+    radial-gradient(ellipse at 37% 12%, #2f263d 0%, #4b344db3 24%, transparent 46%),
+    radial-gradient(ellipse at 86% 22%, #262135 0%, #423047e6 30%, transparent 55%);
+  transform: rotate(5deg);
+}
+
+.living-town-atmosphere {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 45%, transparent 30%, #1b182b66 100%),
+    linear-gradient(180deg, #211b302b, transparent 35%, transparent 65%, #211b30d9);
+}
+
+@media (orientation: portrait) {
+  .living-town-sky {
+    left: -55%;
+    right: -35%;
+  }
+
+  .living-town-clouds {
+    left: -45%;
+    width: 190%;
+  }
+}

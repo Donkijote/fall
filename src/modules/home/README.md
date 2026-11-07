@@ -1,9 +1,14 @@
-# Home HUD
+# Home HUD and Living Town scene
 
 Issue #80 implements the Living Town **HUD**, not the illustrated town (#99).
 The accepted direction uses the existing Cinzel/Spline typography, Lucide icons,
 shared Button/Dialog primitives, and semantic theme tokens, with local bronze
 frames and ember accents. No generated artwork is required for the HUD.
+
+Issue #99 now starts with a static CSS dusk sky in `LivingTownScene`, using the
+existing scene slot. Mountains, the tavern and destination interactions are not
+implemented yet. See `docs/design/home-lobby/living-town.md` for the incremental
+scope, layer manifest and remaining art/visual review requirements.
 
 ## Current behavior
 
