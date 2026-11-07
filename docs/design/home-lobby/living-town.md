@@ -28,18 +28,18 @@ fails. There is no hover tooltip. The accessible button name is Play at the tave
 WebP exports retain source dimensions/alpha, using quality 88, method 6, and total
 about 1167 KiB. Vite fingerprints them; the PNG masters are not emitted in the build.
 
-| Layer                       | Source/export size | Placement                                                       |
-| --------------------------- | ------------------ | --------------------------------------------------------------- |
-| Sky                         | 1672 × 941         | Centered-cover backdrop                                         |
-| Far mountains               | 2172 × 724         | Top 8%, width 108%, left -4%; hazed                             |
-| Near mountains              | 2172 × 724         | Top 22%, same overscan; darker foothills                        |
-| Static haze / optional mist | Reference frame    | Behind the foreground                                           |
-| Ground / plaza              | 1672 × 941         | One unrepeated image, vertically feathered, solid at side edges |
-| Arena                       | 1525 × 1031        | Left 4%, bottom 23%, width 28%; behind tavern                   |
-| Tavern                      | 1536 × 1024        | 32% of contained world width, mirrored inward                   |
-| Merchant                    | 1536 × 1024        | Left -4.7%, bottom -11%, width 24%; in front of tavern          |
-| Quest board                 | 1246 × 1262        | Visible right edge at 99% of stage, bottom -4%, width 20%       |
-| Atmosphere                  | Full stage         | Quiet perimeter, never over HTML HUD                            |
+| Layer                       | Source/export size | Placement                                                                    |
+| --------------------------- | ------------------ | ---------------------------------------------------------------------------- |
+| Sky                         | 1672 × 941         | Centered-cover backdrop                                                      |
+| Far mountains               | 2172 × 724         | Top 8%, width 108%, left -4%; hazed                                          |
+| Near mountains              | 2172 × 724         | Top 22%, same overscan; darker foothills                                     |
+| Static haze / optional mist | Reference frame    | Behind the foreground                                                        |
+| Ground / plaza              | 1672 × 941         | One unrepeated image, vertically feathered, solid at side edges              |
+| Arena                       | 1525 × 1031        | Left 14%, bottom 32% (28% short landscape), width 26%; elevated above tavern |
+| Tavern                      | 1536 × 1024        | 32% of contained world width, mirrored inward                                |
+| Merchant                    | 1536 × 1024        | Left -4.7%, bottom -11%, width 24%; in front of tavern                       |
+| Quest board                 | 1246 × 1262        | Visible right edge at 99% of stage, bottom -4%, width 20%                    |
+| Atmosphere                  | Full stage         | Quiet perimeter, never over HTML HUD                                         |
 
 Foreground destinations share a contained 1600 × 900 world, with width
 `min(scene width, scene height × 16/9)`. The tavern is always 512 reference units
@@ -80,8 +80,13 @@ The newest reference-restored arena and quest booth are selected from
 matches the newest Downloads `quests.png` byte-for-byte, replacing the older
 symmetrical noticeboard. The arena export preserves its native 1525 × 1031 aspect;
 the quest booth keeps its near-square 1246 × 1262 aspect, not a stretched 3:2 box.
-The arena sits in the upper-left district behind the tavern, with its foundation
-feathered into the hillside. The earlier `arena.png` study is not used at runtime.
+The arena sits higher in the upper-left district and shifts toward the square,
+so its facade reads above and beside the tavern instead of being buried behind it.
+Its slightly smaller scale and feathered foundation suggest an elevated, more
+distant terrace. Short landscape screens lower its anchor slightly for header
+clearance. Narrow landscapes with the HUD's two-row header use 16% bottom clearance
+(10% at heights up to 375px), rather than hiding the Arena badge behind resources.
+The earlier `arena.png` study is not used at runtime.
 
 The smaller
 merchant overlaps the tavern's lower-left facade, with its painted silhouette
@@ -89,7 +94,8 @@ at the left screen border rather than detached in the square. The noticeboard's
 painted right edge follows the stage's right border with 1% breathing room, even
 when the contained foreground world is narrower than an ultrawide screen.
 Both sit slightly forward of the tavern. The Merchant retains its inward mirror
-and adds a restrained 14-degree CSS perspective adjustment around its foot line;
+and adds a restrained 24-degree CSS perspective adjustment around its foot line,
+with perspective depth proportional to world width so the turn is stable across resolutions;
 this is a projected sprite, not newly generated side geometry. The latest Quests
 art already faces left into the square and must not be mirrored.
 
@@ -101,8 +107,11 @@ for a future focal point, with the upper town reserved for later landmarks.
 
 All three planned landmarks use permanent bronze nameplates. Merchant and Quests
 plaques sit on their roofs at 32% of each native image height; Arena uses 38%.
-The merchant plaque receives only a minimum left-edge inset
-on narrow screens to keep the text and bronze ends visible.
+The Merchant plaque centres at 52% of its image box to follow the projected roof,
+with only a minimum left-edge inset on narrow screens to keep its bronze ends visible.
+At widths of at least 1024px and heights of at least 601px, planned-landmark badge
+type grows from 16px to 24px and tavern type from 16px to 26px. Compact/short
+landscape badges retain their smaller sizing to avoid covering the artwork or HUD.
 They are disabled buttons announced as coming soon, matching the existing planned
 HUD destinations. They do not open the game picker or introduce shop/quest logic,
 hover tooltips, active glows or additional tab stops. Nameplates survive image

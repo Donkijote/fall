@@ -20,7 +20,10 @@ and the latest Quests booth at the right screen border share the same world-rela
 scale, grading and permanent roof nameplates. The Arena sits behind the tavern in
 the upper-left district. These three destinations are disabled and announced as coming soon;
 they add no game/shop/quest behavior. The Merchant overlaps the tavern at the left
-border with a subtle inward perspective adjustment. Detached oval ground shadows
+border with a subtle inward perspective adjustment and a plaque centred on its
+projected roof. Desktop badges scale up for readability. The Arena is raised and
+shifted toward the square so its facade reads above and beside the tavern instead
+of being mostly concealed by it. Detached oval ground shadows
 are removed, and portrait paving extends beneath the foreground feet rather than
 ending above the Merchant. New assets retain their own native proportions.
 The future castle is not implemented. See
