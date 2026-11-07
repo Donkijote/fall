@@ -1,5 +1,10 @@
 # Home lobby exploration · GHI#80
 
+> **Implementation:** the landscape-first HUD now lives in `src/modules/home`.
+> See [its integration guide](../../../src/modules/home/README.md) for resource
+> presentation, placeholder shortcuts, and the separate scene contract for #99.
+> The HTML studies below are historical explorations, not the implemented UI.
+
 > **Updated direction:** adventure RPG with cards and many future modes.
 > The Hearth visual family is preferred. See [the adventure hub iteration](adventure-hub.md)
 > and open `adventure-hub.html` for three revised world-based compositions inspired
