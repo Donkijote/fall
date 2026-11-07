@@ -6,6 +6,8 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 
 import { getMountainScale, mountainFrame, mountainLayers } from "./mountainModel";
 import type { MountainPoint } from "./mountainModel";
+import { Tavern } from "./Tavern";
+import { getTavernPlacement } from "./tavernModel";
 
 type SceneProps = {
   compact: boolean;
@@ -92,28 +94,23 @@ function MountainPolygon({
           fragmentShader={mountainFragment}
           uniforms={uniforms}
           transparent
-          depthTest={false}
+          depthTest
           depthWrite={false}
         />
       ) : (
-        <meshBasicMaterial
-          color={top}
-          transparent
-          opacity={opacity}
-          depthTest={false}
-          depthWrite={false}
-        />
+        <meshBasicMaterial color={top} transparent opacity={opacity} depthTest depthWrite={false} />
       )}
     </mesh>
   );
 }
 
-function MountainWorld({ onReady, onFailure }: Pick<SceneProps, "onReady" | "onFailure">) {
+function LivingTownWorld({ onReady, onFailure }: Pick<SceneProps, "onReady" | "onFailure">) {
   const { gl, viewport } = useThree();
   const mist = useRef<ShaderMaterial>(null);
   const ready = useRef(false);
   const uniforms = useMemo(() => ({ uTime: { value: 0 } }), []);
   const scale = getMountainScale(viewport.width, viewport.height);
+  const tavern = getTavernPlacement(viewport.width, viewport.height);
 
   useEffect(() => {
     const canvas = gl.domElement;
@@ -135,6 +132,8 @@ function MountainWorld({ onReady, onFailure }: Pick<SceneProps, "onReady" | "onF
 
   return (
     <>
+      <ambientLight color="#c7b9ce" intensity={1.1} />
+      <directionalLight color="#ffd5a0" position={[-4, 7, 8]} intensity={2.1} />
       <group scale={scale}>
         {mountainLayers.map((layer, index) => (
           <group key={layer.id} position-z={index}>
@@ -152,7 +151,15 @@ function MountainWorld({ onReady, onFailure }: Pick<SceneProps, "onReady" | "onF
           </group>
         ))}
       </group>
-      <mesh position-z={5}>
+      <group scale={scale}>
+        <group
+          position={[tavern.horizontal - 800, 450 - tavern.vertical, 380]}
+          scale={tavern.scale}
+        >
+          <Tavern />
+        </group>
+      </group>
+      <mesh position-z={0.5}>
         <planeGeometry args={[viewport.width, viewport.height]} />
         <shaderMaterial
           ref={mist}
@@ -160,7 +167,7 @@ function MountainWorld({ onReady, onFailure }: Pick<SceneProps, "onReady" | "onF
           vertexShader={mistVertex}
           fragmentShader={mistFragment}
           transparent
-          depthTest={false}
+          depthTest
           depthWrite={false}
         />
       </mesh>
@@ -168,7 +175,7 @@ function MountainWorld({ onReady, onFailure }: Pick<SceneProps, "onReady" | "onF
   );
 }
 
-export default function MountainCanvas({ compact, visible, onReady, onFailure }: SceneProps) {
+export default function LivingTownCanvas({ compact, visible, onReady, onFailure }: SceneProps) {
   return (
     <Canvas
       orthographic
@@ -177,7 +184,7 @@ export default function MountainCanvas({ compact, visible, onReady, onFailure }:
       frameloop={visible ? "always" : "never"}
       gl={{
         alpha: true,
-        antialias: false,
+        antialias: !compact,
         powerPreference: "low-power",
         failIfMajorPerformanceCaveat: true,
       }}
@@ -187,7 +194,7 @@ export default function MountainCanvas({ compact, visible, onReady, onFailure }:
       flat
       fallback={null}
     >
-      <MountainWorld onReady={onReady} onFailure={onFailure} />
+      <LivingTownWorld onReady={onReady} onFailure={onFailure} />
     </Canvas>
   );
 }

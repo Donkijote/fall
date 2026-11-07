@@ -56,12 +56,29 @@
 }
 
 .living-town-mountains,
+.living-town-tavern-fallback,
 .living-town-webgl {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
+}
+
+.living-town-tavern-art {
+  transform: translate(87px, 319px) scale(0.68);
+}
+
+.living-town-scene:has(.living-town-webgl[data-ready="true"]) .living-town-tavern-fallback {
+  visibility: hidden;
+}
+
+.living-town-ground {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 16% 73%, #de8c3c24, transparent 20%),
+    linear-gradient(180deg, transparent 64%, #30272c55 82%, #211f2ba6);
 }
 
 .living-town-webgl {
@@ -87,6 +104,10 @@
 }
 
 @media (orientation: portrait) {
+  .living-town-tavern-art {
+    transform: translate(481px, 402px) scale(0.58);
+  }
+
   .living-town-sky {
     left: -55%;
     right: -35%;

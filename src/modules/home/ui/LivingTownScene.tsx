@@ -4,11 +4,12 @@ import type { ReactNode } from "react";
 import { useAtmospherePreferences } from "@/infrastructure/ui/hooks/useAtmospherePreferences";
 
 import { MountainBackdrop } from "./scene/MountainBackdrop";
+import { TavernBackdrop } from "./scene/TavernBackdrop";
 import "./living-town.css";
 
-const MountainCanvas = lazy(() => import("./scene/MountainCanvas"));
+const LivingTownCanvas = lazy(() => import("./scene/LivingTownCanvas"));
 
-class MountainBoundary extends Component<
+class SceneBoundary extends Component<
   { children: ReactNode; onFailure: () => void },
   { failed: boolean }
 > {
@@ -27,7 +28,7 @@ class MountainBoundary extends Component<
   }
 }
 
-function MountainEnhancement({
+function SceneEnhancement({
   compact,
   visible,
   onFailure,
@@ -41,16 +42,16 @@ function MountainEnhancement({
 
   return (
     <div className="living-town-webgl" data-ready={ready}>
-      <MountainBoundary onFailure={onFailure}>
+      <SceneBoundary onFailure={onFailure}>
         <Suspense fallback={null}>
-          <MountainCanvas
+          <LivingTownCanvas
             compact={compact}
             visible={visible}
             onReady={onReady}
             onFailure={onFailure}
           />
         </Suspense>
-      </MountainBoundary>
+      </SceneBoundary>
     </div>
   );
 }
@@ -66,9 +67,11 @@ export function LivingTownScene() {
       <div className="living-town-clouds living-town-clouds-distant" />
       <div className="living-town-clouds living-town-clouds-near" />
       <MountainBackdrop />
+      <TavernBackdrop />
       {animate && !failed && (
-        <MountainEnhancement compact={compact} visible={visible} onFailure={onFailure} />
+        <SceneEnhancement compact={compact} visible={visible} onFailure={onFailure} />
       )}
+      <div className="living-town-ground" />
       <div className="living-town-mountain-haze" />
       <div className="living-town-atmosphere" />
     </div>

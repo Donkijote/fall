@@ -79,6 +79,7 @@ test("composes the decorative Living Town scenery beneath the existing HUD and P
   expect(town).toHaveAttribute("aria-hidden", "true");
   expect(town?.querySelector('[data-slot="living-town-sky"]')).toBeInTheDocument();
   expect(town?.querySelector('[data-slot="living-town-mountains"]')).toBeInTheDocument();
+  expect(town?.querySelector('[data-slot="living-town-tavern"]')).toBeInTheDocument();
   expect(town?.querySelector("button, a, [tabindex], canvas, img")).toBeNull();
   expect(sceneSlot).not.toContainElement(screen.getByRole("banner", { name: "Player HUD" }));
   expect(sceneSlot).not.toContainElement(screen.getByRole("button", { name: "Play" }));

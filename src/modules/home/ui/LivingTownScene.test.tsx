@@ -4,7 +4,7 @@ import { LivingTownScene } from "./LivingTownScene";
 
 const renderer = vi.hoisted(() => ({ crash: false }));
 
-vi.mock("./scene/MountainCanvas", async () => {
+vi.mock("./scene/LivingTownCanvas", async () => {
   const { useEffect } = await import("react");
   return {
     default: ({
@@ -82,6 +82,10 @@ test("keeps decorative SVG mountains behind the lazily enhanced scene", async ()
     expect(container.querySelector(".living-town-webgl")).toHaveAttribute("data-ready", "true"),
   );
   expect(mountains).toBeInTheDocument();
+  expect(container.querySelector('[data-slot="living-town-tavern"]')).toHaveAttribute(
+    "aria-hidden",
+    "true",
+  );
   expect(screen.queryByRole("img")).not.toBeInTheDocument();
 });
 
@@ -95,6 +99,7 @@ test.each(["reduced motion", "data saving", "missing WebGL"])(
     expect(screen.queryByTestId("mountain-renderer")).not.toBeInTheDocument();
     expect(container.querySelector('[data-slot="living-town-sky"]')).toBeInTheDocument();
     expect(container.querySelectorAll("[data-mountain-layer]")).toHaveLength(3);
+    expect(container.querySelector('[data-slot="living-town-tavern"]')).toBeInTheDocument();
   },
 );
 
@@ -123,6 +128,7 @@ test("retains the fallback permanently after a renderer or context failure", asy
   fireEvent.click(await screen.findByTestId("mountain-renderer"));
   expect(container.querySelector(".living-town-webgl")).not.toBeInTheDocument();
   expect(container.querySelectorAll("[data-mountain-layer]")).toHaveLength(3);
+  expect(container.querySelector('[data-slot="living-town-tavern"]')).toBeInTheDocument();
   act(() => compact.set(true));
   expect(screen.queryByTestId("mountain-renderer")).not.toBeInTheDocument();
 });
@@ -146,8 +152,9 @@ test("uses independent gradient IDs when two static backdrops are mounted", () =
       <LivingTownScene />
     </>,
   );
-  const ids = [...container.querySelectorAll("linearGradient")].map((gradient) => gradient.id);
-  expect(new Set(ids).size).toBe(6);
+  const ids = [...container.querySelectorAll("svg [id]")].map((definition) => definition.id);
+  expect(new Set(ids).size).toBe(ids.length);
+  expect(container.querySelectorAll('[data-slot="living-town-tavern"]')).toHaveLength(2);
   for (const polygon of container.querySelectorAll('polygon[fill^="url"]')) {
     const id = polygon.getAttribute("fill")!.slice(5, -1);
     expect(document.getElementById(id)).toBeInTheDocument();
