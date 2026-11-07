@@ -5,10 +5,13 @@ The accepted direction uses the existing Cinzel/Spline typography, Lucide icons,
 shared Button/Dialog primitives, and semantic theme tokens, with local bronze
 frames and ember accents. No generated artwork is required for the HUD.
 
-Issue #99 now starts with a static CSS dusk sky in `LivingTownScene`, using the
-existing scene slot. Mountains, the tavern and destination interactions are not
-implemented yet. See `docs/design/home-lobby/living-town.md` for the incremental
-scope, layer manifest and remaining art/visual review requirements.
+Issue #99 starts with a CSS dusk sky and three faceted mountain ridgelines in
+`LivingTownScene`, using the existing scene slot. An always-on SVG mountain
+backdrop is progressively enhanced by lazy React Three Fiber meshes and drifting
+shader mist, respecting motion/data preferences and renderer failures. The
+tavern and destination interactions are not implemented yet. See
+`docs/design/home-lobby/living-town.md` for the incremental scope, layer manifest
+and remaining art/visual review requirements.
 
 ## Current behavior
 

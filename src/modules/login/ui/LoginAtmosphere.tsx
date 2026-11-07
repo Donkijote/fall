@@ -2,8 +2,7 @@ import { Component, lazy, Suspense, useCallback, useState } from "react";
 import type { ReactNode } from "react";
 
 import mountainCastle from "@/assets/login/mountain-castle.png";
-
-import { useAtmospherePreferences } from "./useAtmospherePreferences";
+import { useAtmospherePreferences } from "@/infrastructure/ui/hooks/useAtmospherePreferences";
 
 const AtmosphereCanvas = lazy(() => import("./scene/AtmosphereCanvas"));
 

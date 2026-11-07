@@ -70,7 +70,7 @@ test("replaces the old navigation with the game HUD while retaining a usable Pla
   expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 });
 
-test("composes the decorative Living Town sky beneath the existing HUD and Play entry", () => {
+test("composes the decorative Living Town scenery beneath the existing HUD and Play entry", () => {
   const { container } = renderLobby();
   const sceneSlot = container.querySelector('[data-slot="home-scene"]');
   const town = container.querySelector('[data-slot="living-town-scene"]');
@@ -78,6 +78,7 @@ test("composes the decorative Living Town sky beneath the existing HUD and Play 
   expect(sceneSlot).toContainElement(town as HTMLElement);
   expect(town).toHaveAttribute("aria-hidden", "true");
   expect(town?.querySelector('[data-slot="living-town-sky"]')).toBeInTheDocument();
+  expect(town?.querySelector('[data-slot="living-town-mountains"]')).toBeInTheDocument();
   expect(town?.querySelector("button, a, [tabindex], canvas, img")).toBeNull();
   expect(sceneSlot).not.toContainElement(screen.getByRole("banner", { name: "Player HUD" }));
   expect(sceneSlot).not.toContainElement(screen.getByRole("button", { name: "Play" }));

@@ -55,6 +55,29 @@
   transform: rotate(5deg);
 }
 
+.living-town-mountains,
+.living-town-webgl {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.living-town-webgl {
+  opacity: 0;
+}
+
+.living-town-webgl[data-ready="true"] {
+  opacity: 1;
+}
+
+.living-town-mountain-haze {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 45%, #d49a9824 57%, transparent 74%);
+}
+
 .living-town-atmosphere {
   position: absolute;
   inset: 0;
