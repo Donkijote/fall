@@ -14,7 +14,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { User } from "@/domain/entities/User";
 
-export const WelcomeModal = () => {
+type WelcomeModalProps = { onSave?: (user: User) => void };
+
+export const WelcomeModal = ({ onSave }: WelcomeModalProps) => {
   const [username, setUsername] = useState("");
   const [isOpen, setIsOpen] = useState(() => !StorageService.get<User>(StorageKeys.FALL_USER));
 
@@ -28,6 +30,7 @@ export const WelcomeModal = () => {
       avatar: "",
     };
     StorageService.set(StorageKeys.FALL_USER, user);
+    onSave?.(user);
     setIsOpen(false);
   };
 

@@ -1,0 +1,154 @@
+.home-screen {
+  --hud-bronze: oklch(0.62 0.075 65);
+  --hud-metal: color-mix(in oklch, var(--hud-bronze), var(--foreground) 24%);
+  --hud-surface: color-mix(in oklch, var(--background) 93%, var(--primary));
+  --hud-raised: color-mix(in oklch, var(--card) 85%, var(--hud-bronze));
+  --hud-edge: color-mix(in oklch, var(--hud-metal) 60%, var(--background));
+  background: var(--background);
+}
+
+.home-scene-layer {
+  background:
+    radial-gradient(
+      ellipse at 50% 112%,
+      color-mix(in oklch, var(--primary), transparent 88%),
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse at 50% 35%,
+      color-mix(in oklch, var(--hud-bronze), transparent 94%),
+      transparent 65%
+    ),
+    var(--background);
+}
+
+.home-hud-layer {
+  padding-top: max(1rem, env(safe-area-inset-top));
+  padding-right: max(1rem, env(safe-area-inset-right));
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+  padding-left: max(1rem, env(safe-area-inset-left));
+}
+
+.hud-player {
+  border: 1px solid var(--hud-edge);
+  border-radius: 3rem 0.65rem 1.5rem 3rem;
+  background: linear-gradient(110deg, var(--hud-raised), var(--hud-surface) 75%);
+  box-shadow:
+    inset 0 1px color-mix(in oklch, var(--hud-metal), transparent 65%),
+    0 4px 18px #00000012;
+}
+
+.hud-portrait {
+  border: 2px solid var(--hud-metal);
+  color: var(--hud-metal);
+  background: radial-gradient(circle at 45% 30%, var(--hud-raised), var(--hud-surface));
+  box-shadow:
+    inset 0 0 0 3px var(--hud-surface),
+    0 0 0 2px var(--hud-edge);
+}
+
+.hud-player-name {
+  color: var(--foreground);
+}
+
+.hud-player-caption,
+.hud-resource-label,
+.hud-shortcut-status {
+  color: var(--muted-foreground);
+}
+
+.hud-resource {
+  border: 1px solid var(--hud-edge);
+  border-radius: 2rem 0.5rem 0.5rem 2rem;
+  background: linear-gradient(var(--hud-raised), var(--hud-surface));
+  box-shadow:
+    inset 0 1px color-mix(in oklch, var(--hud-metal), transparent 70%),
+    0 3px 12px #00000012;
+}
+
+.hud-resource-emblem {
+  border-radius: 50%;
+  color: var(--hud-metal);
+  background: color-mix(in oklch, var(--hud-bronze), transparent 86%);
+  box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--hud-metal), transparent 60%);
+}
+
+.hud-resource[data-resource="energy"] .hud-resource-emblem {
+  color: var(--primary);
+  background: color-mix(in oklch, var(--primary), transparent 90%);
+}
+
+.hud-resource-track {
+  background: color-mix(in oklch, var(--foreground), transparent 90%);
+}
+
+.hud-resource-track > span {
+  background: linear-gradient(
+    90deg,
+    var(--primary),
+    color-mix(in oklch, var(--primary), var(--hud-metal) 35%)
+  );
+}
+
+.hud-settings-trigger {
+  color: var(--hud-metal);
+  border: 1px solid var(--hud-edge);
+  background: radial-gradient(circle at 40% 25%, var(--hud-raised), var(--hud-surface));
+  box-shadow:
+    inset 0 0 0 3px var(--hud-surface),
+    inset 0 0 0 4px color-mix(in oklch, var(--hud-edge), transparent 40%);
+}
+
+.hud-settings-trigger:hover {
+  color: var(--foreground);
+  background: var(--hud-raised);
+}
+
+.hud-shortcut {
+  color: var(--foreground);
+}
+
+.hud-shortcut-emblem {
+  border: 1px solid var(--hud-metal);
+  color: var(--hud-metal);
+  background: radial-gradient(circle at 45% 20%, var(--hud-raised), var(--hud-surface) 80%);
+  box-shadow:
+    inset 0 0 0 3px var(--hud-surface),
+    inset 0 0 0 4px var(--hud-edge),
+    0 5px 15px #00000012;
+}
+
+.hud-shortcut-lock {
+  color: var(--muted-foreground);
+  background: var(--hud-surface);
+  box-shadow: 0 0 0 1px var(--hud-edge);
+}
+
+.home-arrival-mark {
+  color: var(--hud-metal);
+  border: 1px solid color-mix(in oklch, var(--hud-metal), transparent 65%);
+  background: radial-gradient(
+    circle,
+    color-mix(in oklch, var(--hud-bronze), transparent 90%),
+    transparent 75%
+  );
+}
+
+.home-play {
+  background: oklch(from var(--primary) calc(l - 0.06) calc(c - 0.03) h);
+  border-radius: 0.5rem 1.25rem 0.5rem 1.25rem;
+  border: 1px solid color-mix(in oklch, var(--primary), var(--hud-metal) 35%);
+  box-shadow:
+    inset 0 1px color-mix(in oklch, var(--primary-foreground), transparent 80%),
+    0 3px 15px color-mix(in oklch, var(--primary), transparent 90%);
+}
+
+.home-play:hover {
+  background: oklch(from var(--primary) calc(l - 0.035) calc(c - 0.03) h);
+}
+
+.hud-settings-trigger:focus-visible,
+.home-play:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 4px;
+}
