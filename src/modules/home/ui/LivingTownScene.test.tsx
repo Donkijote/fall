@@ -112,6 +112,7 @@ test.each(["reduced motion", "data saving", "missing WebGL"])(
     expect(container.querySelector('[data-slot="living-town-sky"]')).toBeInTheDocument();
     expect(container.querySelectorAll("img")).toHaveLength(4);
     expect(container.querySelector('[data-slot="living-town-tavern"]')).toBeInTheDocument();
+    expect(container.querySelector(".living-town-embers")).not.toBeInTheDocument();
   },
 );
 
@@ -174,7 +175,7 @@ test("isolates image failures and keeps a CSS backdrop when all artwork fails", 
   expect(container.querySelector("a, [tabindex]")).toBeNull();
 });
 
-test("places the inward-facing tavern and tiled plaza outside the cover-cropped backdrop", () => {
+test("places the inward-facing tavern and single plaza outside the cover-cropped backdrop", () => {
   motion.matches = true;
   const { container } = render(<LivingTownScene />);
   const world = container.querySelector('[data-slot="living-town-world"]');
@@ -185,7 +186,7 @@ test("places the inward-facing tavern and tiled plaza outside the cover-cropped 
   expect(container.querySelector(".living-town-frame")).not.toContainElement(world as HTMLElement);
   expect(container.querySelector(".living-town-frame")).not.toContainElement(plaza as HTMLElement);
   expect((plaza as HTMLElement).style.backgroundImage).toContain(townArtwork[3].source);
-  expect(townArtwork[3]).toMatchObject({ width: 3344, height: 602 });
+  expect(townArtwork[3]).toMatchObject({ width: 1672, height: 941 });
 });
 
 test("keeps the tavern action available when images fail without adding a second Play entry", () => {
@@ -195,8 +196,33 @@ test("keeps the tavern action available when images fail without adding a second
   for (const image of container.querySelectorAll("img")) fireEvent.error(image);
   const tavern = screen.getByRole("button", { name: "Play at the tavern" });
   expect(tavern).toBeEnabled();
-  expect(tavern).toHaveTextContent("Play Caída");
+  expect(tavern).toHaveTextContent("The Tavern");
   expect(screen.getAllByRole("button")).toHaveLength(1);
   fireEvent.click(tavern);
   expect(onPlay).toHaveBeenCalledOnce();
+});
+
+test("always shows the tavern nameplate without a hover tooltip", () => {
+  motion.matches = true;
+  const { container } = render(<LivingTownScene canPlay onPlay={vi.fn()} />);
+  fireEvent.load(container.querySelector('[data-slot="living-town-tavern"]')!);
+  expect(container.querySelector(".living-town-tavern-nameplate")).toHaveTextContent("The Tavern");
+  expect(
+    container.querySelector('[role="tooltip"], [title], .living-town-tavern-label'),
+  ).toBeNull();
+  expect(screen.getByRole("button", { name: "Play at the tavern" })).toBeEnabled();
+});
+
+test("limits embers on compact devices, pauses hidden tabs and removes them for reduced motion", async () => {
+  const { container } = render(<LivingTownScene canPlay onPlay={vi.fn()} />);
+  await screen.findByTestId("mountain-renderer");
+  expect(container.querySelectorAll(".living-town-ember")).toHaveLength(6);
+  act(() => compact.set(true));
+  expect(container.querySelectorAll(".living-town-ember")).toHaveLength(4);
+  vi.spyOn(document, "hidden", "get").mockReturnValue(true);
+  fireEvent(document, new Event("visibilitychange"));
+  expect(container.querySelector(".living-town-embers")).toHaveAttribute("data-visible", "false");
+  act(() => motion.set(true));
+  expect(container.querySelector(".living-town-embers")).not.toBeInTheDocument();
+  expect(container.querySelector(".living-town-tavern-nameplate")).toHaveTextContent("The Tavern");
 });

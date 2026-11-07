@@ -9,6 +9,15 @@ import "./living-town.css";
 
 const LivingTownCanvas = lazy(() => import("./scene/LivingTownCanvas"));
 
+const tavernEmbers = [
+  { left: "34%", top: "72%", animationDelay: "-1s" },
+  { left: "47%", top: "61%", animationDelay: "-3.5s" },
+  { left: "65%", top: "66%", animationDelay: "-5s" },
+  { left: "74%", top: "49%", animationDelay: "-2s" },
+  { left: "56%", top: "38%", animationDelay: "-4s" },
+  { left: "28%", top: "54%", animationDelay: "-6s" },
+];
+
 function ArtworkLayer({ artwork }: { artwork: TownArtwork }) {
   const [status, setStatus] = useState("loading");
 
@@ -127,8 +136,15 @@ export function LivingTownScene({
             onClick={onPlay}
           >
             <ArtworkLayer artwork={townArtwork[4]} />
-            <span className="living-town-tavern-label" aria-hidden="true">
-              Play Caída
+            {animate && (
+              <span className="living-town-embers" data-visible={visible} aria-hidden="true">
+                {tavernEmbers.slice(0, compact ? 4 : 6).map((ember) => (
+                  <span key={ember.left} className="living-town-ember" style={ember} />
+                ))}
+              </span>
+            )}
+            <span className="living-town-tavern-nameplate" aria-hidden="true">
+              The Tavern
             </span>
           </button>
         </div>

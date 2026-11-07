@@ -1,5 +1,7 @@
 .living-town-scene {
   --town-world-width: min(100cqw, 177.778cqh);
+  --town-dock-clearance: max(20cqh, 10.5rem);
+  --town-floor-offset: 0px;
   position: absolute;
   inset: 0;
   overflow: hidden;
@@ -72,30 +74,47 @@
 }
 
 .living-town-ground {
-  background: linear-gradient(transparent 58%, #3b3031 76%, #282329);
+  background: linear-gradient(
+    transparent calc(100% - var(--town-floor-offset) - var(--town-world-width) * 0.32),
+    #3b3031 calc(100% - var(--town-floor-offset) - var(--town-world-width) * 0.08),
+    #282329
+  );
 }
 
 .living-town-plaza {
-  top: 58%;
+  bottom: var(--town-floor-offset);
   background-position: center bottom;
-  background-size: calc(var(--town-world-width) * 0.65) auto;
-  background-repeat: repeat;
+  background-size: var(--town-world-width) auto;
+  background-repeat: no-repeat;
   filter: saturate(0.65) brightness(0.7);
-  mask-image: linear-gradient(transparent, #000 42%);
+  mask-image:
+    linear-gradient(
+      transparent calc(100% - var(--town-world-width) * 0.22),
+      #000 calc(100% - var(--town-world-width) * 0.14),
+      #000 calc(100% - var(--town-world-width) * 0.025),
+      transparent
+    ),
+    linear-gradient(
+      90deg,
+      transparent calc(50% - var(--town-world-width) * 0.5),
+      #000 calc(50% - var(--town-world-width) * 0.44),
+      #000 calc(50% + var(--town-world-width) * 0.44),
+      transparent calc(50% + var(--town-world-width) * 0.5)
+    );
+  mask-composite: intersect;
 }
 
 .living-town-world {
   position: absolute;
-  left: 50%;
-  bottom: max(14cqh, 8rem);
+  left: 0;
+  bottom: var(--town-dock-clearance);
   width: var(--town-world-width);
   aspect-ratio: 16 / 9;
-  transform: translateX(-50%);
 }
 
 .living-town-tavern-anchor {
   position: absolute;
-  left: max(1%, 2.75rem);
+  left: -4%;
   bottom: 0;
   width: 32%;
   aspect-ratio: 3 / 2;
@@ -104,9 +123,10 @@
 .living-town-tavern {
   inset: 0;
   width: 100%;
-  filter: saturate(0.83) brightness(0.88);
+  filter: saturate(0.83) brightness(0.88) drop-shadow(0 0 6px #edb96600)
+    drop-shadow(0 0 16px #d2914000);
   transform: scaleX(-1);
-  transition: filter 180ms ease;
+  transition: filter 1400ms ease-in-out;
 }
 
 .living-town-tavern-trigger {
@@ -127,36 +147,104 @@
 }
 
 .living-town-tavern-trigger:not(:disabled):is(:hover, :focus-visible) .living-town-tavern {
-  filter: saturate(0.95) brightness(1.06) drop-shadow(0 0 6px #edb96699)
-    drop-shadow(0 0 16px #d2914055);
+  filter: saturate(0.9) brightness(1) drop-shadow(0 0 6px #edb96666) drop-shadow(0 0 16px #d2914033);
 }
 
 .living-town-tavern-trigger:focus-visible {
+  outline: none;
+}
+
+.living-town-tavern-trigger:focus-visible .living-town-tavern-nameplate {
   outline: 2px solid var(--ring);
-  outline-offset: 3px;
+  outline-offset: 4px;
 }
 
-.living-town-tavern-label {
+.living-town-tavern-nameplate {
   position: absolute;
-  bottom: calc(100% + 0.25rem);
-  left: 50%;
+  top: 47%;
+  left: 60%;
   width: max-content;
-  padding: 0.25rem 0.5rem;
-  border: 1px solid var(--hud-metal);
-  border-radius: 0.5rem;
-  color: var(--foreground);
-  background: var(--hud-surface);
+  padding: 0.3em 0.85em;
+  border: 1px solid #b79756;
+  border-radius: 0.6rem 0.2rem;
+  color: #f2dfb4;
+  background: linear-gradient(110deg, #392b18, #20170f 65%, #302312);
+  box-shadow:
+    inset 0 0 0 2px #20170f,
+    inset 0 0 0 3px #8d713c88,
+    0 3px 6px #130d09aa;
   font-family: var(--font-heading);
-  font-size: 0.75rem;
-  transform: translateX(-50%);
+  font-size: clamp(0.6875rem, 1.4cqw, 1.125rem);
+  font-weight: 600;
+  line-height: 1.25;
+  text-shadow: 0 1px 2px #000;
+  transform: translate(-50%, -50%);
 }
 
-.living-town-tavern-trigger:has([data-status="ready"]) .living-town-tavern-label {
+.living-town-tavern-nameplate::before,
+.living-town-tavern-nameplate::after {
+  position: absolute;
+  top: 50%;
+  width: 0.3em;
+  height: 0.3em;
+  border: 1px solid #b79756;
+  background: #392b18;
+  transform: translateY(-50%) rotate(45deg);
+  content: "";
+}
+
+.living-town-tavern-nameplate::before {
+  left: -0.2em;
+}
+
+.living-town-tavern-nameplate::after {
+  right: -0.2em;
+}
+
+.living-town-embers {
+  position: absolute;
+  inset: 0;
   opacity: 0;
+  pointer-events: none;
+  transition: opacity 1400ms ease-in-out;
 }
 
-.living-town-tavern-trigger:not(:disabled):is(:hover, :focus-visible) .living-town-tavern-label {
-  opacity: 1;
+.living-town-ember {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: #ffdf9e;
+  box-shadow: 0 0 5px 1px #e7ad6277;
+  animation: town-ember-rise 7s ease-in-out infinite paused;
+}
+
+.living-town-tavern-trigger:not(:disabled):is(:hover, :focus-visible) .living-town-embers {
+  opacity: 0.7;
+}
+
+.living-town-tavern-trigger:not(:disabled):is(:hover, :focus-visible)
+  .living-town-embers[data-visible="true"]
+  .living-town-ember {
+  animation-play-state: running;
+}
+
+@keyframes town-ember-rise {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translate(0, 4px);
+  }
+  25% {
+    opacity: 0.7;
+  }
+  75% {
+    opacity: 0.4;
+  }
+  95% {
+    opacity: 0;
+    transform: translate(6px, -26px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -189,8 +277,20 @@
     radial-gradient(ellipse at 42% 50%, transparent 35%, #201b2b55);
 }
 
-@media (max-width: 360px) {
-  .living-town-world {
-    bottom: max(14cqh, 10.5rem);
+@media (orientation: landscape) and (max-height: 600px) {
+  .living-town-scene {
+    --town-dock-clearance: max(5rem, 22cqh);
+  }
+}
+
+@media (orientation: portrait) {
+  .living-town-scene {
+    --town-floor-offset: var(--town-dock-clearance);
+  }
+}
+
+@media (orientation: portrait) and (max-width: 360px) {
+  .living-town-scene {
+    --town-dock-clearance: max(20cqh, 16rem);
   }
 }

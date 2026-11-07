@@ -20,13 +20,11 @@ same scale applies on mobile; there is no portrait-specific landmark enlargement
 ## Runtime exports
 
 The PNG masters above are preserved unchanged. The application imports only
-`.webp` exports (about 522 KiB combined), using `quality=88, method=6`. Sky,
-mountains and tavern retain source dimensions, with alpha for cutouts.
-The plaza instead uses a solid RGB crop `(0, 640, 1672, 941)` mirrored into a
-3344 × 602 repeatable tile. Rebuild it with
-`python scripts/export-living-town-plaza.py` (Pillow required only for export).
-CSS repeats it at 65% of contained world width to keep paving small and its scale
-relative to landmarks consistent. Re-export after changing a master.
+`.webp` exports (about 453 KiB combined), using `quality=88, method=6`.
+All five exports retain source dimensions, with alpha for cutouts. The plaza is
+shown once at contained world width and feathered into the terrain, not repeated
+or reflected. The discarded mirrored tile caused dark bands; its offline helper
+`export-living-town-plaza.py` has been removed. Re-export after changing a master.
 The current implementation uses positioned HTML images for the primary artwork,
 not textured WebGL planes, so reduced-motion and missing-WebGL presentations
 keep exactly the same art. R3F supplies only optional mist behind the foreground.

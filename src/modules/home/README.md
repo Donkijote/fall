@@ -12,9 +12,10 @@ oxblood and bronze direction. Optimized WebP images remain visible independently
 of the optional, lazy React Three Fiber mist. Motion/data preferences, hidden-tab
 pause and renderer failures affect only that enhancement. The HUD layout, theme
 and game-mode behavior are unchanged. The central arrival panel is removed; the
-inward-facing tavern now opens the existing mode picker with hover/focus glow and
-keyboard/touch activation. Tavern and paving share a contained world scale instead
-of oversized mobile/cover zoom. The future castle is not implemented. See
+inward-facing tavern now opens the existing mode picker with a slow hover/focus
+glow, restrained embers, permanent bronze-framed nameplate and keyboard/touch
+activation. Tavern and the single unrepeated paving image share a contained world
+scale instead of oversized mobile/cover zoom. The future castle is not implemented. See
 `docs/design/home-lobby/living-town.md` for the incremental scope, layer manifest
 and remaining art/visual review requirements.
 
@@ -38,8 +39,8 @@ and remaining art/visual review requirements.
 - Settings contains the working theme toggle, Rules and Sings links, and the
   development-only animation playground link. No speculative settings are added.
 - The center remains open for future town landmarks. The tavern is the single
-  Caída entry, disabled until onboarding completes. It has a visible label if the
-  art fails and opens the unchanged mode picker; it does not start a match directly.
+  Caída entry, disabled until onboarding completes. Its permanent The Tavern plaque
+  remains if art fails and opens the unchanged picker; it does not start a match directly.
 
 ## Scene/HUD integration contract for #99
 
