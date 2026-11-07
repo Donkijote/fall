@@ -18,6 +18,46 @@ Use `pnpm lint` to check code with Oxlint and `pnpm lint:fix` to apply safe fixe
 
 Linting and formatting use Vite Plus defaults. The `lint` block in `vite.config.ts` adds browser globals; TypeScript checking runs as part of `pnpm build`. The `fmt` block preserves the custom Tailwind class sorting (using `src/index.css`) and import groups with blank-line separation: unscoped packages and Node built-ins, `@react/*`, `@/*` project aliases, other scoped packages, then relative imports. All other formatting options use the toolchain defaults, including the 100-column print width. Side-effect imports retain their default ordering behavior.
 
+## Cloudflare Deployment
+
+The app is hosted at the domain root on Cloudflare Workers using static assets.
+`wrangler.jsonc` serves `dist` and uses SPA not-found handling so direct requests
+and refreshes on `/login`, `/game`, `/cards`, `/sings`, and `/rules` load the app.
+There is no `/fall` URL prefix or GitHub Pages deployment workflow.
+
+For local deployment, authenticate with `pnpm exec wrangler login`, then run:
+
+```sh
+pnpm deploy:dry-run
+pnpm deploy
+```
+
+Both commands build first. To test Cloudflare routing locally without deploying,
+run `pnpm build` followed by `pnpm preview:cloudflare`.
+The Worker is named `fall` and uses the account's `workers.dev` subdomain;
+no custom domain is configured.
+
+### GitHub Actions
+
+Configure `CLOUDFLARE_API_TOKEN` (scoped to deploying Workers on the target
+account) and `CLOUDFLARE_ACCOUNT_ID` as repository secrets or secrets on the
+`production` GitHub environment. The deployment workflow checks formatting,
+lint, tests, and the build before uploading assets.
+
+- Merging a PR into `main` deploys the current `main` branch automatically.
+- **Deploy to Cloudflare Workers** can also be run manually with a `branch`
+  input, including a PR's head branch such as `chore/ghi#95`.
+- Manual branch deployments replace the same production Worker; they are not
+  isolated preview environments. Only select trusted branches, since the
+  deployment runs their build scripts with access to deployment credentials.
+- Manual runs become available once the workflow exists on the default branch
+  (`develop`). Then use the Actions UI or
+  `gh workflow run deploy-cloudflare.yml -f 'branch=chore/ghi#95'`.
+- Existing release/versioning and release-sync workflows are unchanged.
+
+Disable GitHub Pages in the repository's **Settings → Pages** after migration.
+The old remote `deployment` branch is not updated or deleted by this change.
+
 ## UI Components
 
 The interface uses the installed shadcn/ui `base-luma` preset with Base UI and Lucide icons.
@@ -172,7 +212,7 @@ The name Fall is a literal translation from the spanish word **Caída**
 ## Animation playground (development only)
 
 Run `pnpm dev`, then choose **Animation playground** on the home screen or open
-`/fall/dev/animations`. The route, home link, scene modules, and demo assets are
+`/dev/animations`. The route, home link, scene modules, and demo assets are
 excluded from production builds.
 
 All studies use the app’s Spanish card SVG artwork on the animated 3D mesh, with

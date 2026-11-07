@@ -45,7 +45,6 @@ export default defineConfig({
       "@": path.resolve(import.meta.dirname, "./src"),
     },
   },
-  base: "/fall",
   plugins: lazyPlugins(() => [react({ compiler: true }), tailwindcss()]),
   server: {
     open: true,

@@ -11,7 +11,7 @@ import { LoginScreen } from "./LoginScreen";
 
 function render(element: ReactNode) {
   return renderComponent(
-    <MemoryRouter basename="/fall" initialEntries={[`/fall${LOGIN_PATH}`]}>
+    <MemoryRouter initialEntries={[LOGIN_PATH]}>
       <Routes>
         <Route path={LOGIN_PATH} element={element} />
         <Route path={HOME_PATH} element={<h1>Main screen</h1>} />

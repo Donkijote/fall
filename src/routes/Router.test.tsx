@@ -4,6 +4,7 @@ import {
   GAME_PATH,
   HOME_PATH,
   LOGIN_PATH,
+  RULES_PATH,
   SINGS_SHEETS,
 } from "@/routes/Routes";
 
@@ -22,6 +23,10 @@ vi.mock("@/infrastructure/ui/screens/SingsSheet", () => ({
   SingsSheetScreen: () => <div data-testid="sings">Sings</div>,
 }));
 
+vi.mock("@/infrastructure/ui/screens/rules/Rules", () => ({
+  RulesScreen: () => <div data-testid="rules">Rules</div>,
+}));
+
 vi.mock("@/modules/animationPlayground/ui/AnimationPlayground", () => ({
   AnimationPlayground: () => <div data-testid="animations">Animations</div>,
 }));
@@ -37,9 +42,6 @@ async function importRouter() {
 }
 
 describe("AppRouter", () => {
-  beforeEach(() => {
-    vi.stubEnv("BASE_URL", "/fall/");
-  });
   afterEach(() => {
     cleanup();
     vi.restoreAllMocks();
@@ -48,24 +50,24 @@ describe("AppRouter", () => {
   });
 
   it("renders HomeScreen at HOME_PATH", async () => {
-    window.history.pushState({}, "", "/fall" + HOME_PATH);
+    window.history.pushState({}, "", HOME_PATH);
     const AppRouter = await importRouter();
     render(<AppRouter />);
     expect(screen.getByTestId("home")).toBeInTheDocument();
   });
 
   it("renders GameScreen at GAME_PATH", async () => {
-    window.history.pushState({}, "", "/fall" + GAME_PATH);
+    window.history.pushState({}, "", GAME_PATH);
     const AppRouter = await importRouter();
     render(<AppRouter />);
     expect(screen.getByTestId("game")).toBeInTheDocument();
   });
 
   it.each([true, false])(
-    "loads the login screen with DEV=%s and the configured basename",
+    "loads the login screen at the domain root with DEV=%s",
     async (development) => {
       vi.stubEnv("DEV", development);
-      window.history.pushState({}, "", "/fall" + LOGIN_PATH);
+      window.history.pushState({}, "", LOGIN_PATH);
       const AppRouter = await importRouter();
       render(<AppRouter />);
       expect(await screen.findByTestId("login")).toBeInTheDocument();
@@ -74,14 +76,14 @@ describe("AppRouter", () => {
   );
 
   it("renders CardList at CARDS_PATH", async () => {
-    window.history.pushState({}, "", "/fall" + CARDS_PATH);
+    window.history.pushState({}, "", CARDS_PATH);
     const AppRouter = await importRouter();
     render(<AppRouter />);
     expect(screen.getByTestId("cards")).toBeInTheDocument();
   });
 
   it("renders SingsSheetScreen at SINGS_SHEETS", async () => {
-    window.history.pushState({}, "", "/fall" + SINGS_SHEETS);
+    window.history.pushState({}, "", SINGS_SHEETS);
     const AppRouter = await importRouter();
     render(<AppRouter />);
     expect(screen.getByTestId("sings")).toBeInTheDocument();
@@ -89,7 +91,7 @@ describe("AppRouter", () => {
 
   it("loads the animation playground in development", async () => {
     vi.stubEnv("DEV", true);
-    window.history.pushState({}, "", "/fall" + ANIMATION_PLAYGROUND_PATH);
+    window.history.pushState({}, "", ANIMATION_PLAYGROUND_PATH);
     const AppRouter = await importRouter();
     render(<AppRouter />);
     expect(await screen.findByTestId("animations")).toBeInTheDocument();
@@ -97,7 +99,7 @@ describe("AppRouter", () => {
 
   it("does not register the animation playground in production", async () => {
     vi.stubEnv("DEV", false);
-    window.history.pushState({}, "", "/fall" + ANIMATION_PLAYGROUND_PATH);
+    window.history.pushState({}, "", ANIMATION_PLAYGROUND_PATH);
     const AppRouter = await importRouter();
     const error = vi.spyOn(console, "error").mockImplementation(() => {});
     render(<AppRouter />);
@@ -106,13 +108,10 @@ describe("AppRouter", () => {
     error.mockRestore();
   });
 
-  it("honors basename from import.meta.env.BASE_URL (trims trailing slashes)", async () => {
-    // Simulate a base path like /fall/
-    vi.stubEnv("BASE_URL", "/fall/");
-    // navigate to /fall/<route>
-    window.history.pushState({}, "", `/fall${GAME_PATH}`);
+  it("renders RulesScreen at RULES_PATH", async () => {
+    window.history.pushState({}, "", RULES_PATH);
     const AppRouter = await importRouter();
     render(<AppRouter />);
-    expect(screen.getByTestId("game")).toBeInTheDocument();
+    expect(screen.getByTestId("rules")).toBeInTheDocument();
   });
 });

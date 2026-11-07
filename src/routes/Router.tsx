@@ -17,51 +17,46 @@ import {
   SINGS_SHEETS,
 } from "./Routes";
 
-const basename = (import.meta.env.BASE_URL ?? "/").replace(/\/+$/, "");
-
-const router = createBrowserRouter(
-  [
-    {
-      path: LOGIN_PATH,
-      lazy: async () => {
-        const { LoginScreen } = await import("@/modules/login/ui/LoginScreen");
-        return { Component: LoginScreen };
-      },
+const router = createBrowserRouter([
+  {
+    path: LOGIN_PATH,
+    lazy: async () => {
+      const { LoginScreen } = await import("@/modules/login/ui/LoginScreen");
+      return { Component: LoginScreen };
     },
-    ...(import.meta.env.DEV
-      ? [
-          {
-            path: ANIMATION_PLAYGROUND_PATH,
-            lazy: async () => {
-              const { AnimationPlayground } =
-                await import("@/modules/animationPlayground/ui/AnimationPlayground");
-              return { Component: AnimationPlayground };
-            },
+  },
+  ...(import.meta.env.DEV
+    ? [
+        {
+          path: ANIMATION_PLAYGROUND_PATH,
+          lazy: async () => {
+            const { AnimationPlayground } =
+              await import("@/modules/animationPlayground/ui/AnimationPlayground");
+            return { Component: AnimationPlayground };
           },
-        ]
-      : []),
-    {
-      path: HOME_PATH,
-      element: <HomeScreen />,
-    },
-    {
-      path: GAME_PATH,
-      element: <GameScreen />,
-    },
-    {
-      path: CARDS_PATH,
-      element: <CardList />,
-    },
-    {
-      path: SINGS_SHEETS,
-      element: <SingsSheetScreen />,
-    },
-    {
-      path: RULES_PATH,
-      element: <RulesScreen />,
-    },
-  ],
-  { basename },
-);
+        },
+      ]
+    : []),
+  {
+    path: HOME_PATH,
+    element: <HomeScreen />,
+  },
+  {
+    path: GAME_PATH,
+    element: <GameScreen />,
+  },
+  {
+    path: CARDS_PATH,
+    element: <CardList />,
+  },
+  {
+    path: SINGS_SHEETS,
+    element: <SingsSheetScreen />,
+  },
+  {
+    path: RULES_PATH,
+    element: <RulesScreen />,
+  },
+]);
 
 export const AppRouter = () => <RouterProvider router={router} />;
