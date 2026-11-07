@@ -7,9 +7,11 @@ test("renders real identity without inventing a level or experience", () => {
   render(<HomeHud player={{ name: "Manuel" }} onSettings={vi.fn()} />);
 
   expect(screen.getByRole("group", { name: "Player identity" })).toHaveTextContent("Manuel");
-  expect(screen.queryByText(/level|xp|lv\./i)).not.toBeInTheDocument();
+  expect(screen.getByText("Level —")).toBeInTheDocument();
+  expect(screen.queryByRole("meter", { name: "Player experience" })).not.toBeInTheDocument();
   expect(screen.getByRole("group", { name: "Energy" })).toHaveTextContent("Not available yet");
   expect(screen.getByRole("group", { name: "Coins" })).toHaveTextContent("Not available yet");
+  expect(screen.getByRole("group", { name: "Diamonds" })).toHaveTextContent("Not available yet");
 });
 
 test("accepts resource display models independently of any game store", () => {
@@ -19,26 +21,72 @@ test("accepts resource display models independently of any game store", () => {
       onSettings={vi.fn()}
       energy={{ value: 60, maximum: 120 }}
       coins={0}
+      diamonds={2480}
     />,
   );
 
   expect(screen.getByRole("meter")).toHaveAttribute("aria-valuenow", "60");
   expect(screen.getByRole("group", { name: "Coins" })).toHaveTextContent("0");
+  expect(screen.getByRole("group", { name: "Diamonds" })).toHaveTextContent("2,480");
 });
 
-test("keeps the four agreed player-system positions visible but explicitly unavailable", async () => {
+test("shows supplied level and experience without adding progression behavior", () => {
+  render(
+    <HomeHud
+      player={{ name: "Player", level: 43, experience: { value: 49, maximum: 100 } }}
+      onSettings={vi.fn()}
+    />,
+  );
+
+  expect(screen.getByText("Level 43")).toBeVisible();
+  const experience = screen.getByRole("meter", { name: "Player experience" });
+  expect(experience).toHaveAttribute("aria-valuenow", "49");
+  expect(experience).toHaveAttribute("aria-valuemax", "100");
+  expect(experience.firstElementChild).toHaveStyle({ width: "49%" });
+});
+
+test.each([
+  { value: -1, maximum: 100 },
+  { value: 101, maximum: 100 },
+  { value: 0, maximum: 0 },
+  { value: Number.NaN, maximum: 100 },
+  { value: 10, maximum: Number.POSITIVE_INFINITY },
+])("does not present invalid progression as a real meter: %o", (experience) => {
+  render(<HomeHud player={{ name: "Player", level: -1, experience }} onSettings={vi.fn()} />);
+
+  expect(screen.getByText("Level —")).toBeInTheDocument();
+  expect(screen.queryByRole("meter", { name: "Player experience" })).not.toBeInTheDocument();
+});
+
+test("keeps the five player-system positions visible but explicitly unavailable", async () => {
   const user = userEvent.setup();
   const onSettings = vi.fn();
   render(<HomeHud player={{ name: "Player" }} onSettings={onSettings} />);
 
   const systems = screen.getByRole("navigation", { name: "Player systems" });
-  for (const label of ["Collection", "Character", "Inventory", "Quests"]) {
+  expect(within(systems).getAllByRole("button")).toHaveLength(5);
+  expect(within(systems).queryByText("Soon")).not.toBeInTheDocument();
+  expect(within(systems).queryByRole("button", { name: /zoom/i })).not.toBeInTheDocument();
+  for (const label of ["Collection", "Character", "Inventory", "Ranks", "Quests"]) {
     const button = within(systems).getByRole("button", { name: `${label} (coming soon)` });
     expect(button).toBeDisabled();
     expect(button).toHaveAccessibleDescription(/coming soon/);
     await user.click(button);
   }
   expect(onSettings).not.toHaveBeenCalled();
+  expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+});
+
+test("mail and chat remain explicitly unavailable without fake unread badges or dialogs", async () => {
+  const user = userEvent.setup();
+  render(<HomeHud player={{ name: "Player" }} onSettings={vi.fn()} />);
+
+  for (const name of ["Messages (coming soon)", "Chat (coming soon)"]) {
+    const button = screen.getByRole("button", { name });
+    expect(button).toBeDisabled();
+    expect(button).toHaveAccessibleDescription(/not available yet/);
+    await user.click(button);
+  }
   expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 });
 

@@ -10,11 +10,16 @@ frames and ember accents. No generated artwork is required for the HUD.
 - `HomeLobby` is the controller behind the existing `HomeScreen` route export.
   It reads the local user, updates identity after onboarding, and owns the Play
   and Settings panels. A mode-picker deep link waits until onboarding completes.
-- `HomeHud` is presentation-only: player identity upper-left; energy, coins,
-  and Settings upper-right; Collection, Character, Inventory, and Quests below.
-  These four shortcuts are visible, disabled, and marked Soon until implemented.
+- `HomeHud` is presentation-only: overlapping portrait and name/level/XP plaque
+  upper-left; energy, coins, diamonds, Mail, and Settings upper-right. Collection,
+  Character, Inventory, Ranks, and Quests sit on a spacious bottom-anchored dock with
+  overlapping nameplates. Locks indicate unavailable systems without redundant
+  visible Soon labels. Mail and lower-left Chat are disabled placeholders.
+- Optional player level and experience props support future progression data.
+  Unknown levels show an em dash and unknown experience leaves an empty track,
+  not a fabricated level, progress value, or loading indicator.
 - `HudResource` accepts optional values and renders unknown balances as em
-  dashes. `HomeLobby` intentionally supplies no energy or coin state. Supplied
+  dashes. `HomeLobby` intentionally supplies no balances or progression. Supplied
   test/example values exercise presentation, not an economy. There are no grant,
   spend, recharge, purchase, timer, or persistence actions.
 - Settings contains the working theme toggle, Rules and Sings links, and the

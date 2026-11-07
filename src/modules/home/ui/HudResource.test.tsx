@@ -1,8 +1,22 @@
-import { Coins, Zap } from "lucide-react";
+import { Coins, Diamond, Zap } from "lucide-react";
 
 import { render, screen } from "@testing-library/react";
 
 import { HudResource } from "./HudResource";
+
+test.each([
+  { label: "Energy", icon: Zap },
+  { label: "Coins", icon: Coins },
+  { label: "Diamonds", icon: Diamond },
+])(
+  "$label uses its icon without a visible text label but keeps its accessible name",
+  ({ label, icon }) => {
+    render(<HudResource label={label} icon={icon} value={36} />);
+
+    expect(screen.getByRole("group", { name: label })).toHaveTextContent("36");
+    expect(screen.queryByText(label)).not.toBeInTheDocument();
+  },
+);
 
 test("unknown energy has an honest placeholder rather than an invented or loading balance", () => {
   const { container } = render(<HudResource label="Energy" icon={Zap} bounded />);

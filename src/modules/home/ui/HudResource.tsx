@@ -6,6 +6,7 @@ export type HudResourceProps = {
   value?: number;
   maximum?: number;
   bounded?: boolean;
+  appearance?: "energy" | "coins" | "diamonds";
 };
 
 const numberFormat = new Intl.NumberFormat("en", { maximumFractionDigits: 0 });
@@ -16,6 +17,7 @@ export function HudResource({
   value,
   maximum,
   bounded = false,
+  appearance = bounded ? "energy" : "coins",
 }: HudResourceProps) {
   const hasValue = value !== undefined && Number.isFinite(value) && value >= 0;
   const hasMaximum = maximum !== undefined && Number.isFinite(maximum) && maximum > 0;
@@ -24,22 +26,11 @@ export function HudResource({
   const capacity = bounded ? ` / ${available ? numberFormat.format(maximum!) : "—"}` : "";
 
   return (
-    <div
-      role="group"
-      aria-label={label}
-      className="hud-resource grid min-w-0 grid-cols-[auto_minmax(0,1fr)] items-center gap-2 px-2 py-1.5"
-      data-resource={bounded ? "energy" : "coins"}
-    >
-      <span
-        className="hud-resource-emblem flex size-9 items-center justify-center"
-        aria-hidden="true"
-      >
-        <Icon className="size-5" />
+    <div role="group" aria-label={label} className="hud-resource" data-resource={appearance}>
+      <span className="hud-resource-emblem" aria-hidden="true">
+        <Icon />
       </span>
-      <div className="min-w-0">
-        <span className="hud-resource-label block text-[0.625rem] leading-tight tracking-widest uppercase">
-          {label}
-        </span>
+      <div className="hud-resource-details min-w-0">
         <span
           className="hud-resource-amount block truncate text-sm leading-snug font-semibold tabular-nums"
           aria-hidden="true"
@@ -54,7 +45,7 @@ export function HudResource({
         </span>
         {bounded && (
           <div
-            className="hud-resource-track mt-0.5 h-1 overflow-hidden rounded-full"
+            className="hud-resource-track h-1 overflow-hidden rounded-full"
             role={available ? "meter" : undefined}
             aria-label={available ? `${label} reserve` : undefined}
             aria-valuemin={available ? 0 : undefined}
