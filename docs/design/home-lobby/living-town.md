@@ -24,21 +24,22 @@ fails. There is no hover tooltip. The accessible button name is Play at the tave
 ## Layers and scale
 
 `scene/townArtwork.ts` owns URLs, intrinsic dimensions and art order;
-`living-town.css` owns anchors and grading. PNG masters are unchanged. All seven
+`living-town.css` owns anchors and grading. Selected PNG masters are preserved. All eight
 WebP exports retain source dimensions/alpha, using quality 88, method 6, and total
-about 712 KiB. Vite fingerprints them; the PNG masters are not emitted in the build.
+about 1167 KiB. Vite fingerprints them; the PNG masters are not emitted in the build.
 
-| Layer                        | Source/export size | Placement                                                 |
-| ---------------------------- | ------------------ | --------------------------------------------------------- |
-| Sky                          | 1672 × 941         | Centered-cover backdrop                                   |
-| Far mountains                | 2172 × 724         | Top 8%, width 108%, left -4%; hazed                       |
-| Near mountains               | 2172 × 724         | Top 22%, same overscan; darker foothills                  |
-| Static haze / optional mist  | Reference frame    | Behind the foreground                                     |
-| Ground / plaza               | 1672 × 941         | One unrepeated image, feathered on all edges              |
-| Tavern / contact shadow      | 1536 × 1024        | 32% of contained world width, mirrored inward             |
-| Merchant / contact shadow    | 1536 × 1024        | Left -4.7%, bottom -8%, width 24%; in front of tavern     |
-| Quest board / contact shadow | 1536 × 1024        | Visible right edge at 98% of stage, bottom -4%, width 25% |
-| Atmosphere                   | Full stage         | Quiet perimeter, never over HTML HUD                      |
+| Layer                       | Source/export size | Placement                                                       |
+| --------------------------- | ------------------ | --------------------------------------------------------------- |
+| Sky                         | 1672 × 941         | Centered-cover backdrop                                         |
+| Far mountains               | 2172 × 724         | Top 8%, width 108%, left -4%; hazed                             |
+| Near mountains              | 2172 × 724         | Top 22%, same overscan; darker foothills                        |
+| Static haze / optional mist | Reference frame    | Behind the foreground                                           |
+| Ground / plaza              | 1672 × 941         | One unrepeated image, vertically feathered, solid at side edges |
+| Arena                       | 1525 × 1031        | Left 4%, bottom 23%, width 28%; behind tavern                   |
+| Tavern                      | 1536 × 1024        | 32% of contained world width, mirrored inward                   |
+| Merchant                    | 1536 × 1024        | Left -4.7%, bottom -11%, width 24%; in front of tavern          |
+| Quest board                 | 1246 × 1262        | Visible right edge at 99% of stage, bottom -4%, width 20%       |
+| Atmosphere                  | Full stage         | Quiet perimeter, never over HTML HUD                            |
 
 Foreground destinations share a contained 1600 × 900 world, with width
 `min(scene width, scene height × 16/9)`. The tavern is always 512 reference units
@@ -59,8 +60,9 @@ the taller two-row system dock and Chat, rather than putting them over the facad
 The plaza is the original continuous painted image, shown once at stage width
 with automatic height. There is **no repetition, reflection or texture atlas**.
 Its vertical mask is anchored to the painted apron (22%–14% of world width
-above the image bottom); horizontal feathering spans the stage, including ultrawide
-screens. In portrait the apron ends at world dock clearance, under the tavern;
+above the image bottom). Its side edges remain solid beneath the edge buildings,
+including ultrawide screens. In portrait the apron extends 12% of world width
+beyond world dock clearance so the forward Merchant does not stand below the floor;
 landscape lets it extend behind the dock. CSS ground color and the perimeter
 falloff connect the apron to the surrounding terrain without hard strips. Ground
 occlusion follows that same apron anchor, so raised narrow-screen placement does
@@ -71,24 +73,35 @@ The former mirrored crop created visible alternating bands and was discarded.
 code. It is removed because that tile is no longer used. Ordinary WebP export
 does not require a project-specific script or new application dependency.
 
-## Merchant and quest board
+## Arena, merchant and quest board
 
-The supplied merchant and quest-board masters are integrated unchanged, with
-native 3:2 proportions and the same restrained grading as the tavern. The smaller
+The newest reference-restored arena and quest booth are selected from
+`arena-reference.png` and the updated `quest-board.png`, respectively. The latter
+matches the newest Downloads `quests.png` byte-for-byte, replacing the older
+symmetrical noticeboard. The arena export preserves its native 1525 × 1031 aspect;
+the quest booth keeps its near-square 1246 × 1262 aspect, not a stretched 3:2 box.
+The arena sits in the upper-left district behind the tavern, with its foundation
+feathered into the hillside. The earlier `arena.png` study is not used at runtime.
+
+The smaller
 merchant overlaps the tavern's lower-left facade, with its painted silhouette
 at the left screen border rather than detached in the square. The noticeboard's
-painted right edge follows the stage's right border with 2% breathing room, even
+painted right edge follows the stage's right border with 1% breathing room, even
 when the contained foreground world is narrower than an ultrawide screen.
-Both sit slightly forward of the tavern. Their transparent image padding is
-retained; contact shadows align to actual opaque foot positions, not image-box
-bottoms (tavern 94.8%, merchant 91.7%, noticeboard 98.5% of image height).
-Shadows stay short and scale their blur with the scene. The unrepeated floor spans
+Both sit slightly forward of the tavern. The Merchant retains its inward mirror
+and adds a restrained 14-degree CSS perspective adjustment around its foot line;
+this is a projected sprite, not newly generated side geometry. The latest Quests
+art already faces left into the square and must not be mirrored.
+
+Detached oval ground shadows are removed. A tight one-pixel silhouette shadow
+provides edge occlusion instead; continuous paving now reaches beneath the
+painted feet, including portrait's lower Merchant and the stage edges. The unrepeated floor spans
 the full stage so both edge districts remain over paving. The middle stays open
 for a future focal point, with the upper town reserved for later landmarks.
 
-Both use permanent bronze nameplates, labelled **Merchant** and **Quests**.
-These smaller plaques are centred over the stall's counter and noticeboard face,
-not the roof line. The merchant plaque receives only a minimum left-edge inset
+All three planned landmarks use permanent bronze nameplates. Merchant and Quests
+plaques sit on their roofs at 32% of each native image height; Arena uses 38%.
+The merchant plaque receives only a minimum left-edge inset
 on narrow screens to keep the text and bronze ends visible.
 They are disabled buttons announced as coming soon, matching the existing planned
 HUD destinations. They do not open the game picker or introduce shop/quest logic,
@@ -116,7 +129,7 @@ failure. The tavern remains the only playable landmark.
 
 ## Scope and validation
 
-Castle, arena, observatory, new modes and progression rules remain deferred; #99
+Castle, observatory, new modes and progression rules remain deferred; #99
 stays open. This is an iterative art pass, not final art approval. The painted
 tavern cannot be dynamically relit or viewed from another angle without new art.
 

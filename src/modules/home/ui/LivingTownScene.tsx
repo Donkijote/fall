@@ -10,8 +10,8 @@ import "./living-town.css";
 const LivingTownCanvas = lazy(() => import("./scene/LivingTownCanvas"));
 
 const plannedLandmarks = [
-  { artwork: townArtwork[5], label: "Merchant" },
-  { artwork: townArtwork[6], label: "Quests" },
+  { artwork: townArtwork[6], label: "Merchant" },
+  { artwork: townArtwork[7], label: "Quests" },
 ];
 
 const tavernEmbers = [
@@ -42,6 +42,24 @@ function ArtworkLayer({ artwork }: { artwork: TownArtwork }) {
       onLoad={() => setStatus("ready")}
       onError={() => setStatus("failed")}
     />
+  );
+}
+
+function PlannedLandmark({ artwork, label }: { artwork: TownArtwork; label: string }) {
+  return (
+    <div className={`living-town-landmark living-town-${artwork.id}-anchor`}>
+      <button
+        type="button"
+        className="living-town-planned-landmark"
+        disabled
+        aria-label={`${label} (coming soon)`}
+      >
+        <ArtworkLayer artwork={artwork} />
+        <span className="living-town-nameplate" aria-hidden="true">
+          {label}
+        </span>
+      </button>
+    </div>
   );
 }
 
@@ -131,8 +149,8 @@ export function LivingTownScene({
       <div className="living-town-ground" aria-hidden="true" />
       <PlazaSurface />
       <div className="living-town-world" data-slot="living-town-world">
+        <PlannedLandmark artwork={townArtwork[4]} label="Arena" />
         <div className="living-town-tavern-anchor" data-facing="inward">
-          <div className="living-town-contact" aria-hidden="true" />
           <button
             type="button"
             className="living-town-tavern-trigger"
@@ -140,7 +158,7 @@ export function LivingTownScene({
             disabled={!canPlay}
             onClick={onPlay}
           >
-            <ArtworkLayer artwork={townArtwork[4]} />
+            <ArtworkLayer artwork={townArtwork[5]} />
             {animate && (
               <span className="living-town-embers" data-visible={visible} aria-hidden="true">
                 {tavernEmbers.slice(0, compact ? 4 : 6).map((ember) => (
@@ -153,27 +171,9 @@ export function LivingTownScene({
             </span>
           </button>
         </div>
-        {plannedLandmarks.map(({ artwork, label }) => {
-          return (
-            <div
-              key={artwork.id}
-              className={`living-town-landmark living-town-${artwork.id}-anchor`}
-            >
-              <div className="living-town-contact" aria-hidden="true" />
-              <button
-                type="button"
-                className="living-town-planned-landmark"
-                disabled
-                aria-label={`${label} (coming soon)`}
-              >
-                <ArtworkLayer artwork={artwork} />
-                <span className="living-town-nameplate" aria-hidden="true">
-                  {label}
-                </span>
-              </button>
-            </div>
-          );
-        })}
+        {plannedLandmarks.map(({ artwork, label }) => (
+          <PlannedLandmark key={artwork.id} artwork={artwork} label={label} />
+        ))}
       </div>
       <div className="living-town-atmosphere" aria-hidden="true" />
     </div>

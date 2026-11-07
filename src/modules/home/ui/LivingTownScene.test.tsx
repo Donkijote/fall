@@ -110,7 +110,7 @@ test.each(["reduced motion", "data saving", "missing WebGL"])(
     const { container } = render(<LivingTownScene />);
     expect(screen.queryByTestId("mountain-renderer")).not.toBeInTheDocument();
     expect(container.querySelector('[data-slot="living-town-sky"]')).toBeInTheDocument();
-    expect(container.querySelectorAll("img")).toHaveLength(6);
+    expect(container.querySelectorAll("img")).toHaveLength(7);
     expect(container.querySelector('[data-slot="living-town-tavern"]')).toBeInTheDocument();
     expect(container.querySelector(".living-town-embers")).not.toBeInTheDocument();
   },
@@ -140,7 +140,7 @@ test("retains the fallback permanently after a renderer or context failure", asy
   const { container } = render(<LivingTownScene />);
   fireEvent.click(await screen.findByTestId("mountain-renderer"));
   expect(container.querySelector(".living-town-webgl")).not.toBeInTheDocument();
-  expect(container.querySelectorAll("img")).toHaveLength(6);
+  expect(container.querySelectorAll("img")).toHaveLength(7);
   expect(container.querySelector('[data-slot="living-town-tavern"]')).toBeInTheDocument();
   act(() => compact.set(true));
   expect(screen.queryByTestId("mountain-renderer")).not.toBeInTheDocument();
@@ -153,7 +153,7 @@ test("contains renderer initialization errors without removing the artwork", asy
   await waitFor(() =>
     expect(container.querySelector(".living-town-webgl")).not.toBeInTheDocument(),
   );
-  expect(container.querySelectorAll("img")).toHaveLength(6);
+  expect(container.querySelectorAll("img")).toHaveLength(7);
   expect(error).toHaveBeenCalled();
 });
 
@@ -197,7 +197,7 @@ test("keeps the tavern action available when images fail without adding a second
   const tavern = screen.getByRole("button", { name: "Play at the tavern" });
   expect(tavern).toBeEnabled();
   expect(tavern).toHaveTextContent("The Tavern");
-  expect(screen.getAllByRole("button")).toHaveLength(3);
+  expect(screen.getAllByRole("button")).toHaveLength(4);
   fireEvent.click(tavern);
   expect(onPlay).toHaveBeenCalledOnce();
 });
@@ -213,11 +213,11 @@ test("always shows the tavern nameplate without a hover tooltip", () => {
   expect(screen.getByRole("button", { name: "Play at the tavern" })).toBeEnabled();
 });
 
-test("places named merchant and quest landmarks without exposing unfinished actions", () => {
+test("places named planned landmarks without exposing unfinished actions", () => {
   motion.matches = true;
   const onPlay = vi.fn();
   const { container } = render(<LivingTownScene canPlay onPlay={onPlay} />);
-  for (const label of ["Merchant", "Quests"]) {
+  for (const label of ["Arena", "Merchant", "Quests"]) {
     const landmark = screen.getByRole("button", { name: `${label} (coming soon)` });
     expect(landmark).toBeDisabled();
     expect(landmark.querySelector(".living-town-nameplate")).toHaveTextContent(label);
@@ -225,10 +225,24 @@ test("places named merchant and quest landmarks without exposing unfinished acti
     fireEvent.error(landmark.querySelector("img")!);
     expect(landmark).toHaveTextContent(label);
   }
-  expect(container.querySelectorAll(".living-town-landmark")).toHaveLength(2);
+  expect(container.querySelectorAll(".living-town-landmark")).toHaveLength(3);
   expect(onPlay).not.toHaveBeenCalled();
   fireEvent.click(screen.getByRole("button", { name: "Play at the tavern" }));
   expect(onPlay).toHaveBeenCalledOnce();
+});
+
+test("keeps revised artwork dimensions and arena depth without detached ground shadows", () => {
+  motion.matches = true;
+  const { container } = render(<LivingTownScene />);
+  const world = container.querySelector('[data-slot="living-town-world"]');
+  expect(world?.firstElementChild).toHaveClass("living-town-arena-anchor");
+  expect(world?.firstElementChild?.nextElementSibling).toHaveClass("living-town-tavern-anchor");
+  expect(container.querySelector(".living-town-contact")).toBeNull();
+  expect(townArtwork.find(({ id }) => id === "quest-board")).toMatchObject({
+    width: 1246,
+    height: 1262,
+  });
+  expect(townArtwork.find(({ id }) => id === "arena")).toMatchObject({ width: 1525, height: 1031 });
 });
 
 test("limits embers on compact devices, pauses hidden tabs and removes them for reduced motion", async () => {
