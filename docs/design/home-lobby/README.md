@@ -1,5 +1,10 @@
 # Home lobby exploration · GHI#80
 
+> **Updated direction:** adventure RPG with cards and many future modes.
+> The Hearth visual family is preferred. See [the adventure hub iteration](adventure-hub.md)
+> and open `adventure-hub.html` for three revised world-based compositions inspired
+> by the supplied reference. The menu-first options below are retained as history.
+
 Status: **design review, not a production implementation**. Issue #80’s title
 is the intent; its older minimal-skeleton scope is not the design brief for this
 iteration. No final direction is selected yet.
