@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <filter id="edge" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="2.5" />
+    </filter>
+  </defs>
+  <path fill="#000" d="M0 0h512v512H0z" />
+  <g fill="#fff" filter="url(#edge)">
+    <path d="M0 92 14 113 29 131 43 150 55 174 72 202 85 231 101 256 118 281 132 313 149 341 162 369 174 400 189 431 205 464 218 512H0Z" />
+    <path d="M512 75 492 113 475 146 451 175 427 193 402 211 379 229 359 247 342 267 324 288 307 312 291 337 276 361 260 385 242 412 225 439 210 468 192 512H512Z" />
+  </g>
+</svg>

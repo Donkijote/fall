@@ -12,6 +12,7 @@ import {
   CARDS_PATH,
   GAME_PATH,
   HOME_PATH,
+  LOGIN_PATH,
   RULES_PATH,
   SINGS_SHEETS,
 } from "./Routes";
@@ -20,6 +21,13 @@ const basename = (import.meta.env.BASE_URL ?? "/").replace(/\/+$/, "");
 
 const router = createBrowserRouter(
   [
+    {
+      path: LOGIN_PATH,
+      lazy: async () => {
+        const { LoginScreen } = await import("@/modules/login/ui/LoginScreen");
+        return { Component: LoginScreen };
+      },
+    },
     ...(import.meta.env.DEV
       ? [
           {
