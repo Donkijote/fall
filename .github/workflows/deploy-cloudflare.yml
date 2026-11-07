@@ -90,4 +90,5 @@ jobs:
         run: >-
           curl --fail --silent --show-error --retry 5 --retry-all-errors
           --retry-delay 2 --header 'Accept: text/html'
+          --header 'Sec-Fetch-Mode: navigate'
           "$PREVIEW_URL/login" --output /dev/null
