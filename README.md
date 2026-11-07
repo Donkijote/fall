@@ -262,8 +262,8 @@ The name Fall is a literal translation from the spanish word **Caída**
 
 ## Animation playground (development only)
 
-Run `pnpm dev`, then choose **Animation playground** on the home screen or open
-`/dev/animations`. The route, home link, scene modules, and demo assets are
+Run `pnpm dev`, then open **Settings → Animation playground** on the home screen
+or open `/dev/animations`. The route, home link, scene modules, and demo assets are
 excluded from production builds.
 
 All studies use the app’s Spanish card SVG artwork on the animated 3D mesh, with
