@@ -1,0 +1,103 @@
+name: Deploy Main
+
+on:
+  workflow_call:
+    inputs:
+      release-artifact:
+        description: Built static assets from the successful Release job
+        required: true
+        type: string
+      release-tag:
+        description: GitHub release tag to attach to the Cloudflare Worker version
+        required: true
+        type: string
+    secrets:
+      CLOUDFLARE_API_TOKEN:
+        required: true
+      CLOUDFLARE_ACCOUNT_ID:
+        required: true
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: deploy-fall-production
+  cancel-in-progress: false
+
+jobs:
+  deploy-main:
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.base.ref == 'main' &&
+      inputs.release-artifact != '' && inputs.release-tag != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: production
+
+    steps:
+      - name: Checkout release tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.release-tag }}
+          persist-credentials: false
+
+      - name: Verify deployment credentials
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo "::error::Missing CLOUDFLARE_API_TOKEN secret"; exit 1; }
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "::error::Missing CLOUDFLARE_ACCOUNT_ID secret"; exit 1; }
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check formatting and lint
+        run: pnpm check
+
+      - name: Tests
+        run: pnpm run test:coverage
+
+      - name: Download release build
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.release-artifact }}
+          path: dist
+
+      - name: Verify release metadata
+        env:
+          RELEASE_TAG: ${{ inputs.release-tag }}
+          RELEASE_COMMIT: ${{ github.event.pull_request.merge_commit_sha }}
+        run: |
+          export SOURCE_COMMIT="$(git rev-parse HEAD)"
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import { readFile } from 'node:fs/promises';
+          const metadata = JSON.parse(await readFile('dist/release.json', 'utf8'));
+          assert.equal(metadata.tag, process.env.RELEASE_TAG);
+          assert.equal(metadata.tag, `v${metadata.version}`);
+          assert.equal(metadata.commit, process.env.RELEASE_COMMIT);
+          assert.equal(metadata.commit, process.env.SOURCE_COMMIT);
+          console.log(`Verified release ${metadata.tag} at ${metadata.commit}`);
+          NODE
+
+      - name: Deploy production assets
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          RELEASE_TAG: ${{ inputs.release-tag }}
+          RELEASE_COMMIT: ${{ github.event.pull_request.merge_commit_sha }}
+        run: >-
+          pnpm exec wrangler deploy --tag "$RELEASE_TAG"
+          --message "GitHub release $RELEASE_TAG ($RELEASE_COMMIT)"

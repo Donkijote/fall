@@ -1,38 +1,46 @@
-name: Deploy to Cloudflare Workers
+name: Deploy Cloudflare Preview
 
 on:
   workflow_dispatch:
     inputs:
       branch:
-        description: Branch to deploy to production (including PR branches)
+        description: Trusted branch to deploy to an isolated Preview
         required: true
         default: develop
         type: string
+      preview-name:
+        description: Optional descriptive Preview name (defaults to the branch name)
+        required: false
+        type: string
   pull_request:
-    branches: [main]
-    types: [closed]
+    branches: [develop, main]
+    types: [opened, synchronize, reopened, ready_for_review]
 
 permissions:
   contents: read
 
 concurrency:
-  group: deploy-fall-production
-  cancel-in-progress: false
+  group: preview-fall-${{ github.event.pull_request.number || inputs.branch }}
+  cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
+  preview:
     if: >-
       github.event_name == 'workflow_dispatch' ||
-      github.event.pull_request.merged == true
+      (github.event.pull_request.draft == false &&
+      github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    environment: production
+    environment:
+      name: preview
+      url: ${{ steps.preview.outputs.url }}
 
     steps:
-      - name: Checkout deployment branch
+      - name: Checkout Preview revision
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.branch || 'main' }}
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.branch || github.event.pull_request.head.sha }}
+          persist-credentials: false
 
       - name: Verify deployment credentials
         env:
@@ -60,8 +68,42 @@ jobs:
       - name: Tests
         run: pnpm run test:coverage
 
-      - name: Deploy
+      - name: Build
+        run: pnpm run build
+
+      - name: Deploy isolated Preview
+        id: preview
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: pnpm run deploy
+          PREVIEW_NAME: ${{ inputs.preview-name }}
+          PREVIEW_TITLE: ${{ github.event.pull_request.title }}
+          PREVIEW_BRANCH: ${{ github.event.pull_request.head.ref || inputs.branch }}
+        run: |
+          PREVIEW_NAME="$(node --input-type=module <<'NODE'
+          const source = process.env.PREVIEW_NAME?.trim() || process.env.PREVIEW_TITLE || process.env.PREVIEW_BRANCH;
+          const slug = source.replace(/^\[GHI#\d+\]\s*/i, '').normalize('NFKD')
+            .replace(/\p{M}/gu, '').toLowerCase().replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '');
+          if (!slug) throw new Error('Preview name must contain letters or numbers.');
+          const limit = 48;
+          const readable = slug.length > limit
+            ? slug.slice(0, limit).replace(/-[^-]*$/, '') || slug.slice(0, limit)
+            : slug;
+          console.log(readable);
+          NODE
+          )"
+          output="$(pnpm exec wrangler preview --name "$PREVIEW_NAME" --json)"
+          printf '%s\n' "$output"
+          url="$(printf '%s\n' "$output" | sed -n '/^{/,$p' | jq -er '.preview.urls[0]')"
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          printf '### Cloudflare Preview\n\nName: `%s`\n\n%s\n' "$PREVIEW_NAME" "$url" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Probe Preview deep link
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.url }}
+        run: >-
+          curl --fail --silent --show-error --retry 5 --retry-all-errors
+          --retry-delay 2 --header 'Accept: text/html'
+          --header 'Sec-Fetch-Mode: navigate'
+          "$PREVIEW_URL/login" --output /dev/null

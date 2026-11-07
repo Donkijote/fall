@@ -29,10 +29,15 @@ For local deployment, authenticate with `pnpm exec wrangler login`, then run:
 
 ```sh
 pnpm deploy:dry-run
+pnpm deploy:preview --name my-branch
 pnpm deploy
 ```
 
-Both commands build first. To test Cloudflare routing locally without deploying,
+These commands build first. `deploy:preview` creates or updates an isolated
+Worker Preview; `deploy` is the low-level production command. Use the Release
+workflow below for versioned production deployments rather than deploying a
+branch directly.
+To test Cloudflare routing locally without deploying,
 run `pnpm build` followed by `pnpm preview:cloudflare`.
 The Worker is named `fall` and uses the account's `workers.dev` subdomain;
 no custom domain is configured.
@@ -40,20 +45,66 @@ no custom domain is configured.
 ### GitHub Actions
 
 Configure `CLOUDFLARE_API_TOKEN` (scoped to deploying Workers on the target
-account) and `CLOUDFLARE_ACCOUNT_ID` as repository secrets or secrets on the
-`production` GitHub environment. The deployment workflow checks formatting,
-lint, tests, and the build before uploading assets.
+account) and `CLOUDFLARE_ACCOUNT_ID` as repository secrets. Alternatively,
+configure both secrets separately on the `preview` and `production` GitHub
+environments. Preview deployments never use the production environment.
+Both paths check formatting, lint, tests, and the build before uploading assets.
 
-- Merging a PR into `main` deploys the current `main` branch automatically.
-- **Deploy to Cloudflare Workers** can also be run manually with a `branch`
-  input, including a PR's head branch such as `chore/ghi#95`.
-- Manual branch deployments replace the same production Worker; they are not
-  isolated preview environments. Only select trusted branches, since the
-  deployment runs their build scripts with access to deployment credentials.
-- Manual runs become available once the workflow exists on the default branch
-  (`develop`). Then use the Actions UI or
-  `gh workflow run deploy-cloudflare.yml -f 'branch=chore/ghi#95'`.
-- Existing release/versioning and release-sync workflows are unchanged.
+#### PR and manual branch Previews
+
+- **Deploy Cloudflare Preview** runs for non-draft, same-repository PRs targeting
+  `develop` or `main` when opened, updated, reopened, or marked ready for review.
+  Fork PRs do not receive deployment secrets.
+- Each PR uses a readable title-based name such as `add-login-screen`, without
+  the issue prefix or a PR-number suffix. PRs with the same normalized title
+  update the same Preview; use distinct titles when separate Previews are needed.
+  Long names are shortened at a word boundary. Renaming a PR can
+  create a new Preview on its next deployment. Its URL appears in the workflow
+  summary and the GitHub `preview` deployment.
+- Manual runs accept a trusted `branch` input and always use `wrangler preview`,
+  even if the selected branch is `main`. Names default to readable branch slugs
+  (`feature/login` becomes `feature-login`), not opaque hashes.
+- Set the optional `preview-name` input for a descriptive name such as
+  `cloudflare-previews`, `new-feature`, or `fix-button`. Reusing a name updates
+  that Preview; choose distinct names for branches whose normalized names would
+  otherwise collide. Names use lowercase letters, numbers, and hyphens.
+- Once the workflow exists on `develop`, run it from the Actions UI or use
+  `gh workflow run deploy-cloudflare.yml -f 'branch=develop'`.
+  To choose a name, add `-f 'preview-name=cloudflare-previews'`.
+- Only select trusted branches: their build scripts run in the deployment job.
+  Preview isolation protects the production deployment, not the API token from
+  malicious code. Consider a more restricted token for the `preview` environment.
+- Previews are public by default and remain available after a PR closes. Remove
+  one when no longer needed with
+  `pnpm exec wrangler preview delete --name cloudflare-previews`.
+  Preview settings belong in `wrangler.jsonc`'s `previews` block; static assets
+  and SPA handling stay at the top level. No runtime bindings are currently used.
+
+#### Main and release production deployments
+
+- **Deploy Main** is the only workflow that runs `wrangler deploy`. It cannot
+  run independently or accept an arbitrary deployment branch. It is called
+  only after the **Release** job succeeds.
+- For PRs labeled `release/major`, `release/minor`, `release/patch`, or
+  `release/current`, **Release** builds the merge commit after its existing
+  version-bump step and saves `dist` as `cloudflare-release-assets`. Only after
+  that job has also pushed the tag and created the GitHub release does it call
+  **Deploy Main** with the artifact and release tag. Production uploads that
+  exact build without rebuilding or racing a second main deploy.
+- Cloudflare's Worker version uses the same `v<version>` tag and a deployment
+  message containing the GitHub release tag and source commit. The published
+  `/release.json` also records the version, tag, and source commit. Deployment
+  verifies that this metadata matches the checked-out Git tag before uploading.
+- An unlabeled main merge does not create a release or deploy to production.
+  Apply one of the release labels before merging when a release is intended.
+- Reusing a release tag for a different source commit fails rather than
+  deploying new assets under an old version. Use a new version label instead.
+- A failed release job blocks its production deployment. Release signing,
+  tagging, changelog, and release-sync behavior are otherwise unchanged.
+- To retry a failed production upload, rerun the failed **Deploy Main** job in
+  the original **Release** run. It reuses the same release artifact, retained
+  for seven days, instead of rebuilding a potentially different branch.
+- Production deployments are serialized independently of Preview deployments.
 
 Disable GitHub Pages in the repository's **Settings → Pages** after migration.
 The old remote `deployment` branch is not updated or deleted by this change.
