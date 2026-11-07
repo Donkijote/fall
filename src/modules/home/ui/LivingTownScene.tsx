@@ -3,11 +3,32 @@ import type { ReactNode } from "react";
 
 import { useAtmospherePreferences } from "@/infrastructure/ui/hooks/useAtmospherePreferences";
 
-import { MountainBackdrop } from "./scene/MountainBackdrop";
-import { TavernBackdrop } from "./scene/TavernBackdrop";
+import { townArtwork } from "./scene/townArtwork";
+import type { TownArtwork } from "./scene/townArtwork";
 import "./living-town.css";
 
 const LivingTownCanvas = lazy(() => import("./scene/LivingTownCanvas"));
+
+function ArtworkLayer({ artwork }: { artwork: TownArtwork }) {
+  const [status, setStatus] = useState("loading");
+
+  return (
+    <img
+      className={`living-town-art living-town-${artwork.id}`}
+      data-artwork={artwork.id}
+      data-slot={`living-town-${artwork.id}`}
+      data-status={status}
+      src={artwork.source}
+      width={artwork.width}
+      height={artwork.height}
+      alt=""
+      draggable={false}
+      decoding="async"
+      onLoad={() => setStatus("ready")}
+      onError={() => setStatus("failed")}
+    />
+  );
+}
 
 class SceneBoundary extends Component<
   { children: ReactNode; onFailure: () => void },
@@ -63,16 +84,23 @@ export function LivingTownScene() {
 
   return (
     <div className="living-town-scene" data-slot="living-town-scene" aria-hidden="true">
-      <div className="living-town-sky" data-slot="living-town-sky" />
-      <div className="living-town-clouds living-town-clouds-distant" />
-      <div className="living-town-clouds living-town-clouds-near" />
-      <MountainBackdrop />
-      <TavernBackdrop />
-      {animate && !failed && (
-        <SceneEnhancement compact={compact} visible={visible} onFailure={onFailure} />
-      )}
-      <div className="living-town-ground" />
-      <div className="living-town-mountain-haze" />
+      <div className="living-town-frame">
+        <ArtworkLayer artwork={townArtwork[0]} />
+        <div data-slot="living-town-mountains">
+          <ArtworkLayer artwork={townArtwork[1]} />
+          <ArtworkLayer artwork={townArtwork[2]} />
+        </div>
+        <div className="living-town-mountain-haze" />
+        {animate && !failed && (
+          <SceneEnhancement compact={compact} visible={visible} onFailure={onFailure} />
+        )}
+        <div className="living-town-ground" />
+        <ArtworkLayer artwork={townArtwork[3]} />
+      </div>
+      <div className="living-town-tavern-anchor">
+        <div className="living-town-contact" />
+        <ArtworkLayer artwork={townArtwork[4]} />
+      </div>
       <div className="living-town-atmosphere" />
     </div>
   );

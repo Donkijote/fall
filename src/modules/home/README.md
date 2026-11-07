@@ -5,14 +5,14 @@ The accepted direction uses the existing Cinzel/Spline typography, Lucide icons,
 shared Button/Dialog primitives, and semantic theme tokens, with local bronze
 frames and ember accents. No generated artwork is required for the HUD.
 
-Issue #99 starts with a CSS dusk sky and three faceted mountain ridgelines in
-`LivingTownScene`, using the existing scene slot. An always-on SVG mountain
-backdrop is progressively enhanced by lazy React Three Fiber meshes and drifting
-shader mist, respecting motion/data preferences and renderer failures. A single
-left-foreground tavern adds textured stone/timber, a tiled roof, arched lit windows,
-lanterns and porch details in the same WebGL canvas, with an always-present SVG
-fallback. The tavern is decorative; destination interactions and the future castle
-are not implemented. See
+Issue #99 now uses layered illustrated artwork in `LivingTownScene`, replacing the
+earlier procedural mountain/tavern studies. A plum sky, hazed mountain ridges,
+flagstone plaza and timber-and-stone tavern share the HUD's restrained charcoal,
+oxblood and bronze direction. Optimized WebP images remain visible independently
+of the optional, lazy React Three Fiber mist. Motion/data preferences, hidden-tab
+pause and renderer failures affect only that enhancement. The HUD layout, theme
+and gameplay controls are unchanged. The tavern is decorative; destination
+interactions and the future castle are not implemented. See
 `docs/design/home-lobby/living-town.md` for the incremental scope, layer manifest
 and remaining art/visual review requirements.
 

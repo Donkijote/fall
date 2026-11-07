@@ -1,84 +1,106 @@
 .living-town-scene {
-  --town-sky-zenith: #252035;
-  --town-sky-dusk: #704759;
-  --town-sky-ember: #c27b68;
-  --town-sky-horizon: #edb780;
   position: absolute;
   inset: 0;
   overflow: hidden;
+  container-type: size;
   pointer-events: none;
-  background: var(--town-sky-zenith);
+  background: linear-gradient(#29212f, #704959 48%, #a87962 65%, #332b30 80%);
 }
 
-.living-town-sky {
+.living-town-frame {
   position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse at 57% 64%, #ffd59b70, transparent 42%),
-    linear-gradient(
-      180deg,
-      var(--town-sky-zenith),
-      var(--town-sky-dusk) 34%,
-      var(--town-sky-ember) 56%,
-      var(--town-sky-horizon) 72%,
-      #845260 90%,
-      #3b2c40
-    );
+  top: 50%;
+  left: 50%;
+  width: max(100cqw, 177.778cqh);
+  height: max(100cqh, 56.25cqw);
+  transform: translate(-50%, -50%);
 }
 
-.living-town-clouds {
+.living-town-art {
   position: absolute;
-  left: -10%;
-  width: 120%;
-  height: 48%;
-  background-repeat: no-repeat;
+  display: block;
+  height: auto;
+  max-width: none;
+  user-select: none;
 }
 
-.living-town-clouds-distant {
-  top: 21%;
-  opacity: 0.65;
-  background-image:
-    radial-gradient(ellipse at 14% 46%, #65455ddd 0%, #795369a6 19%, transparent 40%),
-    radial-gradient(ellipse at 36% 58%, #895b70c9 0%, #a46a7370 14%, transparent 29%),
-    radial-gradient(ellipse at 76% 40%, #6e4b65cc 0%, #99647380 22%, transparent 42%),
-    radial-gradient(ellipse at 92% 67%, #9e6876c9 0%, transparent 30%);
-  transform: rotate(-7deg);
-}
-
-.living-town-clouds-near {
-  top: -13%;
-  height: 63%;
-  background-image:
-    radial-gradient(ellipse at 8% 32%, #211e32 0%, #30263de6 29%, transparent 52%),
-    radial-gradient(ellipse at 37% 12%, #2f263d 0%, #4b344db3 24%, transparent 46%),
-    radial-gradient(ellipse at 86% 22%, #262135 0%, #423047e6 30%, transparent 55%);
-  transform: rotate(5deg);
-}
-
-.living-town-mountains,
-.living-town-tavern-fallback,
-.living-town-webgl {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.living-town-tavern-art {
-  transform: translate(87px, 319px) scale(0.68);
-}
-
-.living-town-scene:has(.living-town-webgl[data-ready="true"]) .living-town-tavern-fallback {
+.living-town-art:not([data-status="ready"]) {
   visibility: hidden;
 }
 
-.living-town-ground {
+.living-town-sky,
+.living-town-plaza {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.living-town-sky {
+  filter: saturate(0.8) brightness(0.88);
+}
+
+.living-town-mountains-far,
+.living-town-mountains-near {
+  left: -4%;
+  width: 108%;
+  mask-image: linear-gradient(#000 78%, transparent);
+}
+
+.living-town-mountains-far {
+  top: 8%;
+  opacity: 0.76;
+  filter: saturate(0.65) brightness(0.95);
+}
+
+.living-town-mountains-near {
+  top: 22%;
+  filter: saturate(0.7) brightness(0.8);
+}
+
+.living-town-mountain-haze,
+.living-town-ground,
+.living-town-webgl,
+.living-town-atmosphere {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(ellipse at 16% 73%, #de8c3c24, transparent 20%),
-    linear-gradient(180deg, transparent 64%, #30272c55 82%, #211f2ba6);
+}
+
+.living-town-mountain-haze {
+  background: linear-gradient(transparent 42%, #c08e7d18 56%, transparent 73%);
+}
+
+.living-town-ground {
+  background: linear-gradient(transparent 58%, #3b3031 76%, #282329);
+}
+
+.living-town-plaza {
+  filter: saturate(0.65) brightness(0.7);
+  mask-image: linear-gradient(transparent 59%, #000 74%);
+}
+
+.living-town-tavern-anchor {
+  position: absolute;
+  left: -3cqw;
+  bottom: 14cqh;
+  width: min(47cqw, 85cqh);
+  aspect-ratio: 3 / 2;
+}
+
+.living-town-tavern {
+  inset: 0;
+  width: 100%;
+  filter: saturate(0.83) brightness(0.88);
+}
+
+.living-town-contact {
+  position: absolute;
+  left: 17%;
+  right: 12%;
+  bottom: 1%;
+  height: 10%;
+  background: radial-gradient(ellipse, #191416bd, transparent 70%);
+  filter: blur(5px);
 }
 
 .living-town-webgl {
@@ -89,32 +111,16 @@
   opacity: 1;
 }
 
-.living-town-mountain-haze {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent 45%, #d49a9824 57%, transparent 74%);
-}
-
 .living-town-atmosphere {
-  position: absolute;
-  inset: 0;
   background:
-    radial-gradient(ellipse at 50% 45%, transparent 30%, #1b182b66 100%),
-    linear-gradient(180deg, #211b302b, transparent 35%, transparent 65%, #211b30d9);
+    linear-gradient(#1e192b80, transparent 23%, transparent 72%, #211c24d9),
+    radial-gradient(ellipse at 42% 50%, transparent 35%, #201b2b55);
 }
 
 @media (orientation: portrait) {
-  .living-town-tavern-art {
-    transform: translate(481px, 402px) scale(0.58);
-  }
-
-  .living-town-sky {
-    left: -55%;
-    right: -35%;
-  }
-
-  .living-town-clouds {
-    left: -45%;
-    width: 190%;
+  .living-town-tavern-anchor {
+    left: -15cqw;
+    bottom: 14cqh;
+    width: min(90cqw, 52cqh);
   }
 }

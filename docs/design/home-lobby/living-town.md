@@ -1,150 +1,107 @@
-# Living Town · issue #99
+# Living Town: illustrated environment (#99)
 
-## Increment 1: sky foundation
+## Art direction
 
-The approved composition reference is `fall_living_town_lobby_ui.png`, supplied
-in the issue implementation conversation. Its plum dusk sky, warm peach/ember
-horizon and darker overhead clouds guide this first pass. This is a CSS atmosphere
-study, not final illustrated artwork or approval of the complete town composition.
-Do not use the earlier HTML town blockouts as the art target.
+The supplied `fall_living_town_lobby_ui.png` remains the composition reference:
+a dusk valley, warm tavern in the left foreground, open plaza and room for future
+landmarks. The earlier CSS/SVG/mesh blockouts were rejected as too cartoonish.
+They are replaced, not rendered underneath or used as alternate art on mobile.
 
-`LivingTownScene` occupies the existing full-bleed `HomeHud.scene` slot beneath
-the HUD. The current Caída entry, onboarding and Settings remain unchanged. A
-theme-aware backing keeps the temporary arrival text readable over the sky.
-The scenery has a fixed dusk palette; it does not force the HUD into dark mode.
+Use believable timber/stone forms and painterly material detail, not photorealism,
+low-poly facets, candy colors or miniature/toy architecture. The prepared assets
+in `src/assets/lobby/living-town` deliberately follow the existing hub's charcoal,
+oxblood, muted plum and aged-bronze palette. Their generation briefs are preserved
+in that directory's README. Do not mix in the softer alternative cottage set or
+crop scenery from the flattened reference with its UI baked in.
 
-## Increment 2: distant mountains
+## Integration with the HUD
 
-The sky was reviewed in the implementation conversation. The next chosen element
-is the distant mountain setting: three faceted ridgelines, warm-facing rock planes,
-plum shadows and a lower central valley. This establishes the surroundings before
-adding the single tavern. The mountains are code-native geometry, not generated
-or final painted artwork; no castles, buildings, text or hotspots are introduced.
+`LivingTownScene` stays in the full-bleed `HomeHud.scene` slot, under the existing
+HTML HUD. Player identity remains upper-left; resources and Settings upper-right;
+the five player-system shortcuts remain below. Keep the central valley quiet for
+The Hearth and the existing Play entry. No HUD typography, tokens, icons, controls,
+theme selection or gameplay rules change in this increment.
 
-`scene/mountainModel.ts` defines the shared 1600 × 900 composition. The always-on
-SVG backdrop and the lazily loaded React Three Fiber renderer consume exactly
-the same ridge/facet coordinates. SVG uses centered `slice` sizing; the orthographic
-Three.js scene uses the equivalent cover scale, including portrait cropping.
-The SVG has independent gradient IDs and remains mounted behind the renderer.
+The scenery has a fixed dusk palette in both themes. Local desaturation, depth
+grading, horizon haze and a charcoal perimeter connect it to the HUD without
+forcing dark mode or tinting the HTML controls. Warm tavern windows and the oxblood
+awning echo existing ember/primary accents. The arrival panel's theme-aware backing
+continues to protect text contrast. The tavern is scenery, not a second Play button.
 
-Three.js renders layered mountain meshes and a low-opacity procedural mist shader
-that drifts slowly across their bases. There are no texture downloads, pointer
-listeners, camera controls or destination changes. GSAP is not required for this
-continuous shader effect; avoid introducing a second animation clock just to use
-another installed library.
+## Layer manifest
 
-## Increment 3: the tavern
+`scene/townArtwork.ts` owns imported URLs, intrinsic dimensions and back-to-front
+art ordering. `living-town.css` owns composition and grading.
 
-The next landmark is a single left-foreground tavern, not the future mountain-top
-castle. The user requested a more grounded/material-rich direction after reviewing
-the faceted mountain study. `scene/Tavern.tsx` therefore builds a three-quarter
-timber-and-stone building with real depth, rough materials, roof shingles, a stone
-chimney, timber braces, arched leaded windows, a sheltered porch, steps, lanterns,
-a barrel, a crate and a small hanging tankard sign. It remains a 3D architectural
-study, not final photorealistic or reference-matched painted artwork.
+| Layer                       | Source/export dimensions | Composition                                      |
+| --------------------------- | ------------------------ | ------------------------------------------------ |
+| Sky                         | 1672 × 941               | Full frame, original aspect preserved with cover |
+| Far mountains               | 2172 × 724               | Top 8%, width 108%, left -4%; quieter/hazed      |
+| Near mountains              | 2172 × 724               | Top 22%, same overscan; darker foothills         |
+| Static haze / optional mist | Full reference frame     | Between terrain and foreground                   |
+| Ground / plaza              | 1672 × 941               | Full frame; top feathered into terrain           |
+| Tavern / contact shadow     | 1536 × 1024              | Independent left-foreground anchor               |
+| Atmosphere                  | Full stage               | Dark upper/lower perimeter; never over HUD       |
 
-Four deterministic 128 × 128 RGBA data textures provide stone courses/mortar,
-timber grain/planks, roof courses and plaster grain. They are generated locally
-from `tavernModel.ts`, repeated as color/bump maps and disposed on unmount. There
-are no stock-asset downloads, image-generation API calls or added dependencies.
-Warm emissive window/lantern materials and two local lights contrast with a warm
-directional key and cool ambient light. No flicker or new animation is added.
+The centered 1600 × 900 reference composition covers the actual scene container
+using container units, not viewport-height assumptions. Landscapes retain a central
+valley; portrait crops the same reference frame without stretching either ridge.
+The tavern is independently sized from the visible stage so it survives that crop.
+Desktop width is min(47% stage width, 85% stage height), with its image bottom 14%
+above the stage bottom. Portrait uses min(90% width, 52% height), left -15% and
+bottom 14%, keeping more of the facade below the arrival panel. Intrinsic
+transparent padding is part of these placements. A soft
+contact ellipse grounds the steps on the plaza rather than adding a floating base.
 
-The tavern shares the existing lazy renderer, now named `LivingTownCanvas`; no
-second WebGL context or frame loop is introduced. Mountain and mist materials
-respect the tavern depth buffer so the background cannot paint over the building.
-The mist remains behind the foreground architecture. Desktop antialiasing is
-enabled; compact devices retain DPR 1 without multisample antialiasing.
+PNG masters are retained unchanged. Only same-size WebP exports are imported;
+RGBA is preserved for cutouts. Pillow export settings: quality 88, method 6, from
+the source converted to RGBA. Five exports total about 453 KiB versus about 6 MiB
+of PNG masters; no new application dependency or remote runtime request is needed.
+Vite fingerprints the image URLs. The original PNGs are not emitted by the build.
 
-`TavernBackdrop` supplies a self-contained, detailed SVG alternative with stone,
-roof and wood patterns, warm windows and lantern halos. It stays mounted and is
-hidden only once the renderer is ready; renderer failure or preference changes
-restore it. This fallback approximates the 3D composition, not pixel-identical art.
-It has no raster loading dependency and does not intercept input.
+## Loading, accessibility and enhancement
 
-### Placement manifest
+- Every image has empty alt text, explicit dimensions and disabled dragging.
+  The full scene is `aria-hidden` and owns no focusable controls or pointer input.
+- Images decode asynchronously and become visible after loading. Failed images
+  stay hidden instead of showing broken-image placeholders. Other layers remain;
+  CSS sky/ground colors provide a basic usable backdrop if all requests fail.
+- The raster composition is the primary presentation, including reduced motion,
+  save-data and missing WebGL. There is no different geometric fallback style.
+- The one lazy R3F canvas draws only a low-opacity drifting mist plane. It never
+  hides or replaces artwork. Initialization/shader/context-loss errors disable it
+  until remount. Reduced motion and save-data unmount it; hidden tabs stop frames.
+- Desktop DPR is capped at 1.5, compact DPR at 1. The mist uses no antialiasing,
+  texture downloads, lights, pointer listeners, camera controls or second clock.
+  The shared preference hook and login atmosphere behavior are unchanged.
 
-Both paths use the existing centered-cover 1600 × 900 reference frame. The 3D
-building ground anchor is (290, 756), with 55 reference pixels per model unit;
-portrait moves it to (655, 777) at 47 pixels per unit so part of the landmark
-remains visible rather than being lost to the landscape crop. The SVG fallback
-uses a local 600 × 650 drawing translated to (87, 319), scaled 0.68; portrait uses
-(481, 402), scaled 0.58. Placement values are recorded in `tavernModel.ts` and CSS.
-The HUD and the temporary central Play entry retain their existing space and
-pointer ownership. The tavern introduces no hotspot, unlock rule or new game flow.
+## Scope and further review
 
-### Current layer manifest (back to front)
+The castle, other landmarks, destination interactions and progression rules are
+explicitly deferred. Issue #99 remains open. This is an integrated art-direction
+pass, not final art approval. The fixed-view tavern contains painted illumination
+and a soft warm fringe; changing its viewpoint or lighting needs revised artwork,
+not dynamic relighting of a flat image. Edge cleanup, plaza perspective and the
+final landmark scale remain candidates for the next art review. Prefer composition
+and source-art corrections to adding bloom, clutter or more rendering libraries.
 
-| Layer                | Source                            | Bounds / anchor                                    | Purpose                                                              |
-| -------------------- | --------------------------------- | -------------------------------------------------- | -------------------------------------------------------------------- |
-| Sky                  | CSS gradients                     | Full stage; glow at 57% x, 64% y                   | Plum zenith into ember horizon                                       |
-| Distant clouds       | CSS radial gradients              | 120% stage width, 48% height; top 21%, left -10%   | Muted rose/plum cloud banks                                          |
-| Near clouds          | CSS radial gradients              | 120% stage width, 63% height; top -13%, left -10%  | Dark overhead framing                                                |
-| Mountains            | SVG polygons from shared model    | 1600 × 900 reference frame; centered cover         | Distant ridge, middle ridge, near foothills with light/shadow facets |
-| Tavern fallback      | Patterned SVG architecture        | Shared reference frame; placement above            | Always-available decorative landmark                                 |
-| Scene enhancement    | Lazy React Three Fiber / Three.js | Same frame/cover for meshes; full-stage mist plane | Matching ridgelines, mist and textured 3D tavern                     |
-| Ground apron         | CSS gradients                     | Full stage; lower third and left foreground        | Dark ground contact and warm lantern spill                           |
-| Static mountain haze | CSS gradient                      | Full stage; strongest around 57% y                 | Consistent warm atmospheric separation in both paths                 |
-| Atmosphere           | CSS gradients                     | Full stage                                         | Edge vignette and lower falloff                                      |
+Scene tests cover layer order, intrinsic sizing, decorative semantics, individual
+image failure, static paths and enhancement lifecycle. Home tests preserve
+onboarding, Settings, the single existing Play entry and mode selection. Mocked
+renderer tests do not establish GPU quality or physical-phone performance.
 
-Layers follow DOM paint order. Bounds are relative to the same scene stage, not
-the viewport or HUD rows. Portrait widens the sky and cloud fields rather than
-scaling a landscape illustration down. Mountain cover cropping preserves the
-central valley without stretching the peaks. The complete static presentation
-has no exported raster images, texture requests or rendering dependencies. The
-enhanced tavern uses only generated in-memory texture data.
+## Integration validation
 
-### Enhancement and fallback
-
-- The shared `useAtmospherePreferences` hook is also used by the login atmosphere;
-  it was moved to `infrastructure/ui/hooks` without changing its behavior.
-- Reduced motion, data saving or missing WebGL2 keep the SVG/CSS sky, mountains and tavern.
-  Preference changes unmount the renderer immediately.
-- Canvas is transparent, lazy-loaded and invisible until its first frame. Its
-  loading, initialization, shader and context-loss failures retain the backdrop.
-  After failure the enhancement stays off until the scene remounts.
-- Compact/coarse-pointer devices render at DPR 1; desktop DPR is capped at 1.5.
-  Hidden tabs stop the frame loop. Time steps are capped to prevent large jumps
-  on resume. Declarative geometries/materials are disposed on unmount.
-- The WebGL canvas never owns input; semantic HTML HUD and gameplay controls stay
-  above the scene. No new controls or accessibility announcements are added.
-
-### Next increments
-
-Review the tavern and its material direction next. The castle remains a later
-composition step; do not add it or other landmarks without agreement. Keep the
-entire sky and mountain backdrop intact behind future foreground layers. Before replacing
-this study with raster art, agree on the complete static composition and document
-source/export dimensions, compression, anchors and cropping. Generate clean art
-without text, HUD elements or badges; do not crop layers from the flattened
-reference. Built-in image generation was unavailable for this increment; no API
-key or image-generation integration has been added.
-
-Do not add a tavern hotspot until its artwork and destination behavior are agreed.
-No other landmarks, game modes, progression rules or icon-library changes are
-implemented in these increments. Issue #99 remains open for those later steps.
-
-### Validation boundary
-
-Home integration tests cover decorative scene ownership and preservation of the
-existing gameplay entry. Mountain tests cover SVG composition/unique gradients,
-triangulatable model coordinates, cover scaling, renderer lifecycle/failure and
-motion/data/visibility preferences. Tavern tests cover deterministic texture buffers,
-distinct surfaces, portrait/landscape anchors and decorative fallback preservation.
-Renderer lifecycle tests use a mocked canvas; they do not validate GPU output.
-
-The tavern increment also receives a production-build visual/integration pass
-using isolated headless Chromium (not the user's browser profile), because the
-shared preview's screenshot bridge timed out. Desktop (1280 × 800), portrait
-(390 × 844 and 320 × 568), phone landscape (844 × 390) and wide desktop
-(1920 × 1080) have no horizontal overflow, one canvas, and an in-bounds Play
-button with at least 44px targets. Desktop and portrait screenshots were captured
-and inspected. Reduced motion removes the canvas and reveals the tavern fallback;
-a fallback screenshot was also inspected. A light-theme mode-picker smoke test
-passes, and simulated WebGL context loss restores the static tavern. No uncaught
-page errors were recorded.
-
-`pnpm check`, all 331 tests in 57 files, and the production build pass. Existing
-Three.js deprecation and bundle-size warnings remain. These checks are not art
-approval or representative physical-phone GPU/battery performance measurement.
-The full composition and its eventual realistic art treatment remain iterative.
+- `pnpm check`, all 314 tests in 55 files, the production build and
+  `git diff --check` pass. Obsolete geometry-model tests were removed with the
+  rejected procedural art. Existing Three.js deprecation/large-chunk warnings remain.
+- Production-build checks in isolated headless Chromium cover 1280 × 800,
+  390 × 844, 320 × 568, 844 × 390 and 1920 × 1080: five loaded art layers,
+  no horizontal overflow and an in-bounds Play target at least 44px tall.
+- Desktop and portrait compositions were captured and inspected. Portrait moves
+  the tavern below the arrival panel rather than letting that panel hide its facade.
+- Reduced motion retains the five images without a canvas. Simulated context loss
+  retains the art; blocking all image requests leaves the CSS fallback and usable Play.
+  Light-theme mode selection and Settings dialogs work. No uncaught page errors
+  were recorded. Physical-device GPU/battery performance and final art approval
+  remain outstanding.
