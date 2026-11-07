@@ -78,7 +78,6 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           PREVIEW_NAME: ${{ inputs.preview-name }}
           PREVIEW_TITLE: ${{ github.event.pull_request.title }}
-          PREVIEW_NUMBER: ${{ github.event.pull_request.number || '' }}
           PREVIEW_BRANCH: ${{ github.event.pull_request.head.ref || inputs.branch }}
         run: |
           PREVIEW_NAME="$(node --input-type=module <<'NODE'
@@ -87,12 +86,11 @@ jobs:
             .replace(/\p{M}/gu, '').toLowerCase().replace(/[^a-z0-9]+/g, '-')
             .replace(/^-+|-+$/g, '');
           if (!slug) throw new Error('Preview name must contain letters or numbers.');
-          const suffix = process.env.PREVIEW_NUMBER ? `-pr-${process.env.PREVIEW_NUMBER}` : '';
-          const limit = 48 - suffix.length;
+          const limit = 48;
           const readable = slug.length > limit
             ? slug.slice(0, limit).replace(/-[^-]*$/, '') || slug.slice(0, limit)
             : slug;
-          console.log(readable + suffix);
+          console.log(readable);
           NODE
           )"
           output="$(pnpm exec wrangler preview --name "$PREVIEW_NAME" --json)"

@@ -55,9 +55,10 @@ Both paths check formatting, lint, tests, and the build before uploading assets.
 - **Deploy Cloudflare Preview** runs for non-draft, same-repository PRs targeting
   `develop` or `main` when opened, updated, reopened, or marked ready for review.
   Fork PRs do not receive deployment secrets.
-- Each PR uses a readable title-based name such as `add-login-screen-pr-123`.
-  The issue prefix is removed, and the PR suffix keeps similarly titled PRs
-  separate. Long names are shortened at a word boundary. Renaming a PR can
+- Each PR uses a readable title-based name such as `add-login-screen`, without
+  the issue prefix or a PR-number suffix. PRs with the same normalized title
+  update the same Preview; use distinct titles when separate Previews are needed.
+  Long names are shortened at a word boundary. Renaming a PR can
   create a new Preview on its next deployment. Its URL appears in the workflow
   summary and the GitHub `preview` deployment.
 - Manual runs accept a trusted `branch` input and always use `wrangler preview`,
