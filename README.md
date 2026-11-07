@@ -55,18 +55,27 @@ Both paths check formatting, lint, tests, and the build before uploading assets.
 - **Deploy Cloudflare Preview** runs for non-draft, same-repository PRs targeting
   `develop` or `main` when opened, updated, reopened, or marked ready for review.
   Fork PRs do not receive deployment secrets.
-- Each PR updates its own `pr-<number>` Preview with `wrangler preview`. Its URL
-  appears in the workflow summary and the GitHub `preview` deployment.
+- Each PR uses a readable title-based name such as `add-login-screen-pr-123`.
+  The issue prefix is removed, and the PR suffix keeps similarly titled PRs
+  separate. Long names are shortened at a word boundary. Renaming a PR can
+  create a new Preview on its next deployment. Its URL appears in the workflow
+  summary and the GitHub `preview` deployment.
 - Manual runs accept a trusted `branch` input and always use `wrangler preview`,
-  even if the selected branch is `main`. Each branch has a stable hashed Preview
-  name, separate from PR Previews and production.
+  even if the selected branch is `main`. Names default to readable branch slugs
+  (`feature/login` becomes `feature-login`), not opaque hashes.
+- Set the optional `preview-name` input for a descriptive name such as
+  `cloudflare-previews`, `new-feature`, or `fix-button`. Reusing a name updates
+  that Preview; choose distinct names for branches whose normalized names would
+  otherwise collide. Names use lowercase letters, numbers, and hyphens.
 - Once the workflow exists on `develop`, run it from the Actions UI or use
   `gh workflow run deploy-cloudflare.yml -f 'branch=develop'`.
+  To choose a name, add `-f 'preview-name=cloudflare-previews'`.
 - Only select trusted branches: their build scripts run in the deployment job.
   Preview isolation protects the production deployment, not the API token from
   malicious code. Consider a more restricted token for the `preview` environment.
 - Previews are public by default and remain available after a PR closes. Remove
-  one when no longer needed with `pnpm exec wrangler preview delete --name pr-96`.
+  one when no longer needed with
+  `pnpm exec wrangler preview delete --name cloudflare-previews`.
   Preview settings belong in `wrangler.jsonc`'s `previews` block; static assets
   and SPA handling stay at the top level. No runtime bindings are currently used.
 

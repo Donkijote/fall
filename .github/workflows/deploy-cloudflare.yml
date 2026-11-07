@@ -8,6 +8,10 @@ on:
         required: true
         default: develop
         type: string
+      preview-name:
+        description: Optional descriptive Preview name (defaults to the branch name)
+        required: false
+        type: string
   pull_request:
     branches: [develop, main]
     types: [opened, synchronize, reopened, ready_for_review]
@@ -72,12 +76,25 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          PREVIEW_NAME: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || '' }}
-          PREVIEW_BRANCH: ${{ inputs.branch }}
+          PREVIEW_NAME: ${{ inputs.preview-name }}
+          PREVIEW_TITLE: ${{ github.event.pull_request.title }}
+          PREVIEW_NUMBER: ${{ github.event.pull_request.number || '' }}
+          PREVIEW_BRANCH: ${{ github.event.pull_request.head.ref || inputs.branch }}
         run: |
-          if [ -z "$PREVIEW_NAME" ]; then
-            PREVIEW_NAME="branch-$(printf '%s' "$PREVIEW_BRANCH" | sha256sum | cut -c1-12)"
-          fi
+          PREVIEW_NAME="$(node --input-type=module <<'NODE'
+          const source = process.env.PREVIEW_NAME?.trim() || process.env.PREVIEW_TITLE || process.env.PREVIEW_BRANCH;
+          const slug = source.replace(/^\[GHI#\d+\]\s*/i, '').normalize('NFKD')
+            .replace(/\p{M}/gu, '').toLowerCase().replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '');
+          if (!slug) throw new Error('Preview name must contain letters or numbers.');
+          const suffix = process.env.PREVIEW_NUMBER ? `-pr-${process.env.PREVIEW_NUMBER}` : '';
+          const limit = 48 - suffix.length;
+          const readable = slug.length > limit
+            ? slug.slice(0, limit).replace(/-[^-]*$/, '') || slug.slice(0, limit)
+            : slug;
+          console.log(readable + suffix);
+          NODE
+          )"
           output="$(pnpm exec wrangler preview --name "$PREVIEW_NAME" --json)"
           printf '%s\n' "$output"
           url="$(printf '%s\n' "$output" | sed -n '/^{/,$p' | jq -er '.preview.urls[0]')"
