@@ -15,7 +15,10 @@ and game-mode behavior are unchanged. The central arrival panel is removed; the
 inward-facing tavern now opens the existing mode picker with a slow hover/focus
 glow, restrained embers, permanent bronze-framed nameplate and keyboard/touch
 activation. Tavern and the single unrepeated paving image share a contained world
-scale instead of oversized mobile/cover zoom. The future castle is not implemented. See
+scale instead of oversized mobile/cover zoom. A smaller Merchant beside the tavern
+and a Quests noticeboard on the right share the same world, grading and permanent
+nameplates. These two destinations are disabled and announced as coming soon;
+they add no game/shop/quest behavior. The future castle is not implemented. See
 `docs/design/home-lobby/living-town.md` for the incremental scope, layer manifest
 and remaining art/visual review requirements.
 

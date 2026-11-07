@@ -159,6 +159,7 @@
   outline-offset: 4px;
 }
 
+.living-town-nameplate,
 .living-town-tavern-nameplate {
   position: absolute;
   top: 47%;
@@ -181,6 +182,8 @@
   transform: translate(-50%, -50%);
 }
 
+.living-town-nameplate::before,
+.living-town-nameplate::after,
 .living-town-tavern-nameplate::before,
 .living-town-tavern-nameplate::after {
   position: absolute;
@@ -193,10 +196,12 @@
   content: "";
 }
 
+.living-town-nameplate::before,
 .living-town-tavern-nameplate::before {
   left: -0.2em;
 }
 
+.living-town-nameplate::after,
 .living-town-tavern-nameplate::after {
   right: -0.2em;
 }
@@ -261,6 +266,48 @@
   height: 10%;
   background: radial-gradient(ellipse, #191416bd, transparent 70%);
   filter: blur(5px);
+}
+
+.living-town-landmark {
+  position: absolute;
+  bottom: 0;
+  aspect-ratio: 3 / 2;
+}
+
+.living-town-merchant-anchor {
+  left: 33%;
+  width: 22%;
+}
+
+.living-town-quest-board-anchor {
+  left: 75%;
+  width: 25%;
+}
+
+.living-town-planned-landmark {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  opacity: 1;
+  cursor: default;
+}
+
+.living-town-merchant,
+.living-town-quest-board {
+  inset: 0;
+  width: 100%;
+  filter: saturate(0.83) brightness(0.88);
+}
+
+.living-town-merchant {
+  transform: scaleX(-1);
+}
+
+.living-town-landmark .living-town-nameplate {
+  top: 32%;
+  left: 50%;
 }
 
 .living-town-webgl {

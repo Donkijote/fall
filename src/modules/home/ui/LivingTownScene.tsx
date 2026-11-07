@@ -9,6 +9,11 @@ import "./living-town.css";
 
 const LivingTownCanvas = lazy(() => import("./scene/LivingTownCanvas"));
 
+const plannedLandmarks = [
+  { artwork: townArtwork[5], label: "Merchant" },
+  { artwork: townArtwork[6], label: "Quests" },
+];
+
 const tavernEmbers = [
   { left: "34%", top: "72%", animationDelay: "-1s" },
   { left: "47%", top: "61%", animationDelay: "-3.5s" },
@@ -148,6 +153,27 @@ export function LivingTownScene({
             </span>
           </button>
         </div>
+        {plannedLandmarks.map(({ artwork, label }) => {
+          return (
+            <div
+              key={artwork.id}
+              className={`living-town-landmark living-town-${artwork.id}-anchor`}
+            >
+              <div className="living-town-contact" aria-hidden="true" />
+              <button
+                type="button"
+                className="living-town-planned-landmark"
+                disabled
+                aria-label={`${label} (coming soon)`}
+              >
+                <ArtworkLayer artwork={artwork} />
+                <span className="living-town-nameplate" aria-hidden="true">
+                  {label}
+                </span>
+              </button>
+            </div>
+          );
+        })}
       </div>
       <div className="living-town-atmosphere" aria-hidden="true" />
     </div>
