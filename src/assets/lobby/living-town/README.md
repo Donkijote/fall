@@ -20,12 +20,20 @@ same scale applies on mobile; there is no portrait-specific landmark enlargement
 ## Runtime exports
 
 The PNG masters above are preserved unchanged. The application imports only
-`.webp` exports (about 1167 KiB combined), using `quality=88, method=6`.
-All eight exports retain source dimensions, with alpha for cutouts. The Merchant
+`.webp` exports (about 1970 KiB combined), using `quality=88, method=6`.
+The original eight exports retain source dimensions, with alpha for cutouts. The Merchant
 uses the supplied 1536 × 1024 master. The updated `quest-board.png` matches the
 latest Downloads `quests.png` (1246 × 1262); `arena.webp` uses the newer
 `arena-reference.png` (1525 × 1031), matching Downloads `area.png`, not the earlier
-`arena.png` study. These native aspects are preserved at runtime. The plaza is
+`arena.png` study. The latest Downloads `castle.png`, `observatory.png`,
+`fountain.png` and `gates.png` are also preserved unchanged under those master names.
+Their WebP exports trim transparent padding with an eight-pixel margin around the
+alpha-above-16 silhouette: castle 1137 × 1009, observatory 948 × 1375,
+fountain 1658 × 424 and gates 1088 × 1114. This removes the fountain's empty upper
+canvas without distorting its shallow oval. Earlier `*-reference.png` variants
+are not used for these four runtime assets. All native artwork aspects are preserved.
+The twelve exports include no baked labels or new terrain images; district
+foundations reuse the existing painted ridges as cached CSS backgrounds. The plaza is
 shown once at full stage width and feathered into the terrain, not repeated
 or reflected. The discarded mirrored tile caused dark bands; its offline helper
 `export-living-town-plaza.py` has been removed. Re-export after changing a master.

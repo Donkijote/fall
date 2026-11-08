@@ -81,10 +81,10 @@ test("composes the decorative Living Town scenery beneath the existing HUD and P
   expect(town?.querySelector('[data-slot="living-town-sky"]')).toBeInTheDocument();
   expect(town?.querySelector('[data-slot="living-town-mountains"]')).toBeInTheDocument();
   expect(town?.querySelector('[data-slot="living-town-tavern"]')).toBeInTheDocument();
-  expect(town?.querySelectorAll("button")).toHaveLength(4);
+  expect(town?.querySelectorAll("button")).toHaveLength(6);
   expect(town?.querySelectorAll("button:not(:disabled)")).toHaveLength(1);
   expect(town?.querySelector("a, [tabindex], canvas")).toBeNull();
-  expect(town?.querySelectorAll('img[alt=""]')).toHaveLength(7);
+  expect(town?.querySelectorAll('img[alt=""]')).toHaveLength(11);
   expect(town?.querySelector('[data-slot="living-town-plaza"]')).toBeInTheDocument();
   expect(sceneSlot).not.toContainElement(screen.getByRole("banner", { name: "Player HUD" }));
   expect(sceneSlot).toContainElement(screen.getByRole("button", { name: "Play at the tavern" }));

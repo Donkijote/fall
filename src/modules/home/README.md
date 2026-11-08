@@ -17,16 +17,19 @@ glow, restrained embers, permanent bronze-framed nameplate and keyboard/touch
 activation. Tavern and the single unrepeated paving image share a contained world
 scale instead of oversized mobile/cover zoom. A smaller Merchant beside the tavern
 and the latest Quests booth at the right screen border share the same world-relative
-scale, grading and permanent roof nameplates. The Arena sits behind the tavern in
-the upper-left district. These three destinations are disabled and announced as coming soon;
+scale, grading and permanent roof nameplates. Campaign, Arena and Modes occupy
+separate painted mountain districts. These five destinations are disabled and announced as coming soon;
 they add no game/shop/quest behavior. The Merchant overlaps the tavern at the left
 border with a subtle inward perspective adjustment and a plaque centred on its
-projected roof. Desktop badges scale up for readability. The Arena is raised and
-shifted toward the square so its facade reads above and beside the tavern instead
-of being mostly concealed by it. Detached oval ground shadows
+projected roof. Desktop badges scale up for readability. The smaller castle is
+highest and farthest, Arena sits lower-left without overlapping it, and the
+observatory rises on the right. A fully exposed gate sits behind the larger,
+closer fountain. These two central assets are decorative, not alternate Play entries.
+Detached oval ground shadows
 are removed, and portrait paving extends beneath the foreground feet rather than
 ending above the Merchant. New assets retain their own native proportions.
-The future castle is not implemented. See
+The latest four PNG masters are preserved; runtime exports trim only alpha padding.
+Their native aspects and stage-centred sightline survive responsive changes. See
 `docs/design/home-lobby/living-town.md` for the incremental scope, layer manifest
 and remaining art/visual review requirements.
 

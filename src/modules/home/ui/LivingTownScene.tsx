@@ -9,9 +9,30 @@ import "./living-town.css";
 
 const LivingTownCanvas = lazy(() => import("./scene/LivingTownCanvas"));
 
-const plannedLandmarks = [
-  { artwork: townArtwork[6], label: "Merchant" },
-  { artwork: townArtwork[7], label: "Quests" },
+const [
+  skyArtwork,
+  mountainsFarArtwork,
+  mountainsNearArtwork,
+  plazaArtwork,
+  castleArtwork,
+  arenaArtwork,
+  observatoryArtwork,
+  gatesArtwork,
+  tavernArtwork,
+  merchantArtwork,
+  questArtwork,
+  fountainArtwork,
+] = townArtwork;
+
+const distantLandmarks = [
+  { artwork: castleArtwork, label: "Campaign" },
+  { artwork: arenaArtwork, label: "Arena" },
+  { artwork: observatoryArtwork, label: "Modes" },
+];
+
+const foregroundLandmarks = [
+  { artwork: merchantArtwork, label: "Merchant" },
+  { artwork: questArtwork, label: "Quests" },
 ];
 
 const tavernEmbers = [
@@ -47,7 +68,10 @@ function ArtworkLayer({ artwork }: { artwork: TownArtwork }) {
 
 function PlannedLandmark({ artwork, label }: { artwork: TownArtwork; label: string }) {
   return (
-    <div className={`living-town-landmark living-town-${artwork.id}-anchor`}>
+    <div
+      className={`living-town-landmark living-town-${artwork.id}-anchor`}
+      style={{ aspectRatio: `${artwork.width} / ${artwork.height}` }}
+    >
       <button
         type="button"
         className="living-town-planned-landmark"
@@ -63,6 +87,18 @@ function PlannedLandmark({ artwork, label }: { artwork: TownArtwork; label: stri
   );
 }
 
+function DecorativeLandmark({ artwork }: { artwork: TownArtwork }) {
+  return (
+    <div
+      className={`living-town-landmark living-town-${artwork.id}-anchor`}
+      style={{ aspectRatio: `${artwork.width} / ${artwork.height}` }}
+      aria-hidden="true"
+    >
+      <ArtworkLayer artwork={artwork} />
+    </div>
+  );
+}
+
 function PlazaSurface() {
   return (
     <div
@@ -70,7 +106,7 @@ function PlazaSurface() {
       data-artwork="plaza"
       data-slot="living-town-plaza"
       aria-hidden="true"
-      style={{ backgroundImage: `url("${townArtwork[3].source}")` }}
+      style={{ backgroundImage: `url("${plazaArtwork.source}")` }}
     />
   );
 }
@@ -136,10 +172,10 @@ export function LivingTownScene({
   return (
     <div className="living-town-scene" data-slot="living-town-scene">
       <div className="living-town-frame" aria-hidden="true">
-        <ArtworkLayer artwork={townArtwork[0]} />
+        <ArtworkLayer artwork={skyArtwork} />
         <div data-slot="living-town-mountains">
-          <ArtworkLayer artwork={townArtwork[1]} />
-          <ArtworkLayer artwork={townArtwork[2]} />
+          <ArtworkLayer artwork={mountainsFarArtwork} />
+          <ArtworkLayer artwork={mountainsNearArtwork} />
         </div>
         <div className="living-town-mountain-haze" />
         {animate && !failed && (
@@ -149,7 +185,25 @@ export function LivingTownScene({
       <div className="living-town-ground" aria-hidden="true" />
       <PlazaSurface />
       <div className="living-town-world" data-slot="living-town-world">
-        <PlannedLandmark artwork={townArtwork[4]} label="Arena" />
+        <div
+          className="living-town-district-terrain living-town-castle-terrain"
+          style={{ backgroundImage: `url("${mountainsFarArtwork.source}")` }}
+          aria-hidden="true"
+        />
+        <div
+          className="living-town-district-terrain living-town-arena-terrain"
+          style={{ backgroundImage: `url("${mountainsNearArtwork.source}")` }}
+          aria-hidden="true"
+        />
+        <div
+          className="living-town-district-terrain living-town-observatory-terrain"
+          style={{ backgroundImage: `url("${mountainsNearArtwork.source}")` }}
+          aria-hidden="true"
+        />
+        {distantLandmarks.map(({ artwork, label }) => (
+          <PlannedLandmark key={artwork.id} artwork={artwork} label={label} />
+        ))}
+        <DecorativeLandmark artwork={gatesArtwork} />
         <div className="living-town-tavern-anchor" data-facing="inward">
           <button
             type="button"
@@ -158,7 +212,7 @@ export function LivingTownScene({
             disabled={!canPlay}
             onClick={onPlay}
           >
-            <ArtworkLayer artwork={townArtwork[5]} />
+            <ArtworkLayer artwork={tavernArtwork} />
             {animate && (
               <span className="living-town-embers" data-visible={visible} aria-hidden="true">
                 {tavernEmbers.slice(0, compact ? 4 : 6).map((ember) => (
@@ -171,9 +225,10 @@ export function LivingTownScene({
             </span>
           </button>
         </div>
-        {plannedLandmarks.map(({ artwork, label }) => (
+        {foregroundLandmarks.map(({ artwork, label }) => (
           <PlannedLandmark key={artwork.id} artwork={artwork} label={label} />
         ))}
+        <DecorativeLandmark artwork={fountainArtwork} />
       </div>
       <div className="living-town-atmosphere" aria-hidden="true" />
     </div>

@@ -24,9 +24,10 @@ fails. There is no hover tooltip. The accessible button name is Play at the tave
 ## Layers and scale
 
 `scene/townArtwork.ts` owns URLs, intrinsic dimensions and art order;
-`living-town.css` owns anchors and grading. Selected PNG masters are preserved. All eight
-WebP exports retain source dimensions/alpha, using quality 88, method 6, and total
-about 1167 KiB. Vite fingerprints them; the PNG masters are not emitted in the build.
+`living-town.css` owns anchors and grading. Selected PNG masters are preserved.
+Twelve WebP exports total about 1970 KiB, using quality 88, method 6. The four
+new exports trim transparent margins only; existing exports retain source dimensions.
+Vite fingerprints them; the PNG masters are not emitted in the build.
 
 | Layer                       | Source/export size | Placement                                                                    |
 | --------------------------- | ------------------ | ---------------------------------------------------------------------------- |
@@ -35,10 +36,14 @@ about 1167 KiB. Vite fingerprints them; the PNG masters are not emitted in the b
 | Near mountains              | 2172 × 724         | Top 22%, same overscan; darker foothills                                     |
 | Static haze / optional mist | Reference frame    | Behind the foreground                                                        |
 | Ground / plaza              | 1672 × 941         | One unrepeated image, vertically feathered, solid at side edges              |
-| Arena                       | 1525 × 1031        | Left 14%, bottom 32% (28% short landscape), width 26%; elevated above tavern |
+| Castle / Campaign           | 1137 × 1009        | Stage-centred, width 18%, bottom tier 48%; highest, farthest district        |
+| Arena                       | 1525 × 1031        | Left 17%, width 20%, bottom tier 27%; lower-left mountain district           |
+| Observatory / Modes         | 948 × 1375         | Right edge 92% of stage, width 13%, bottom tier 30%; right mountain district |
+| Gate                        | 1088 × 1114        | Stage-centred, width 17%, bottom 18%; exposed behind fountain                |
 | Tavern                      | 1536 × 1024        | 32% of contained world width, mirrored inward                                |
 | Merchant                    | 1536 × 1024        | Left -4.7%, bottom -11%, width 24%; in front of tavern                       |
 | Quest board                 | 1246 × 1262        | Visible right edge at 99% of stage, bottom -4%, width 20%                    |
+| Fountain                    | 1658 × 424         | Stage-centred, width 34%, bottom -4%; nearest central foreground             |
 | Atmosphere                  | Full stage         | Quiet perimeter, never over HTML HUD                                         |
 
 Foreground destinations share a contained 1600 × 900 world, with width
@@ -46,7 +51,10 @@ Foreground destinations share a contained 1600 × 900 world, with width
 wide with its native 3:2 aspect; there is no mobile-specific zoom. The world is
 left-aligned, not centered within an ultrawide stage. The tavern anchor is -4%
 of world width, accounting for transparent sprite padding while preserving the
-visible building at the left edge and leaving the square open to the right.
+visible building at the left edge. Castle, gate and fountain use stage-centred
+anchors, so the central sightline remains centred even on ultrawide screens.
+The observatory follows the stage's right side like Quests. Landmark frame aspects
+come directly from the asset manifest, not an assumed 3:2 ratio.
 
 Normal/portrait dock clearance is `max(20% scene height, 10.5rem)`, keeping the
 left-shifted tavern clear of Chat. Landscapes at most 600px tall instead use
@@ -59,7 +67,7 @@ the taller two-row system dock and Chat, rather than putting them over the facad
 
 The plaza is the original continuous painted image, shown once at stage width
 with automatic height. There is **no repetition, reflection or texture atlas**.
-Its vertical mask is anchored to the painted apron (22%–14% of world width
+Its vertical mask is anchored to the painted apron (32%–20% of world width
 above the image bottom). Its side edges remain solid beneath the edge buildings,
 including ultrawide screens. In portrait the apron extends 12% of world width
 beyond world dock clearance so the forward Merchant does not stand below the floor;
@@ -67,6 +75,10 @@ landscape lets it extend behind the dock. CSS ground color and the perimeter
 falloff connect the apron to the surrounding terrain without hard strips. Ground
 occlusion follows that same apron anchor, so raised narrow-screen placement does
 not reveal distant mountains underneath the paving like a floating platform.
+The complete plaza/ground anchor is lifted another 4% of world width: the source
+has transparent sky above row 585, so merely extending a CSS mask cannot put
+paving beneath the distant gate. The single original image now reaches its feet,
+without duplication, stretching or a separate floating floor patch.
 
 The former mirrored crop created visible alternating bands and was discarded.
 `export-living-town-plaza.py` was only an offline tile-export helper, never runtime
@@ -80,12 +92,10 @@ The newest reference-restored arena and quest booth are selected from
 matches the newest Downloads `quests.png` byte-for-byte, replacing the older
 symmetrical noticeboard. The arena export preserves its native 1525 × 1031 aspect;
 the quest booth keeps its near-square 1246 × 1262 aspect, not a stretched 3:2 box.
-The arena sits higher in the upper-left district and shifts toward the square,
-so its facade reads above and beside the tavern instead of being buried behind it.
-Its slightly smaller scale and feathered foundation suggest an elevated, more
-distant terrace. Short landscape screens lower its anchor slightly for header
-clearance. Narrow landscapes with the HUD's two-row header use 16% bottom clearance
-(10% at heights up to 375px), rather than hiding the Arena badge behind resources.
+The arena is smaller and lower than the castle, separated horizontally from it
+instead of overlapping. Its facade reads above and beside the tavern. Short
+landscape uses a 23% arena tier; narrow landscapes use 16%, falling to 10% at
+heights up to 375px, keeping the badge below the two-row resources header.
 The earlier `arena.png` study is not used at runtime.
 
 The smaller
@@ -102,10 +112,38 @@ art already faces left into the square and must not be mirrored.
 Detached oval ground shadows are removed. A tight one-pixel silhouette shadow
 provides edge occlusion instead; continuous paving now reaches beneath the
 painted feet, including portrait's lower Merchant and the stage edges. The unrepeated floor spans
-the full stage so both edge districts remain over paving. The middle stays open
-for a future focal point, with the upper town reserved for later landmarks.
+the full stage so both edge districts remain over paving.
 
-All three planned landmarks use permanent bronze nameplates. Merchant and Quests
+## Mountain districts and central sightline
+
+The latest Downloads castle, observatory, fountain and gates are copied byte-for-byte
+to their named PNG masters. The observatory and fountain differ from the earlier
+`*-reference.png` alternates; those alternates are deliberately not imported.
+Runtime exports crop only alpha margins, retaining an eight-pixel buffer around
+the alpha-above-16 silhouette. The fountain's large transparent upper area is
+removed instead of stretching its shallow, street-level oval into a tall shape.
+No new camera angle, mirrored gateway or altered building geometry is invented.
+
+The castle is smaller, farther away and highest, on a central peak. Arena occupies
+a separate, lower-left terrace; Modes is smaller and raised on the right. Three
+static, feathered landforms reuse the existing painted ridge images, with no new
+image requests or renderer. Shared tier variables anchor each building and its
+terrain together through responsive changes. The ridge extends behind each
+foundation rather than leaving a transparent gap beneath a floating building.
+
+The gate is brighter, slightly smaller and farther back than the fountain, and
+its full arch remains exposed above the foreground platform. The fountain is
+larger and lower, preserving its native shallow perspective and drawing in front
+of the gate. Neither has a badge or another Play action: both are decorative.
+
+Campaign and Modes use disabled coming-soon nameplates, consistent with Arena and
+the other planned destinations. Campaign's plaque is at 46% of its image height
+(60% in short landscape); Modes uses 54%. Compact landscapes reduce the right
+district and gate to 12% and 14% width, lower their tiers, and use 20% castle
+clearance so the denser two-row HUD does not cover the plaques. Native aspects,
+the central sightline and terrain-to-foundation alignment remain intact.
+
+All five planned landmarks use permanent bronze nameplates. Merchant and Quests
 plaques sit on their roofs at 32% of each native image height; Arena uses 38%.
 The Merchant plaque centres at 52% of its image box to follow the projected roof,
 with only a minimum left-edge inset on narrow screens to keep its bronze ends visible.
@@ -138,7 +176,7 @@ failure. The tavern remains the only playable landmark.
 
 ## Scope and validation
 
-Castle, observatory, new modes and progression rules remain deferred; #99
+New modes, progression rules and additional environmental detailing remain deferred; #99
 stays open. This is an iterative art pass, not final art approval. The painted
 tavern cannot be dynamically relit or viewed from another angle without new art.
 
