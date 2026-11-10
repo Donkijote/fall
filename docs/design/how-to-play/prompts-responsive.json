@@ -1,0 +1,16 @@
+{
+  "tool": "built-in image_gen",
+  "status": "Responsive clean archive masters; optimized WebP exports in src/assets/rulebook",
+  "outputs": [
+    {
+      "file": "archive-background-phone.png",
+      "references": ["archive-background-v1.png"],
+      "prompt": "Use case: stylized-concept\nAsset type: responsive phone artwork master for the approved Fall How to Play archive page.\nInput image: the approved clean landscape archive, art and room identity reference.\nRecompose this exact archive room for narrow phone portrait, approximately 9:19.5. Produce a full-bleed portrait painting, around 1024x2048. Preserve the same stone arches, oak shelves, leather-bound books, lantern and desk, ivy and cool doorway daylight as recognizable landmarks, but reframe vertically. Place a slim bookshelf and lantern grouping along lower-left and left edge; desk in bottom sixth. Keep upper half and central reading area quiet shadowed slate stone so mobile page title, chapter disclosure and article can fit as live controls. Bring a suggestion of cool window light to the far right edge. Preserve painterly material quality. Do not squeeze or letterbox the landscape scene.\nNo UI, labels, lettering, cards, people, borders, watermark, logos or baked controls. The background is decorative. Do not add new scene landmarks or change the palette."
+    },
+    {
+      "file": "archive-background-tablet.png",
+      "references": ["archive-background-v1.png"],
+      "prompt": "Use case: stylized-concept\nAsset type: responsive tablet artwork master for the approved Fall How to Play archive page.\nInput image: the approved clean landscape archive, art and room identity reference.\nRecompose this exact archive room for tablet portrait approximately 4:5, around 1120x1400. Pull back slightly to show shelves at left and cool daylight at right, desk and books low in the bottom fifth. Keep a large quiet central stone area and upper title zone. Preserve the room identity, stone arches, oak, leather books, low warm lantern and cool light; extend the vault upward rather than stretching. Do not squeeze or letterbox the original.\nNo UI, labels, lettering, cards, people, borders, watermark, logos or baked controls. The background is decorative. Do not add new scene landmarks or change the palette."
+    }
+  ]
+}

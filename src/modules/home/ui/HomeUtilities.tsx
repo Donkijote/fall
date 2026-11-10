@@ -1,6 +1,6 @@
 import { ChevronRight } from "lucide-react";
-import { useId } from "react";
-import { Link, useNavigate } from "react-router";
+import { useEffect, useId, useRef } from "react";
+import { Link, useLocation, useNavigate } from "react-router";
 
 import help from "@/assets/lobby/card-hall/icons/help.svg";
 import logout from "@/assets/lobby/card-hall/icons/logout.svg";
@@ -51,6 +51,11 @@ function HelpLinks() {
 
 export function HomeUtilities({ onSettings }: { onSettings: () => void }) {
   const navigate = useNavigate();
+  const location = useLocation();
+  const helpRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (location.state?.focusHelp === true) helpRef.current?.focus();
+  }, [location.key, location.state]);
   return (
     <nav aria-label="Utilities" className="ml-auto flex gap-1 sm:gap-2.5">
       <NavigationGroup label="Communication">
@@ -66,7 +71,7 @@ export function HomeUtilities({ onSettings }: { onSettings: () => void }) {
         <li>
           <Popover>
             <PopoverTrigger
-              render={<NavigationButton icon={help} aria-label="Help" title="Help" />}
+              render={<NavigationButton ref={helpRef} icon={help} aria-label="Help" title="Help" />}
             />
             <HelpLinks />
           </Popover>

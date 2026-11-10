@@ -1,6 +1,6 @@
 import { ArrowLeft } from "lucide-react";
 import { useMemo, useState } from "react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 import { SelectTrigger, TextInput } from "@/components";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import { getUiHands } from "@/infrastructure/adapters/handWithMeta";
 import { SingsList } from "@/infrastructure/ui/components/singins/SingsList";
+import { HOME_PATH } from "@/routes/Routes";
 
 const pointOptions = [
   { value: "any", label: "Any points" },
@@ -21,6 +22,13 @@ export const SingsSheetScreen = () => {
   const [onlyMandatory, setOnlyMandatory] = useState(false);
   const [minPoints, setMinPoints] = useState<number | null>(null);
   const navigate = useNavigate();
+  const location = useLocation();
+  const rulesReturnTo =
+    typeof location.state?.rulesReturnTo === "string" &&
+    /^\/rules(?:\?|$)/.test(location.state.rulesReturnTo)
+      ? location.state.rulesReturnTo
+      : null;
+  const canGoBack = typeof window.history.state?.idx === "number" && window.history.state.idx > 0;
   const list = useMemo(() => {
     const search = query.trim().toLowerCase();
     return getUiHands()
@@ -44,9 +52,20 @@ export const SingsSheetScreen = () => {
           <Button
             variant="outline"
             size="icon"
-            aria-label="Go back"
-            className="goBack"
-            onClick={() => navigate(-1)}
+            aria-label={
+              rulesReturnTo ? "Back to How to play" : canGoBack ? "Go back" : "Back to Hall"
+            }
+            className="goBack transition-none"
+            onClick={() =>
+              rulesReturnTo
+                ? navigate(rulesReturnTo, {
+                    replace: true,
+                    state: { rulebookPositionKey: location.state.rulesPositionKey },
+                  })
+                : canGoBack
+                  ? navigate(-1)
+                  : navigate(HOME_PATH)
+            }
           >
             <ArrowLeft />
           </Button>

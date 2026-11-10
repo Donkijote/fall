@@ -39,6 +39,26 @@ inherited transitions and keep focus cues visible with reduced motion. Scope tim
 See [AGENTS.md](AGENTS.md) for the implementation rules and the
 [login screen](docs/login-screen.md#interface-motion) for a working example.
 
+### Module architecture
+
+Feature work belongs under `src/modules/<feature>` and follows hexagonal
+dependency direction: framework-independent domain rules, application logic
+that depends inward on those rules, and adapters for routing, browser state or
+other external dependencies. UI composes those pieces. Keep infrastructure
+screens and routes thin and expose a small module entry point through `index.ts`.
+Do not copy authoritative game rules into feature state or create empty layers
+and ports without an actual dependency to isolate.
+
+At a module's `ui` root, keep its exported screen/composition component and
+colocated tests. Group supporting components under `ui/components` by
+responsibility instead of flattening them into the root or growing a single
+large screen. Shared presentation belongs in `src/components`; feature-only
+presentation stays inside the module. Colocate tests and document ownership and
+dependencies in each module's README.
+
+The [rulebook module](src/modules/rulebook/README.md) illustrates this organization.
+These conventions are also part of [AGENTS.md](AGENTS.md).
+
 ## Cloudflare Deployment
 
 The app is hosted at the domain root on Cloudflare Workers using static assets.

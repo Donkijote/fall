@@ -23,7 +23,7 @@ vi.mock("@/infrastructure/ui/screens/SingsSheet", () => ({
   SingsSheetScreen: () => <div data-testid="sings">Sings</div>,
 }));
 
-vi.mock("@/infrastructure/ui/screens/rules/Rules", () => ({
+vi.mock("@/infrastructure/ui/screens/Rules", () => ({
   RulesScreen: () => <div data-testid="rules">Rules</div>,
 }));
 

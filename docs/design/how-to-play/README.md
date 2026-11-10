@@ -1,6 +1,6 @@
 # How to Play — Card Hall rulebook study
 
-Design research and mockups for [#103](https://github.com/Donkijote/fall/issues/103). The owner approved the open archive page composition and both visual references, with the subtitle removed. This PR locks that design; it does not implement the screen or change gameplay. Implementation follows in a separate pass. The existing Rules and Sings content defines the intended first-release rules, as confirmed by the owner during this work. Engine discrepancies belong in [bug #109](https://github.com/Donkijote/fall/issues/109), not in revised teaching copy.
+Design research and mockups for [#103](https://github.com/Donkijote/fall/issues/103). The owner approved the open archive page composition and both visual references, with the subtitle removed. The approved simplified design is now implemented at `/rules` in the rulebook module. Gameplay rules and scoring behavior remain unchanged. The existing Rules and Sings content defines the intended first-release rules, as confirmed by the owner during this work. Engine discrepancies belong in [bug #109](https://github.com/Donkijote/fall/issues/109), not in revised teaching copy.
 
 ## Approved page composition
 
@@ -83,7 +83,7 @@ The approved `archive-background-v1.png` is the landscape scene master. During i
 | Tablet portrait       | Pull back and reframe the room; bring shelves and daylight toward the edges, keep the desk low and the upper/title area quiet. Leave generous space for the single-column guide.                               |
 | Narrow phone portrait | Recompose vertically; keep a recognizable shelf edge and small low desk/lantern grouping, with quiet stone behind the title and navigation. Do not squeeze the whole desktop room or desktop UI into portrait. |
 
-Keep full-resolution reference masters in `docs/design/how-to-play`. Export optimized WebP runtime artwork under `src/assets` and select sources by aspect ratio using the existing picture pattern. Determine output dimensions and compression from the rendered results; preserve safe-area readability and test 320px portrait, tablet portrait, short landscape and ultrawide. The two portrait paintings and all runtime exports are deferred to implementation; they are not additional delivered assets in this design pass.
+Keep full-resolution reference masters in `docs/design/how-to-play`. Export optimized WebP runtime artwork under `src/assets` and select sources by aspect ratio using the existing picture pattern. Determine output dimensions and compression from the rendered results; preserve safe-area readability and test 320px portrait, tablet portrait, short landscape and ultrawide. Both portrait masters and all three optimized WebP exports are now included; see the implementation section below for source paths and verification.
 
 ## Content organization
 
@@ -142,6 +142,56 @@ Inspected all four supplied stills and the existing design masters; read the Rul
 
 A temporary fixture exercised the mockup's exact play through `analyzePlay`, hand removal, the service-style played-card table insertion and `updateTableAndHandCards`: cups-4 captures coins-4; clubs-7 and swords-11 remain; the collected pile contains exactly the two 4s. Five additional diagnostic cases reproduced #109 (three pair ranks, optional Big House disabled, and cascade collection). These probes were removed after the research; no diagnostic assertions of incorrect behavior ship as regression tests. Existing moves, scoring, deal, resolveHands and hands suites plus the initial example fixture passed: 39 tests in six files. The subsequent six focused probe cases also passed, confirming the recorded current outcomes. See #109 for the required expected-behavior tests.
 
-Revision validation: re-reviewed all four supplied references for the relationship between page-level navigation and framed content. The v2 work changes composition and background only; the written rules, verified card example and #109 findings remain unchanged. The archive master is reference artwork under `docs/design`; no runtime asset or route has been changed.
+Historical v2 design validation: re-reviewed all four supplied references for the relationship between page-level navigation and framed content. The v2 work changes composition and background only; the written rules, verified card example and #109 findings remain unchanged. The archive master is reference artwork under `docs/design`; no runtime asset or route has been changed.
 
-Final design lock: both subtitle-free images were visually reviewed. HOW TO PLAY remains in place; navigation, lesson, illustration and the archive composition remain the approved direction. Earlier studies are retained for provenance. This pass intentionally stops at design finalization, as requested by the owner.
+Final design lock: both subtitle-free images were visually reviewed. HOW TO PLAY remains in place; navigation, lesson, illustration and the archive composition remain the approved direction. Earlier studies are retained for provenance. That design-only pass was followed by the implementation described below, at the owner’s request.
+
+## Implemented simplified page
+
+![Running simplified rulebook, desktop](implementation-desktop.png)
+
+The running `/rules` page implements the approved subtitle-free simplified
+composition with live Cinzel/Spline Sans text, open chapter navigation, the
+shared FramedCard/ActionButton/TextInput components, and real Spanish-deck SVGs.
+All existing written Rules items remain in seven chapters, including the
+complete Sings ranking and glossary. Search covers rule text, examples,
+callouts, combination values and definitions. No domain rule data was changed.
+
+Ownership is documented in [the rulebook module](../../../src/modules/rulebook/README.md).
+The application projection is framework-independent; routing, focus, reading
+positions and GSAP motion are adapters. Supporting UI is grouped under
+`ui/components/{layout,navigation,chapters,search}`. The infrastructure screen is
+one export. Root AGENTS.md and README record this module convention.
+
+The existing `/sings` page remains a separate reference, with its search and
+filters intact. The new guide passes a contextual return destination and scroll
+position key. Back restores the chapter and reading position; Back to Hall
+restores focus to Help. In-match Sings remains unchanged. A visual redesign of
+the reference page has not been folded into this work.
+
+Dedicated [phone](archive-background-phone.png) and
+[tablet](archive-background-tablet.png) paintings preserve the approved archive
+identity. Their [exact built-in ImageGen prompts](prompts-responsive.json) and
+[runtime artwork inventory](../../../src/assets/rulebook/README.md) document
+provenance, dimensions and WebP exports. The runtime picture selects phone,
+tablet or landscape by aspect ratio. No design PNG is imported into app code.
+
+The desktop rail becomes a native Chapters disclosure on compact widths. The
+page has one scroll region; the read-only card diagram reflows into labeled
+groups. Touch targets, heading focus, search status/empty state, safe-area
+padding and reduced motion are preserved. Semantic light/dark surfaces keep
+reading contrast without changing the approved archive artwork.
+
+Verification on the existing port 3000 app covered desktop (1600×900), tablet
+portrait (768×1024), narrow phone (320×568), and short landscape (568×320), plus
+ultrawide width/overflow measurement (2560×1080). Checked the desktop light and
+dark themes, real Hub Help entry, Hall focus restoration, mobile disclosure and
+footer access, search and deep-link focus, and the Sings return path. System
+appearance was restored after theme testing. Browser viewport overrides were
+reset. The desktop image above is a browser capture, unlike the design studies.
+
+Automated verification: application source retention/search tests, composed
+screen tests for chapter URLs, deep links, search, mobile navigation, Sings
+return and saved positions, plus Hall focus restoration. Final verification passed: `pnpm check`, 301 tests across 60 files,
+`pnpm run build`, and `git diff --check`. Results are also recorded in the PR. Existing
+Three.js deprecation and bundle-size warnings are unrelated to this module.

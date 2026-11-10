@@ -45,3 +45,30 @@
   masters only; export optimised runtime assets rather than importing from docs.
 - The user already runs the app on port 3000. Reuse it; do not start another server.
 - Preserve manual edits and deletions. Do not commit or push without a request.
+
+# Module architecture
+
+- Organize features as modules under `src/modules/<feature>` and follow hexagonal
+  dependency direction. Domain rules and types remain framework-independent;
+  application code composes domain behavior and data without importing React,
+  routing, browser APIs, UI components, or infrastructure. Adapters handle those
+  external integrations. UI composes the application model and the adapters.
+- Keep existing shared domain rules authoritative. Do not duplicate game rules
+  inside a feature or introduce empty layers, ports, or repositories merely to
+  match a folder template. Add an interface/port where an actual external
+  dependency needs inversion or substitution.
+- Export a small module entry point from `index.ts`. Infrastructure screens and
+  routes should remain thin composition adapters, not own feature content or
+  large component trees. Import another feature through its public entry point.
+- Keep only the exported screen/composition component and its colocated tests at
+  a module's `ui` root. Put supporting UI under `ui/components`, grouped by
+  responsibility (for example `layout`, `navigation`, `chapters`, and `search`).
+  Split orchestration, content rendering, navigation, and browser effects into
+  focused owners. Avoid both a large screen file and a flat pile of helpers.
+- Feature-only presentation stays in its module. Promote presentation reused
+  across features to `src/components` under its appropriate purpose; shared
+  components must not depend on a feature's internal modules or infrastructure
+  screen implementations. Preserve the generated primitives boundary.
+- Colocate tests with their owner and document module responsibilities,
+  dependency boundaries, public entry points, and verification in the module's
+  README. Update these architecture notes when introducing a new convention.

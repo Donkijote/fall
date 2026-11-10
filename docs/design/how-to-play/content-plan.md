@@ -4,15 +4,15 @@ The owner confirmed that the existing Rules page and Sings reference are the int
 
 ## Source inventory
 
-| Source                                                                                    | Owns                                                                                                             |
-| ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `src/domain/constants/rules.ts`                                                           | Written guide, mode quotas, Fall/Clean Table values, target, Sings ranking and glossary.                         |
-| `src/infrastructure/ui/screens/rules/Rules.tsx` and `components/`                         | Eight section tabs, expanded rule accordions, desktop quick reference, Sings ranking and first-visit hint modal. |
-| `src/infrastructure/ui/screens/SingsSheet.tsx`                                            | Search by name/tag, minimum points, mandatory-only filter, descending points order, empty state.                 |
-| `src/infrastructure/adapters/handWithMeta.ts`, `src/domain/rules/hands.ts`, `handMeta.ts` | Reference entries: names, patterns, points, mandatory flags, descriptions, tags and illustrated examples.        |
-| `src/infrastructure/ui/components/modal/SingsModal.tsx`                                   | Existing in-match lookup; preserve match state and dismissal.                                                    |
+| Source                                                                                    | Owns                                                                                                        |
+| ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `src/domain/constants/rules.ts`                                                           | Written guide, mode quotas, Fall/Clean Table values, target, Sings ranking and glossary.                    |
+| `src/modules/rulebook/application` and `ui/components`                                    | Implemented chapter organization, search and focused page components; source content remains in the domain. |
+| `src/infrastructure/ui/screens/SingsSheet.tsx`                                            | Search by name/tag, minimum points, mandatory-only filter, descending points order, empty state.            |
+| `src/infrastructure/adapters/handWithMeta.ts`, `src/domain/rules/hands.ts`, `handMeta.ts` | Reference entries: names, patterns, points, mandatory flags, descriptions, tags and illustrated examples.   |
+| `src/infrastructure/ui/components/modal/SingsModal.tsx`                                   | Existing in-match lookup; preserve match state and dismissal.                                               |
 
-## Current presentation audit
+## Original presentation audit (before implementation)
 
 The current Overview contains only a definition, so new readers must assemble their first turn across Setup, Turn and Captures. Eight wrapping tabs compete with a sticky right reference; the latter is hidden below the desktop breakpoint. The first-visit modal tells users how to operate the tabs before they can read the guide. Captures are explained in prose without worked before/after card examples. Sings are presented both in a compact rules ranking and in a richer filtered reference, making divergence possible. Both guide routes use `navigate(-1)` without a guaranteed fallback for direct visits.
 
@@ -91,4 +91,4 @@ These are source-review questions, not decisions to change the first-release rul
 - **Multiple equal ranks and rank sequence.** The engine selects one target per rank and uses 1–7,10–12 order. Written “card(s)” and numeric adjacent notation are less precise. Confirm intended examples with duplicates and 7 → 10 rather than silently inventing behavior.
 - **Fall and round ending.** The code retains the last played rank even after captures; the written rule describes a just-thrown card. Clean Table and immediate-winning checks also need end-to-end verification, including the last action before `roundEnd`. These edge cases need focused gameplay tests before final worked examples.
 
-Do not hide implementation bugs or unresolved wording from the release review, and do not place these engineering notes in the player's tutorial. This design PR leaves all runtime code and current Rules/Sings data unchanged.
+Do not hide implementation bugs or unresolved wording from the release review, and do not place these engineering notes in the player's tutorial. The implemented guide preserves the current Rules/Sings data; gameplay engine corrections remain separate from the rulebook UI work.

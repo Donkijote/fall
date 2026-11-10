@@ -1,0 +1,134 @@
+import { RULES } from "@/domain/constants/rules";
+import type { RuleItem } from "@/domain/entities/Rules";
+
+export type Chapter = {
+  id: string;
+  title: string;
+  heading: string;
+  items: RuleItem[];
+};
+
+const items = (...ids: string[]) =>
+  RULES.sections.filter((section) => ids.includes(section.id)).flatMap((section) => section.items);
+
+export const chapters: Chapter[] = [
+  { id: "quick-start", title: "Quick start", heading: "Your first capture", items: [] },
+  {
+    id: "setup",
+    title: "Setup & objective",
+    heading: "Take your seat",
+    items: items("overview", "setup"),
+  },
+  { id: "turn", title: "Your turn", heading: "Play one card", items: items("turn") },
+  { id: "captures", title: "Captures", heading: "Read the table", items: items("captures") },
+  {
+    id: "sings",
+    title: "Sings (Cantos)",
+    heading: "Know your combinations",
+    items: items("sings"),
+  },
+  {
+    id: "scoring",
+    title: "Scoring & winning",
+    heading: "Every point counts",
+    items: items("scoring"),
+  },
+  {
+    id: "variations",
+    title: "Variations & glossary",
+    heading: "The finer details",
+    items: items("variations", "glossary"),
+  },
+];
+
+export const quickSteps = [
+  { title: "Take your seat", body: "Choose 1v1, three-player free-for-all, or 2v2." },
+  {
+    title: "Read the table",
+    body: "At the opening deal, each player receives 3 cards. Four start face up.",
+  },
+  {
+    title: "Play one card",
+    body: "Match a rank to capture. If there is no match, leave your card on the table.",
+  },
+];
+
+export const captureExample = {
+  played: { rank: 4, suit: "cups" },
+  table: [
+    { rank: 4, suit: "coins" },
+    { rank: 7, suit: "clubs" },
+    { rank: 11, suit: "swords" },
+  ],
+  captured: [
+    { rank: 4, suit: "cups" },
+    { rank: 4, suit: "coins" },
+  ],
+} as const;
+
+export type RuleResult = {
+  chapter: string;
+  chapterTitle: string;
+  id?: string;
+  title: string;
+  text: string;
+};
+
+// Search indexes the same written rules and values rendered in the guide.
+const searchEntries: RuleResult[] = chapters.flatMap((chapter) => [
+  { chapter: chapter.id, chapterTitle: chapter.title, title: chapter.title, text: chapter.heading },
+  ...chapter.items.map((item) => ({
+    chapter: chapter.id,
+    chapterTitle: chapter.title,
+    id: item.id,
+    title: item.title,
+    text: [item.body, ...(item.examples ?? []), ...(item.callouts?.map((c) => c.text) ?? [])].join(
+      " ",
+    ),
+  })),
+]);
+searchEntries.push(
+  ...quickSteps.map((step) => ({
+    chapter: "quick-start",
+    chapterTitle: "Quick start",
+    title: step.title,
+    text: step.body,
+  })),
+  ...RULES.glossary.map((entry, index) => ({
+    chapter: "variations",
+    chapterTitle: "Variations & glossary",
+    id: `term-${index}`,
+    title: entry.term,
+    text: entry.def,
+  })),
+  ...RULES.singsRanking.map((entry, index) => ({
+    chapter: "sings",
+    chapterTitle: "Sings (Cantos)",
+    id: `sing-${index}`,
+    title: entry.name,
+    text: `${entry.pattern}. ${entry.points} points. ${entry.optional ? "Optional" : "Mandatory"}. ${entry.notes ?? ""}`,
+  })),
+  {
+    chapter: "scoring",
+    chapterTitle: "Scoring & winning",
+    id: "fall-points",
+    title: "Fall points by rank",
+    text: Object.entries(RULES.scoring.fall.ranks)
+      .map(([rank, points]) => `${rank}: ${points} points`)
+      .join("; "),
+  },
+);
+
+export function findRules(query: string): RuleResult[] {
+  const terms = query.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
+  if (!terms.length) return [];
+  return searchEntries.filter((entry) =>
+    terms.every((term) =>
+      `${entry.chapterTitle} ${entry.title} ${entry.text}`.toLocaleLowerCase().includes(term),
+    ),
+  );
+}
+
+export const fallRankValues = Object.entries(RULES.scoring.fall.ranks).sort(
+  ([first], [second]) => Number.parseInt(first) - Number.parseInt(second),
+);
