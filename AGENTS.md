@@ -1,17 +1,24 @@
 # UI implementation rules
 
 - Use Tailwind utilities for component styling and responsive layouts wherever possible.
-- Keep shared colours and theme decisions in `src/index.css`, using semantic global
-  tokens in both light and dark appearances. Do not introduce a Home-only theme or
-  duplicate a global palette inside component styles. Artwork-specific contrast
-  tokens must also be global and reusable across illustrated screens.
+- Start with the existing shadcn semantic colour tokens in `src/index.css`.
+  Use their matching foregrounds, borders, inputs, and focus rings in both
+  themes. Keep the shadcn token names and OKLCH values or semantic aliases.
+  Use Tailwind palette utilities for one-off decorative colours. Add a global
+  token only for a distinct, reusable role across features, such as the shared
+  gold trim or artwork contrast. Give it a semantic name and define it in
+  OKLCH. Avoid component palettes, raw hex UI colours, and duplicate tokens.
 - Keep reusable styled components in `src/components`, outside the generated
   shadcn/Base UI primitives in `src/components/ui`. Do not customise generated core
   files to implement game-specific visuals.
-- Use the installed GSAP / `@gsap/react` tools for DOM animation and Three.js /
-  React Three Fiber for scenes that need an actual 3D renderer. Do not build rich
-  motion with CSS keyframes. Respect reduced motion, clean up animation contexts
-  and listeners, and keep decorative effects out of the accessibility tree.
+- Use GSAP / `@gsap/react` for all DOM motion, Three.js or React Three Fiber for
+  rendered scenes, and Three Quarks for 3D particle effects. This applies to
+  simple fades and hover or focus motion as well as complex game sequences.
+  Tailwind and CSS are for static styling, layout, and immediate state cues.
+  Do not animate with CSS transitions, CSS keyframes, or Tailwind animation
+  utilities. Disable inherited primitive transitions in features that adopt
+  this guidance. Respect reduced motion, clean up animation contexts and
+  listeners, and keep decorative effects out of the accessibility tree.
 - Only add custom CSS when utilities cannot reasonably express the requirement.
   Name that stylesheet exactly after its owning component, e.g. `HomeLobby.css`
   for `HomeLobby.tsx`. Do not accumulate shared component styling in a generic CSS file.

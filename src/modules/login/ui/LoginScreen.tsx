@@ -1,14 +1,15 @@
+import { cn } from "cn";
 import gsap from "gsap";
 import { useId, useRef } from "react";
 import { useNavigate } from "react-router";
 
+import appEmblem from "@/assets/branding/wingfoot.svg";
 import mailIcon from "@/assets/lobby/card-hall/icons/envelope.svg";
 import coinSuit from "@/assets/lobby/card-hall/icons/two-coins.svg";
 import swordSuit from "@/assets/login/icons/crossed-swords.svg";
 import cupSuit from "@/assets/login/icons/jeweled-chalice.svg";
 import passwordIcon from "@/assets/login/icons/padlock.svg";
 import seatIcon from "@/assets/login/icons/plain-arrow.svg";
-import appEmblem from "@/assets/login/icons/wingfoot.svg";
 import clubSuit from "@/assets/login/icons/wood-club.svg";
 import { GameIcon } from "@/components/game/GameIcon";
 import { Button } from "@/components/ui/button";
@@ -22,18 +23,22 @@ import { useGSAP } from "@gsap/react";
 
 import { LoginAtmosphere } from "./LoginAtmosphere";
 import { ProviderIcon } from "./ProviderIcon";
+import "./LoginScreen.css";
 
 const suitIcons = [coinSuit, cupSuit, swordSuit, clubSuit];
 
 const credentialInputClass =
-  "h-11 border-border/60 bg-background pl-11 inset-shadow-sm inset-shadow-artwork-shadow/10 sm:h-12 md:text-base lg:text-sm max-xl:landscape:h-[clamp(2.75rem,12dvh,3.25rem)] max-xl:landscape:text-base dark:bg-artwork-shadow/60";
+  "h-11 border-input bg-background pl-11 inset-shadow-sm inset-shadow-artwork-shadow/10 sm:h-12 md:text-base lg:text-sm max-xl:landscape:h-[clamp(2.75rem,12dvh,3.25rem)] max-xl:landscape:text-base dark:bg-artwork-shadow/60 transition-none";
 
-const cardLinkClass = "h-6 px-0 text-engraved-accent";
+const staticButtonClass = "transition-none active:not-aria-[haspopup]:translate-y-0";
+const cardLinkClass = cn(staticButtonClass, "h-6 px-0 text-foreground");
 
 export function LoginScreen() {
   const formId = useId();
   const navigate = useNavigate();
   const screenRef = useRef<HTMLElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const rimRef = useRef<HTMLSpanElement>(null);
 
   useGSAP(
     () => {
@@ -43,7 +48,20 @@ export function LoginScreen() {
         gsap
           .timeline({ defaults: { ease: "power2.out", clearProps: "opacity,transform" } })
           .from(".login-intro > *", { opacity: 0, y: 18, duration: 0.85, stagger: 0.09 })
-          .from(".login-card", { opacity: 0, y: 24, duration: 1 }, 0.15);
+          .from(cardRef.current, { opacity: 0, y: 24, duration: 1 }, 0.15);
+
+        const rim = rimRef.current;
+        if (!rim) return;
+
+        gsap
+          .timeline({ delay: 0.9, repeat: -1, repeatDelay: 2.5 })
+          .fromTo(
+            rim,
+            { "--login-rim-angle": "-65deg" },
+            { "--login-rim-angle": "295deg", duration: 8, ease: "none" },
+          )
+          .to(rim, { opacity: 0.9, duration: 1.25, ease: "sine.out" }, 0)
+          .to(rim, { opacity: 0, duration: 1.5, ease: "sine.in" }, 6.5);
       });
       return () => motion.revert();
     },
@@ -53,7 +71,7 @@ export function LoginScreen() {
   return (
     <main
       ref={screenRef}
-      className="login-screen h-dvh scroll-pt-[calc(var(--safe-area-top)+0.5rem)] scroll-pb-[calc(var(--safe-area-bottom)+0.5rem)] overflow-x-hidden overflow-y-auto overscroll-contain bg-artwork-shadow before:pointer-events-none before:fixed before:inset-x-0 before:top-px before:z-20 before:h-0.5 before:bg-linear-to-r before:from-transparent before:via-artwork-accent/65 before:to-transparent after:pointer-events-none after:fixed after:inset-x-0 after:bottom-px after:z-20 after:h-0.5 after:bg-linear-to-r after:from-transparent after:via-artwork-accent/65 after:to-transparent motion-reduce:**:transition-none"
+      className="login-screen h-dvh scroll-pt-[calc(var(--safe-area-top)+0.5rem)] scroll-pb-[calc(var(--safe-area-bottom)+0.5rem)] overflow-x-hidden overflow-y-auto overscroll-contain bg-artwork-shadow before:pointer-events-none before:fixed before:inset-x-0 before:top-px before:z-20 before:h-0.5 before:bg-linear-to-r before:from-transparent before:via-gold/65 before:to-transparent after:pointer-events-none after:fixed after:inset-x-0 after:bottom-px after:z-20 after:h-0.5 after:bg-linear-to-r after:from-transparent after:via-gold/65 after:to-transparent"
     >
       <div className="login-stage relative isolate flex min-h-full items-center justify-center pt-[calc(var(--login-y)+var(--safe-area-top))] pr-[calc(var(--login-x)+var(--safe-area-right))] pb-[calc(var(--login-y)+var(--safe-area-bottom))] pl-[calc(var(--login-x)+var(--safe-area-left))] [--login-x:1rem] [--login-y:1.25rem] sm:[--login-x:2rem] sm:[--login-y:2rem] lg:[--login-x:2.5rem] lg:[--login-y:1.5rem] max-xl:landscape:[--login-x:1.5rem] max-xl:landscape:[--login-y:0.5rem]">
         <LoginAtmosphere />
@@ -62,9 +80,9 @@ export function LoginScreen() {
             aria-labelledby="login-title"
             className="login-intro min-w-0 space-y-3 text-artwork-foreground [text-shadow:0_1px_4px_var(--artwork-shadow)] sm:space-y-5 lg:space-y-7 max-xl:landscape:space-y-4 max-sm:landscape:hidden"
           >
-            <p className="flex items-center gap-2 text-[0.625rem] font-semibold tracking-[0.2em] text-artwork-accent uppercase sm:gap-3 sm:text-xs sm:tracking-[0.24em] max-xl:landscape:gap-2 max-xl:landscape:text-[0.625rem] max-xl:landscape:tracking-[0.16em]">
+            <p className="flex items-center gap-2 text-[0.625rem] font-semibold tracking-[0.2em] text-gold uppercase sm:gap-3 sm:text-xs sm:tracking-[0.24em] max-xl:landscape:gap-2 max-xl:landscape:text-[0.625rem] max-xl:landscape:tracking-[0.16em]">
               <span
-                className="h-px w-6 shrink-0 bg-artwork-accent sm:w-10 max-xl:landscape:w-6"
+                className="h-px w-6 shrink-0 bg-gold sm:w-10 max-xl:landscape:w-6"
                 aria-hidden="true"
               />
               The classic. Reimagined.
@@ -75,11 +93,11 @@ export function LoginScreen() {
             >
               Every hand
               <br />{" "}
-              <span className="login-title-gradient inline-block bg-linear-to-r from-primary from-10% to-artwork-ember bg-clip-text text-transparent forced-colors:bg-none forced-colors:text-[CanvasText]">
+              <span className="login-title-gradient inline-block bg-linear-to-r from-primary from-10% to-orange-500 bg-clip-text text-transparent forced-colors:bg-none forced-colors:text-[CanvasText]">
                 A new story.
               </span>
             </h1>
-            <p className="hidden max-w-md border-l border-artwork-accent/60 pl-4 text-sm leading-relaxed lg:block lg:pl-5 lg:text-base xl:text-lg max-xl:landscape:pl-3 max-xl:landscape:text-sm sm:landscape:block">
+            <p className="hidden max-w-md border-l border-gold/60 pl-4 text-sm leading-relaxed lg:block lg:pl-5 lg:text-base xl:text-lg max-xl:landscape:pl-3 max-xl:landscape:text-sm sm:landscape:block">
               Beyond the mist, a new challenge awaits.
               <span className="max-xl:landscape:hidden">
                 {" "}
@@ -91,7 +109,7 @@ export function LoginScreen() {
                 {suitIcons.map((icon) => (
                   <span
                     key={icon}
-                    className="login-suit-symbol flex size-10 items-center justify-center rounded-full border border-artwork-accent/55 bg-artwork-shadow text-artwork-foreground shadow-sm"
+                    className="login-suit-symbol flex size-10 items-center justify-center rounded-full border border-gold/55 bg-artwork-shadow text-artwork-foreground shadow-sm"
                   >
                     <GameIcon icon={icon} className="size-5" />
                   </span>
@@ -103,9 +121,17 @@ export function LoginScreen() {
             </div>
           </section>
 
-          <Card className="login-card relative w-full min-w-0 border-2 border-gold bg-linear-to-b from-card to-background shadow-[0_18px_36px_var(--artwork-shadow),0_0_24px_color-mix(in_oklab,var(--artwork-accent)_34%,transparent)] inset-ring-1 inset-ring-gold/35 [--card-spacing:--spacing(4)] sm:[--card-spacing:--spacing(5)] xl:[--card-spacing:--spacing(6)] max-xl:landscape:[--card-spacing:clamp(1rem,calc(12dvh-1.5rem),2rem)]">
+          <Card
+            ref={cardRef}
+            className="login-card relative w-full min-w-0 border-2 border-gold bg-linear-to-b from-card to-background shadow-[0_18px_36px_var(--artwork-shadow),0_0_24px_color-mix(in_oklab,var(--gold)_34%,transparent)] inset-ring-1 inset-ring-gold/35 [--card-spacing:--spacing(4)] sm:[--card-spacing:--spacing(5)] xl:[--card-spacing:--spacing(6)] max-xl:landscape:[--card-spacing:clamp(1rem,calc(12dvh-1.5rem),2rem)]"
+          >
+            <span
+              ref={rimRef}
+              aria-hidden="true"
+              className="login-card-rim pointer-events-none absolute inset-0 rounded-[inherit] opacity-0 forced-colors:hidden"
+            />
             <CardHeader className="justify-items-center gap-2 pt-0 text-center sm:gap-3 xl:pt-2 max-xl:landscape:flex max-xl:landscape:items-center max-xl:landscape:justify-center max-xl:landscape:gap-3">
-              <span className="mb-1 flex size-10 items-center justify-center rounded-full border border-gold/60 bg-linear-to-b from-secondary to-card text-engraved-accent shadow-sm sm:size-12 xl:size-16 max-xl:landscape:mb-0 max-xl:landscape:size-[clamp(2rem,10dvh,2.75rem)] max-xl:landscape:shrink-0">
+              <span className="mb-1 flex size-10 items-center justify-center rounded-full border border-gold/60 bg-linear-to-b from-secondary to-card text-muted-foreground shadow-sm sm:size-12 xl:size-16 max-xl:landscape:mb-0 max-xl:landscape:size-[clamp(2rem,10dvh,2.75rem)] max-xl:landscape:shrink-0">
                 <GameIcon icon={appEmblem} className="size-5 sm:size-6 xl:size-8" />
               </span>
               <h2 className="font-heading text-2xl font-bold sm:text-3xl max-xl:landscape:text-2xl">
@@ -125,7 +151,7 @@ export function LoginScreen() {
                   <div className="relative">
                     <GameIcon
                       icon={mailIcon}
-                      className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-engraved-accent"
+                      className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-muted-foreground"
                     />
                     <Input
                       id={`${formId}-email`}
@@ -147,7 +173,7 @@ export function LoginScreen() {
                   <div className="relative">
                     <GameIcon
                       icon={passwordIcon}
-                      className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-engraved-accent"
+                      className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-muted-foreground"
                     />
                     <Input
                       id={`${formId}-password`}
@@ -161,7 +187,10 @@ export function LoginScreen() {
 
                 <Button
                   type="button"
-                  className="h-11 w-full border-gold/55 bg-action bg-linear-to-b from-action-highlight to-action font-semibold text-artwork-foreground shadow-md shadow-artwork-shadow/25 hover:bg-action hover:from-action hover:to-action sm:h-12 max-xl:landscape:h-[clamp(2.75rem,12dvh,3.25rem)]"
+                  className={cn(
+                    staticButtonClass,
+                    "h-11 w-full border-gold/55 bg-linear-to-b from-[color-mix(in_oklab,var(--primary),var(--artwork-shadow)_30%)] to-[color-mix(in_oklab,var(--primary),var(--artwork-shadow)_58%)] font-semibold shadow-md shadow-artwork-shadow/25 hover:from-[color-mix(in_oklab,var(--primary),var(--artwork-shadow)_42%)] sm:h-12 max-xl:landscape:h-[clamp(2.75rem,12dvh,3.25rem)]",
+                  )}
                   onClick={() => navigate(HOME_PATH)}
                 >
                   Take your seat
@@ -188,7 +217,10 @@ export function LoginScreen() {
                         type="button"
                         variant="outline"
                         size="icon-lg"
-                        className="size-11 rounded-full border-gold/65 text-engraved-accent xl:size-12 max-xl:landscape:size-[clamp(2.75rem,12dvh,3.5rem)]"
+                        className={cn(
+                          staticButtonClass,
+                          "size-11 rounded-full border-gold/65 text-muted-foreground xl:size-12 max-xl:landscape:size-[clamp(2.75rem,12dvh,3.5rem)]",
+                        )}
                         aria-label={`Continue with ${name}`}
                         title={`Continue with ${name}`}
                       >

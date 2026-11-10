@@ -1,13 +1,12 @@
 import type { ReactNode } from "react";
 import { MemoryRouter, Route, Routes } from "react-router";
 
-import appEmblem from "@/assets/login/icons/wingfoot.svg";
+import appEmblem from "@/assets/branding/wingfoot.svg";
 import { HOME_PATH, LOGIN_PATH } from "@/routes/Routes";
 
 import { fireEvent, render as renderComponent, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import loginStyles from "./LoginAtmosphere.css?raw";
 import { LoginScreen } from "./LoginScreen";
 
 function render(element: ReactNode) {
@@ -24,11 +23,7 @@ function render(element: ReactNode) {
 describe("LoginScreen", () => {
   it("keeps responsive and accessibility variants in Tailwind rather than custom media queries", () => {
     const { container } = render(<LoginScreen />);
-    expect(loginStyles).not.toMatch(/@media|@container/);
-    expect(screen.getByRole("main")).toHaveClass(
-      "motion-reduce:**:transition-none",
-      "overflow-y-auto",
-    );
+    expect(screen.getByRole("main")).toHaveClass("overflow-y-auto");
     expect(container.querySelector(".login-intro")).not.toHaveClass("hidden");
     expect(container.querySelector(".login-card")).not.toHaveClass(
       "max-lg:landscape:overflow-y-auto",

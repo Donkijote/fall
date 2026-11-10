@@ -50,7 +50,7 @@ Label, Button, and Separator primitives and inherits the app's light/dark theme.
 promotional copy evokes an adventure beyond the mist without fabricated live-player counts.
 The suit strip uses four overlapping circular placeholder badges with simple coin, cup,
 swords, and club silhouettes from the game icon library. Wingfoot is the temporary emblem
-for the login card and the installed app. See the [icon credits](../src/assets/login/icons/README.md).
+for the login card and Card Hall wordmark. See the [icon credits](../src/assets/login/icons/README.md).
 The space-consuming design-preview notice is intentionally omitted on every screen size.
 Inputs are editable, but all buttons are non-submitting. **Take your seat** uses React Router to navigate to
 `HOME_PATH` (`/fall/` with the configured basename), without checking credentials or creating
@@ -111,22 +111,24 @@ technology and cannot intercept clicks or keyboard focus.
 
 ### Interface motion
 
-The existing GSAP/`useGSAP` integration animates a restrained, staggered introduction for
-the promotional copy and login card. A scoped `gsap.matchMedia` skips entrances for reduced
-motion and reverts them when the preference changes or the screen unmounts. Content is
-visible by default, so failure to initialize animation does not hide the form.
+GSAP animates the introductory copy and login card entrance. A single warm
+highlight sweeps around the brass rim, fades out, and pauses before repeating.
+`LoginScreen.css` defines the static gradient and mask that keep the highlight
+on the rim. GSAP drives its angle and opacity independently of form focus.
+The scoped timelines are reverted on unmount and when reduced motion is enabled.
 
-Rebuilt features must not introduce Framer Motion. This feature uses GSAP and Three.js/React
-Three Fiber, with CSS only for basic transitions and presentation. Framer Motion remains in
-legacy game components pending their separate rebuild; those usages are not migrated here.
+The WebGL layer also uses GSAP for its reveal after the first rendered frame.
+Three.js and React Three Fiber own the scene motion. Tailwind and CSS define
+the static layout and appearance. The login controls override the transitions
+and press movement inherited from the generated primitives. Reduced motion
+retains the static brass frame and the original backdrop.
 
 ## Verification
 
 ### Responsive layout
 
-Layout changes use Tailwind's built-in width/orientation variants, not custom CSS media
-queries or JavaScript-driven layout. `LoginAtmosphere.css` contains only decorative scene styling;
-reduced-motion transitions and forced-color text fallbacks also use Tailwind variants.
+Tailwind handles responsive layout, the static atmosphere layers, and forced-color
+text fallbacks.
 
 - Phone portrait: show a compact eyebrow/headline above the centered card, pushing the form
   down slightly. Short portrait screens scroll vertically.

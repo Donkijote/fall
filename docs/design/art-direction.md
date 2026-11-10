@@ -22,8 +22,8 @@ typography, and the masters for illustration and composition.
   labels and controls. The shared `artwork-title` utility defines the Hub
   wordmark and mode titles, with bold uppercase display type, warm parchment
   contrast and a soft shadow. Keep readable live text over artwork. Give the
-  main action the clearest contrast and use gold for borders, focus, and
-  selection. Reserve the brand red for primary actions where a separate
+  main action the clearest contrast. Use shared gold for illustrated frames
+  and selection cues, and shadcn border and focus tokens for ordinary controls. Reserve the brand red for primary actions where a separate
   button is useful.
 - **Controls and surfaces.** Use compact icon groups, engraved or lightly
   framed surfaces, and clear states. Reuse shared components under
@@ -31,9 +31,12 @@ typography, and the masters for illustration and composition.
   generated primitives under `src/components/ui` as the core.
 - **Responsive art and motion.** Compose for the controls in each orientation.
   Let the background extend to the viewport edge and keep controls inside
-  safe areas. Use GSAP for restrained DOM motion, with independent timing
-  where it helps and static focus styling under reduced motion. Card Hall
-  uses depth drift, a moving gold rim, embers and light parallax.
+  safe areas. Use GSAP for DOM motion, Three.js or React Three Fiber for
+  3D scenes, and Three Quarks for 3D particle effects. Apply the same rule
+  to fades and control feedback. Tailwind and CSS define static styles and
+  layouts. Keep static focus cues under reduced motion. Card Hall uses
+  depth drift, a moving gold rim, embers and light parallax. See the
+  [UI implementation rules](../../AGENTS.md).
 
 The original reference review drew on GWENT for illustrated mode cards,
 selection and compact utilities, Armello for a grounded medieval atmosphere,
