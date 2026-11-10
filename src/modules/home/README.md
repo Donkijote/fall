@@ -11,11 +11,12 @@ not the flattened screenshot.
 - `HomeLobby.tsx`: local-player onboarding and Settings/Play dialog state.
 - `CardHall.tsx`: activity selection, keyboard traversal, responsive Tailwind layout and decorative background.
 - `cardHallArtwork.ts`: the three activity records and cropped runtime illustrations.
-- `HomeSettings.tsx`: existing theme, guide and development-tool actions.
-- `src/components/game`: reusable themed components and component styles.
+- `HomeUtilities.tsx`: Home-only Messages, Help, Settings, and Log out controls with the anchored guide panel.
+- `HomeSettings.tsx`: persisted appearance, audio and motion controls, reset, credits, and development tools.
+- `src/components`: reusable themed components and component styles.
 - `src/components/ui`: upstream shadcn primitives; no edits for this implementation.
 
-See `src/components/game/README.md` for the styled/core component boundary and
+See `src/components/README.md` for the styled/core component boundary and
 `docs/design/home-lobby/card-hall.md` for design mapping and responsive behaviour.
 
 ## Behaviour
@@ -26,7 +27,8 @@ second tap on the same card opens it. The existing game IDs, bot defaults and
 `/game` navigation are preserved.
 
 Campaign and Arena remain greyscale Coming soon previews. Hero, Collection,
-Journal, Guild, Market and mail are also unavailable.
+Journal, Guild and Market are also unavailable. Help sits next to Settings and links to How to play and Sings reference. The
+disabled Messages shortcut sits in its own group to their left.
 
 Keyboard arrows, Home and End move focus between cards. Modal dismissal returns
 focus to its trigger. Portrait uses a native horizontal activity list with a
@@ -44,3 +46,17 @@ Run `pnpm check`, `pnpm exec vp test run`, `pnpm run build` and `git diff --chec
 Use the existing development app for layout review; do not start a second server.
 Check all activity states, native portrait scrolling, visible activity cards and footer,
 keyboard navigation, image failures, onboarding and the existing three game formats.
+
+The global theme preserves the proportional shadcn radius scale. Reusable app
+components choose `rounded-md` (8px) for their common control and surface shape.
+Other radius tokens remain available for distinct roles. Shared styled components
+own brass frames and action presentation. Feature code supplies layout.
+Native focus, dismissal, refs, keyboard, and touch behavior come from the primitives.
+
+Settings uses the simplified reference composition with shared game actions and shadcn value controls.
+Its body scrolls without a visible scrollbar while the title and actions stay
+reachable. The `fall-preferences` record owns card volume, mute, and motion.
+Appearance continues to use the existing `fall-theme` key.
+
+Log out opens `/login` from the right-hand utility dock. It currently serves
+as a navigation placeholder for future logout behavior.

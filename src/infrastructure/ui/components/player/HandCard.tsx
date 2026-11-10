@@ -5,6 +5,7 @@ import { useGameStoreService } from "@/application/hooks/useGameStoreService";
 import type { Card as ICard } from "@/domain/entities/Card";
 import type { Player } from "@/domain/entities/GameState";
 import { Card } from "@/infrastructure/ui/components/card/Card";
+import { useReducedMotion } from "@/infrastructure/ui/hooks/useGamePreferences";
 
 type HandCard = {
   card: ICard;
@@ -15,6 +16,7 @@ type HandCard = {
 };
 
 export const HandCard = ({ card, player, index, mainPlayer, currentPlayer }: HandCard) => {
+  const reducedMotion = useReducedMotion();
   const { playCard } = useGameStoreService();
   const total = player.hand.length;
   const middle = (total - 1) / 2;
@@ -24,7 +26,11 @@ export const HandCard = ({ card, player, index, mainPlayer, currentPlayer }: Han
   const layoutId = `card-${card.suit}-${card.rank}`;
 
   return (
-    <motion.div key={layoutId} layout={true} layoutId={layoutId}>
+    <motion.div
+      key={layoutId}
+      layout={!reducedMotion}
+      layoutId={reducedMotion ? undefined : layoutId}
+    >
       <div
         style={{
           transform: `rotate(${rotate}deg) translateY(${translateY}px)`,

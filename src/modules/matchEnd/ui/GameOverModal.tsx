@@ -1,9 +1,8 @@
 import { Skull, Trophy } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { ActionButton, ModalContent } from "@/components";
 import {
   Dialog,
-  DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
@@ -28,7 +27,7 @@ export const GameOverModal = () => {
       }}
       disablePointerDismissal
     >
-      <DialogContent data-testid="gameOverModal" className="overflow-x-hidden">
+      <ModalContent data-testid="gameOverModal" className="overflow-x-hidden">
         <div className="flex justify-center text-primary" aria-hidden>
           <ResultIcon className="size-14" />
         </div>
@@ -40,15 +39,15 @@ export const GameOverModal = () => {
         </DialogHeader>
         {stats?.teamScore && <StatPill label="Score" value={stats.teamScore} />}
         <DialogFooter>
-          <Button variant="outline" onClick={onNewGame} title="Open game modes">
+          <ActionButton tone="outline" onClick={onNewGame} title="Open game modes">
             New Game <span className="sr-only">(N)</span>
-          </Button>
-          <Button onClick={onReplay}>
+          </ActionButton>
+          <ActionButton tone="primary" onClick={onReplay}>
             Replay <span className="sr-only">(R)</span>
-          </Button>
+          </ActionButton>
         </DialogFooter>
         {gameResult === "win" && <ConfettiController active={isFinished} />}
-      </DialogContent>
+      </ModalContent>
     </Dialog>
   );
 };

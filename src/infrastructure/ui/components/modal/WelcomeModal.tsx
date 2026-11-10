@@ -2,15 +2,8 @@ import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import { StorageKeys, StorageService } from "@/application/services/StorageService";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+import { ActionButton, ModalContent, TextInput } from "@/components";
+import { Dialog, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import type { User } from "@/domain/entities/User";
 
@@ -36,7 +29,7 @@ export const WelcomeModal = ({ onSave }: WelcomeModalProps) => {
 
   return (
     <Dialog open={isOpen} disablePointerDismissal>
-      <DialogContent showCloseButton={false}>
+      <ModalContent showCloseButton={false}>
         <DialogHeader>
           <DialogTitle>Welcome to Fall!</DialogTitle>
           <DialogDescription>Enter your username to get started.</DialogDescription>
@@ -50,7 +43,7 @@ export const WelcomeModal = ({ onSave }: WelcomeModalProps) => {
         >
           <div className="grid gap-2">
             <Label htmlFor="welcome-username">Username</Label>
-            <Input
+            <TextInput
               id="welcome-username"
               autoComplete="nickname"
               value={username}
@@ -59,11 +52,11 @@ export const WelcomeModal = ({ onSave }: WelcomeModalProps) => {
               required
             />
           </div>
-          <Button type="submit" disabled={!username.trim()}>
+          <ActionButton tone="primary" type="submit" disabled={!username.trim()}>
             Save
-          </Button>
+          </ActionButton>
         </form>
-      </DialogContent>
+      </ModalContent>
     </Dialog>
   );
 };

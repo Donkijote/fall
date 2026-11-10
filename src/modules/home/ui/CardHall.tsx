@@ -3,21 +3,18 @@ import { useRef, useState } from "react";
 import type { KeyboardEvent, MouseEvent } from "react";
 
 import appEmblem from "@/assets/branding/wingfoot.svg";
-import {
-  GameActivityCard,
-  GameNavigation,
-  GamePlayerIdentity,
-  GameResource,
-} from "@/components/game";
-import type { GameNavigationItem, GamePlayerIdentityProps } from "@/components/game";
-import { GameIcon } from "@/components/game/GameIcon";
+import { ActivityCard, Navigation, PlayerIdentity, ResourceReadout } from "@/components";
+import type { NavigationItem, PlayerIdentityProps } from "@/components";
+import { Icon } from "@/components/icons/Icon";
+import { useReducedMotion } from "@/infrastructure/ui/hooks/useGamePreferences";
 
 import { useGSAP } from "@gsap/react";
 
 import { cardHallArtwork, homeActivities } from "./cardHallArtwork";
 import { cardHallIcons } from "./cardHallIcons";
+import { HomeUtilities } from "./HomeUtilities";
 
-const playerSystems: { label: string; items: GameNavigationItem[] }[] = [
+const playerSystems: { label: string; items: NavigationItem[] }[] = [
   {
     label: "Character and progress",
     items: [
@@ -43,7 +40,7 @@ function isTouchFirstDevice() {
 }
 
 export type CardHallProps = {
-  player: Pick<GamePlayerIdentityProps, "name" | "avatarUrl" | "level" | "experience">;
+  player: Pick<PlayerIdentityProps, "name" | "avatarUrl" | "level" | "experience">;
   resources?: {
     energy?: { value: number; maximum: number };
     coins?: number;
@@ -55,6 +52,7 @@ export type CardHallProps = {
 };
 
 export function CardHall({ player, resources, canPlay, onPlay, onSettings }: CardHallProps) {
+  const reducedMotion = useReducedMotion();
   const [touchFocusedId, setTouchFocusedId] = useState<
     (typeof homeActivities)[number]["id"] | null
   >(null);
@@ -64,7 +62,7 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
 
   useGSAP(
     () => {
-      if (!window.matchMedia) return;
+      if (!window.matchMedia || reducedMotion) return;
       const media = gsap.matchMedia();
       media.add("(prefers-reduced-motion: no-preference)", () => {
         const random = gsap.utils.random;
@@ -131,7 +129,7 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
       });
       return () => media.revert();
     },
-    { scope: backdropRef },
+    { scope: backdropRef, dependencies: [reducedMotion], revertOnUpdate: true },
   );
 
   function focusActivity(index: number) {
@@ -215,10 +213,12 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
           <div data-hall-light-plane="" className="absolute inset-0 mix-blend-screen">
             <span
               data-hall-light=""
+              hidden={reducedMotion}
               className="absolute top-0 left-[4%] h-[70%] w-[42%] bg-[radial-gradient(ellipse_at_33%_35%,var(--artwork-foreground),transparent_68%)] opacity-0 motion-reduce:hidden"
             />
             <span
               data-hall-light=""
+              hidden={reducedMotion}
               className="absolute top-[58%] left-[7%] h-[32%] w-[44%] bg-[radial-gradient(ellipse,var(--artwork-foreground),transparent_65%)] opacity-0 motion-reduce:hidden"
             />
           </div>
@@ -229,13 +229,13 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
         className="card-hall-header grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-start gap-4 pt-[calc(var(--hall-header-top)+var(--safe-area-top))] pr-[calc(var(--hall-header-gutter)+var(--safe-area-right))] pb-3 pl-[calc(var(--hall-header-gutter)+var(--safe-area-left))] text-artwork-foreground [--hall-header-gutter:clamp(1rem,2.6vw,3rem)] [--hall-header-top:1rem] [text-shadow:0_1px_4px_var(--artwork-shadow)] max-[480px]:grid-cols-[minmax(0,1fr)_auto] portrait:gap-1.5 portrait:pb-2 portrait:[--hall-header-gutter:0.75rem] portrait:[--hall-header-top:0.7rem] compact-landscape:items-center compact-landscape:gap-2 compact-landscape:pb-0 compact-landscape:[--hall-header-gutter:1rem] compact-landscape:[--hall-header-top:0.25rem]"
         aria-label="Player HUD"
       >
-        <GamePlayerIdentity
+        <PlayerIdentity
           {...player}
           fallbackAvatarUrl={cardHallArtwork.traveller}
           levelCrestUrl={cardHallIcons.level}
         />
         <h1 className="card-hall-wordmark m-0 flex items-center gap-[0.3em] artwork-title text-[clamp(2rem,3.5vw,3.4rem)] whitespace-nowrap max-[480px]:col-span-2 max-[480px]:row-start-2 max-[480px]:justify-self-center portrait:text-[1.65rem] compact-landscape:text-[clamp(1.25rem,3.4vw,1.8rem)]">
-          <GameIcon
+          <Icon
             icon={appEmblem}
             className="size-[0.8em] text-gold drop-shadow-sm drop-shadow-artwork-shadow"
           />
@@ -246,15 +246,15 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
           aria-label="Resources"
           className="flex justify-end gap-1.5 self-center max-[480px]:col-start-2 max-[480px]:row-start-1 sm:gap-4"
         >
-          <GameResource
+          <ResourceReadout
             label="Energy"
             icon={cardHallIcons.energy}
             iconClassName="text-amber-300"
             value={resources?.energy?.value}
             maximum={resources?.energy?.maximum}
           />
-          <GameResource label="Coins" icon={cardHallIcons.coins} value={resources?.coins} />
-          <GameResource
+          <ResourceReadout label="Coins" icon={cardHallIcons.coins} value={resources?.coins} />
+          <ResourceReadout
             label="Diamonds"
             icon={cardHallIcons.diamonds}
             iconClassName="text-cyan-200"
@@ -270,7 +270,7 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
           aria-describedby="card-hall-selection-help"
         >
           {homeActivities.map((activity, index) => (
-            <GameActivityCard
+            <ActivityCard
               key={activity.id}
               ref={(element) => {
                 cardRefs.current[index] = element;
@@ -307,30 +307,8 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
         {touchFocusedId === "tavern" ? "Tavern focused." : ""}
       </p>
       <footer className="flex flex-wrap items-end justify-between gap-1 pt-1 pr-[calc(var(--hall-footer-gutter)+var(--safe-area-right))] pb-[calc(var(--hall-footer-bottom)+var(--safe-area-bottom))] pl-[calc(var(--hall-footer-gutter)+var(--safe-area-left))] [--hall-footer-bottom:0.625rem] [--hall-footer-gutter:0.25rem] min-[360px]:[--hall-footer-gutter:0.75rem] sm:[--hall-footer-bottom:0.75rem] sm:[--hall-footer-gutter:1rem] compact-landscape:[--hall-footer-bottom:0.125rem] compact-landscape:[--hall-footer-gutter:0.375rem] [&>nav:last-child]:ml-auto">
-        <GameNavigation label="Player systems" groups={playerSystems} />
-        <GameNavigation
-          label="Utilities"
-          groups={[
-            {
-              label: "Messages and settings",
-              items: [
-                {
-                  id: "messages",
-                  label: "Messages",
-                  icon: cardHallIcons.messages,
-                  disabled: true,
-                  unavailableLabel: "coming soon",
-                },
-                {
-                  id: "settings",
-                  label: "Settings",
-                  icon: cardHallIcons.settings,
-                  onClick: onSettings,
-                },
-              ],
-            },
-          ]}
-        />
+        <Navigation label="Player systems" groups={playerSystems} />
+        <HomeUtilities onSettings={onSettings} />
       </footer>
     </div>
   );

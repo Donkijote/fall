@@ -1,6 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 
-export function GameContextStrip({
+export function ContextStrip({
   icon: Icon,
   label,
   detail,

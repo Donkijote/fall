@@ -6,10 +6,10 @@ Tracking issue: [#89](https://github.com/Donkijote/fall/issues/89).
 
 The UI uses the installed `base-luma` shadcn preset, backed by Base UI, with the stone neutral
 palette. Spline Sans is the body font and Cinzel is the heading font. The primary brand red and
-its coordinated light/dark sidebar and focus-ring variations live in `src/index.css`.
+its coordinated sidebar aliases and accessible focus-ring variations live in `src/index.css`.
 
 The app-wide `next-themes` provider applies the `light`/`dark` class on the document and
-initially follows the system preference. The bottom navigation's theme button overrides that
+initially follows the system preference. The Settings appearance selector overrides that
 preference and persists it under `fall-theme`. Theme changes apply to every route and portal.
 
 Use the existing semantic tokens for surfaces, text, actions, borders, inputs,
@@ -37,8 +37,15 @@ Add a primitive using the existing configuration:
 pnpm exec shadcn add <component>
 ```
 
-Do not reinitialize the preset or replace `src/index.css` when adding components. Customize
-component variants in their local source and shared colors/fonts in the global theme.
+Do not reinitialize the preset or replace `src/index.css` when adding components.
+Keep generated primitive files unchanged. The global theme sets semantic colors,
+fonts, and the original proportional radius scale through the existing token names.
+Styled app components choose `rounded-md` (8px) for their common shape.
+Compose shared app presentation in the purpose-based folders under `src/components` rather than modifying
+generated variants or adding feature-specific frames. ActionButton owns action
+presentation. NavigationButton and NavigationGroup own both Hall docks.
+FramedCard, ModalContent, and PopoverPanel share the brass frame in
+surfaceStyles.ts while preserving native interaction and accessibility behavior.
 
 The registry menu color is `default` (opaque), so future generated menus do not reintroduce
 the old translucent styling. Google Fonts supplies the font-face declarations; do not import

@@ -4,6 +4,7 @@ import { useUIGameStoreState } from "@/application/hooks/useUIGameStoreState";
 import { AnimationKeys, animationService } from "@/application/services/AnimationService";
 import type { Card } from "@/domain/entities/Card";
 import { Card as CardComponent } from "@/infrastructure/ui/components/card/Card";
+import { useReducedMotion } from "@/infrastructure/ui/hooks/useGamePreferences";
 
 type CollectedCardProps = {
   card: Card;
@@ -20,6 +21,7 @@ const angleFromKey = (key: string) => {
 };
 
 export const CollectedCard = ({ card, index }: CollectedCardProps) => {
+  const reducedMotion = useReducedMotion();
   const { playingCard } = useUIGameStoreState();
 
   const layoutId = `card-${card.suit}-${card.rank}`;
@@ -33,8 +35,8 @@ export const CollectedCard = ({ card, index }: CollectedCardProps) => {
 
   return (
     <motion.div
-      layout={true}
-      layoutId={layoutId}
+      layout={!reducedMotion}
+      layoutId={reducedMotion ? undefined : layoutId}
       onLayoutAnimationComplete={() => {
         if (!isPlayed) return;
         animationService.dispatch(AnimationKeys.PILE_COLLECT, {

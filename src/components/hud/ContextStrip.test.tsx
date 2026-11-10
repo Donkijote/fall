@@ -2,9 +2,9 @@ import { BookOpen } from "lucide-react";
 
 import { render, screen } from "@testing-library/react";
 
-import { GameContextStrip } from "./GameContextStrip";
+import { ContextStrip } from "./ContextStrip";
 
 test("renders supplied context without coupling to feature state", () => {
-  render(<GameContextStrip icon={BookOpen} label="Context" detail="Supplied detail" />);
+  render(<ContextStrip icon={BookOpen} label="Context" detail="Supplied detail" />);
   expect(screen.getByRole("group", { name: "Context" })).toHaveTextContent("Supplied detail");
 });

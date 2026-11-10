@@ -10,7 +10,9 @@ beforeEach(() => localStorage.clear());
 test("requires a nonblank username and saves the trimmed name on Enter", async () => {
   const user = userEvent.setup();
   render(<WelcomeModal />);
-  expect(screen.getByRole("dialog", { name: "Welcome to Fall!" })).toBeVisible();
+  await waitFor(() =>
+    expect(screen.getByRole("dialog", { name: "Welcome to Fall!" })).toBeVisible(),
+  );
   expect(screen.getByRole("button", { name: "Save" })).toBeDisabled();
   await user.type(screen.getByLabelText("Username"), "   ");
   expect(screen.getByRole("button", { name: "Save" })).toBeDisabled();

@@ -1,7 +1,14 @@
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import type { ReactElement } from "react";
+import { MemoryRouter } from "react-router";
+
+import { fireEvent, render as renderComponent, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { CardHall } from "./CardHall";
+
+function render(ui: ReactElement) {
+  return renderComponent(ui, { wrapper: MemoryRouter });
+}
 
 test("previews the Tavern on hover and opens it on a mouse click", async () => {
   const user = userEvent.setup();
@@ -114,7 +121,7 @@ test("uses artwork-overlay titles without descriptions or a separate card footer
   );
 });
 
-test("keeps the approved player navigation and mail explicitly unavailable", () => {
+test("keeps unavailable player destinations separate from the active utilities", () => {
   render(<CardHall player={{ name: "Traveller" }} canPlay onPlay={vi.fn()} onSettings={vi.fn()} />);
   const navigation = screen.getByRole("navigation", { name: "Player systems" });
   for (const label of ["Hero", "Collection", "Journal", "Guild", "Market"]) {
@@ -124,6 +131,7 @@ test("keeps the approved player navigation and mail explicitly unavailable", () 
   }
   const utilities = within(screen.getByRole("navigation", { name: "Utilities" }));
   expect(utilities.getByRole("button", { name: "Messages (coming soon)" })).toBeDisabled();
+  expect(utilities.getByRole("button", { name: "Help" })).toBeEnabled();
   expect(utilities.getByRole("button", { name: "Settings" })).toBeEnabled();
 });
 

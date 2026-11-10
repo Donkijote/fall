@@ -88,7 +88,7 @@ body {
   --gold: oklch(0.7185 0.1076 79.31);
   --artwork-foreground: oklch(0.9223 0.0332 83.71);
   --artwork-shadow: oklch(0.1898 0.0094 255.63);
-  --brand-red: oklch(0.606046 0.223912 25.3317);
+  --brand-red: oklch(0.45 0.14 25.3317);
   --background: oklch(0.9396 0.0246 83.42);
   --foreground: oklch(0.2892 0.0152 71.46);
   --card: oklch(0.9715 0.0171 84.59);
@@ -106,7 +106,7 @@ body {
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.923 0.003 48.717);
   --input: var(--border);
-  --ring: oklch(from var(--brand-red) calc(l + 0.04) calc(c - 0.045) h);
+  --ring: var(--primary);
   --chart-1: oklch(0.869 0.005 56.366);
   --chart-2: oklch(0.553 0.013 58.071);
   --chart-3: oklch(0.444 0.011 73.639);
@@ -115,12 +115,12 @@ body {
   --radius: 0.625rem;
   --sidebar: var(--card);
   --sidebar-foreground: var(--foreground);
-  --sidebar-primary: oklch(from var(--brand-red) calc(l - 0.035) calc(c - 0.015) h);
-  --sidebar-primary-foreground: oklch(from var(--brand-red) 0.985 0.004 h);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
   --sidebar-accent: var(--accent);
   --sidebar-accent-foreground: var(--accent-foreground);
   --sidebar-border: var(--border);
-  --sidebar-ring: oklch(from var(--brand-red) calc(l + 0.015) calc(c - 0.03) h);
+  --sidebar-ring: var(--ring);
 }
 
 .dark {
@@ -142,7 +142,7 @@ body {
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(from var(--brand-red) calc(l + 0.12) calc(c - 0.065) h);
+  --ring: oklch(from var(--primary) calc(l + 0.22) c h);
   --chart-1: oklch(0.869 0.005 56.366);
   --chart-2: oklch(0.553 0.013 58.071);
   --chart-3: oklch(0.444 0.011 73.639);
@@ -150,12 +150,12 @@ body {
   --chart-5: oklch(0.268 0.007 34.298);
   --sidebar: var(--card);
   --sidebar-foreground: var(--foreground);
-  --sidebar-primary: oklch(from var(--brand-red) calc(l + 0.045) calc(c - 0.02) h);
-  --sidebar-primary-foreground: oklch(from var(--brand-red) 0.18 0.035 h);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
   --sidebar-accent: var(--accent);
   --sidebar-accent-foreground: var(--accent-foreground);
   --sidebar-border: var(--border);
-  --sidebar-ring: oklch(from var(--brand-red) calc(l + 0.085) calc(c - 0.045) h);
+  --sidebar-ring: var(--ring);
 }
 
 @layer base {

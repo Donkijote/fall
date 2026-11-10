@@ -1,22 +1,24 @@
 import { motion } from "framer-motion";
 import { type FC, useEffect, useState } from "react";
 
+import { useReducedMotion } from "@/infrastructure/ui/hooks/useGamePreferences";
 import type { ConfettiSide } from "@/modules/matchEnd/entities/types";
 
 export const ConfettiController: FC<{ active: boolean }> = ({ active }) => {
+  const reducedMotion = useReducedMotion();
   const [side, setSide] = useState<ConfettiSide>("left");
   const [burstId, setBurstId] = useState(0);
 
   useEffect(() => {
-    if (!active) return;
+    if (!active || reducedMotion) return;
     const id = setInterval(() => {
       setSide((s) => (s === "left" ? "right" : "left"));
       setBurstId((n) => n + 1);
     }, 1700);
     return () => clearInterval(id);
-  }, [active]);
+  }, [active, reducedMotion]);
 
-  if (!active) return null;
+  if (!active || reducedMotion) return null;
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
       <ConfettiBurst key={`${side}-${burstId}`} side={side} seed={burstId} count={28} />

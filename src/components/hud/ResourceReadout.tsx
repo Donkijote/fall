@@ -1,11 +1,11 @@
 import { cn } from "cn";
 import type { LucideIcon } from "lucide-react";
 
-import { GameIcon } from "./GameIcon";
+import { Icon } from "../icons/Icon";
 
 const fullFormat = new Intl.NumberFormat();
 
-export type GameResourceProps = {
+export type ResourceReadoutProps = {
   label: string;
   icon: string | LucideIcon;
   iconClassName?: string;
@@ -13,7 +13,13 @@ export type GameResourceProps = {
   maximum?: number;
 };
 
-export function GameResource({ label, icon, iconClassName, value, maximum }: GameResourceProps) {
+export function ResourceReadout({
+  label,
+  icon,
+  iconClassName,
+  value,
+  maximum,
+}: ResourceReadoutProps) {
   const available =
     value !== undefined &&
     Number.isFinite(value) &&
@@ -30,7 +36,7 @@ export function GameResource({ label, icon, iconClassName, value, maximum }: Gam
       title={`${label}: ${description}`}
       className="grid min-w-8 justify-items-center gap-0.5 px-0.5 py-1 sm:min-w-12 sm:px-1 compact-landscape:py-0.5"
     >
-      <GameIcon
+      <Icon
         icon={icon}
         className={cn("size-5 text-gold sm:size-7 compact-landscape:size-5", iconClassName)}
       />

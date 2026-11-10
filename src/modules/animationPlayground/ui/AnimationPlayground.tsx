@@ -2,19 +2,13 @@ import { ArrowLeft, Play, RotateCcw } from "lucide-react";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { Link } from "react-router";
 
+import { SelectTrigger, TextInput } from "@/components";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RULES } from "@/domain/constants/rules";
 import { HOME_PATH } from "@/routes/Routes";
@@ -334,7 +328,7 @@ function NumericControl({
   return (
     <Label className="grid gap-2">
       {label}
-      <Input
+      <TextInput
         type="number"
         value={value}
         min={min}

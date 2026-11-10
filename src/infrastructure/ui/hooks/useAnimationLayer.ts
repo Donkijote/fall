@@ -8,7 +8,10 @@ import {
 import { useUIGameStore } from "@/application/store/uiGameStore";
 import { createCardAudio } from "@/infrastructure/adapters/audio/cardAudio";
 
+import { useReducedMotion } from "./useGamePreferences";
+
 export const useAnimationLayer = () => {
+  const reducedMotion = useReducedMotion();
   useEffect(() => {
     const audio = createCardAudio();
     const offCardSound = useUIGameStore.subscribe((current, previous) => {
@@ -16,7 +19,8 @@ export const useAnimationLayer = () => {
         audio.playCard();
       }
     });
-    const offGameCards = onAnimation(AnimationKeys.GAME_CARDS, (payload) => {
+    const offFramedCards = onAnimation(AnimationKeys.GAME_CARDS, (payload) => {
+      if (reducedMotion) return;
       return new Promise<void>((resolve) => {
         const to = setTimeout(() => {
           animationService.dispatch(AnimationKeys.GAME_CARDS, payload);
@@ -32,6 +36,7 @@ export const useAnimationLayer = () => {
     });
 
     const offCapture = onAnimation(AnimationKeys.PILE_COLLECT, (payload) => {
+      if (reducedMotion) return;
       return new Promise<void>((resolve) => {
         const to = setTimeout(() => {
           animationService.dispatch(AnimationKeys.PILE_COLLECT, payload);
@@ -47,10 +52,10 @@ export const useAnimationLayer = () => {
     });
 
     return () => {
-      offGameCards();
+      offFramedCards();
       offCapture();
       offCardSound();
       audio.dispose();
     };
-  }, []);
+  }, [reducedMotion]);
 };

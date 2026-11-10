@@ -27,7 +27,7 @@ typography, and the masters for illustration and composition.
   button is useful.
 - **Controls and surfaces.** Use compact icon groups, engraved or lightly
   framed surfaces, and clear states. Reuse shared components under
-  `src/components/game` and semantic tokens in `src/index.css`. Keep the
+  `src/components` and semantic tokens in `src/index.css`. Keep the
   generated primitives under `src/components/ui` as the core.
 - **Responsive art and motion.** Compose for the controls in each orientation.
   Let the background extend to the viewport edge and keep controls inside

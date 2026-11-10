@@ -3,6 +3,7 @@ import type { CSSProperties } from "react";
 
 import { type Rank, type Suit } from "@/domain/entities/Card";
 import { SuitGlyph } from "@/infrastructure/ui/components/card/SuitGlyph";
+import { useReducedMotion } from "@/infrastructure/ui/hooks/useGamePreferences";
 
 export type CardProps = {
   rank: Rank;
@@ -33,6 +34,7 @@ export const Card = ({
   className,
   style,
 }: CardProps) => {
+  const reducedMotion = useReducedMotion();
   return (
     <button
       type="button"
@@ -42,7 +44,8 @@ export const Card = ({
         "rounded-xl relative isolate aspect-[63/88]",
         "bg-zinc-50 ring-zinc-200 shadow-sm ring-1",
         "transition-transform duration-150 will-change-transform",
-        !disabled && "hover:-translate-y-0.5 active:translate-y-0",
+        !disabled && !reducedMotion && "hover:-translate-y-0.5 active:translate-y-0",
+        reducedMotion && "transition-none",
         selected && "ring-ring ring-2 ring-offset-2 ring-offset-background",
         "overflow-hidden",
         className,

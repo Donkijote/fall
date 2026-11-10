@@ -2,11 +2,11 @@ import { BookOpen } from "lucide-react";
 
 import { render, screen } from "@testing-library/react";
 
-import { GameNavigation } from "./GameNavigation";
+import { Navigation } from "./Navigation";
 
 test("keeps unavailable destinations labelled without activating them", () => {
   render(
-    <GameNavigation
+    <Navigation
       label="Destinations"
       groups={[
         {
