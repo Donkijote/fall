@@ -20,7 +20,7 @@ See `src/components/game/README.md` for the styled/core component boundary and
 
 ## Behaviour
 
-The Tavern opens the existing `BottomSidebar` format picker. A mouse click or
+Tavern opens the existing `BottomSidebar` format picker. A mouse click or
 keyboard activation opens it directly. On touch, one tap focuses the card and a
 second tap on the same card opens it. The existing game IDs, bot defaults and
 `/game` navigation are preserved.

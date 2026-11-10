@@ -61,16 +61,13 @@ afterEach(() => {
   document.documentElement.style.removeProperty("color-scheme");
 });
 
-test("opens the working Card Hall with The Tavern playable and no placeholder campaign progress", () => {
+test("opens the working Card Hall with Tavern playable and no placeholder campaign progress", () => {
   renderLobby();
   expect(screen.queryByRole("heading", { name: "The Hearth" })).not.toBeInTheDocument();
   expect(screen.queryByText("A moment of rest. Another hand awaits.")).not.toBeInTheDocument();
   expect(screen.getByText("Player One")).toBeVisible();
-  expect(screen.getByRole("button", { name: "The Tavern" })).toBeEnabled();
-  expect(screen.getByRole("button", { name: "The Tavern" })).toHaveAttribute(
-    "aria-haspopup",
-    "dialog",
-  );
+  expect(screen.getByRole("button", { name: "Tavern" })).toBeEnabled();
+  expect(screen.getByRole("button", { name: "Tavern" })).toHaveAttribute("aria-haspopup", "dialog");
   expect(screen.queryByRole("button", { name: "Play at the tavern" })).not.toBeInTheDocument();
   expect(screen.queryByText("CHAPTER II")).not.toBeInTheDocument();
   expect(screen.queryByRole("navigation", { name: "Main navigation" })).not.toBeInTheDocument();
@@ -95,12 +92,12 @@ test("onboarding updates the HUD immediately and only then allows play", async (
   localStorage.clear();
   const user = userEvent.setup();
   const { container } = renderLobby();
-  expect(container.querySelector('[aria-label="The Tavern"]')).toBeDisabled();
+  expect(container.querySelector('[aria-label="Tavern"]')).toBeDisabled();
   await user.type(screen.getByLabelText("Username"), "  New Traveller  {Enter}");
 
   await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
   expect(screen.getByText("New Traveller")).toBeVisible();
-  expect(screen.getByRole("button", { name: "The Tavern" })).toBeEnabled();
+  expect(screen.getByRole("button", { name: "Tavern" })).toBeEnabled();
   expect(setupGame).not.toHaveBeenCalled();
 });
 
@@ -111,7 +108,7 @@ test.each([
 ])("Play preserves the $label game setup and route", async ({ label, mode }) => {
   const user = userEvent.setup();
   renderLobby();
-  await user.click(screen.getByRole("button", { name: "The Tavern" }));
+  await user.click(screen.getByRole("button", { name: "Tavern" }));
   await user.click(screen.getByRole("button", { name: `Play ${label}` }));
   expect(setupGame).toHaveBeenCalledExactlyOnceWith("player", mode);
   expect(await screen.findByRole("heading", { name: "Game scene" })).toBeVisible();
@@ -155,10 +152,10 @@ test("Settings preserves appearance switching and returns keyboard focus on Esca
   await waitFor(() => expect(settings).toHaveFocus());
 });
 
-test("Escape closes the mode picker and returns focus to The Tavern", async () => {
+test("Escape closes the mode picker and returns focus to Tavern", async () => {
   const user = userEvent.setup();
   renderLobby();
-  const play = screen.getByRole("button", { name: "The Tavern" });
+  const play = screen.getByRole("button", { name: "Tavern" });
   await user.click(play);
   await user.keyboard("{Escape}");
   await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
@@ -168,7 +165,7 @@ test("Escape closes the mode picker and returns focus to The Tavern", async () =
 test.each(["{Enter}", " "])("the tavern opens the existing mode picker with %s", async (key) => {
   const user = userEvent.setup();
   renderLobby();
-  const tavern = screen.getByRole("button", { name: "The Tavern" });
+  const tavern = screen.getByRole("button", { name: "Tavern" });
   tavern.focus();
   await user.keyboard(key);
   expect(await screen.findByRole("dialog", { name: "Choose your game" })).toBeVisible();
@@ -201,8 +198,8 @@ test("future activities cannot start a game; return to Tavern to choose a format
   }
   expect(setupGame).not.toHaveBeenCalled();
   expect(screen.queryByRole("button", { name: "All Caída modes" })).not.toBeInTheDocument();
-  await user.click(screen.getByRole("button", { name: "The Tavern" }));
+  await user.click(screen.getByRole("button", { name: "Tavern" }));
   expect(await screen.findByRole("dialog", { name: "Choose your game" })).toBeVisible();
   await user.keyboard("{Escape}");
-  await waitFor(() => expect(screen.getByRole("button", { name: "The Tavern" })).toHaveFocus());
+  await waitFor(() => expect(screen.getByRole("button", { name: "Tavern" })).toHaveFocus());
 });

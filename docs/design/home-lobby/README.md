@@ -1,6 +1,7 @@
 # Home documentation
 
-- [Current Card Hall design](../main-menu-research/image-concepts/README.md).
-- [Implemented Living Town scene](living-town.md): documentation retained while
-  the existing scene is still used by the application.
-- [Home module integration](../../../src/modules/home/README.md).
+- [Fall art direction and asset provenance](../art-direction.md)
+- [Current Card Hall implementation](card-hall.md)
+- [Card Hall design masters and prompt archive](../main-menu-research/image-concepts/README.md)
+- [Home module integration](../../../src/modules/home/README.md)
+- [Archived Living Town design](living-town.md)

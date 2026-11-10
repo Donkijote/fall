@@ -10,7 +10,7 @@ The three positions remain Tavern / Campaign / Arena. Hover and keyboard focus
 highlight a card. On touch, the first tap highlights the card and a second tap
 on the same card opens it if playable.
 
-- The Tavern opens the existing Caída picker on click, Enter, Space or the
+- Tavern opens the existing Caída picker on click, Enter, Space or the
   confirming tap. It preserves 1vs1, three-player free-for-all (internal ID 1vs2),
   2vs2, bot defaults and `/game` routing.
 - Campaign and Arena remain Coming soon previews.

@@ -347,7 +347,7 @@ export function GameActivityCard({
                 {caption}
               </span>
             )}
-            <span className="game-activity-title absolute inset-x-2 bottom-[9%] font-heading text-[clamp(1rem,1.85vw,1.85rem)] leading-tight font-bold tracking-wide text-artwork-foreground uppercase [text-shadow:0_2px_3px_var(--artwork-shadow),0_0_8px_var(--artwork-shadow),1px_0_1px_var(--artwork-shadow),-1px_0_1px_var(--artwork-shadow)] portrait:text-[clamp(1rem,4.4vw,1.6rem)] compact-landscape:text-[clamp(0.85rem,2vw,1.1rem)]">
+            <span className="game-activity-title absolute inset-x-2 bottom-[9%] artwork-title text-[clamp(1rem,1.85vw,1.85rem)] portrait:text-[clamp(1rem,4.4vw,1.6rem)] compact-landscape:text-[clamp(0.85rem,2vw,1.1rem)]">
               {title}
             </span>
           </span>

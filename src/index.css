@@ -74,6 +74,15 @@ body {
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+@utility artwork-title {
+  @apply font-heading leading-tight font-bold tracking-wide text-artwork-foreground uppercase;
+  text-shadow:
+    0 2px 3px var(--artwork-shadow),
+    0 0 8px var(--artwork-shadow),
+    1px 0 1px var(--artwork-shadow),
+    -1px 0 1px var(--artwork-shadow);
+}
+
 :root {
   --safe-area-top: env(safe-area-inset-top, 0px);
   --safe-area-right: env(safe-area-inset-right, 0px);

@@ -7,7 +7,7 @@ test("previews the Tavern on hover and opens it on a mouse click", async () => {
   const user = userEvent.setup();
   const onPlay = vi.fn();
   render(<CardHall player={{ name: "Traveller" }} canPlay onPlay={onPlay} onSettings={vi.fn()} />);
-  const tavern = screen.getByRole("button", { name: "The Tavern" });
+  const tavern = screen.getByRole("button", { name: "Tavern" });
   expect(tavern).toHaveAttribute("data-active", "false");
   await user.hover(tavern);
   expect(tavern).toHaveAttribute("data-active", "true");
@@ -21,12 +21,12 @@ test("requires two taps on the same playable card and keeps future cards as prev
   const user = userEvent.setup();
   const onPlay = vi.fn();
   render(<CardHall player={{ name: "Traveller" }} canPlay onPlay={onPlay} onSettings={vi.fn()} />);
-  const tavern = screen.getByRole("button", { name: "The Tavern" });
+  const tavern = screen.getByRole("button", { name: "Tavern" });
   const campaign = screen.getByRole("button", { name: "Campaign" });
   const tap = (target: HTMLElement) => user.pointer({ keys: "[TouchA]", target });
   await tap(tavern);
   expect(tavern).toHaveAttribute("data-selected", "true");
-  expect(screen.getByRole("status")).toHaveTextContent("The Tavern focused.");
+  expect(screen.getByRole("status")).toHaveTextContent("Tavern focused.");
   expect(screen.queryByText("Tap again to play")).not.toBeInTheDocument();
   await tap(campaign);
   expect(tavern).toHaveAttribute("data-selected", "false");
@@ -52,7 +52,7 @@ test("treats a mouse-style click as a tap on a touch-first device", async () => 
     render(
       <CardHall player={{ name: "Traveller" }} canPlay onPlay={onPlay} onSettings={vi.fn()} />,
     );
-    const tavern = screen.getByRole("button", { name: "The Tavern" });
+    const tavern = screen.getByRole("button", { name: "Tavern" });
     await user.click(tavern);
     expect(tavern).toHaveAttribute("data-selected", "true");
     expect(onPlay).not.toHaveBeenCalled();
@@ -69,15 +69,15 @@ test("supports arrow, Home and End focus without activating an activity", async 
   const user = userEvent.setup();
   const onPlay = vi.fn();
   render(<CardHall player={{ name: "Traveller" }} canPlay onPlay={onPlay} onSettings={vi.fn()} />);
-  screen.getByRole("button", { name: "The Tavern" }).focus();
+  screen.getByRole("button", { name: "Tavern" }).focus();
   await user.keyboard("{ArrowRight}");
   expect(screen.getByRole("button", { name: "Campaign" })).toHaveFocus();
   await user.keyboard("{End}");
   expect(screen.getByRole("button", { name: "Arena" })).toHaveFocus();
   await user.keyboard("{ArrowRight}");
-  expect(screen.getByRole("button", { name: "The Tavern" })).toHaveFocus();
+  expect(screen.getByRole("button", { name: "Tavern" })).toHaveFocus();
   await user.keyboard("{ArrowLeft}{Home}");
-  expect(screen.getByRole("button", { name: "The Tavern" })).toHaveFocus();
+  expect(screen.getByRole("button", { name: "Tavern" })).toHaveFocus();
   expect(onPlay).not.toHaveBeenCalled();
 });
 
@@ -90,7 +90,7 @@ test("gates all Play actions until onboarding and exposes no fake progression or
       onSettings={vi.fn()}
     />,
   );
-  expect(screen.getByRole("button", { name: "The Tavern" })).toBeDisabled();
+  expect(screen.getByRole("button", { name: "Tavern" })).toBeDisabled();
   expect(screen.queryByRole("button", { name: "All Caída modes" })).not.toBeInTheDocument();
   expect(screen.getByText("Level —")).toBeVisible();
   expect(screen.getByRole("img", { name: "Experience unavailable" })).toBeVisible();
@@ -105,10 +105,10 @@ test("uses artwork-overlay titles without descriptions or a separate card footer
   expect(container.querySelector(".game-activity-copy")).toBeNull();
   expect(screen.queryByText("Swipe to explore activities")).toBeNull();
   expect(screen.queryByText("Current quest")).toBeNull();
-  for (const title of ["The Tavern", "Campaign", "Arena"]) {
+  for (const title of ["Tavern", "Campaign", "Arena"]) {
     expect(screen.getByText(title).parentElement).toHaveClass("game-activity-art");
   }
-  expect(screen.getByRole("button", { name: "The Tavern" })).toHaveAttribute(
+  expect(screen.getByRole("button", { name: "Tavern" })).toHaveAttribute(
     "data-unavailable",
     "false",
   );
@@ -134,9 +134,9 @@ test("retains all titles and a usable Play action when artwork fails", async () 
     <CardHall player={{ name: "Traveller" }} canPlay onPlay={onPlay} onSettings={vi.fn()} />,
   );
   for (const image of container.querySelectorAll("img")) fireEvent.error(image);
-  expect(screen.getByRole("button", { name: "The Tavern" })).toBeVisible();
+  expect(screen.getByRole("button", { name: "Tavern" })).toBeVisible();
   expect(screen.getByRole("button", { name: "Campaign" })).toBeVisible();
-  await user.click(screen.getByRole("button", { name: "The Tavern" }));
+  await user.click(screen.getByRole("button", { name: "Tavern" }));
   expect(onPlay).toHaveBeenCalledOnce();
 });
 

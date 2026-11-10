@@ -11,7 +11,7 @@ export const cardHallArtwork = { hall, hallPhone, hallTablet, traveller };
 export const homeActivities = [
   {
     id: "tavern",
-    title: "The Tavern",
+    title: "Tavern",
     imageUrl: tavern,
     imageWidth: 374,
     imageHeight: 386,
