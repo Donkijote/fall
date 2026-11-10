@@ -11,7 +11,8 @@ not the flattened screenshot.
 - `HomeLobby.tsx`: local-player onboarding and Settings/Play dialog state.
 - `CardHall.tsx`: activity selection, keyboard traversal, responsive Tailwind layout and decorative background.
 - `cardHallArtwork.ts`: the three activity records and cropped runtime illustrations.
-- `HomeSettings.tsx`: existing theme, guide and development-tool actions.
+- `HomeUtilities.tsx`: Home-only Messages, Help, and Settings controls with the anchored guide panel.
+- `HomeSettings.tsx`: theme, attribution and development-tool actions.
 - `src/components/game`: reusable themed components and component styles.
 - `src/components/ui`: upstream shadcn primitives; no edits for this implementation.
 
@@ -26,7 +27,8 @@ second tap on the same card opens it. The existing game IDs, bot defaults and
 `/game` navigation are preserved.
 
 Campaign and Arena remain greyscale Coming soon previews. Hero, Collection,
-Journal, Guild, Market and mail are also unavailable.
+Journal, Guild and Market are also unavailable. Help sits next to Settings and links to How to play and Sings reference. The
+disabled Messages shortcut sits in its own group to their left.
 
 Keyboard arrows, Home and End move focus between cards. Modal dismissal returns
 focus to its trigger. Portrait uses a native horizontal activity list with a
@@ -44,3 +46,7 @@ Run `pnpm check`, `pnpm exec vp test run`, `pnpm run build` and `git diff --chec
 Use the existing development app for layout review; do not start a second server.
 Check all activity states, native portrait scrolling, visible activity cards and footer,
 keyboard navigation, image failures, onboarding and the existing three game formats.
+
+Reuse the existing app and shadcn components with their default rounded corners,
+borders, focus, dismissal, and interaction behavior. Mockups guide layout and
+semantic colors. Preserve component shapes when translating them into the app.

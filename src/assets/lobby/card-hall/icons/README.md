@@ -11,3 +11,6 @@ Icons from [Game-icons.net](https://game-icons.net), licensed under
 
 The source SVG paths are unchanged. Fall uses the silhouettes as masks and
 applies colors and gradients through its theme.
+
+Help uses project-drawn circle and question-mark geometry. It uses the same
+mask and theme gradient as the other Home utility icons.

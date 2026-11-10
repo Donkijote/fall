@@ -60,3 +60,7 @@ import { GameButton, GameActivityCard } from "@/components/game";
   </GameButton>
 </section>;
 ```
+
+Reuse the existing app and shadcn components with their default rounded corners,
+borders, focus, dismissal, and interaction behavior. Mockups guide layout and
+semantic colors. Preserve component shapes when translating them into the app.

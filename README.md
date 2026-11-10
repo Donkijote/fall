@@ -319,3 +319,7 @@ Capture card and Cascade capture use curved, banking gestures with slight landin
 offsets and contact settling. Cascade pickups vary their cadence; collected cards
 square up during the lift and align on the final pile. Motion variation is fixed
 so replay remains repeatable.
+
+Reuse the existing app and shadcn components with their default rounded corners,
+borders, focus, dismissal, and interaction behavior. Mockups guide layout and
+semantic colors. Preserve component shapes when translating them into the app.

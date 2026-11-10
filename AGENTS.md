@@ -11,6 +11,10 @@
 - Keep reusable styled components in `src/components`, outside the generated
   shadcn/Base UI primitives in `src/components/ui`. Do not customise generated core
   files to implement game-specific visuals.
+- Reuse existing app and shadcn components, preserving their default corner radii,
+  borders, focus, dismissal, and interaction behavior. Mockups guide composition
+  and color, not custom component shapes. Prefer semantic color changes and layout
+  utilities over reshaping controls or popups.
 - Use GSAP / `@gsap/react` for all DOM motion, Three.js or React Three Fiber for
   rendered scenes, and Three Quarks for 3D particle effects. This applies to
   simple fades and hover or focus motion as well as complex game sequences.

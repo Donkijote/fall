@@ -129,13 +129,37 @@ test("the game-mode deep link waits for onboarding rather than opening two dialo
 test.each([
   { label: "How to play", heading: "Rules scene" },
   { label: "Sings reference", heading: "Sings scene" },
-  { label: "Animation playground", heading: "Animation playground scene" },
-])("Settings preserves $label navigation", async ({ label, heading }) => {
+])("Help opens the $label guide", async ({ label, heading }) => {
+  const user = userEvent.setup();
+  renderLobby();
+  await user.click(screen.getByRole("button", { name: "Help" }));
+  await user.click(screen.getByRole("link", { name: label }));
+  expect(await screen.findByRole("heading", { name: heading })).toBeVisible();
+});
+
+test("Escape closes Help and restores focus to its trigger", async () => {
+  const user = userEvent.setup();
+  renderLobby();
+  const help = screen.getByRole("button", { name: "Help" });
+  help.focus();
+  await user.keyboard("{Enter}");
+  expect(await screen.findByRole("dialog", { name: "Help" })).toBeVisible();
+  await waitFor(() => expect(screen.getByRole("link", { name: "How to play" })).toHaveFocus());
+  await user.keyboard("{Escape}");
+  await waitFor(() =>
+    expect(screen.queryByRole("dialog", { name: "Help" })).not.toBeInTheDocument(),
+  );
+  await waitFor(() => expect(help).toHaveFocus());
+});
+
+test("Settings keeps the development playground link after moving the guides", async () => {
   const user = userEvent.setup();
   renderLobby();
   await user.click(screen.getByRole("button", { name: "Settings" }));
-  await user.click(screen.getByRole("link", { name: label }));
-  expect(await screen.findByRole("heading", { name: heading })).toBeVisible();
+  expect(screen.queryByRole("link", { name: "How to play" })).not.toBeInTheDocument();
+  expect(screen.queryByRole("link", { name: "Sings reference" })).not.toBeInTheDocument();
+  await user.click(screen.getByRole("link", { name: "Animation playground" }));
+  expect(await screen.findByRole("heading", { name: "Animation playground scene" })).toBeVisible();
 });
 
 test("Settings preserves appearance switching and returns keyboard focus on Escape", async () => {

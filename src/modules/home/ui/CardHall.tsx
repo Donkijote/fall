@@ -16,6 +16,7 @@ import { useGSAP } from "@gsap/react";
 
 import { cardHallArtwork, homeActivities } from "./cardHallArtwork";
 import { cardHallIcons } from "./cardHallIcons";
+import { HomeUtilities } from "./HomeUtilities";
 
 const playerSystems: { label: string; items: GameNavigationItem[] }[] = [
   {
@@ -308,29 +309,7 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
       </p>
       <footer className="flex flex-wrap items-end justify-between gap-1 pt-1 pr-[calc(var(--hall-footer-gutter)+var(--safe-area-right))] pb-[calc(var(--hall-footer-bottom)+var(--safe-area-bottom))] pl-[calc(var(--hall-footer-gutter)+var(--safe-area-left))] [--hall-footer-bottom:0.625rem] [--hall-footer-gutter:0.25rem] min-[360px]:[--hall-footer-gutter:0.75rem] sm:[--hall-footer-bottom:0.75rem] sm:[--hall-footer-gutter:1rem] compact-landscape:[--hall-footer-bottom:0.125rem] compact-landscape:[--hall-footer-gutter:0.375rem] [&>nav:last-child]:ml-auto">
         <GameNavigation label="Player systems" groups={playerSystems} />
-        <GameNavigation
-          label="Utilities"
-          groups={[
-            {
-              label: "Messages and settings",
-              items: [
-                {
-                  id: "messages",
-                  label: "Messages",
-                  icon: cardHallIcons.messages,
-                  disabled: true,
-                  unavailableLabel: "coming soon",
-                },
-                {
-                  id: "settings",
-                  label: "Settings",
-                  icon: cardHallIcons.settings,
-                  onClick: onSettings,
-                },
-              ],
-            },
-          ]}
-        />
+        <HomeUtilities onSettings={onSettings} />
       </footer>
     </div>
   );

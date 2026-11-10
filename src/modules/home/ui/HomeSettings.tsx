@@ -1,10 +1,10 @@
-import { BookOpen, FlaskConical, ScrollText } from "lucide-react";
+import { FlaskConical } from "lucide-react";
 import { Link } from "react-router";
 
 import { GameDialogContent } from "@/components/game";
 import { Dialog, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ThemeToggle } from "@/infrastructure/ui/components/theme/ThemeToggle";
-import { ANIMATION_PLAYGROUND_PATH, RULES_PATH, SINGS_SHEETS } from "@/routes/Routes";
+import { ANIMATION_PLAYGROUND_PATH } from "@/routes/Routes";
 
 type HomeSettingsProps = { open: boolean; onOpenChange: (open: boolean) => void };
 
@@ -20,34 +20,16 @@ export function HomeSettings({ open, onOpenChange }: HomeSettingsProps) {
           <span className="text-sm font-medium">Appearance</span>
           <ThemeToggle />
         </div>
-        <nav aria-label="Guides and tools" className="grid gap-2">
+        {import.meta.env.DEV && (
           <Link
-            to={RULES_PATH}
+            to={ANIMATION_PLAYGROUND_PATH}
             onClick={() => onOpenChange(false)}
             className="flex min-h-11 items-center gap-3 rounded-lg px-3 py-2 text-sm hover:bg-accent focus-visible:outline-2 focus-visible:outline-ring"
           >
-            <BookOpen className="size-4 text-primary" aria-hidden="true" />
-            How to play
+            <FlaskConical className="size-4 text-primary" aria-hidden="true" />
+            Animation playground
           </Link>
-          <Link
-            to={SINGS_SHEETS}
-            onClick={() => onOpenChange(false)}
-            className="flex min-h-11 items-center gap-3 rounded-lg px-3 py-2 text-sm hover:bg-accent focus-visible:outline-2 focus-visible:outline-ring"
-          >
-            <ScrollText className="size-4 text-primary" aria-hidden="true" />
-            Sings reference
-          </Link>
-          {import.meta.env.DEV && (
-            <Link
-              to={ANIMATION_PLAYGROUND_PATH}
-              onClick={() => onOpenChange(false)}
-              className="flex min-h-11 items-center gap-3 rounded-lg px-3 py-2 text-sm hover:bg-accent focus-visible:outline-2 focus-visible:outline-ring"
-            >
-              <FlaskConical className="size-4 text-primary" aria-hidden="true" />
-              Animation playground
-            </Link>
-          )}
-        </nav>
+        )}
         <details className="text-xs text-muted-foreground">
           <summary className="flex min-h-11 cursor-pointer items-center font-medium">
             Icon credits
