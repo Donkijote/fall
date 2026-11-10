@@ -15,7 +15,7 @@
   mask-composite: exclude;
 }
 
-.game-activity-card[data-selected="true"]:not(:disabled) .game-activity-glint {
+.game-activity-card[data-active="true"] .game-activity-glint {
   padding: 3px;
   background: conic-gradient(
     from var(--glint-angle, 0deg),

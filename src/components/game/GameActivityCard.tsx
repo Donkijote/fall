@@ -9,7 +9,7 @@ import "./GameActivityCard.css";
 
 gsap.registerPlugin(useGSAP);
 
-const sparks = Array.from({ length: 8 }, (_, index) => index);
+const sparks = Array.from({ length: 14 }, (_, index) => index);
 
 export type GameActivityCardProps = Omit<ComponentProps<"button">, "children" | "title"> & {
   title: string;
@@ -44,8 +44,8 @@ export function GameActivityCard({
   const descriptionId = useId();
   const captionId = useId();
   const root = useRef<HTMLButtonElement>(null);
-  const controller = useRef<((active: boolean, selected: boolean) => void) | null>(null);
-  const latest = useRef({ active: selected, selected });
+  const controller = useRef<((active: boolean) => void) | null>(null);
+  const latest = useRef(selected && !disabled);
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
   const [failedImage, setFailedImage] = useState<string>();
@@ -186,22 +186,22 @@ export function GameActivityCard({
               0,
             );
             particles.forEach((particle) => {
-              gsap.set(particle, { left: `${random(8, 92)}%` });
+              gsap.set(particle, { left: `${random(5, 95)}%` });
               ambience.fromTo(
                 particle,
-                { y: 0, x: 0, opacity: 0, scale: 0.5 },
+                { y: 0, x: 0, opacity: 0, scale: random(0.7, 1.25) },
                 {
-                  y: () => -card.clientHeight * random(0.65, 1),
-                  x: () => random(-20, 20),
+                  y: () => -card.clientHeight * random(0.72, 1.1),
+                  x: () => random(-28, 28),
                   scale: 0.2,
-                  keyframes: { opacity: [0, 0.55, 0.35, 0] },
-                  duration: random(4.5, 7.5),
+                  keyframes: { opacity: [0, 1, 0.72, 0] },
+                  duration: random(3.2, 5.8),
                   repeat: -1,
                   repeatRefresh: true,
                   ease: "none",
                   immediateRender: false,
                 },
-                random(0, 5),
+                random(0, 2.6),
               );
             });
           } else {
@@ -209,9 +209,9 @@ export function GameActivityCard({
             gsap.set([rim, glint], { opacity: 0 });
           }
 
-          controller.current = (isActive, isSelected) => {
+          controller.current = (isActive) => {
             context.add(() => {
-              const scale = disabled ? 1 : isSelected ? 1.05 : isActive ? 1.015 : 1;
+              const scale = isActive ? 1.05 : 0.94;
               if (!moving) {
                 gsap.set(scaleLayer, { scale });
                 gsap.set(effects, { opacity: 0 });
@@ -225,9 +225,9 @@ export function GameActivityCard({
                 ease: "power2.out",
                 overwrite: "auto",
               });
-              borderSweep?.timeScale(isSelected ? 1.4 : 1);
+              borderSweep?.timeScale(isActive ? 1.4 : 1);
               gsap.to(glint, {
-                opacity: isSelected ? 1 : isActive ? 0.75 : 0.16,
+                opacity: isActive ? 1 : 0.16,
                 duration: 0.4,
                 overwrite: "auto",
               });
@@ -242,7 +242,7 @@ export function GameActivityCard({
               gsap.to(rim, { visibility: isActive ? "visible" : "hidden", duration: 0 });
             });
           };
-          controller.current(latest.current.active, latest.current.selected);
+          controller.current(latest.current);
           return () => {
             stopTrackingPointer?.();
             controller.current = null;
@@ -256,14 +256,15 @@ export function GameActivityCard({
 
   useGSAP(
     () => {
-      latest.current = { active, selected };
-      controller.current?.(active, selected);
+      latest.current = active;
+      controller.current?.(active);
     },
-    { dependencies: [active, selected], scope: root },
+    { dependencies: [active], scope: root },
   );
 
   return (
     <button
+      aria-pressed={selected}
       {...props}
       ref={root}
       type="button"
@@ -272,7 +273,6 @@ export function GameActivityCard({
         "game-activity-card group relative isolate grid aspect-2/3 w-full cursor-pointer rounded-lg bg-transparent p-0 text-center focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-gold disabled:cursor-default disabled:opacity-65",
         className,
       )}
-      aria-pressed={selected}
       aria-describedby={
         [description ? descriptionId : undefined, caption ? captionId : undefined, describedBy]
           .filter(Boolean)
@@ -300,7 +300,7 @@ export function GameActivityCard({
       }}
     >
       <span className="game-activity-scale absolute inset-0 rounded-[inherit]">
-        <span className="game-activity-motion absolute inset-0 rounded-[inherit] border border-border bg-card shadow-lg shadow-artwork-shadow/40 group-data-[active=true]:border-gold group-data-[selected=true]:shadow-[0_0_24px_color-mix(in_oklch,var(--gold)_45%,transparent)] motion-reduce:group-data-[selected=true]:ring-1 motion-reduce:group-data-[selected=true]:ring-gold">
+        <span className="game-activity-motion absolute inset-0 rounded-[inherit] border border-border bg-card shadow-lg shadow-artwork-shadow/40 group-data-[active=true]:border-gold group-data-[active=true]:shadow-[0_0_24px_color-mix(in_oklch,var(--gold)_45%,transparent)] motion-reduce:group-data-[active=true]:ring-1 motion-reduce:group-data-[active=true]:ring-gold">
           <span
             className="game-activity-rim pointer-events-none invisible absolute -inset-px rounded-[inherit] shadow-[0_0_14px_var(--gold),0_0_3px_var(--gold)]"
             aria-hidden="true"
@@ -332,7 +332,10 @@ export function GameActivityCard({
               {sparks.map((spark) => (
                 <span
                   key={spark}
-                  className="game-activity-spark absolute -bottom-[4%] size-[3px] rounded-full bg-gold opacity-0 shadow-[0_0_8px_var(--gold)]"
+                  className={cn(
+                    "game-activity-spark absolute -bottom-[4%] rounded-full bg-artwork-foreground opacity-0 shadow-[0_0_4px_1px_var(--gold),0_0_11px_var(--gold)]",
+                    spark % 4 === 0 ? "h-2 w-[2px]" : "size-1",
+                  )}
                 />
               ))}
             </span>
@@ -344,7 +347,7 @@ export function GameActivityCard({
                 {caption}
               </span>
             )}
-            <span className="game-activity-title absolute inset-x-2 bottom-[9%] font-heading text-[clamp(1rem,1.85vw,1.85rem)] leading-tight font-bold tracking-wide text-artwork-foreground uppercase [text-shadow:0_2px_3px_var(--artwork-shadow),0_0_8px_var(--artwork-shadow),1px_0_1px_var(--artwork-shadow),-1px_0_1px_var(--artwork-shadow)] compact-landscape:text-[clamp(0.85rem,2vw,1.1rem)]">
+            <span className="game-activity-title absolute inset-x-2 bottom-[9%] font-heading text-[clamp(1rem,1.85vw,1.85rem)] leading-tight font-bold tracking-wide text-artwork-foreground uppercase [text-shadow:0_2px_3px_var(--artwork-shadow),0_0_8px_var(--artwork-shadow),1px_0_1px_var(--artwork-shadow),-1px_0_1px_var(--artwork-shadow)] portrait:text-[clamp(1rem,4.4vw,1.6rem)] compact-landscape:text-[clamp(0.85rem,2vw,1.1rem)]">
               {title}
             </span>
           </span>

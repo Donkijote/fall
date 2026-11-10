@@ -34,10 +34,10 @@ tokens. Components retain 44px action targets and visible keyboard focus.
 
 GSAP gives each activity card independent randomized position, depth, tilt and
 timing. Selection, keyboard focus and pointer hover reveal a pulsing gold rim,
-eight drifting embers, a light sweep and gentle movement of the painting.
+fourteen drifting embers and sparks, a light sweep and gentle movement of the painting.
 Unavailable artwork retains its greyscale filter. Decorative effects are hidden
 from assistive technology and never intercept input. Reduced motion leaves the
-static selection rim and size emphasis. The GSAP context reverts when the card
+static active rim and size emphasis. The GSAP context reverts when the card
 unmounts or the motion preference changes.
 
 ## Example

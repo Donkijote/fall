@@ -6,6 +6,7 @@
 @import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant standalone (@media (display-mode: standalone));
 @custom-variant compact-landscape (@media (orientation: landscape) and (max-height: 650px));
 @custom-variant compact-portrait (@media (orientation: portrait) and (max-height: 650px));
 
@@ -15,6 +16,13 @@
 html,
 body {
   overflow: hidden;
+}
+
+@media (display-mode: standalone) and (orientation: portrait) {
+  html:has(.home-screen),
+  body:has(.home-screen) {
+    background-color: var(--artwork-shadow);
+  }
 }
 
 @theme inline {
@@ -67,6 +75,10 @@ body {
 }
 
 :root {
+  --safe-area-top: env(safe-area-inset-top, 0px);
+  --safe-area-right: env(safe-area-inset-right, 0px);
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-left: env(safe-area-inset-left, 0px);
   --gold: #c89c50;
   --artwork-foreground: #f0e4cd;
   --artwork-shadow: #111418;

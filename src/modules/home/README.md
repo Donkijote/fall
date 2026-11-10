@@ -20,20 +20,18 @@ See `src/components/game/README.md` for the styled/core component boundary and
 
 ## Behaviour
 
-The Tavern is selected initially and its primary action opens the existing
-`BottomSidebar` format picker. The existing game IDs, bot defaults and `/game`
-navigation are preserved. Card selection itself never starts a match.
+The Tavern opens the existing `BottomSidebar` format picker. A mouse click or
+keyboard activation opens it directly. On touch, one tap focuses the card and a
+second tap on the same card opens it. The existing game IDs, bot defaults and
+`/game` navigation are preserved.
 
-Campaign and Arena remain selectable previews with a disabled Coming soon action.
-Future activities use greyscale artwork but remain selectable. The All modes shortcut
-is removed pending the future tab-bar flow; Tavern's primary action remains available.
-Hero, Collection, Journal, Guild, Market and mail are explicitly unavailable.
-There is no invented chapter, quest, currency, level, online lobby or progress.
+Campaign and Arena remain greyscale Coming soon previews. Hero, Collection,
+Journal, Guild, Market and mail are also unavailable.
 
-Keyboard arrows/Home/End select activities, Enter/Space preserve native activation,
-and modal dismissal restores focus. Portrait uses a native horizontal activity
-list with a hidden scrollbar. GSAP animates activity cards and respects the
-system reduced-motion preference.
+Keyboard arrows, Home and End move focus between cards. Modal dismissal returns
+focus to its trigger. Portrait uses a native horizontal activity list with a
+hidden scrollbar. GSAP animates the active card's rim, artwork and embers while
+respecting the system reduced-motion preference.
 
 The hall uses separate phone, tablet and landscape paintings selected by viewport
 aspect ratio. Each fills the lobby, with a small margin for pointer parallax. Shared semantic tokens in `src/index.css` adapt the interface to
@@ -44,5 +42,5 @@ over a themed surface.
 
 Run `pnpm check`, `pnpm exec vp test run`, `pnpm run build` and `git diff --check`.
 Use the existing development app for layout review; do not start a second server.
-Check all activity states, native portrait scrolling, visible primary/footer,
+Check all activity states, native portrait scrolling, visible activity cards and footer,
 keyboard navigation, image failures, onboarding and the existing three game formats.

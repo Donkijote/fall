@@ -6,17 +6,14 @@ source artwork. Manually deleted historical studies are not restored.
 
 ## Working state, not illustrative progress
 
-The user selected the working-hub option: **The Tavern is selected by default**.
-The three positions remain Tavern / Campaign / Arena; the selected card gets the
-golden outer glow and approximately 5% size emphasis, whichever card is selected.
-Selecting a card previews a destination; only the separate primary action enters it.
+The three positions remain Tavern / Campaign / Arena. Hover and keyboard focus
+highlight a card. On touch, the first tap highlights the card and a second tap
+on the same card opens it if playable.
 
-- The Tavern opens the existing Caída picker and preserves 1vs1, three-player
-  free-for-all (internal ID 1vs2), 2vs2, bot defaults and `/game` routing.
-- Campaign and Arena can be selected, but show Coming soon and disable entry.
-  They cannot start a game or create a save, chapter or progress record.
-- The All modes shortcut is removed pending the future tab-bar interaction. Return
-  to Tavern to access its existing format picker.
+- The Tavern opens the existing Caída picker on click, Enter, Space or the
+  confirming tap. It preserves 1vs1, three-player free-for-all (internal ID 1vs2),
+  2vs2, bot defaults and `/game` routing.
+- Campaign and Arena remain Coming soon previews.
 - Hero, Collection, Journal, Guild, Market and mail remain explicitly unavailable.
 - The player HUD shows level and XP on the left and Energy, Coins and Diamonds on the right. Missing values use dashes and an empty XP track.
 - Existing welcome/local-user onboarding, mode deep links, Settings, appearance,
@@ -32,7 +29,7 @@ Their exact source rectangles are in `src/assets/lobby/card-hall/README.md`.
 Three full-bleed hall paintings cover narrow phone portrait, tablet and landscape
 viewports. Each reframes the same room to keep its landmarks in view. The compact identity,
 centred wordmark and resource readouts use live text. The activity row sits above
-the primary action and two compact icon groups. Player systems are on the left,
+two compact icon groups. Player systems are on the left,
 with Messages and Settings on the right.
 Cards use a smaller 2:3 portrait silhouette with titles directly over their artwork,
 without description panels or stacked bottom borders. Selection adds a soft golden
@@ -43,8 +40,8 @@ Motion takes inspiration from the supplied Gwent mode-hover clip, translated to
 Fall's gold. GSAP varies drift, depth, tilt and timing independently on each card.
 The active effects include a pulsing rim, drifting embers, a soft light sweep and
 subtle pan and zoom of the still painting.
-Hover and keyboard focus preview the effect without selecting or launching a mode.
-Touch uses the persistent selected state. Reduced motion preserves static styling
+Hover, keyboard focus and touch preview show the active effects. Reduced motion
+preserves static styling
 but removes floating, art motion, shimmer and particles. No generated video or new
 runtime assets are required.
 
@@ -54,8 +51,8 @@ artwork contrast tokens keep labels readable over illustrations in both appearan
 Landscape keeps all three cards visible with viewport-constrained sizing. Portrait
 uses a native horizontal, scroll-snap activity list with a hidden scrollbar and
 partially visible next card; it does not shrink the whole menu into tiny labels.
-Selection supports click/touch, native Enter/Space, Left/Right and Home/End. On a
-scrolling list, selection is brought into view without animated scrolling.
+Arrow keys, Home and End move focus. A focused card is brought into view on the
+scrolling list.
 
 ## Code ownership
 
@@ -80,7 +77,7 @@ format, onboarding/deep links, Settings, appearance, guides and focus restoratio
 
 Visual validation uses the user's existing port 3000 app, not another server.
 Check desktop, ultrawide, portrait and short landscape; selected-card separation,
-readable labels, touch targets, visible primary action/footer, image-failure and
+readable labels, touch targets, visible cards and footer, image-failure and
 reduced-motion behaviour. The extracted source paintings are modest resolution;
 larger dedicated crops are a future art improvement, not a new layout dependency.
 

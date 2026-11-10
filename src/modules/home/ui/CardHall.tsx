@@ -1,11 +1,9 @@
 import gsap from "gsap";
-import { ArrowRight } from "lucide-react";
 import { useRef, useState } from "react";
-import type { KeyboardEvent } from "react";
+import type { KeyboardEvent, MouseEvent } from "react";
 
 import {
   GameActivityCard,
-  GameButton,
   GameNavigation,
   GamePlayerIdentity,
   GameResource,
@@ -38,6 +36,10 @@ const playerSystems: { label: string; items: GameNavigationItem[] }[] = [
   items: items.map((item) => ({ ...item, disabled: true, unavailableLabel: "coming soon" })),
 }));
 
+function isTouchFirstDevice() {
+  return window.matchMedia?.("(hover: none), (pointer: coarse)").matches ?? false;
+}
+
 export type CardHallProps = {
   player: Pick<GamePlayerIdentityProps, "name" | "avatarUrl" | "level" | "experience">;
   resources?: {
@@ -51,10 +53,12 @@ export type CardHallProps = {
 };
 
 export function CardHall({ player, resources, canPlay, onPlay, onSettings }: CardHallProps) {
-  const [selectedId, setSelectedId] = useState<(typeof homeActivities)[number]["id"]>("tavern");
+  const [touchFocusedId, setTouchFocusedId] = useState<
+    (typeof homeActivities)[number]["id"] | null
+  >(null);
+  const touchPointer = useRef(false);
   const cardRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const backdropRef = useRef<HTMLDivElement>(null);
-  const selectedActivity = homeActivities.find(({ id }) => id === selectedId)!;
 
   useGSAP(
     () => {
@@ -128,13 +132,32 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
     { scope: backdropRef },
   );
 
-  function selectActivity(index: number, focus = false) {
-    setSelectedId(homeActivities[index].id);
+  function focusActivity(index: number) {
     const card = cardRefs.current[index];
-    if (focus) card?.focus({ preventScroll: true });
+    card?.focus({ preventScroll: true });
     const list = card?.parentElement;
     if (list && list.scrollWidth > list.clientWidth)
       card?.scrollIntoView?.({ block: "nearest", inline: "center", behavior: "instant" });
+  }
+
+  function activateActivity(event: MouseEvent<HTMLButtonElement>, index: number) {
+    const activity = homeActivities[index];
+    const pointerType = "pointerType" in event.nativeEvent ? event.nativeEvent.pointerType : "";
+    const isTouch =
+      pointerType === "touch" ||
+      (event.detail > 0 && (touchPointer.current || isTouchFirstDevice()));
+    touchPointer.current = false;
+
+    if (isTouch && touchFocusedId !== activity.id) {
+      setTouchFocusedId(activity.id);
+      focusActivity(index);
+      return;
+    }
+    if (!activity.available || !canPlay) return;
+
+    setTouchFocusedId(null);
+    event.currentTarget.focus({ preventScroll: true });
+    onPlay();
   }
 
   function navigateActivities(event: KeyboardEvent<HTMLButtonElement>, index: number) {
@@ -150,13 +173,24 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
               : undefined;
     if (nextIndex === undefined) return;
     event.preventDefault();
-    selectActivity(nextIndex, true);
+    setTouchFocusedId(null);
+    focusActivity(nextIndex);
   }
 
   return (
     <div
-      className="card-hall relative isolate grid min-h-dvh grid-rows-[auto_1fr_auto_auto] bg-background text-foreground [--hall-card-height:min(44dvh,440px,calc((100vw_-_8rem)/2))] portrait:[--hall-card-height:min(40dvh,340px,calc((100vw_-_5rem)*1.5))] compact-landscape:[--hall-card-height:max(110px,min(43dvh,calc(100dvh_-_13rem)))] compact-portrait:[--hall-card-height:min(33dvh,240px,calc((100vw_-_5rem)*1.5))]"
+      className="card-hall relative isolate grid min-h-dvh grid-rows-[auto_1fr_auto] bg-background text-foreground [--hall-card-height:min(44dvh,440px,calc((var(--hall-safe-width)_-_8rem)/2))] [--hall-safe-width:calc(100vw_-_var(--safe-area-left)_-_var(--safe-area-right))] portrait:[--hall-card-height:min(46dvh,390px,calc((var(--hall-safe-width)_-_4rem)*1.5))] compact-landscape:[--hall-card-height:min(55dvh,calc(100dvh_-_9.85rem_-_var(--safe-area-top)_-_var(--safe-area-bottom)),calc((var(--hall-safe-width)_-_7rem)/2))] compact-portrait:[--hall-card-height:min(42dvh,275px,calc((var(--hall-safe-width)_-_4rem)*1.5))]"
       data-slot="card-hall"
+      onPointerDown={(event) => {
+        touchPointer.current =
+          (event.pointerType === "touch" || isTouchFirstDevice()) &&
+          event.target instanceof Element &&
+          Boolean(event.target.closest('[data-slot="game-activity-card"]'));
+        if (!touchPointer.current) setTouchFocusedId(null);
+      }}
+      onPointerCancel={() => {
+        touchPointer.current = false;
+      }}
     >
       <div
         ref={backdropRef}
@@ -187,9 +221,10 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
             />
           </div>
         </div>
+        <div className="absolute inset-x-0 top-0 hidden h-[calc(var(--safe-area-top)+1.5rem)] bg-linear-to-b from-artwork-shadow via-artwork-shadow/55 to-transparent standalone:portrait:block" />
       </div>
       <header
-        className="card-hall-header grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-start gap-4 px-[clamp(1rem,2.6vw,3rem)] pt-[max(1rem,env(safe-area-inset-top))] pb-3 text-artwork-foreground [text-shadow:0_1px_4px_var(--artwork-shadow)] max-[480px]:grid-cols-[minmax(0,1fr)_auto] portrait:gap-1.5 portrait:px-3 portrait:pt-[max(0.7rem,env(safe-area-inset-top))] portrait:pb-2 compact-landscape:items-center compact-landscape:px-4 compact-landscape:pt-[max(0.25rem,env(safe-area-inset-top))] compact-landscape:pb-0"
+        className="card-hall-header grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-start gap-4 pt-[calc(var(--hall-header-top)+var(--safe-area-top))] pr-[calc(var(--hall-header-gutter)+var(--safe-area-right))] pb-3 pl-[calc(var(--hall-header-gutter)+var(--safe-area-left))] text-artwork-foreground [--hall-header-gutter:clamp(1rem,2.6vw,3rem)] [--hall-header-top:1rem] [text-shadow:0_1px_4px_var(--artwork-shadow)] max-[480px]:grid-cols-[minmax(0,1fr)_auto] portrait:gap-1.5 portrait:pb-2 portrait:[--hall-header-gutter:0.75rem] portrait:[--hall-header-top:0.7rem] compact-landscape:items-center compact-landscape:gap-2 compact-landscape:pb-0 compact-landscape:[--hall-header-gutter:1rem] compact-landscape:[--hall-header-top:0.25rem]"
         aria-label="Player HUD"
       >
         <GamePlayerIdentity
@@ -197,7 +232,7 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
           fallbackAvatarUrl={cardHallArtwork.traveller}
           levelCrestUrl={cardHallIcons.level}
         />
-        <h1 className="card-hall-wordmark m-0 font-heading text-[clamp(2rem,3.5vw,3.4rem)] leading-tight font-semibold tracking-[0.08em] max-[480px]:col-span-2 max-[480px]:row-start-2 max-[480px]:justify-self-center portrait:text-[1.65rem] compact-landscape:text-[1.8rem]">
+        <h1 className="card-hall-wordmark m-0 font-heading text-[clamp(2rem,3.5vw,3.4rem)] leading-tight font-semibold tracking-[0.08em] max-[480px]:col-span-2 max-[480px]:row-start-2 max-[480px]:justify-self-center portrait:text-[1.65rem] compact-landscape:text-[clamp(1.25rem,3.4vw,1.8rem)]">
           THE FALL
         </h1>
         <div
@@ -221,7 +256,7 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
           />
         </div>
       </header>
-      <div className="card-hall-stage grid min-w-0 content-center py-3 compact-landscape:py-0.5">
+      <div className="card-hall-stage grid min-w-0 content-center py-3 pr-(--safe-area-right) pl-(--safe-area-left) compact-landscape:py-0.5">
         <div
           className="card-hall-activities mx-auto grid min-h-[calc(var(--hall-card-height)*1.1+4rem)] w-fit max-w-full [scrollbar-width:none] grid-cols-[repeat(3,calc(var(--hall-card-height)*2/3))] items-center gap-[clamp(1.2rem,2.4vw,2.6rem)] p-8 portrait:w-full portrait:snap-x portrait:snap-proximity portrait:scroll-px-10 portrait:auto-cols-[calc(var(--hall-card-height)*2/3)] portrait:grid-flow-col portrait:grid-cols-none portrait:justify-start portrait:gap-6 portrait:overflow-x-auto portrait:overscroll-x-contain portrait:px-10 compact-landscape:min-h-[calc(var(--hall-card-height)*1.1+1.5rem)] compact-landscape:py-3 compact-portrait:min-h-[calc(var(--hall-card-height)*1.1+2rem)] compact-portrait:py-4 [&::-webkit-scrollbar]:hidden [&>.game-activity-card]:h-(--hall-card-height) [&>.game-activity-card]:snap-center"
           role="group"
@@ -239,49 +274,33 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
               imageWidth={activity.imageWidth}
               imageHeight={activity.imageHeight}
               caption={activity.available ? undefined : "Coming soon"}
-              selected={activity.id === selectedId}
+              selected={touchFocusedId === activity.id}
               unavailable={!activity.available}
-              aria-label={`Select ${activity.title}`}
-              onClick={() => selectActivity(index)}
+              disabled={activity.available && !canPlay}
+              aria-label={activity.title}
+              aria-haspopup={activity.available ? "dialog" : undefined}
+              aria-pressed={undefined}
+              className="touch-manipulation"
+              onPointerEnter={(event) => {
+                if (event.pointerType === "mouse" && !isTouchFirstDevice()) {
+                  setTouchFocusedId(null);
+                }
+              }}
+              onClick={(event) => activateActivity(event, index)}
               onKeyDown={(event) => navigateActivities(event, index)}
             />
           ))}
         </div>
         <p id="card-hall-selection-help" className="sr-only">
-          Choose an activity, then use the action below. Arrow keys change the selection. Campaign
-          and Arena are coming soon.
+          Click an activity to open it. On touch screens, tap once to focus and tap again to open.
+          Use arrow keys to move between cards and Enter or Space to open. Campaign and Arena are
+          coming soon.
         </p>
       </div>
-      <section
-        className="card-hall-actions mx-auto grid w-full max-w-395 justify-items-center px-4 pt-5 pb-9 portrait:py-4 compact-landscape:py-2 compact-portrait:py-2.5"
-        aria-label="Selected activity"
-      >
-        <div className="card-hall-primary w-full max-w-112.5 compact-landscape:max-w-80">
-          <GameButton
-            tone="primary"
-            className="w-full [&_svg]:size-[1.2em]"
-            disabled={!canPlay || !selectedActivity.available}
-            aria-label={
-              selectedActivity.available
-                ? "Play at the tavern"
-                : `${selectedActivity.title} (coming soon)`
-            }
-            onClick={() => {
-              if (canPlay && selectedActivity.available) onPlay();
-            }}
-          >
-            {selectedActivity.available
-              ? "Play at the tavern"
-              : `${selectedActivity.title} coming soon`}
-            <ArrowRight aria-hidden="true" data-icon="inline-end" />
-          </GameButton>
-          <span className="sr-only" role="status">
-            {selectedActivity.title} selected.{" "}
-            {selectedActivity.available ? "Caída is available." : "This activity is coming soon."}
-          </span>
-        </div>
-      </section>
-      <footer className="flex items-end justify-between gap-1 px-1 pt-1 pb-[max(0.25rem,env(safe-area-inset-bottom))] sm:px-4 sm:pb-[max(0.75rem,env(safe-area-inset-bottom))] compact-landscape:px-3 compact-landscape:pb-[max(0.25rem,env(safe-area-inset-bottom))]">
+      <p role="status" className="sr-only">
+        {touchFocusedId === "tavern" ? "The Tavern focused." : ""}
+      </p>
+      <footer className="flex flex-wrap items-end justify-between gap-1 pt-1 pr-[calc(var(--hall-footer-gutter)+var(--safe-area-right))] pb-[calc(var(--hall-footer-bottom)+var(--safe-area-bottom))] pl-[calc(var(--hall-footer-gutter)+var(--safe-area-left))] [--hall-footer-bottom:0.625rem] [--hall-footer-gutter:0.25rem] min-[360px]:[--hall-footer-gutter:0.75rem] sm:[--hall-footer-bottom:0.75rem] sm:[--hall-footer-gutter:1rem] compact-landscape:[--hall-footer-bottom:0.125rem] compact-landscape:[--hall-footer-gutter:0.375rem] [&>nav:last-child]:ml-auto">
         <GameNavigation label="Player systems" groups={playerSystems} />
         <GameNavigation
           label="Utilities"
