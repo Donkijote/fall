@@ -43,7 +43,10 @@ export const BottomSidebar = ({ isOpen, onClose }: BottomSidebarProps) => {
         if (!open) onClose();
       }}
     >
-      <SheetContent side="bottom" className="rounded-none data-[side=bottom]:h-dvh">
+      <SheetContent
+        side="bottom"
+        className="rounded-none data-[side=bottom]:h-dvh [&_[data-slot=sheet-close]]:top-[calc(1rem+var(--safe-area-top))] [&_[data-slot=sheet-close]]:right-[calc(1rem+var(--safe-area-right))]"
+      >
         <SheetHeader className="sr-only">
           <SheetTitle>Choose your game</SheetTitle>
           <SheetDescription>Play a duel, a free-for-all, or a team match.</SheetDescription>

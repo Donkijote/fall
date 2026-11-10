@@ -61,25 +61,43 @@ afterEach(() => {
   document.documentElement.style.removeProperty("color-scheme");
 });
 
-test("replaces the old navigation with the game HUD while retaining a usable Play entry", () => {
+test("opens the working Card Hall with Tavern playable and no placeholder campaign progress", () => {
   renderLobby();
-  expect(screen.getByRole("heading", { name: "The Hearth" })).toBeVisible();
+  expect(screen.queryByRole("heading", { name: "The Hearth" })).not.toBeInTheDocument();
+  expect(screen.queryByText("A moment of rest. Another hand awaits.")).not.toBeInTheDocument();
   expect(screen.getByText("Player One")).toBeVisible();
-  expect(screen.getByRole("button", { name: "Play" })).toBeEnabled();
+  expect(screen.getByRole("button", { name: "Tavern" })).toBeEnabled();
+  expect(screen.getByRole("button", { name: "Tavern" })).toHaveAttribute("aria-haspopup", "dialog");
+  expect(screen.queryByRole("button", { name: "Play at the tavern" })).not.toBeInTheDocument();
+  expect(screen.queryByText("CHAPTER II")).not.toBeInTheDocument();
   expect(screen.queryByRole("navigation", { name: "Main navigation" })).not.toBeInTheDocument();
   expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+});
+
+test("composes real activity controls over the clean hall, not the flattened mockup", () => {
+  const { container } = renderLobby();
+  expect(container.querySelector('[data-slot="card-hall"]')).toBeInTheDocument();
+  expect(container.querySelector('[data-slot="living-town-scene"], canvas')).toBeNull();
+  expect(container.querySelector(".card-hall-backdrop")).toHaveAttribute("aria-hidden", "true");
+  expect(screen.getByRole("group", { name: "Activities" }).querySelectorAll("button")).toHaveLength(
+    3,
+  );
+  expect(screen.getByRole("banner", { name: "Player HUD" })).toContainElement(
+    screen.getByText("Player One"),
+  );
+  expect(screen.queryByRole("group", { name: "Current quest" })).not.toBeInTheDocument();
 });
 
 test("onboarding updates the HUD immediately and only then allows play", async () => {
   localStorage.clear();
   const user = userEvent.setup();
   const { container } = renderLobby();
-  expect(container.querySelector('[aria-label="Play"]')).toBeDisabled();
+  expect(container.querySelector('[aria-label="Tavern"]')).toBeDisabled();
   await user.type(screen.getByLabelText("Username"), "  New Traveller  {Enter}");
 
   await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
   expect(screen.getByText("New Traveller")).toBeVisible();
-  expect(screen.getByRole("button", { name: "Play" })).toBeEnabled();
+  expect(screen.getByRole("button", { name: "Tavern" })).toBeEnabled();
   expect(setupGame).not.toHaveBeenCalled();
 });
 
@@ -90,7 +108,7 @@ test.each([
 ])("Play preserves the $label game setup and route", async ({ label, mode }) => {
   const user = userEvent.setup();
   renderLobby();
-  await user.click(screen.getByRole("button", { name: "Play" }));
+  await user.click(screen.getByRole("button", { name: "Tavern" }));
   await user.click(screen.getByRole("button", { name: `Play ${label}` }));
   expect(setupGame).toHaveBeenCalledExactlyOnceWith("player", mode);
   expect(await screen.findByRole("heading", { name: "Game scene" })).toBeVisible();
@@ -134,24 +152,54 @@ test("Settings preserves appearance switching and returns keyboard focus on Esca
   await waitFor(() => expect(settings).toHaveFocus());
 });
 
-test("Escape closes the mode picker and returns focus to Play", async () => {
+test("Escape closes the mode picker and returns focus to Tavern", async () => {
   const user = userEvent.setup();
   renderLobby();
-  const play = screen.getByRole("button", { name: "Play" });
+  const play = screen.getByRole("button", { name: "Tavern" });
   await user.click(play);
   await user.keyboard("{Escape}");
   await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
   await waitFor(() => expect(play).toHaveFocus());
 });
 
+test.each(["{Enter}", " "])("the tavern opens the existing mode picker with %s", async (key) => {
+  const user = userEvent.setup();
+  renderLobby();
+  const tavern = screen.getByRole("button", { name: "Tavern" });
+  tavern.focus();
+  await user.keyboard(key);
+  expect(await screen.findByRole("dialog", { name: "Choose your game" })).toBeVisible();
+  expect(setupGame).not.toHaveBeenCalled();
+});
+
 test("the presentational HUD never writes an economy or performs network requests", () => {
   const storageSpy = vi.spyOn(Storage.prototype, "setItem");
   const fetchSpy = vi.spyOn(globalThis, "fetch");
   renderLobby();
-  expect(screen.getByRole("group", { name: "Energy" })).toHaveTextContent("Not available yet");
-  expect(screen.getByRole("group", { name: "Coins" })).toHaveTextContent("Not available yet");
+  for (const resource of ["Energy", "Coins", "Diamonds"]) {
+    expect(screen.getByRole("group", { name: resource })).toHaveTextContent("Unavailable");
+  }
+  expect(screen.getByText("Level —")).toBeVisible();
+  expect(screen.getByRole("img", { name: "Experience unavailable" })).toBeVisible();
   expect(storageSpy).not.toHaveBeenCalled();
   expect(fetchSpy).not.toHaveBeenCalled();
   storageSpy.mockRestore();
   fetchSpy.mockRestore();
+});
+
+test("future activities cannot start a game; return to Tavern to choose a format", async () => {
+  const user = userEvent.setup();
+  renderLobby();
+  for (const title of ["Campaign", "Arena"]) {
+    const activity = screen.getByRole("button", { name: title });
+    expect(activity).toHaveAccessibleDescription("Coming soon");
+    await user.click(activity);
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  }
+  expect(setupGame).not.toHaveBeenCalled();
+  expect(screen.queryByRole("button", { name: "All Caída modes" })).not.toBeInTheDocument();
+  await user.click(screen.getByRole("button", { name: "Tavern" }));
+  expect(await screen.findByRole("dialog", { name: "Choose your game" })).toBeVisible();
+  await user.keyboard("{Escape}");
+  await waitFor(() => expect(screen.getByRole("button", { name: "Tavern" })).toHaveFocus());
 });

@@ -1,13 +1,8 @@
 import { BookOpen, FlaskConical, ScrollText } from "lucide-react";
 import { Link } from "react-router";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { GameDialogContent } from "@/components/game";
+import { Dialog, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ThemeToggle } from "@/infrastructure/ui/components/theme/ThemeToggle";
 import { ANIMATION_PLAYGROUND_PATH, RULES_PATH, SINGS_SHEETS } from "@/routes/Routes";
 
@@ -16,7 +11,7 @@ type HomeSettingsProps = { open: boolean; onOpenChange: (open: boolean) => void 
 export function HomeSettings({ open, onOpenChange }: HomeSettingsProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="home-settings [&_[data-slot=button]]:min-h-11 [&_[data-slot=button]]:min-w-11 [&_[data-slot=dialog-close]]:size-11">
+      <GameDialogContent className="home-settings [&_[data-slot=button]]:min-h-11 [&_[data-slot=button]]:min-w-11 [&_[data-slot=dialog-close]]:size-11">
         <DialogHeader>
           <DialogTitle>Settings</DialogTitle>
           <DialogDescription>Make yourself at home.</DialogDescription>
@@ -53,7 +48,23 @@ export function HomeSettings({ open, onOpenChange }: HomeSettingsProps) {
             </Link>
           )}
         </nav>
-      </DialogContent>
+        <details className="text-xs text-muted-foreground">
+          <summary className="flex min-h-11 cursor-pointer items-center font-medium">
+            Icon credits
+          </summary>
+          <p>
+            Icons made by Lorc, Delapouite, Faithtoken, Sbed and Skoll for{" "}
+            <a className="underline" href="https://game-icons.net">
+              Game-icons.net
+            </a>
+            . Fall applies its own colors. Licensed under{" "}
+            <a className="underline" href="https://creativecommons.org/licenses/by/3.0/">
+              CC BY 3.0
+            </a>
+            .
+          </p>
+        </details>
+      </GameDialogContent>
     </Dialog>
   );
 }

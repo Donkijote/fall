@@ -115,6 +115,7 @@ The interface uses the installed shadcn/ui `base-luma` preset with Base UI and L
 Shared primitives live in `src/components/ui`; add components with `pnpm exec shadcn add <component>`.
 Use semantic theme colors from `src/index.css` rather than custom glass or gold styles.
 See [the design-system and migration guide](docs/shadcn-migration.md) for conventions and the component inventory.
+[Fall art direction](docs/design/art-direction.md) covers the visual language, artwork, and image prompts.
 
 ## 📖 Overview
 
