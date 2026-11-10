@@ -63,6 +63,7 @@ body {
   --color-engraved-accent: var(--engraved-accent);
   --color-action: var(--action);
   --color-action-highlight: var(--action-highlight);
+  --color-artwork-ember: var(--artwork-ember);
   --color-artwork-accent: var(--artwork-accent);
   --color-artwork-foreground: var(--artwork-foreground);
   --color-artwork-shadow: var(--artwork-shadow);
@@ -94,6 +95,7 @@ body {
   --safe-area-left: env(safe-area-inset-left, 0px);
   --gold: #c89c50;
   --artwork-foreground: #f0e4cd;
+  --artwork-ember: #ff6a00;
   --artwork-accent: #dfbd8b;
   --engraved-accent: #70512f;
   --action: #6c2924;

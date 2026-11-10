@@ -71,11 +71,11 @@ export function LoginScreen() {
             </p>
             <h1
               id="login-title"
-              className="font-heading text-3xl leading-[1.15] font-bold lg:text-5xl xl:text-6xl 2xl:text-7xl sm:portrait:text-5xl max-xl:landscape:text-2xl"
+              className="font-heading text-3xl leading-[1.15] font-bold [text-shadow:none] lg:text-5xl xl:text-6xl 2xl:text-7xl sm:portrait:text-5xl max-xl:landscape:text-2xl"
             >
-              Every hand.
-              <br />
-              <span className="login-title-gradient inline-block bg-linear-to-r from-artwork-foreground from-10% to-artwork-accent bg-clip-text text-transparent [text-shadow:none] forced-colors:bg-none forced-colors:text-[CanvasText]">
+              Every hand
+              <br />{" "}
+              <span className="login-title-gradient inline-block bg-linear-to-r from-primary from-10% to-artwork-ember bg-clip-text text-transparent forced-colors:bg-none forced-colors:text-[CanvasText]">
                 A new story.
               </span>
             </h1>
@@ -91,7 +91,7 @@ export function LoginScreen() {
                 {suitIcons.map((icon) => (
                   <span
                     key={icon}
-                    className="login-suit-symbol flex size-10 items-center justify-center rounded-full border border-artwork-accent/55 bg-artwork-shadow/85 text-artwork-foreground shadow-sm"
+                    className="login-suit-symbol flex size-10 items-center justify-center rounded-full border border-artwork-accent/55 bg-artwork-shadow text-artwork-foreground shadow-sm"
                   >
                     <GameIcon icon={icon} className="size-5" />
                   </span>
@@ -103,7 +103,7 @@ export function LoginScreen() {
             </div>
           </section>
 
-          <Card className="login-card relative w-full min-w-0 border border-gold bg-linear-to-b from-card to-background shadow-2xl ring-1 inset-ring-1 shadow-artwork-shadow/65 ring-artwork-shadow/25 inset-ring-gold/35 [--card-spacing:--spacing(4)] sm:[--card-spacing:--spacing(5)] xl:[--card-spacing:--spacing(6)] max-xl:landscape:[--card-spacing:clamp(1rem,calc(12dvh-1.5rem),2rem)]">
+          <Card className="login-card relative w-full min-w-0 border-2 border-gold bg-linear-to-b from-card to-background shadow-[0_18px_36px_var(--artwork-shadow),0_0_24px_color-mix(in_oklab,var(--artwork-accent)_34%,transparent)] inset-ring-1 inset-ring-gold/35 [--card-spacing:--spacing(4)] sm:[--card-spacing:--spacing(5)] xl:[--card-spacing:--spacing(6)] max-xl:landscape:[--card-spacing:clamp(1rem,calc(12dvh-1.5rem),2rem)]">
             <CardHeader className="justify-items-center gap-2 pt-0 text-center sm:gap-3 xl:pt-2 max-xl:landscape:flex max-xl:landscape:items-center max-xl:landscape:justify-center max-xl:landscape:gap-3">
               <span className="mb-1 flex size-10 items-center justify-center rounded-full border border-gold/60 bg-linear-to-b from-secondary to-card text-engraved-accent shadow-sm sm:size-12 xl:size-16 max-xl:landscape:mb-0 max-xl:landscape:size-[clamp(2rem,10dvh,2.75rem)] max-xl:landscape:shrink-0">
                 <GameIcon icon={appEmblem} className="size-5 sm:size-6 xl:size-8" />

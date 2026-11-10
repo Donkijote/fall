@@ -44,7 +44,9 @@ describe("LoginScreen", () => {
   it("renders the layout with accessible, empty email and password fields", () => {
     render(<LoginScreen />);
 
-    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Every hand.");
+    expect(
+      screen.getByRole("heading", { level: 1, name: "Every hand A new story." }),
+    ).toBeVisible();
     expect(screen.getByRole("heading", { level: 2, name: "The Fall" })).toBeVisible();
     expect(screen.getByLabelText("Email address")).toHaveAttribute("type", "email");
     expect(screen.getByLabelText("Email address")).toHaveValue("");
