@@ -1,0 +1,31 @@
+.game-activity-glint {
+  padding: 2px;
+  background: conic-gradient(
+    from var(--glint-angle, 0deg),
+    transparent 0%,
+    var(--gold) 13%,
+    var(--artwork-foreground) 22%,
+    transparent 34% 52%,
+    var(--gold) 64%,
+    transparent 78%
+  );
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+}
+
+.game-activity-card[data-selected="true"]:not(:disabled) .game-activity-glint {
+  padding: 3px;
+  background: conic-gradient(
+    from var(--glint-angle, 0deg),
+    transparent,
+    var(--gold) 10%,
+    var(--artwork-foreground) 19% 25%,
+    var(--gold) 33%,
+    transparent 46% 55%,
+    var(--gold) 67%,
+    var(--artwork-foreground) 73%,
+    transparent 88%
+  );
+}

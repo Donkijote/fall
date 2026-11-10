@@ -1,89 +1,48 @@
-# Home HUD and Living Town scene
+# Home: Card Hall
 
-Issue #80 implements the Living Town **HUD**, not the illustrated town (#99).
-The accepted direction uses the existing Cinzel/Spline typography, Lucide icons,
-shared Button/Dialog primitives, and semantic theme tokens, with local bronze
-frames and ember accents. No generated artwork is required for the HUD.
+The Home/lobby now implements the revised Card Hall master in
+`docs/design/main-menu-research/image-concepts/card-hall.png`. It replaces the
+multi-building Living Town scene. Existing source art and manual design deletions
+are preserved; the running menu uses a clean background and real UI controls,
+not the flattened screenshot.
 
-Issue #99 now uses layered illustrated artwork in `LivingTownScene`, replacing the
-earlier procedural mountain/tavern studies. A plum sky, hazed mountain ridges,
-flagstone plaza and timber-and-stone tavern share the HUD's restrained charcoal,
-oxblood and bronze direction. Optimized WebP images remain visible independently
-of the optional, lazy React Three Fiber mist. Motion/data preferences, hidden-tab
-pause and renderer failures affect only that enhancement. The HUD layout, theme
-and game-mode behavior are unchanged. The central arrival panel is removed; the
-inward-facing tavern now opens the existing mode picker with a slow hover/focus
-glow, restrained embers, permanent bronze-framed nameplate and keyboard/touch
-activation. Tavern and the single unrepeated paving image share a contained world
-scale instead of oversized mobile/cover zoom. A smaller Merchant beside the tavern
-and the latest Quests booth at the right screen border share the same world-relative
-scale, grading and permanent roof nameplates. Campaign, Arena and Modes occupy
-separate painted mountain districts. These five destinations are disabled and announced as coming soon;
-they add no game/shop/quest behavior. The Merchant overlaps the tavern at the left
-border with a subtle inward perspective adjustment and a plaque centred on its
-projected roof. Desktop badges scale up for readability. The smaller castle is
-highest and farthest, Arena sits lower-left without overlapping it, and the
-observatory rises on the right. A fully exposed gate sits behind the larger,
-closer fountain. These two central assets are decorative, not alternate Play entries.
-Detached oval ground shadows
-are removed, and portrait paving extends beneath the foreground feet rather than
-ending above the Merchant. New assets retain their own native proportions.
-The latest four PNG masters are preserved; runtime exports trim only alpha padding.
-Their native aspects and stage-centred sightline survive responsive changes. See
-`docs/design/home-lobby/living-town.md` for the incremental scope, layer manifest
-and remaining art/visual review requirements.
+## Ownership
 
-## Current behavior
+- `HomeLobby.tsx`: local-player onboarding and Settings/Play dialog state.
+- `CardHall.tsx`: activity selection, keyboard traversal, responsive Tailwind layout and decorative background.
+- `cardHallArtwork.ts`: the three activity records and cropped runtime illustrations.
+- `HomeSettings.tsx`: existing theme, guide and development-tool actions.
+- `src/components/game`: reusable themed components and component styles.
+- `src/components/ui`: upstream shadcn primitives; no edits for this implementation.
 
-- `HomeLobby` is the controller behind the existing `HomeScreen` route export.
-  It reads the local user, updates identity after onboarding, and owns the Play
-  and Settings panels. A mode-picker deep link waits until onboarding completes.
-- `HomeHud` is presentation-only: overlapping portrait and name/level/XP plaque
-  upper-left; energy, coins, diamonds, Mail, and Settings upper-right. Collection,
-  Character, Inventory, Ranks, and Quests sit on a spacious bottom-anchored dock with
-  overlapping nameplates. Locks indicate unavailable systems without redundant
-  visible Soon labels. Mail and lower-left Chat are disabled placeholders.
-- Optional player level and experience props support future progression data.
-  Unknown levels show an em dash and unknown experience leaves an empty track,
-  not a fabricated level, progress value, or loading indicator.
-- `HudResource` accepts optional values and renders unknown balances as em
-  dashes. `HomeLobby` intentionally supplies no balances or progression. Supplied
-  test/example values exercise presentation, not an economy. There are no grant,
-  spend, recharge, purchase, timer, or persistence actions.
-- Settings contains the working theme toggle, Rules and Sings links, and the
-  development-only animation playground link. No speculative settings are added.
-- The center remains open for future town landmarks. The tavern is the single
-  Caída entry, disabled until onboarding completes. Its permanent The Tavern plaque
-  remains if art fails and opens the unchanged picker; it does not start a match directly.
+See `src/components/game/README.md` for the styled/core component boundary and
+`docs/design/home-lobby/card-hall.md` for design mapping and responsive behaviour.
 
-## Scene/HUD integration contract for #99
+## Behaviour
 
-`HomeHud` accepts `scene` and `children` slots. The scene is an absolute layer
-at z-index 0; the HUD is a separate grid at z-index 10. Dialogs/sheets retain
-the shared primitives’ portal layering above both.
+The Tavern is selected initially and its primary action opens the existing
+`BottomSidebar` format picker. The existing game IDs, bot defaults and `/game`
+navigation are preserved. Card selection itself never starts a match.
 
-- Put full-bleed town layers and destination controls in `scene`. The layer has
-  `pointer-events: none`; set `pointer-events: auto` on actual scene controls,
-  not on an invisible full-screen overlay. The scene slot is not aria-hidden:
-  only its decorative art should be hidden from assistive technology.
-- The HUD also defaults to pointer passthrough. Its player/resource regions and
-  Settings control opt in. The top row and bottom shortcut cluster reserve their
-  own layout space; do not put town destinations beneath those occupied regions.
-- `children` occupies the middle row (`data-slot="home-scene-space"`), currently
-  empty now that the town owns the game entry. Do not add a competing central
-  Play action or move artwork through HUD rows.
-- The stage uses dynamic viewport sizing and safe-area padding. Landscape is
-  the primary composition; compact landscapes reduce the center decoration.
-  Portrait reflows rather than forcing orientation or blocking navigation.
-  An orientation lock is a future decision, not implemented here.
-- Theme appearance is inherited. Do not force `.dark` on the HUD or bypass the
-  shared accessibility/focus behavior when adding new controls.
+Campaign and Arena remain selectable previews with a disabled Coming soon action.
+Future activities use greyscale artwork but remain selectable. The All modes shortcut
+is removed pending the future tab-bar flow; Tavern's primary action remains available.
+Hero, Collection, Journal, Guild, Market and mail are explicitly unavailable.
+There is no invented chapter, quest, currency, level, online lobby or progress.
+
+Keyboard arrows/Home/End select activities, Enter/Space preserve native activation,
+and modal dismissal restores focus. Portrait uses a native horizontal activity
+list with a hidden scrollbar. GSAP animates activity cards and respects the
+system reduced-motion preference.
+
+The hall uses separate phone, tablet and landscape paintings selected by viewport
+aspect ratio. Each fills the lobby, with a small margin for pointer parallax. Shared semantic tokens in `src/index.css` adapt the interface to
+light and dark appearance. Card artwork failures fall back to a readable title
+over a themed surface.
 
 ## Validation
 
-Focused tests cover resource values/unknown states, unavailable shortcuts,
-avatar fallback, scene composition, onboarding, deep links, all current match
-formats, Settings navigation, theme switching, and keyboard focus restoration.
-
-Run `pnpm exec vp test run src/modules/home` or the complete suite, `pnpm check`,
-and `pnpm run build` before shipping changes.
+Run `pnpm check`, `pnpm exec vp test run`, `pnpm run build` and `git diff --check`.
+Use the existing development app for layout review; do not start a second server.
+Check all activity states, native portrait scrolling, visible primary/footer,
+keyboard navigation, image failures, onboarding and the existing three game formats.

@@ -96,7 +96,6 @@ The arena is smaller and lower than the castle, separated horizontally from it
 instead of overlapping. Its facade reads above and beside the tavern. Short
 landscape uses a 23% arena tier; narrow landscapes use 16%, falling to 10% at
 heights up to 375px, keeping the badge below the two-row resources header.
-The earlier `arena.png` study is not used at runtime.
 
 The smaller
 merchant overlaps the tavern's lower-left facade, with its painted silhouette

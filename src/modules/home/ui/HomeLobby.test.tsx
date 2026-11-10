@@ -61,34 +61,37 @@ afterEach(() => {
   document.documentElement.style.removeProperty("color-scheme");
 });
 
-test("replaces the old navigation with the game HUD while retaining a usable Play entry", () => {
+test("opens the working Card Hall with The Tavern selected and no placeholder campaign progress", () => {
   renderLobby();
   expect(screen.queryByRole("heading", { name: "The Hearth" })).not.toBeInTheDocument();
   expect(screen.queryByText("A moment of rest. Another hand awaits.")).not.toBeInTheDocument();
   expect(screen.getByText("Player One")).toBeVisible();
   expect(screen.getByRole("button", { name: "Play at the tavern" })).toBeEnabled();
+  expect(screen.getByRole("button", { name: "Select The Tavern" })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  expect(screen.getByRole("button", { name: "Select Campaign" })).toHaveAttribute(
+    "aria-pressed",
+    "false",
+  );
+  expect(screen.queryByText("CHAPTER II")).not.toBeInTheDocument();
   expect(screen.queryByRole("navigation", { name: "Main navigation" })).not.toBeInTheDocument();
   expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 });
 
-test("composes the decorative Living Town scenery beneath the existing HUD and Play entry", () => {
+test("composes real activity controls over the clean hall, not the flattened mockup", () => {
   const { container } = renderLobby();
-  const sceneSlot = container.querySelector('[data-slot="home-scene"]');
-  const town = container.querySelector('[data-slot="living-town-scene"]');
-
-  expect(sceneSlot).toContainElement(town as HTMLElement);
-  expect(town).not.toHaveAttribute("aria-hidden");
-  expect(town?.querySelector('[data-slot="living-town-sky"]')).toBeInTheDocument();
-  expect(town?.querySelector('[data-slot="living-town-mountains"]')).toBeInTheDocument();
-  expect(town?.querySelector('[data-slot="living-town-tavern"]')).toBeInTheDocument();
-  expect(town?.querySelectorAll("button")).toHaveLength(6);
-  expect(town?.querySelectorAll("button:not(:disabled)")).toHaveLength(1);
-  expect(town?.querySelector("a, [tabindex], canvas")).toBeNull();
-  expect(town?.querySelectorAll('img[alt=""]')).toHaveLength(11);
-  expect(town?.querySelector('[data-slot="living-town-plaza"]')).toBeInTheDocument();
-  expect(sceneSlot).not.toContainElement(screen.getByRole("banner", { name: "Player HUD" }));
-  expect(sceneSlot).toContainElement(screen.getByRole("button", { name: "Play at the tavern" }));
-  expect(container.querySelector('[data-slot="home-scene-space"]')).toBeEmptyDOMElement();
+  expect(container.querySelector('[data-slot="card-hall"]')).toBeInTheDocument();
+  expect(container.querySelector('[data-slot="living-town-scene"], canvas')).toBeNull();
+  expect(container.querySelector(".card-hall-backdrop")).toHaveAttribute("aria-hidden", "true");
+  expect(screen.getByRole("group", { name: "Activities" }).querySelectorAll("button")).toHaveLength(
+    3,
+  );
+  expect(screen.getByRole("banner", { name: "Player HUD" })).toContainElement(
+    screen.getByText("Player One"),
+  );
+  expect(screen.queryByRole("group", { name: "Current quest" })).not.toBeInTheDocument();
 });
 
 test("onboarding updates the HUD immediately and only then allows play", async () => {
@@ -179,10 +182,32 @@ test("the presentational HUD never writes an economy or performs network request
   const storageSpy = vi.spyOn(Storage.prototype, "setItem");
   const fetchSpy = vi.spyOn(globalThis, "fetch");
   renderLobby();
-  expect(screen.getByRole("group", { name: "Energy" })).toHaveTextContent("Not available yet");
-  expect(screen.getByRole("group", { name: "Coins" })).toHaveTextContent("Not available yet");
+  for (const resource of ["Energy", "Coins", "Diamonds"]) {
+    expect(screen.getByRole("group", { name: resource })).toHaveTextContent("Unavailable");
+  }
+  expect(screen.getByText("Level —")).toBeVisible();
+  expect(screen.getByRole("img", { name: "Experience unavailable" })).toBeVisible();
   expect(storageSpy).not.toHaveBeenCalled();
   expect(fetchSpy).not.toHaveBeenCalled();
   storageSpy.mockRestore();
   fetchSpy.mockRestore();
+});
+
+test("future activities cannot start a game; return to Tavern to choose a format", async () => {
+  const user = userEvent.setup();
+  renderLobby();
+  for (const title of ["Campaign", "Arena"]) {
+    await user.click(screen.getByRole("button", { name: `Select ${title}` }));
+    expect(screen.getByRole("button", { name: `${title} (coming soon)` })).toBeDisabled();
+    expect(screen.getByRole("status")).toHaveTextContent(`${title} selected`);
+  }
+  expect(setupGame).not.toHaveBeenCalled();
+  expect(screen.queryByRole("button", { name: "All Caída modes" })).not.toBeInTheDocument();
+  await user.click(screen.getByRole("button", { name: "Select The Tavern" }));
+  await user.click(screen.getByRole("button", { name: "Play at the tavern" }));
+  expect(await screen.findByRole("dialog", { name: "Choose your game" })).toBeVisible();
+  await user.keyboard("{Escape}");
+  await waitFor(() =>
+    expect(screen.getByRole("button", { name: "Play at the tavern" })).toHaveFocus(),
+  );
 });
