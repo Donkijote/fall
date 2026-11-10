@@ -2,20 +2,35 @@
 
 Design research and mockups for [#103](https://github.com/Donkijote/fall/issues/103). This PR proposes the guide's organization and appearance; it does not implement the screen or change gameplay. The existing Rules and Sings content defines the intended first-release rules, as confirmed by the owner during this work. Engine discrepancies belong in [bug #109](https://github.com/Donkijote/fall/issues/109), not in revised teaching copy.
 
-## Mockups
+## Revised page composition
 
-| Study                                | Purpose                                                                                                                                |
-| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
-| [Simplified](how-to-play-simple.png) | Recommended starting point: flat charcoal reading surface, thin brass edge, clear chapter selection, quiet parchment example.          |
-| [Detailed](how-to-play-detailed.png) | Same lesson and chapter structure with engraved brass, suit corners and more material detail, continuing the detailed login direction. |
+The initial studies enclosed the title, chapter rail and lesson in one nearly full-screen frame over the existing Hall. That silhouette read as a modal. Following review, the revised direction separates the page navigation from the reading surface and moves the guide into a distinct archive room in the same world.
 
-![Simplified rulebook study](how-to-play-simple.png)
+| Study                                                 | Purpose                                                                                                                                       |
+| ----------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Simplified page, v2](how-to-play-page-simple-v2.png) | Open page heading and chapter rail over a dedicated archive scene; a quiet frame encloses only the article. Recommended structural direction. |
+| [Detailed page, v2](how-to-play-page-detailed-v2.png) | Same page organization with more crafted material and brass detail confined to the reading surface.                                           |
+| [Clean archive background](archive-background-v1.png) | Separate artwork-only scene master, without baked controls or text, available for later implementation export.                                |
 
-![Detailed rulebook study](how-to-play-detailed.png)
+![Revised simplified page](how-to-play-page-simple-v2.png)
 
-Both are generated 1672 × 941 desktop design studies, not browser captures or working controls. They use the existing [Settings](../settings/README.md) and [login](../main-menu-research/image-concepts/login-detailed.png) studies as visual references. The [exact prompts](prompts.json) record both built-in ImageGen calls. Source game screenshots were inspected for composition; they were not copied into the generated output or redistributed in this repo.
+![Revised detailed page](how-to-play-page-detailed-v2.png)
 
-The images illustrate one chapter, not the entire rulebook. The setup sentence is an opening-deal summary; later deals and exceptions belong in Setup. Their first-capture text is one valid action, not an exhaustive statement of whether a player may decline a capture. Production diagrams must use the actual Spanish-deck card component: the detailed image invents pip/face artwork and the simplified image intentionally uses schematic suit marks. Neither generated card face is a runtime asset. Use the exact existing font files/families, theme tokens and component radii when implemented; the raster studies approximate them.
+These are built-in ImageGen desktop studies, not browser captures or working controls. The [revised prompt archive](prompts-v2.json) records the background and both revisions; the [original archive](prompts.json) retains the initial studies. Source game screenshots informed composition but are not redistributed in this repo. The original [simplified](how-to-play-simple.png) and [detailed](how-to-play-detailed.png) studies remain available for comparison; their enclosing-shell layout is superseded.
+
+The revised background is a quiet stone-and-oak archive adjoining the Card Hall, with recessed shelves, a low writing desk and restrained warm lamplight. It changes the location while retaining Fall's materials, lighting and painterly treatment. It must replace the main-menu scene on navigation; there is no retained Hub underneath, backdrop dismissal or scene-wide modal scrim.
+
+### Why this reads as a page
+
+- The title and subtitle sit directly in the scene above the content, outside any enclosing frame.
+- Chapters sit in an open left navigation region. Only the selected row needs a quiet fill and selection marker; there is no framed sidebar box.
+- Back to Hall occupies the page's lower-left navigation position, outside the article. This is a route action, not an X or dialog dismissal.
+- Only the lesson and its examples have an opaque reading surface, offset to the right with visible scene between the rail and the article. The article frame does not wrap the page header, chapter list or Back action.
+- Search belongs to the page header, while chapter Previous/Next belongs to the article footer. A compact At a glance summary can live within the article, without creating another outer shell.
+
+This combines Armello's open index and page-level Back action with Frostpunk's locally framed article. Horizon also shows that a tutorial title and category navigation can belong to a full page without a common surrounding border. These observations concern layout only; the stills do not establish routing semantics or motion behavior in those games.
+
+The images illustrate one chapter, not the entire rulebook. Opening-deal copy remains a summary; later deals and exceptions belong in Setup. The first-capture text is one valid action, not an exhaustive ruling on declining a capture. Production figures must use the existing Spanish-deck card component and live labels, not generated card faces. Use exact Cinzel/Spline Sans families, semantic themes and shared component radii when implemented; raster studies approximate them.
 
 ## Reference study and limits
 
@@ -32,7 +47,7 @@ Two additional first-party references broaden the teaching options. [Magic Arena
 
 ## Recommended destination
 
-Keep `/rules` as a dedicated, route-addressable rulebook, reached from **Hub → Help → How to play**. It needs more reading space and stable links than Settings. Preserve the recognizable Hall around a nearly opaque reading surface. A quiet shell connects it to the world without placing paragraphs over scenery. Avoid literal curved book pages, page-turn animation, or a huge character beside the text.
+Keep `/rules` as a dedicated, route-addressable rulebook, reached from **Hub → Help → How to play**. It needs more reading space and stable links than Settings. Use the dedicated archive background, open page navigation and a nearly opaque article surface. The shared world materials connect it to the Hall without retaining the main menu behind it or placing paragraphs over detailed scenery. Avoid literal curved book pages, page-turn animation, or a huge character beside the text.
 
 | Alternative                        | Assessment                                                                                                                                                                                      |
 | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -44,17 +59,17 @@ Keep `/rules` as a dedicated, route-addressable rulebook, reached from **Hub →
 
 ### Desktop distribution
 
-- Header: Back to Hall (or known originating screen), title, short context, Find a rule.
-- Left: numbered learning chapters, selected marker using shape and text as well as color, and a Sings reference shortcut.
-- Center: approximately 60–75 characters per text line; chapter title, short rule blocks, one concept per figure, captions with exact outcomes. Main content gets the largest share of width.
-- Right, only when space permits: At a glance with goal, hand/deck size, Fall rank values, and the deck-empty Clean Table exception. This is a brief summary, not a second rulebook.
-- Bottom: current chapter and Previous/Next chapter actions. The current mockup's inline Captures link is an optional shortcut; Next: Setup follows the numbered reading order. Do not treat Next as a completion or unlock action.
+- Page header, outside the article: title, short context and Find a rule. Keep sufficient scene visible around the heading; no enclosing top-and-bottom shell or title plaque spanning all regions.
+- Open left region: numbered learning chapters and a Sings reference shortcut, with selected state conveyed by shape and text as well as color. Page-level Back to Hall sits below this navigation.
+- Article on the right: chapter title, short rule blocks, one concept per figure, and captions with exact outcomes. Approximately 60–75 characters per text line; diagrams may use the full article width. Keep ornament at the boundary, never behind reading text.
+- At a glance: compact summary inside the reading surface or a disclosure in its footer, containing goal, hand/deck size, Fall values and Clean Table exception. The detailed rule definitions remain in their mapped chapters.
+- Article footer: chapter position and Previous/Next actions, following the numbered reading order. No completion or unlock state. Back to Hall remains a separate page-level action.
 
 ### Mobile and short landscape
 
 At narrow widths, replace the rail with a labeled **Chapters** disclosure and current chapter name. Keep chapters directly reachable; do not make swipe the only navigation. Move At a glance into its own expandable block in the same document, never hide the only copy of a rule. Search results show chapter and excerpt and navigate to a stable heading anchor.
 
-Use one page scroll on mobile with a compact sticky header and safe-area padding. Let the footer flow after the article on short screens rather than cover the last paragraph. The card example reflows into Before / Played card / After groups with a text caption; never shrink the desktop bitmap to fit a phone. Minimum 44px touch targets; visible native scrollbar; no horizontal body scroll at 320px portrait or 568 × 320 landscape. These are implementation requirements, not layouts validated by the desktop concept images.
+Use one page scroll on mobile with a compact sticky header and safe-area padding. Recompose the archive background for the viewport and let it extend edge to edge; avoid making the entire mobile page look like an inset dialog. Keep the return link at page level and the article surface below the title and Chapters control. Let the footer flow after the article on short screens rather than cover the last paragraph. The card example reflows into Before / Played card / After groups with a text caption; never shrink the desktop bitmap to fit a phone. Minimum 44px touch targets; visible native scrollbar; no horizontal body scroll at 320px portrait or 568 × 320 landscape. These are implementation requirements, not layouts validated by the desktop concept images.
 
 ## Content organization
 
@@ -72,9 +87,9 @@ The [content plan](content-plan.md) maps every existing Rules item into seven ch
 
 ## Combining the guide and Sings
 
-Share the rulebook shell and visual vocabulary, and cross-link them, while keeping `/sings` as a distinct lookup. The guide explains **when and why** Sings apply. The reference answers **which hand and how many points**, keeping current search by name/tag, minimum-point filter, mandatory-only filter, descriptions, examples and empty state. Do not duplicate its entire catalog inside a long introductory chapter.
+Share the rulebook page structure and visual vocabulary, and cross-link them, while keeping `/sings` as a distinct lookup. The guide explains **when and why** Sings apply. The reference answers **which hand and how many points**, keeping current search by name/tag, minimum-point filter, mandatory-only filter, descriptions, examples and empty state. Do not duplicate its entire catalog inside a long introductory chapter.
 
-Use one source for each combination's pattern, value, eligibility, example and display name. The current `RULES.singsRanking` and `HANDS`/`HAND_META` overlap; a future implementation should reconcile their presentation without dropping any first-release rule, especially the agreed instant-win option absent from the simple points list. A link from the Sings chapter can open `/sings`; Back returns to the same chapter and position. Direct visits get a reliable Hall fallback. In-match View sings remains a modal and must not navigate away or reset the match.
+Use one source for each combination's pattern, value, eligibility, example and display name. The current `RULES.singsRanking` and `HANDS`/`HAND_META` overlap; a future implementation should reconcile their presentation without dropping any first-release rule, especially the agreed instant-win option absent from the simple points list. The future `/sings` page can share the archive scene and open page header/navigation, while its in-match modal retains the existing match context. A link from the Sings chapter can open `/sings`; Back returns to the same chapter and position. Direct visits get a reliable Hall fallback. In-match View sings remains a modal and must not navigate away or reset the match.
 
 The illustration system can be shared: a labeled three-card hand for each Sing, and a labeled table/played/capture figure for a play. These are distinct concepts. Do not use a Sings hand as though it were a legal table capture. Prefer existing live card components and text labels over generating one bitmap per rule, so localization, zoom and accessibility work.
 
@@ -93,9 +108,9 @@ The illustration system can be shared: a labeled three-card hand for each Sing, 
 
 ## Motion and accessibility specification
 
-Use GSAP/`@gsap/react` for any DOM motion. Proposed entry: a 160–180ms surface fade with at most 8px vertical movement, stationary Hall. Chapter navigation may use a brief 100–140ms content fade; update the heading and focus without animating the page height. Immediate static hover/focus styling is sufficient. A future step-through figure can use a short card movement only after explicit activation; no autoplay. Reduced motion applies final states immediately. Clean up contexts/listeners; no CSS transitions, keyframes or inherited primitive transitions.
+Use GSAP/`@gsap/react` for any DOM motion. Proposed page entry: a brief 160–180ms route-content fade as the archive replaces the Hall; keep the archive stationary. Do not lift the entire page like a dialog or fade a scrim over the main menu. Chapter navigation may use a brief 100–140ms content fade; update the heading and focus without animating the page height. Immediate static hover/focus styling is sufficient. A future step-through figure can use a short card movement only after explicit activation; no autoplay. Reduced motion applies final states immediately. Clean up contexts/listeners; no CSS transitions, keyframes or inherited primitive transitions.
 
-Implement chapters as navigation links with a current-state indication, headings in a consistent hierarchy, figures with captions, properly labeled search/disclosure controls, and a search result/empty-result announcement. Decorative Hall art, frames and duplicate visual arrows stay out of the accessibility tree. Each card needs an understandable rank/suit label; describe captures in prose so the diagram is not the only explanation. Color alone must not identify captured versus remaining cards. Restore the originating focus on return; focus the chapter heading after explicit chapter navigation without stealing focus during search typing. Avoid the current blocking first-visit HintModal: Quick start is directly visible.
+Implement chapters as navigation links with a current-state indication, headings in a consistent hierarchy, figures with captions, properly labeled search/disclosure controls, and a search result/empty-result announcement. Decorative archive art, frames and duplicate visual arrows stay out of the accessibility tree. Each card needs an understandable rank/suit label; describe captures in prose so the diagram is not the only explanation. Color alone must not identify captured versus remaining cards. Restore the originating focus on return; focus the chapter heading after explicit chapter navigation without stealing focus during search typing. Avoid the current blocking first-visit HintModal: Quick start is directly visible.
 
 Use existing Cinzel/Spline Sans, `background`, `card`, foreground pairs, `muted`, `border`, `input`, `ring`, `primary` and shared `gold` in both themes. Reuse ActionButton and the shared brass surface treatment outside generated primitives; use `rounded-md` for controls and framed surfaces. No new component palette, radius, or token is needed. Dark mockups do not supersede light or System appearance support.
 
@@ -112,3 +127,5 @@ Use existing Cinzel/Spline Sans, `background`, `card`, foreground pairs, `muted`
 Inspected all four supplied stills and the existing design masters; read the Rules screen, Sings screen and their data sources; inspected relevant deal, move, scoring, Sings and service code. Visually reviewed both generated images for text, hierarchy, chapter coverage, card example and reference values. The simplified version improves schematic card legibility. Production card fidelity and responsive behavior still require implementation validation.
 
 A temporary fixture exercised the mockup's exact play through `analyzePlay`, hand removal, the service-style played-card table insertion and `updateTableAndHandCards`: cups-4 captures coins-4; clubs-7 and swords-11 remain; the collected pile contains exactly the two 4s. Five additional diagnostic cases reproduced #109 (three pair ranks, optional Big House disabled, and cascade collection). These probes were removed after the research; no diagnostic assertions of incorrect behavior ship as regression tests. Existing moves, scoring, deal, resolveHands and hands suites plus the initial example fixture passed: 39 tests in six files. The subsequent six focused probe cases also passed, confirming the recorded current outcomes. See #109 for the required expected-behavior tests.
+
+Revision validation: re-reviewed all four supplied references for the relationship between page-level navigation and framed content. The v2 work changes composition and background only; the written rules, verified card example and #109 findings remain unchanged. The archive master is reference artwork under `docs/design`; no runtime asset or route has been changed.
