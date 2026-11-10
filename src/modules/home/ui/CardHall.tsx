@@ -2,6 +2,7 @@ import gsap from "gsap";
 import { useRef, useState } from "react";
 import type { KeyboardEvent, MouseEvent } from "react";
 
+import appEmblem from "@/assets/branding/wingfoot.svg";
 import {
   GameActivityCard,
   GameNavigation,
@@ -9,6 +10,7 @@ import {
   GameResource,
 } from "@/components/game";
 import type { GameNavigationItem, GamePlayerIdentityProps } from "@/components/game";
+import { GameIcon } from "@/components/game/GameIcon";
 
 import { useGSAP } from "@gsap/react";
 
@@ -232,7 +234,11 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
           fallbackAvatarUrl={cardHallArtwork.traveller}
           levelCrestUrl={cardHallIcons.level}
         />
-        <h1 className="card-hall-wordmark m-0 artwork-title text-[clamp(2rem,3.5vw,3.4rem)] max-[480px]:col-span-2 max-[480px]:row-start-2 max-[480px]:justify-self-center portrait:text-[1.65rem] compact-landscape:text-[clamp(1.25rem,3.4vw,1.8rem)]">
+        <h1 className="card-hall-wordmark m-0 flex items-center gap-[0.3em] artwork-title text-[clamp(2rem,3.5vw,3.4rem)] whitespace-nowrap max-[480px]:col-span-2 max-[480px]:row-start-2 max-[480px]:justify-self-center portrait:text-[1.65rem] compact-landscape:text-[clamp(1.25rem,3.4vw,1.8rem)]">
+          <GameIcon
+            icon={appEmblem}
+            className="size-[0.8em] text-gold drop-shadow-sm drop-shadow-artwork-shadow"
+          />
           The Fall
         </h1>
         <div
@@ -243,7 +249,7 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
           <GameResource
             label="Energy"
             icon={cardHallIcons.energy}
-            iconClassName="text-resource-energy"
+            iconClassName="text-amber-300"
             value={resources?.energy?.value}
             maximum={resources?.energy?.maximum}
           />
@@ -251,7 +257,7 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
           <GameResource
             label="Diamonds"
             icon={cardHallIcons.diamonds}
-            iconClassName="text-resource-diamonds"
+            iconClassName="text-cyan-200"
             value={resources?.diamonds}
           />
         </div>

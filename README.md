@@ -18,6 +18,27 @@ Use `pnpm lint` to check code with Oxlint and `pnpm lint:fix` to apply safe fixe
 
 Linting and formatting use Vite Plus defaults. The `lint` block in `vite.config.ts` adds browser globals; TypeScript checking runs as part of `pnpm build`. The `fmt` block preserves the custom Tailwind class sorting (using `src/index.css`) and import groups with blank-line separation: unscoped packages and Node built-ins, `@react/*`, `@/*` project aliases, other scoped packages, then relative imports. All other formatting options use the toolchain defaults, including the 100-column print width. Side-effect imports retain their default ordering behavior.
 
+### Theme colours
+
+Use the existing shadcn tokens for surfaces, text, actions, borders, inputs, and
+focus rings. Keep light and dark theme values in OKLCH in `src/index.css`, and
+use semantic aliases when roles intentionally share a value. Use Tailwind's
+palette for one-off decorative accents. A new global token needs a reusable role
+across features that the existing palette cannot express. Shared gold trim and
+artwork contrast are examples. See the [UI implementation rules](AGENTS.md).
+
+### Animation in new features
+
+Use GSAP with `@gsap/react` for DOM animation, Three.js or React Three Fiber for
+3D scenes, and Three Quarks for 3D particle effects. This applies to a simple
+fade, hover, or focus effect as much as to a game sequence. Keep Tailwind and
+CSS for static styling, responsive layout, and immediate state changes. Do not
+use CSS keyframes, CSS transitions, or Tailwind animation utilities. Disable
+inherited transitions and keep focus cues visible with reduced motion. Scope timelines to the feature and clean them up on unmount.
+
+See [AGENTS.md](AGENTS.md) for the implementation rules and the
+[login screen](docs/login-screen.md#interface-motion) for a working example.
+
 ## Cloudflare Deployment
 
 The app is hosted at the domain root on Cloudflare Workers using static assets.

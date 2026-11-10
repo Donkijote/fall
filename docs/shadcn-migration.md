@@ -12,10 +12,14 @@ The app-wide `next-themes` provider applies the `light`/`dark` class on the docu
 initially follows the system preference. The bottom navigation's theme button overrides that
 preference and persists it under `fall-theme`. Theme changes apply to every route and portal.
 
-Use semantic tokens such as `bg-background`, `bg-card`, `text-foreground`,
-`text-muted-foreground`, `border-border`, and `ring-ring`. Do not reintroduce glass panels,
-backdrop blur, gold highlights, or hard-coded white interface text. Dialog and sheet backdrops
-dim the page without blurring it; their contents use opaque theme surfaces.
+Use the existing semantic tokens for surfaces, text, actions, borders, inputs,
+and focus rings. Keep light and dark values in OKLCH in `src/index.css` and use
+aliases when two semantic roles intentionally share a value. Generic control
+borders and inputs use the neutral shadcn treatment. Gold is reserved for
+intentional trim and selection cues shared by illustrated screens. Use a
+Tailwind palette utility for a one-off decorative tint. Add a new global token
+only when multiple features need the same distinct role. Dialog and sheet
+backdrops dim the page, and their contents use opaque theme surfaces.
 
 ## Components and ownership
 

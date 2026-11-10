@@ -87,7 +87,7 @@ export function GamePlayerIdentity({
             >
               <span
                 aria-hidden="true"
-                className="absolute inset-0 -z-10 bg-linear-to-b from-level-crest to-artwork-shadow [clip-path:polygon(18%_8%,82%_8%,82%_75%,50%_92%,18%_75%)]"
+                className="absolute inset-0 -z-10 bg-linear-to-b from-sky-800 to-artwork-shadow [clip-path:polygon(18%_8%,82%_8%,82%_75%,50%_92%,18%_75%)]"
               />
               <GameIcon icon={levelCrestUrl} className="absolute inset-0 -z-10 size-full bg-gold" />
               <span

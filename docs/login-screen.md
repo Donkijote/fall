@@ -1,6 +1,7 @@
 # Login screen
 
-Tracking issue: [#92](https://github.com/Donkijote/fall/issues/92).
+Tracking issues: [#92](https://github.com/Donkijote/fall/issues/92) (original layout) and
+[#102](https://github.com/Donkijote/fall/issues/102) (Card Hall alignment).
 
 ## Status
 
@@ -18,7 +19,7 @@ or fabricated live-player counts from the reference.
 Compose the card with the project's existing shadcn/ui primitives: labeled email and password
 fields, a primary login button, password-recovery affordance, social sign-in buttons, a
 separator, and an account-creation affordance. Follow the existing semantic theme tokens,
-Spline Sans/Cinzel typography, and Lucide icons described in `docs/shadcn-migration.md`.
+and Spline Sans/Cinzel typography.
 
 Background image supplied by the requester:
 
@@ -48,17 +49,18 @@ The screen lives in `src/modules/login/ui/LoginScreen.tsx`. It uses the existing
 Label, Button, and Separator primitives and inherits the app's light/dark theme. The
 promotional copy evokes an adventure beyond the mist without fabricated live-player counts.
 The suit strip uses four overlapping circular placeholder badges with simple coin, cup,
-swords, and club symbols. These are temporary Lucide icons, not miniature playing cards;
-the final artwork can replace them later.
+swords, and club silhouettes from the game icon library. Wingfoot is the temporary emblem
+for the login card and Card Hall wordmark. See the [icon credits](../src/assets/login/icons/README.md).
 The space-consuming design-preview notice is intentionally omitted on every screen size.
 Inputs are editable, but all buttons are non-submitting. **Take your seat** uses React Router to navigate to
 `HOME_PATH` (`/fall/` with the configured basename), without checking credentials or creating
 authentication state. Recovery, account creation, and provider buttons remain inert. The form
 still cancels direct or implicit submission without validation or navigation.
 
-The highlighted headline uses the reference's red-to-orange text gradient. The page and card
-have inset top/bottom red ribbons that fade toward their edges, rather than a solid card
-border. Round social buttons use monochrome Google and Apple brand paths from
+The [login studies](design/main-menu-research/image-concepts/README.md) informed the brass rim,
+recessed fields, and warm red primary button. The card keeps its rounded silhouette with
+parchment in light mode and charcoal in dark mode. The title sits beside the emblem in compact
+landscape and below it elsewhere, without a subtitle or header illustration. Round social buttons use monochrome Google and Apple brand paths from
 [Simple Icons](https://github.com/simple-icons/simple-icons/tree/develop/icons), stored locally
 in `ProviderIcon.tsx`, alongside local Microsoft window and Facebook brand marks, with
 accessible provider labels and native hover titles. No icon-library dependency is added.
@@ -109,30 +111,32 @@ technology and cannot intercept clicks or keyboard focus.
 
 ### Interface motion
 
-The existing GSAP/`useGSAP` integration animates a restrained, staggered introduction for
-the promotional copy and login card. A scoped `gsap.matchMedia` skips entrances for reduced
-motion and reverts them when the preference changes or the screen unmounts. Content is
-visible by default, so failure to initialize animation does not hide the form.
+GSAP animates the introductory copy and login card entrance. A single warm
+highlight sweeps around the brass rim, fades out, and pauses before repeating.
+`LoginScreen.css` defines the static gradient and mask that keep the highlight
+on the rim. GSAP drives its angle and opacity independently of form focus.
+The scoped timelines are reverted on unmount and when reduced motion is enabled.
 
-Rebuilt features must not introduce Framer Motion. This feature uses GSAP and Three.js/React
-Three Fiber, with CSS only for basic transitions and presentation. Framer Motion remains in
-legacy game components pending their separate rebuild; those usages are not migrated here.
+The WebGL layer also uses GSAP for its reveal after the first rendered frame.
+Three.js and React Three Fiber own the scene motion. Tailwind and CSS define
+the static layout and appearance. The login controls override the transitions
+and press movement inherited from the generated primitives. Reduced motion
+retains the static brass frame and the original backdrop.
 
 ## Verification
 
 ### Responsive layout
 
-Layout changes use Tailwind's built-in width/orientation variants, not custom CSS media
-queries or JavaScript-driven layout. `login.css` contains only decorative scene styling;
-reduced-motion transitions and forced-color text fallbacks also use Tailwind variants.
+Tailwind handles responsive layout, the static atmosphere layers, and forced-color
+text fallbacks.
 
 - Phone portrait: show a compact eyebrow/headline above the centered card, pushing the form
-  down slightly while keeping its subtitle hidden. Short portrait screens scroll vertically.
+  down slightly. Short portrait screens scroll vertically.
 - Compact landscape below `xl`: keep the introduction on the left and give the card three
   quarters of the available row width. Inside the card, stack email/password and the primary
   action in the left column; place a two-by-two grid of round Google/Apple/Microsoft/Facebook
-  buttons and account creation in a separate, softly surfaced right column. Keep the shield
-  beside the card title; hide the subtitle and decorative suit row. Card padding, field gaps,
+  buttons and account creation in a separate, softly surfaced right column. Keep the emblem
+  beside the card title and hide the decorative suit row. Card padding, field gaps,
   and control sizes grow with available viewport height using clamped Tailwind utilities,
   giving taller landscape phones more breathing room. Remove the internal scroll container and height
   cap. An intrinsic auto-fit content grid stacks these sections only if each cannot retain

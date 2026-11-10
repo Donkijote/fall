@@ -1,12 +1,12 @@
 import type { ReactNode } from "react";
 import { MemoryRouter, Route, Routes } from "react-router";
 
+import appEmblem from "@/assets/branding/wingfoot.svg";
 import { HOME_PATH, LOGIN_PATH } from "@/routes/Routes";
 
 import { fireEvent, render as renderComponent, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import loginStyles from "./login.css?raw";
 import { LoginScreen } from "./LoginScreen";
 
 function render(element: ReactNode) {
@@ -23,11 +23,7 @@ function render(element: ReactNode) {
 describe("LoginScreen", () => {
   it("keeps responsive and accessibility variants in Tailwind rather than custom media queries", () => {
     const { container } = render(<LoginScreen />);
-    expect(loginStyles).not.toMatch(/@media|@container/);
-    expect(screen.getByRole("main")).toHaveClass(
-      "motion-reduce:**:transition-none",
-      "overflow-y-auto",
-    );
+    expect(screen.getByRole("main")).toHaveClass("overflow-y-auto");
     expect(container.querySelector(".login-intro")).not.toHaveClass("hidden");
     expect(container.querySelector(".login-card")).not.toHaveClass(
       "max-lg:landscape:overflow-y-auto",
@@ -36,14 +32,16 @@ describe("LoginScreen", () => {
     expect(screen.getByRole("form", { name: "Login preview" })).toHaveClass("grid-cols-1");
     expect(screen.getByText("A new story.")).toHaveClass(
       "forced-colors:bg-none",
-      "forced-colors:text-primary",
+      "forced-colors:text-[CanvasText]",
     );
   });
 
   it("renders the layout with accessible, empty email and password fields", () => {
     render(<LoginScreen />);
 
-    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Every hand.");
+    expect(
+      screen.getByRole("heading", { level: 1, name: "Every hand A new story." }),
+    ).toBeVisible();
     expect(screen.getByRole("heading", { level: 2, name: "The Fall" })).toBeVisible();
     expect(screen.getByLabelText("Email address")).toHaveAttribute("type", "email");
     expect(screen.getByLabelText("Email address")).toHaveValue("");
@@ -148,7 +146,12 @@ describe("LoginScreen", () => {
 
     expect(header).toHaveClass("max-xl:landscape:flex");
     expect(emblem).not.toHaveClass("max-xl:landscape:hidden");
-    expect(emblem?.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
+    expect(emblem?.querySelector("[aria-hidden=true]")).toHaveAttribute(
+      "style",
+      expect.stringContaining(appEmblem),
+    );
+    expect(header?.querySelector("img")).not.toBeInTheDocument();
+    expect(screen.queryByText("Your seat at the table awaits")).not.toBeInTheDocument();
     expect(screen.getByRole("group", { name: "Social sign-in preview" })).toHaveClass(
       "max-xl:landscape:grid-cols-[repeat(2,auto)]",
     );
@@ -163,7 +166,7 @@ describe("LoginScreen", () => {
     expect(symbols).toHaveLength(4);
     for (const symbol of symbols) {
       expect(symbol).toHaveClass("rounded-full");
-      expect(symbol.querySelector("svg")).toBeInTheDocument();
+      expect(symbol.querySelector("[style*=mask-image]")).toHaveAttribute("aria-hidden", "true");
       expect(symbol.parentElement).toHaveAttribute("aria-hidden", "true");
     }
     expect(container.querySelector(".login-intro img")).not.toBeInTheDocument();
