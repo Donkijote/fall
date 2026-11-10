@@ -8,6 +8,7 @@ import { useUIGameStoreState } from "@/application/hooks/useUIGameStoreState";
 import { AnimationKeys, animationService } from "@/application/services/AnimationService";
 import type { Card, Rank, Suit } from "@/domain/entities/Card";
 import { Card as CardView } from "@/infrastructure/ui/components/card/Card";
+import { useReducedMotion } from "@/infrastructure/ui/hooks/useGamePreferences";
 import type { Placement as TablePlacement } from "@/modules/table/entities/types";
 
 import { useTableLayout } from "../application/useTableLayout";
@@ -93,6 +94,7 @@ const TableCardItem = ({
   cascadeFollowers,
   onPickDealerCard,
 }: TableCardItemProps) => {
+  const reducedMotion = useReducedMotion();
   const [suit, rankStr] = placement.key.split("-");
   const rank = Number(rankStr) as Rank;
   const key = placement.key;
@@ -134,8 +136,8 @@ const TableCardItem = ({
   return (
     <motion.div
       key={key}
-      layout={true}
-      layoutId={layoutId}
+      layout={!reducedMotion}
+      layoutId={reducedMotion ? undefined : layoutId}
       onLayoutAnimationComplete={() => {
         if (!isAnimatingCard) return;
         animationService.dispatch(AnimationKeys.GAME_CARDS, {
@@ -158,10 +160,10 @@ const TableCardItem = ({
           scale: isLifted ? LIFT_SCALE : 1,
           boxShadow: isLifted ? "0 10px 20px rgba(0,0,0,0.25)" : "0 0 0 rgba(0,0,0,0)",
         }}
-        transition={{ duration: 0.28, ease: EASE }}
+        transition={{ duration: reducedMotion ? 0 : 0.28, ease: EASE }}
         style={{
           transform: `translate(-50%, -50%) rotate(${basePlacement.rotationDeg}deg)`,
-          borderRadius: 8,
+          borderRadius: "var(--radius)",
         }}
       >
         <CardView
@@ -189,6 +191,7 @@ const FollowerStack = ({
   anchorKey: string | null;
   cardsByKey: Map<string, TablePlacement>;
 }) => {
+  const reducedMotion = useReducedMotion();
   if (!followers.length) return null;
 
   const anchorPlacement = anchorKey ? cardsByKey.get(anchorKey) : null;
@@ -211,8 +214,8 @@ const FollowerStack = ({
         return (
           <motion.div
             key={`follower-${fKey}`}
-            layout={true}
-            layoutId={layoutId}
+            layout={!reducedMotion}
+            layoutId={reducedMotion ? undefined : layoutId}
             style={{
               position: "absolute",
               left: `${base.leftPct}%`,
@@ -227,7 +230,7 @@ const FollowerStack = ({
                 y: anchorPlacement?.z ?? 0,
                 scale: anchorPlacement?.z ?? 1,
               }}
-              transition={{ duration: 0.28, ease: EASE }}
+              transition={{ duration: reducedMotion ? 0 : 0.28, ease: EASE }}
               style={{
                 transform: `translate(-50%, -50%) rotate(${base.rotationDeg}deg) translate(${offset}px, ${offset}px)`,
               }}

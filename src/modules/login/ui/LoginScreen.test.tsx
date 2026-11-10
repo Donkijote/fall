@@ -134,7 +134,7 @@ describe("LoginScreen", () => {
       expect(icon).toHaveAttribute("focusable", "false");
       expect(icon?.querySelector("path")).toHaveAttribute("d");
       expect(button).toHaveAttribute("type", "button");
-      expect(button).toHaveClass("rounded-full");
+      expect(button).toHaveClass("game-button-icon");
       expect(button).toHaveAttribute("title", `Continue with ${provider}`);
     }
   });

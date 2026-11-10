@@ -1,13 +1,7 @@
 import { cn } from "cn";
 import type { LucideIcon } from "lucide-react";
 
-export function GameIcon({
-  icon: Icon,
-  className,
-}: {
-  icon: string | LucideIcon;
-  className?: string;
-}) {
+export function Icon({ icon: Icon, className }: { icon: string | LucideIcon; className?: string }) {
   if (typeof Icon !== "string") {
     return <Icon aria-hidden="true" className={className} />;
   }

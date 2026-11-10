@@ -1,15 +1,12 @@
-import gsap from "gsap";
 import { ChevronRight } from "lucide-react";
-import { useId, useRef, useState } from "react";
-import { Link } from "react-router";
+import { useId } from "react";
+import { Link, useNavigate } from "react-router";
 
 import help from "@/assets/lobby/card-hall/icons/help.svg";
-import { GameIcon } from "@/components/game/GameIcon";
-import { Button } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { RULES_PATH, SINGS_SHEETS } from "@/routes/Routes";
-
-import { useGSAP } from "@gsap/react";
+import logout from "@/assets/lobby/card-hall/icons/logout.svg";
+import { NavigationButton, NavigationGroup, PopoverPanel } from "@/components";
+import { Popover, PopoverTrigger } from "@/components/ui/popover";
+import { LOGIN_PATH, RULES_PATH, SINGS_SHEETS } from "@/routes/Routes";
 
 import { cardHallIcons } from "./cardHallIcons";
 
@@ -20,24 +17,14 @@ const guides = [
 
 function HelpLinks() {
   const id = useId();
-  const popup = useRef<HTMLDivElement>(null);
-
-  useGSAP(() => {
-    const motion = gsap.matchMedia();
-    motion.add("(prefers-reduced-motion: no-preference)", () => {
-      gsap.from(popup.current, { opacity: 0, y: 4, duration: 0.16, ease: "power2.out" });
-    });
-    return () => motion.revert();
-  });
 
   return (
-    <PopoverContent
+    <PopoverPanel
       side="top"
       align="start"
       sideOffset={8}
-      ref={popup}
       aria-label="Help"
-      className="max-h-[var(--available-height)] w-[min(21rem,var(--available-width),calc(100vw_-_var(--safe-area-left)_-_var(--safe-area-right)_-_2rem))] [scrollbar-width:none] gap-0 overflow-auto overscroll-contain data-open:animate-none data-closed:animate-none [&::-webkit-scrollbar]:hidden"
+      className="max-h-[var(--available-height)] w-[min(21rem,var(--available-width),calc(100vw_-_var(--safe-area-left)_-_var(--safe-area-right)_-_2rem))] [scrollbar-width:none] gap-0 overflow-auto overscroll-contain [&::-webkit-scrollbar]:hidden"
     >
       {guides.map(({ to, label, description }, index) => (
         <Link
@@ -45,7 +32,7 @@ function HelpLinks() {
           to={to}
           aria-labelledby={`${id}-label-${index}`}
           aria-describedby={`${id}-description-${index}`}
-          className="flex min-h-16 items-center justify-between gap-3 rounded-2xl px-3 py-2.5 text-sm hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+          className="flex min-h-16 items-center justify-between gap-3 rounded-sm px-3 py-2.5 text-sm hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
         >
           <span className="grid gap-0.5">
             <span id={`${id}-label-${index}`} className="font-semibold">
@@ -58,60 +45,51 @@ function HelpLinks() {
           <ChevronRight aria-hidden="true" className="size-4 shrink-0 text-muted-foreground" />
         </Link>
       ))}
-    </PopoverContent>
+    </PopoverPanel>
   );
 }
 
-const buttonClassName =
-  "min-h-11 min-w-11 bg-artwork-shadow/75 text-artwork-foreground transition-none hover:bg-artwork-shadow hover:text-artwork-foreground aria-expanded:bg-artwork-shadow aria-expanded:text-artwork-foreground sm:size-12";
-const iconClassName = "size-6 bg-linear-to-b from-artwork-foreground to-gold sm:size-7";
-const groupClassName = "flex gap-1";
-
 export function HomeUtilities({ onSettings }: { onSettings: () => void }) {
-  const [helpOpen, setHelpOpen] = useState(false);
-
+  const navigate = useNavigate();
   return (
     <nav aria-label="Utilities" className="ml-auto flex gap-1 sm:gap-2.5">
-      <div role="group" aria-label="Communication" className={groupClassName}>
-        <Button
-          variant="ghost"
-          size="icon"
-          disabled
-          aria-label="Messages (coming soon)"
-          title="Messages (coming soon)"
-          className={buttonClassName}
-        >
-          <GameIcon icon={cardHallIcons.messages} className={iconClassName} />
-        </Button>
-      </div>
-      <div role="group" aria-label="Help and settings" className={groupClassName}>
-        <Popover open={helpOpen} onOpenChange={setHelpOpen}>
-          <PopoverTrigger
-            render={
-              <Button
-                variant="ghost"
-                size="icon"
-                aria-label="Help"
-                title="Help"
-                className={buttonClassName}
-              />
-            }
-          >
-            <GameIcon icon={help} className={iconClassName} />
-          </PopoverTrigger>
-          {helpOpen && <HelpLinks />}
-        </Popover>
-        <Button
-          variant="ghost"
-          size="icon"
-          aria-label="Settings"
-          title="Settings"
-          onClick={onSettings}
-          className={buttonClassName}
-        >
-          <GameIcon icon={cardHallIcons.settings} className={iconClassName} />
-        </Button>
-      </div>
+      <NavigationGroup label="Communication">
+        <li title="Messages (coming soon)">
+          <NavigationButton
+            icon={cardHallIcons.messages}
+            disabled
+            aria-label="Messages (coming soon)"
+          />
+        </li>
+      </NavigationGroup>
+      <NavigationGroup label="Help and settings">
+        <li>
+          <Popover>
+            <PopoverTrigger
+              render={<NavigationButton icon={help} aria-label="Help" title="Help" />}
+            />
+            <HelpLinks />
+          </Popover>
+        </li>
+        <li>
+          <NavigationButton
+            icon={cardHallIcons.settings}
+            aria-label="Settings"
+            title="Settings"
+            onClick={onSettings}
+          />
+        </li>
+      </NavigationGroup>
+      <NavigationGroup label="Session">
+        <li>
+          <NavigationButton
+            icon={logout}
+            aria-label="Log out"
+            title="Log out"
+            onClick={() => navigate(LOGIN_PATH)}
+          />
+        </li>
+      </NavigationGroup>
     </nav>
   );
 }

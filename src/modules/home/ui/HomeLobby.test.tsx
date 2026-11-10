@@ -119,7 +119,9 @@ test("the game-mode deep link waits for onboarding rather than opening two dialo
   const user = userEvent.setup();
   renderLobby("/?bottomSidebar=true");
   expect(screen.getAllByRole("dialog")).toHaveLength(1);
-  expect(screen.getByRole("dialog", { name: "Welcome to Fall!" })).toBeVisible();
+  await waitFor(() =>
+    expect(screen.getByRole("dialog", { name: "Welcome to Fall!" })).toBeVisible(),
+  );
   await user.type(screen.getByLabelText("Username"), "Traveller{Enter}");
   expect(await screen.findByRole("dialog", { name: "Choose your game" })).toBeVisible();
   await user.click(screen.getByRole("button", { name: "Play 1 vs 1" }));
@@ -143,7 +145,7 @@ test("Escape closes Help and restores focus to its trigger", async () => {
   const help = screen.getByRole("button", { name: "Help" });
   help.focus();
   await user.keyboard("{Enter}");
-  expect(await screen.findByRole("dialog", { name: "Help" })).toBeVisible();
+  await waitFor(() => expect(screen.getByRole("dialog", { name: "Help" })).toBeVisible());
   await waitFor(() => expect(screen.getByRole("link", { name: "How to play" })).toHaveFocus());
   await user.keyboard("{Escape}");
   await waitFor(() =>
@@ -167,7 +169,7 @@ test("Settings preserves appearance switching and returns keyboard focus on Esca
   renderLobby();
   const settings = screen.getByRole("button", { name: "Settings" });
   await user.click(settings);
-  const theme = screen.getByRole("button", { name: "Dark mode" });
+  const theme = screen.getByRole("button", { name: "Dark" });
   expect(theme).toHaveAttribute("aria-pressed", "false");
   await user.click(theme);
   expect(theme).toHaveAttribute("aria-pressed", "true");

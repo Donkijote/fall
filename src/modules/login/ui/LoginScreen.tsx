@@ -11,12 +11,13 @@ import cupSuit from "@/assets/login/icons/jeweled-chalice.svg";
 import passwordIcon from "@/assets/login/icons/padlock.svg";
 import seatIcon from "@/assets/login/icons/plain-arrow.svg";
 import clubSuit from "@/assets/login/icons/wood-club.svg";
-import { GameIcon } from "@/components/game/GameIcon";
+import { ActionButton, FramedCard, TextInput } from "@/components";
+import { Icon } from "@/components/icons/Icon";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { useReducedMotion } from "@/infrastructure/ui/hooks/useGamePreferences";
 import { HOME_PATH } from "@/routes/Routes";
 
 import { useGSAP } from "@gsap/react";
@@ -28,12 +29,13 @@ import "./LoginScreen.css";
 const suitIcons = [coinSuit, cupSuit, swordSuit, clubSuit];
 
 const credentialInputClass =
-  "h-11 border-input bg-background pl-11 inset-shadow-sm inset-shadow-artwork-shadow/10 sm:h-12 md:text-base lg:text-sm max-xl:landscape:h-[clamp(2.75rem,12dvh,3.25rem)] max-xl:landscape:text-base dark:bg-artwork-shadow/60 transition-none";
+  "h-11 pl-11 sm:h-12 md:text-base lg:text-sm max-xl:landscape:h-[clamp(2.75rem,12dvh,3.25rem)] max-xl:landscape:text-base transition-none";
 
 const staticButtonClass = "transition-none active:not-aria-[haspopup]:translate-y-0";
 const cardLinkClass = cn(staticButtonClass, "h-6 px-0 text-foreground");
 
 export function LoginScreen() {
+  const reducedMotion = useReducedMotion();
   const formId = useId();
   const navigate = useNavigate();
   const screenRef = useRef<HTMLElement>(null);
@@ -42,7 +44,7 @@ export function LoginScreen() {
 
   useGSAP(
     () => {
-      if (!window.matchMedia) return;
+      if (!window.matchMedia || reducedMotion) return;
       const motion = gsap.matchMedia();
       motion.add("(prefers-reduced-motion: no-preference)", () => {
         gsap
@@ -65,7 +67,7 @@ export function LoginScreen() {
       });
       return () => motion.revert();
     },
-    { scope: screenRef },
+    { scope: screenRef, dependencies: [reducedMotion], revertOnUpdate: true },
   );
 
   return (
@@ -111,7 +113,7 @@ export function LoginScreen() {
                     key={icon}
                     className="login-suit-symbol flex size-10 items-center justify-center rounded-full border border-gold/55 bg-artwork-shadow text-artwork-foreground shadow-sm"
                   >
-                    <GameIcon icon={icon} className="size-5" />
+                    <Icon icon={icon} className="size-5" />
                   </span>
                 ))}
               </span>
@@ -121,9 +123,9 @@ export function LoginScreen() {
             </div>
           </section>
 
-          <Card
+          <FramedCard
             ref={cardRef}
-            className="login-card relative w-full min-w-0 border-2 border-gold bg-linear-to-b from-card to-background shadow-[0_18px_36px_var(--artwork-shadow),0_0_24px_color-mix(in_oklab,var(--gold)_34%,transparent)] inset-ring-1 inset-ring-gold/35 [--card-spacing:--spacing(4)] sm:[--card-spacing:--spacing(5)] xl:[--card-spacing:--spacing(6)] max-xl:landscape:[--card-spacing:clamp(1rem,calc(12dvh-1.5rem),2rem)]"
+            className="login-card relative w-full min-w-0 [--card-spacing:--spacing(4)] sm:[--card-spacing:--spacing(5)] xl:[--card-spacing:--spacing(6)] max-xl:landscape:[--card-spacing:clamp(1rem,calc(12dvh-1.5rem),2rem)]"
           >
             <span
               ref={rimRef}
@@ -132,7 +134,7 @@ export function LoginScreen() {
             />
             <CardHeader className="justify-items-center gap-2 pt-0 text-center sm:gap-3 xl:pt-2 max-xl:landscape:flex max-xl:landscape:items-center max-xl:landscape:justify-center max-xl:landscape:gap-3">
               <span className="mb-1 flex size-10 items-center justify-center rounded-full border border-gold/60 bg-linear-to-b from-secondary to-card text-muted-foreground shadow-sm sm:size-12 xl:size-16 max-xl:landscape:mb-0 max-xl:landscape:size-[clamp(2rem,10dvh,2.75rem)] max-xl:landscape:shrink-0">
-                <GameIcon icon={appEmblem} className="size-5 sm:size-6 xl:size-8" />
+                <Icon icon={appEmblem} className="size-5 sm:size-6 xl:size-8" />
               </span>
               <h2 className="font-heading text-2xl font-bold sm:text-3xl max-xl:landscape:text-2xl">
                 The Fall
@@ -149,11 +151,11 @@ export function LoginScreen() {
                 <div className="min-w-0 space-y-2">
                   <Label htmlFor={`${formId}-email`}>Email address</Label>
                   <div className="relative">
-                    <GameIcon
+                    <Icon
                       icon={mailIcon}
                       className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-muted-foreground"
                     />
-                    <Input
+                    <TextInput
                       id={`${formId}-email`}
                       type="email"
                       autoComplete="email"
@@ -171,11 +173,11 @@ export function LoginScreen() {
                     </Button>
                   </div>
                   <div className="relative">
-                    <GameIcon
+                    <Icon
                       icon={passwordIcon}
                       className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-muted-foreground"
                     />
-                    <Input
+                    <TextInput
                       id={`${formId}-password`}
                       type="password"
                       autoComplete="current-password"
@@ -185,17 +187,15 @@ export function LoginScreen() {
                   </div>
                 </div>
 
-                <Button
+                <ActionButton
                   type="button"
-                  className={cn(
-                    staticButtonClass,
-                    "h-11 w-full border-gold/55 bg-linear-to-b from-[color-mix(in_oklab,var(--primary),var(--artwork-shadow)_30%)] to-[color-mix(in_oklab,var(--primary),var(--artwork-shadow)_58%)] font-semibold shadow-md shadow-artwork-shadow/25 hover:from-[color-mix(in_oklab,var(--primary),var(--artwork-shadow)_42%)] sm:h-12 max-xl:landscape:h-[clamp(2.75rem,12dvh,3.25rem)]",
-                  )}
+                  tone="primary"
+                  className="w-full sm:min-h-12 max-xl:landscape:h-[clamp(2.75rem,12dvh,3.25rem)]"
                   onClick={() => navigate(HOME_PATH)}
                 >
                   Take your seat
-                  <GameIcon icon={seatIcon} className="size-4 -rotate-90" />
-                </Button>
+                  <Icon icon={seatIcon} className="size-4 -rotate-90" />
+                </ActionButton>
               </form>
 
               <div className="login-alternatives flow-root min-w-0 max-xl:landscape:flex max-xl:landscape:flex-col max-xl:landscape:justify-center max-xl:landscape:rounded-2xl max-xl:landscape:bg-muted/30 max-xl:landscape:p-4">
@@ -212,20 +212,20 @@ export function LoginScreen() {
                   {(["google", "apple", "microsoft", "facebook"] as const).map((provider) => {
                     const name = provider.charAt(0).toUpperCase() + provider.slice(1);
                     return (
-                      <Button
+                      <ActionButton
                         key={provider}
                         type="button"
-                        variant="outline"
-                        size="icon-lg"
+                        tone="outline"
+                        iconOnly
                         className={cn(
                           staticButtonClass,
-                          "size-11 rounded-full border-gold/65 text-muted-foreground xl:size-12 max-xl:landscape:size-[clamp(2.75rem,12dvh,3.5rem)]",
+                          "size-11 text-muted-foreground xl:size-12 max-xl:landscape:size-[clamp(2.75rem,12dvh,3.5rem)]",
                         )}
                         aria-label={`Continue with ${name}`}
                         title={`Continue with ${name}`}
                       >
                         <ProviderIcon provider={provider} />
-                      </Button>
+                      </ActionButton>
                     );
                   })}
                 </div>
@@ -239,7 +239,7 @@ export function LoginScreen() {
                 </CardFooter>
               </div>
             </CardContent>
-          </Card>
+          </FramedCard>
         </div>
       </div>
     </main>

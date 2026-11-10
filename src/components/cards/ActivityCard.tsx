@@ -3,15 +3,18 @@ import gsap from "gsap";
 import { useId, useImperativeHandle, useRef, useState } from "react";
 import type { ComponentProps } from "react";
 
+import { useReducedMotion } from "@/infrastructure/ui/hooks/useGamePreferences";
+
 import { useGSAP } from "@gsap/react";
 
-import "./GameActivityCard.css";
+import { frameClassName } from "../surfaces/surfaceStyles";
+import "./ActivityCard.css";
 
 gsap.registerPlugin(useGSAP);
 
 const sparks = Array.from({ length: 14 }, (_, index) => index);
 
-export type GameActivityCardProps = Omit<ComponentProps<"button">, "children" | "title"> & {
+export type ActivityCardProps = Omit<ComponentProps<"button">, "children" | "title"> & {
   title: string;
   description?: string;
   imageUrl: string;
@@ -22,7 +25,7 @@ export type GameActivityCardProps = Omit<ComponentProps<"button">, "children" | 
   unavailable?: boolean;
 };
 
-export function GameActivityCard({
+export function ActivityCard({
   ref,
   title,
   description,
@@ -40,7 +43,8 @@ export function GameActivityCard({
   onBlur,
   "aria-describedby": describedBy,
   ...props
-}: GameActivityCardProps) {
+}: ActivityCardProps) {
+  const reducedMotion = useReducedMotion();
   const descriptionId = useId();
   const captionId = useId();
   const root = useRef<HTMLButtonElement>(null);
@@ -73,7 +77,7 @@ export function GameActivityCard({
           const shimmer = card.querySelector(".game-activity-shimmer");
           const particles = card.querySelectorAll(".game-activity-spark");
           const random = gsap.utils.random;
-          const moving = context.conditions?.motion && !disabled;
+          const moving = context.conditions?.motion && !reducedMotion && !disabled;
           const ambience = gsap.timeline({ paused: true });
           let borderSweep: gsap.core.Tween | undefined;
           let stopTrackingPointer: (() => void) | undefined;
@@ -251,7 +255,11 @@ export function GameActivityCard({
       );
       return () => media.revert();
     },
-    { scope: root, dependencies: [disabled, imageUrl, failedImage], revertOnUpdate: true },
+    {
+      scope: root,
+      dependencies: [disabled, imageUrl, failedImage, reducedMotion],
+      revertOnUpdate: true,
+    },
   );
 
   useGSAP(
@@ -270,7 +278,7 @@ export function GameActivityCard({
       type="button"
       disabled={disabled}
       className={cn(
-        "game-activity-card group relative isolate grid aspect-2/3 w-full cursor-pointer rounded-lg bg-transparent p-0 text-center focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-gold disabled:cursor-default disabled:opacity-65",
+        "game-activity-card group relative isolate grid aspect-2/3 w-full cursor-pointer rounded-md bg-transparent p-0 text-center focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-gold disabled:cursor-default disabled:opacity-65",
         className,
       )}
       aria-describedby={
@@ -300,7 +308,12 @@ export function GameActivityCard({
       }}
     >
       <span className="game-activity-scale absolute inset-0 rounded-[inherit]">
-        <span className="game-activity-motion absolute inset-0 rounded-[inherit] border border-border bg-card shadow-lg shadow-artwork-shadow/40 group-data-[active=true]:border-gold group-data-[active=true]:shadow-[0_0_24px_color-mix(in_oklch,var(--gold)_45%,transparent)] motion-reduce:group-data-[active=true]:ring-1 motion-reduce:group-data-[active=true]:ring-gold">
+        <span
+          className={cn(
+            frameClassName,
+            "game-activity-motion absolute inset-0 rounded-[inherit] bg-card shadow-lg shadow-artwork-shadow/40 group-data-[active=true]:border-gold group-data-[active=true]:shadow-[0_0_24px_color-mix(in_oklch,var(--gold)_45%,transparent)] motion-reduce:group-data-[active=true]:ring-1 motion-reduce:group-data-[active=true]:ring-gold",
+          )}
+        >
           <span
             className="game-activity-rim pointer-events-none invisible absolute -inset-px rounded-[inherit] shadow-[0_0_14px_var(--gold),0_0_3px_var(--gold)]"
             aria-hidden="true"

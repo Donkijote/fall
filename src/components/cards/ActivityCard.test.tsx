@@ -3,12 +3,12 @@ import { createRef } from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import { GameActivityCard } from "./GameActivityCard";
+import { ActivityCard } from "./ActivityCard";
 
 test("exposes controlled card selection, native ref and an image-independent label", () => {
   const ref = createRef<HTMLButtonElement>();
   const { container, rerender } = render(
-    <GameActivityCard
+    <ActivityCard
       ref={ref}
       title="Activity"
       description="Description"
@@ -25,7 +25,7 @@ test("exposes controlled card selection, native ref and an image-independent lab
   expect(button).toHaveTextContent("Activity");
   expect(container.querySelector("img")).toBeNull();
   rerender(
-    <GameActivityCard
+    <ActivityCard
       ref={ref}
       title="Activity"
       description="Description"
@@ -42,7 +42,7 @@ test("keeps decorative motion separate from accessible card content and native s
   const user = userEvent.setup();
   const onSelect = vi.fn();
   const { container, rerender } = render(
-    <GameActivityCard
+    <ActivityCard
       title="Campaign"
       imageUrl="/campaign.webp"
       imageWidth={400}
@@ -62,7 +62,7 @@ test("keeps decorative motion separate from accessible card content and native s
   await user.click(card);
   expect(onSelect).toHaveBeenCalledOnce();
   rerender(
-    <GameActivityCard
+    <ActivityCard
       title="Campaign"
       imageUrl="/campaign.webp"
       imageWidth={400}

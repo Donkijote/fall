@@ -2,15 +2,15 @@ import { Dialog, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 
 import { render, screen } from "@testing-library/react";
 
-import { GameDialogContent } from "./GameDialogContent";
+import { ModalContent } from "./ModalContent";
 
 test("keeps core dialog semantics without introducing a local theme", () => {
   render(
     <Dialog open>
-      <GameDialogContent>
+      <ModalContent>
         <DialogTitle>Settings</DialogTitle>
         <DialogDescription>Preferences</DialogDescription>
-      </GameDialogContent>
+      </ModalContent>
     </Dialog>,
   );
   const dialog = screen.getByRole("dialog", { name: "Settings" });

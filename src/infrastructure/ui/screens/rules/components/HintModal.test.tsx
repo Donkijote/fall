@@ -12,10 +12,12 @@ vi.mock("@/application/services/StorageService", () => ({
 
 beforeEach(() => vi.clearAllMocks());
 
-test("opens an accessible dialog with quick hints for first-time visitors", () => {
+test("opens an accessible dialog with quick hints for first-time visitors", async () => {
   vi.mocked(StorageService.get).mockReturnValue(false);
   render(<HintModal />);
-  expect(screen.getByRole("dialog", { name: "Welcome to Fall Rules" })).toBeVisible();
+  await waitFor(() =>
+    expect(screen.getByRole("dialog", { name: "Welcome to Fall Rules" })).toBeVisible(),
+  );
   expect(screen.getByText("Quick start")).toBeVisible();
   expect(screen.getByText("Sings sheet")).toBeVisible();
 });

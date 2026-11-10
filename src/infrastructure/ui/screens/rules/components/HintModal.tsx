@@ -1,11 +1,10 @@
 import { useState } from "react";
 
 import { StorageKeys, StorageService } from "@/application/services/StorageService";
-import { Button } from "@/components/ui/button";
+import { ActionButton, ModalContent } from "@/components";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
-  DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
@@ -26,7 +25,7 @@ export const HintModal = () => {
         if (!nextOpen) dismiss();
       }}
     >
-      <DialogContent>
+      <ModalContent>
         <DialogHeader>
           <DialogTitle>Welcome to Fall Rules</DialogTitle>
           <DialogDescription>
@@ -48,11 +47,11 @@ export const HintModal = () => {
           </Card>
         </div>
         <DialogFooter>
-          <Button onClick={dismiss} data-testid="got-it-button">
+          <ActionButton tone="primary" onClick={dismiss} data-testid="got-it-button">
             Got it
-          </Button>
+          </ActionButton>
         </DialogFooter>
-      </DialogContent>
+      </ModalContent>
     </Dialog>
   );
 };

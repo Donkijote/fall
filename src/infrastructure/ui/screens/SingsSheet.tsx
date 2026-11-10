@@ -2,18 +2,12 @@ import { ArrowLeft } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 
+import { SelectTrigger, TextInput } from "@/components";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import { getUiHands } from "@/infrastructure/adapters/handWithMeta";
 import { SingsList } from "@/infrastructure/ui/components/singins/SingsList";
 
@@ -62,7 +56,7 @@ export const SingsSheetScreen = () => {
           <CardContent className="flex flex-wrap items-end gap-4">
             <div className="grid flex-1 gap-2">
               <Label htmlFor="search-sings">Search combinations</Label>
-              <Input
+              <TextInput
                 id="search-sings"
                 placeholder="Search by name or tag…"
                 value={query}

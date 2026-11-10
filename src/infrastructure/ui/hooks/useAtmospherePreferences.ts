@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 
+import { useReducedMotion } from "./useGamePreferences";
+
 type DataConnection = EventTarget & { saveData?: boolean };
 
 export function useAtmospherePreferences() {
+  const reducedMotion = useReducedMotion();
   const [preferences, setPreferences] = useState({ animate: false, compact: true, visible: true });
 
   useEffect(() => {
@@ -33,5 +36,5 @@ export function useAtmospherePreferences() {
     };
   }, []);
 
-  return preferences;
+  return { ...preferences, animate: preferences.animate && !reducedMotion };
 }

@@ -1,11 +1,11 @@
 import { UserRound } from "lucide-react";
 import { useState } from "react";
 
-import { GameIcon } from "./GameIcon";
+import { Icon } from "../icons/Icon";
 
 const formatExperience = new Intl.NumberFormat();
 
-export type GamePlayerIdentityProps = {
+export type PlayerIdentityProps = {
   name: string;
   avatarUrl?: string;
   fallbackAvatarUrl?: string;
@@ -14,14 +14,14 @@ export type GamePlayerIdentityProps = {
   experience?: { value: number; maximum: number };
 };
 
-export function GamePlayerIdentity({
+export function PlayerIdentity({
   name,
   avatarUrl,
   fallbackAvatarUrl,
   levelCrestUrl,
   level,
   experience,
-}: GamePlayerIdentityProps) {
+}: PlayerIdentityProps) {
   const [failedAvatar, setFailedAvatar] = useState<string>();
   const [failedFallback, setFailedFallback] = useState<string>();
   const avatarAvailable = avatarUrl && avatarUrl !== failedAvatar;
@@ -89,7 +89,7 @@ export function GamePlayerIdentity({
                 aria-hidden="true"
                 className="absolute inset-0 -z-10 bg-linear-to-b from-sky-800 to-artwork-shadow [clip-path:polygon(18%_8%,82%_8%,82%_75%,50%_92%,18%_75%)]"
               />
-              <GameIcon icon={levelCrestUrl} className="absolute inset-0 -z-10 size-full bg-gold" />
+              <Icon icon={levelCrestUrl} className="absolute inset-0 -z-10 size-full bg-gold" />
               <span
                 aria-hidden="true"
                 className="-translate-y-0.5 font-heading text-sm leading-none font-bold tabular-nums md:text-base compact-landscape:text-xs"

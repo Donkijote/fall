@@ -1,5 +1,6 @@
 import dealCardSound from "@/assets/cards/deal-card.mp3";
 import playCardSound from "@/assets/cards/play-card.mp3";
+import { updateGamePreferences } from "@/infrastructure/preferences/gamePreferences";
 
 import { createCardAudio } from "./cardAudio";
 
@@ -8,12 +9,16 @@ const howler = vi.hoisted(() => ({
     options: { src: string[]; volume: number };
     play: ReturnType<typeof vi.fn>;
     unload: ReturnType<typeof vi.fn>;
+    volume: ReturnType<typeof vi.fn>;
+    mute: ReturnType<typeof vi.fn>;
   }[],
 }));
 vi.mock("howler", () => ({
   Howl: class {
     play = vi.fn();
     unload = vi.fn();
+    volume = vi.fn();
+    mute = vi.fn();
     options: { src: string[]; volume: number };
     constructor(options: { src: string[]; volume: number }) {
       this.options = options;
@@ -24,6 +29,7 @@ vi.mock("howler", () => ({
 
 beforeEach(() => {
   howler.instances.length = 0;
+  localStorage.clear();
 });
 
 it("loads the play-card clip lazily and reuses it without replacing the deal cue", () => {
@@ -47,4 +53,17 @@ it("unloads a preloaded deal sound even if it never plays", () => {
   expect(howler.instances[0].play).not.toHaveBeenCalled();
   audio.dispose();
   expect(howler.instances[0].unload).toHaveBeenCalledOnce();
+});
+
+it("updates already loaded sounds and applies preferences to future sounds", () => {
+  const audio = createCardAudio();
+  audio.playCard();
+  updateGamePreferences({ volume: 0.25, muted: true });
+  expect(howler.instances[0].volume).toHaveBeenLastCalledWith(0.25);
+  expect(howler.instances[0].mute).toHaveBeenLastCalledWith(true);
+  audio.playDealCard();
+  expect(howler.instances[1].options).toMatchObject({ volume: 0.25, mute: true });
+  audio.dispose();
+  updateGamePreferences({ volume: 0.9 });
+  expect(howler.instances[0].volume).toHaveBeenCalledTimes(1);
 });

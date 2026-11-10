@@ -1,7 +1,14 @@
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import type { ReactElement } from "react";
+import { MemoryRouter } from "react-router";
+
+import { fireEvent, render as renderComponent, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { CardHall } from "./CardHall";
+
+function render(ui: ReactElement) {
+  return renderComponent(ui, { wrapper: MemoryRouter });
+}
 
 test("previews the Tavern on hover and opens it on a mouse click", async () => {
   const user = userEvent.setup();

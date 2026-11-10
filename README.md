@@ -134,7 +134,13 @@ The old remote `deployment` branch is not updated or deleted by this change.
 
 The interface uses the installed shadcn/ui `base-luma` preset with Base UI and Lucide icons.
 Shared primitives live in `src/components/ui`; add components with `pnpm exec shadcn add <component>`.
-Use semantic theme colors from `src/index.css` rather than custom glass or gold styles.
+Use semantic theme colors and radius aliases from `src/index.css`. Compose game actions and brass-framed surfaces through `src/components`.
+
+The global theme preserves the proportional shadcn radius scale. Reusable app
+components choose `rounded-md` (8px) for their common control and surface shape.
+Other radius tokens remain available for distinct roles. Shared styled components
+own brass frames and action presentation. Feature code supplies layout.
+Native focus, dismissal, refs, keyboard, and touch behavior come from the primitives.
 See [the design-system and migration guide](docs/shadcn-migration.md) for conventions and the component inventory.
 [Fall art direction](docs/design/art-direction.md) covers the visual language, artwork, and image prompts.
 
@@ -319,7 +325,3 @@ Capture card and Cascade capture use curved, banking gestures with slight landin
 offsets and contact settling. Cascade pickups vary their cadence; collected cards
 square up during the lift and align on the final pile. Motion variation is fixed
 so replay remains repeatable.
-
-Reuse the existing app and shadcn components with their default rounded corners,
-borders, focus, dismissal, and interaction behavior. Mockups guide layout and
-semantic colors. Preserve component shapes when translating them into the app.

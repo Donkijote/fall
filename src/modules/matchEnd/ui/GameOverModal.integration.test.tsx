@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { GameOverModal } from "./GameOverModal";
@@ -29,7 +29,7 @@ beforeEach(() => vi.clearAllMocks());
 
 test("Escape exits exactly once with the real match-end hook and shadcn dialog", async () => {
   render(<GameOverModal />);
-  expect(screen.getByRole("dialog")).toBeVisible();
+  await waitFor(() => expect(screen.getByRole("dialog")).toBeVisible());
   await userEvent.keyboard("{Escape}");
   expect(navigate).toHaveBeenCalledTimes(1);
   expect(resetGameState).toHaveBeenCalledTimes(1);

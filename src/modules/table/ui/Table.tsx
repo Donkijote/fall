@@ -4,11 +4,13 @@ import type { ReactNode } from "react";
 
 import { useGameStoreState } from "@/application/hooks/useGameStoreState";
 import { AnimationKeys } from "@/application/services/AnimationService";
+import { useReducedMotion } from "@/infrastructure/ui/hooks/useGamePreferences";
 
 import { TableBackground } from "./components/TableBackground";
 import { TableCards } from "./TableCards";
 
 export const Table = ({ children }: { children: ReactNode }) => {
+  const reducedMotion = useReducedMotion();
   const { players } = useGameStoreState();
 
   const onlyTwoPlayers = players.length === 2;
@@ -18,7 +20,7 @@ export const Table = ({ children }: { children: ReactNode }) => {
       <TableBackground />
       <LayoutGroup id={AnimationKeys.GAME_CARDS}>
         <motion.div
-          layout={true}
+          layout={!reducedMotion}
           className={clsx(
             "landscape:-translate-y-1/6 absolute left-1/2 top-1/2 h-[50%] -translate-x-1/2 -translate-y-1/2 transform lg:h-[45%] landscape:top-1/3 landscape:h-[40%] landscape:lg:top-1/2 landscape:lg:h-[45%] landscape:lg:-translate-y-1/2",
             {

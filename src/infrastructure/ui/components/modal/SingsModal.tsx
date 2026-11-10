@@ -1,10 +1,5 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { ModalContent } from "@/components";
+import { Dialog, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { getUiHands } from "@/infrastructure/adapters/handWithMeta";
 import { SingsList } from "@/infrastructure/ui/components/singins/SingsList";
 
@@ -17,12 +12,12 @@ export const SingsModal = ({ isOpen, onClose }: SingsModalProps) => (
       if (!open) onClose();
     }}
   >
-    <DialogContent className="max-h-[85dvh] overflow-y-auto sm:max-w-5xl">
+    <ModalContent className="max-h-[85dvh] overflow-y-auto sm:max-w-5xl">
       <DialogHeader>
         <DialogTitle>Sings (Combinations)</DialogTitle>
         <DialogDescription>Explore the patterns and points for each combination.</DialogDescription>
       </DialogHeader>
       <SingsList sings={getUiHands()} />
-    </DialogContent>
+    </ModalContent>
   </Dialog>
 );

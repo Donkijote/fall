@@ -1,15 +1,15 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import { GameButton } from "./GameButton";
+import { ActionButton } from "./ActionButton";
 
 test("wraps the public shadcn button with separate game presentation", async () => {
   const user = userEvent.setup();
   const action = vi.fn();
   render(
-    <GameButton tone="primary" onClick={action}>
+    <ActionButton tone="primary" onClick={action}>
       Enter
-    </GameButton>,
+    </ActionButton>,
   );
   const button = screen.getByRole("button", { name: "Enter" });
   expect(button).toHaveAttribute("data-slot", "button");

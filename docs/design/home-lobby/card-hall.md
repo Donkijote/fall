@@ -57,8 +57,8 @@ scrolling list.
 ## Code ownership
 
 - `src/components/ui/*`: shadcn/Base UI core, **unchanged**.
-- `src/components/game/*`: reusable `GameButton`, `GameActivityCard`,
-  `GamePlayerIdentity`, `GameNavigation`, `GameContextStrip`, `GameDialogContent`
+- `src/components/*`: reusable `ActionButton`, `ActivityCard`,
+  `PlayerIdentity`, `Navigation`, `ContextStrip`, `ModalContent`
   and their Tailwind styles. See that folder's README.
 - `src/modules/home/ui/CardHall.tsx`: Home activity selection and responsive Tailwind layout.
 - `src/modules/home/ui/cardHallArtwork.ts`: activity manifest and runtime artwork.

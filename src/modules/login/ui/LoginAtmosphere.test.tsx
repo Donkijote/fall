@@ -1,3 +1,5 @@
+import { updateGamePreferences } from "@/infrastructure/preferences/gamePreferences";
+
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 import { LoginAtmosphere } from "./LoginAtmosphere";
@@ -49,6 +51,7 @@ const originalConnection = Object.getOwnPropertyDescriptor(navigator, "connectio
 
 beforeEach(() => {
   sceneState.crash = false;
+  localStorage.clear();
   motion = new Preference();
   compact = new Preference();
   connection = Object.assign(new EventTarget(), { saveData: false });
@@ -150,4 +153,18 @@ it("removes preference subscriptions on unmount", async () => {
   expect(removeMotion).toHaveBeenCalledWith("change", expect.any(Function));
   expect(removeCompact).toHaveBeenCalledWith("change", expect.any(Function));
   expect(removeConnection).toHaveBeenCalledWith("change", expect.any(Function));
+});
+
+it("applies the saved motion choice immediately and keeps the device preference authoritative", async () => {
+  render(<LoginAtmosphere />);
+  await screen.findByTestId("scene");
+  act(() => updateGamePreferences({ motion: "reduced" }));
+  expect(screen.queryByTestId("scene")).not.toBeInTheDocument();
+  act(() => {
+    motion.set(true);
+    updateGamePreferences({ motion: "system" });
+  });
+  expect(screen.queryByTestId("scene")).not.toBeInTheDocument();
+  act(() => motion.set(false));
+  await screen.findByTestId("scene");
 });
