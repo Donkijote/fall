@@ -8,9 +8,11 @@ All three images were captured at 1600 × 900 over the existing Card Hall on por
 
 | Study | What it shows |
 | --- | --- |
-| [Simplified Settings](settings-simple.png) | The recommended #104 release layout. One Appearance control with immediate persistence, a small Credits & licenses link, and Done. |
-| [Detailed Settings](settings-detailed.png) | The same modal after enough preferences exist to justify General, Audio, and Accessibility sections. Controls and values in this image illustrate future states. |
+| [Simplified Settings](settings-simple.png) | The flat treatment of General, Audio, and Accessibility, with quiet borders and a compact title. |
+| [Detailed Settings](settings-detailed.png) | The same controls and section order with an engraved brass frame, Wingfoot crest, textured charcoal, recessed controls, and a framed red action. The ornament draws on [the detailed login](../main-menu-research/image-concepts/login-detailed.png) and [the detailed Hall study](../main-menu-research/image-concepts/card-hall-background-2.png). |
 | [Hub Help](hub-help.png) | A Help entry next to the gear, in the slot currently occupied by the disabled Messages shortcut. The open panel links to the rules and Sings reference. |
+
+Both Settings images use the expanded preference set to compare visual style. The #104 release scope still starts with Appearance and Credits & licenses, with the Animation Playground available in development.
 
 ## Game reference study
 
@@ -52,7 +54,7 @@ Move both guide links when the new Help entry ships, in the same change. Issue #
 | **When effects warrant it** | Performance | Consider reduced scene effects or lower render quality if measurements show the Hall or table effects cause slowdowns. Keep adaptive defaults and avoid a desktop-style resolution menu for a responsive web game. |
 | **When online features ship** | Notifications and social visibility | Allow opt-in by notification type once those events exist. Keep profile visibility, account privacy and cloud data controls with the player account. |
 
-Expose only implemented controls. The detailed study shows a plausible first expansion. Keep later ideas in the backlog until the corresponding features exist or user testing establishes a need.
+Expose only implemented controls. Both Settings studies show a plausible first expansion. Keep later ideas in the backlog until the corresponding features exist or user testing establishes a need.
 
 ## Layout, motion, and acceptance
 
