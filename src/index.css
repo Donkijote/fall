@@ -60,6 +60,10 @@ body {
   --color-foreground: var(--foreground);
   --color-background: var(--background);
   --color-gold: var(--gold);
+  --color-engraved-accent: var(--engraved-accent);
+  --color-action: var(--action);
+  --color-action-highlight: var(--action-highlight);
+  --color-artwork-accent: var(--artwork-accent);
   --color-artwork-foreground: var(--artwork-foreground);
   --color-artwork-shadow: var(--artwork-shadow);
   --color-resource-energy: var(--resource-energy);
@@ -90,6 +94,10 @@ body {
   --safe-area-left: env(safe-area-inset-left, 0px);
   --gold: #c89c50;
   --artwork-foreground: #f0e4cd;
+  --artwork-accent: #dfbd8b;
+  --engraved-accent: #70512f;
+  --action: #6c2924;
+  --action-highlight: #913d31;
   --artwork-shadow: #111418;
   --resource-energy: #f1bc68;
   --resource-diamonds: #9cd9e8;
@@ -130,7 +138,8 @@ body {
 }
 
 .dark {
-  --gold: #dfbd8b;
+  --gold: var(--artwork-accent);
+  --engraved-accent: var(--gold);
   --background: #1c2021;
   --foreground: #f0e4cd;
   --card: #242626;

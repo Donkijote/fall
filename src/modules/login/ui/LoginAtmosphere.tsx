@@ -4,6 +4,8 @@ import type { ReactNode } from "react";
 import mountainCastle from "@/assets/login/mountain-castle.png";
 import { useAtmospherePreferences } from "@/infrastructure/ui/hooks/useAtmospherePreferences";
 
+import "./LoginAtmosphere.css";
+
 const AtmosphereCanvas = lazy(() => import("./scene/AtmosphereCanvas"));
 
 class SceneBoundary extends Component<
