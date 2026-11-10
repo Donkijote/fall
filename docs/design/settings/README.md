@@ -9,8 +9,8 @@ All three images were captured at 1600 × 900 over the existing Card Hall on por
 | Study | What it shows |
 | --- | --- |
 | [Simplified Settings](settings-simple.png) | The flat treatment of General, Audio, and Accessibility, with quiet borders and a compact title. |
-| [Detailed Settings](settings-detailed.png) | The same controls and section order with an engraved brass frame, Wingfoot crest, textured charcoal, recessed controls, and a framed red action. The ornament draws on [the detailed login](../main-menu-research/image-concepts/login-detailed.png) and [the detailed Hall study](../main-menu-research/image-concepts/card-hall-background-2.png). |
-| [Hub Help](hub-help.png) | A Help entry next to the gear, in the slot currently occupied by the disabled Messages shortcut. The open panel links to the rules and Sings reference. |
+| [Detailed Settings](settings-detailed.png) | The same controls and section order with an engraved brass frame, textured charcoal, recessed controls, and a framed red action. The ornament draws on [the detailed login](../main-menu-research/image-concepts/login-detailed.png) and [the detailed Hall study](../main-menu-research/image-concepts/card-hall-background-2.png). |
+| [Hub Help](hub-help.png) | A Help entry next to the gear, in the slot currently occupied by the disabled Messages shortcut. The open panel shows two links with short descriptions. |
 
 Both Settings images use the expanded preference set to compare visual style. The #104 release scope still starts with Appearance and Credits & licenses, with the Animation Playground available in development.
 
@@ -59,7 +59,7 @@ Expose only implemented controls. Both Settings studies show a plausible first e
 ## Layout, motion, and acceptance
 
 - Use a centered dialog over the existing Hall on desktop. On portrait use a near-full-width inset sheet. In short landscape constrain the height to the safe area, scroll the content, and keep the close action visible. Use 44px minimum targets and let controls stack when copy wraps.
-- Reuse Card Hall’s Cinzel and Spline Sans typography, the shared gold trim, and semantic surfaces, foregrounds, and focus rings in both themes. Mark the selected appearance with a filled radio indicator as well as color.
-- Use the existing dialog primitives for modal focus and dismissal. Restore focus to the gear after Done, Close, Escape, or backdrop dismissal. Help opens from its own trigger, restores focus on dismissal, and becomes an inset sheet when the anchored panel will not fit. Focus the guide heading on navigation and give direct visits an explicit return to the Hall.
+- Reuse Card Hall’s Cinzel and Spline Sans typography, the shared gold trim, and semantic surfaces, foregrounds, and focus rings in both themes. Use a sun, moon and monitor for Light, Dark and System. Give each icon an accessible name and a label on hover and keyboard focus. Combine a filled glyph and a visible border for the selected choice.
+- Use the existing dialog primitives for modal focus and dismissal. Restore focus to the gear after Done, Close, Escape, or backdrop dismissal. The Help trigger toggles its panel. Escape dismisses it and returns focus to the trigger. Use an inset panel when the anchored layout will not fit. Focus the guide heading on navigation and give direct visits an explicit return to the Hall.
 - Use GSAP for a short scrim fade and small panel lift, around 160–180ms. Reduced motion applies the final states immediately. Keep underlying Hall motion stationary while Settings is open, disable inherited primitive transitions, and clean up the GSAP context. Treat the Hall art as decorative.
 - During implementation, verify both themes and System persistence, keyboard focus and dismissal, the Help and guide return paths, in-match Sings access, attributions, development-only gating, and scroll reachability at 320px portrait and 568×320 landscape. The images are desktop design studies.
