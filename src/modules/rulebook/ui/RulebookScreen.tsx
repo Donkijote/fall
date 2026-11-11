@@ -27,10 +27,10 @@ export function RulebookScreen() {
     <main
       ref={route.mainRef}
       onScroll={(event) => route.savePosition(event.currentTarget.scrollTop)}
-      className="relative isolate h-dvh overflow-x-hidden overflow-y-auto overscroll-contain bg-background text-foreground"
+      className="relative isolate h-dvh [scrollbar-width:none] overflow-x-hidden overflow-y-auto overscroll-contain bg-background text-foreground [&::-webkit-scrollbar]:hidden"
     >
       <ArchiveBackground />
-      <div className="relative mx-auto grid max-w-[1680px] gap-5 pt-[calc(1rem+var(--safe-area-top))] pr-[calc(1rem+var(--safe-area-right))] pb-[calc(1.5rem+var(--safe-area-bottom))] pl-[calc(1rem+var(--safe-area-left))] sm:gap-7 sm:px-8 lg:grid-cols-[minmax(15rem,0.29fr)_minmax(0,1fr)] lg:gap-x-12 lg:pt-[calc(2.5rem+var(--safe-area-top))] lg:pr-[calc(3rem+var(--safe-area-right))] lg:pl-[calc(3rem+var(--safe-area-left))]">
+      <div className="relative mx-auto grid max-w-[1680px] grid-cols-[minmax(0,1fr)] gap-5 pt-[calc(1rem+var(--safe-area-top))] pr-[calc(var(--rulebook-gutter)+var(--safe-area-right))] pb-[calc(1.5rem+var(--safe-area-bottom))] pl-[calc(var(--rulebook-gutter)+var(--safe-area-left))] [--rulebook-gutter:1rem] sm:gap-7 sm:[--rulebook-gutter:2rem] lg:grid-cols-[minmax(15rem,0.29fr)_minmax(0,1fr)] lg:gap-x-12 lg:pt-[calc(2.5rem+var(--safe-area-top))] lg:[--rulebook-gutter:3rem]">
         <RulebookHeader query={query} onQueryChange={setQuery} backLink={backLink} />
         <ChapterNavigation
           chapter={route.chapter}

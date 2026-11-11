@@ -52,7 +52,7 @@ back to Quick start. Search indexes the written rules, callouts, examples,
 combination values and glossary without a remote service.
 
 The desktop rail becomes a native Chapters disclosure on compact widths. The
-page scrolls as one document; diagrams reflow into labeled card groups. Header,
+page scrolls as one document with a hidden scrollbar; every breakpoint adds the horizontal safe-area insets to its gutter, while the archive remains full bleed. Diagrams reflow into labeled card groups. Header,
 navigation and Back to Hall stay outside the article frame. Previous/Next follows
 the learning order without completion gates. Reduced motion skips the article
 fade, with immediate native focus and hover cues.

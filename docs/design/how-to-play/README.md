@@ -69,7 +69,7 @@ Keep `/rules` as a dedicated, route-addressable rulebook, reached from **Hub →
 
 At narrow widths, replace the rail with a labeled **Chapters** disclosure and current chapter name. Keep chapters directly reachable; do not make swipe the only navigation. Move At a glance into its own expandable block in the same document, never hide the only copy of a rule. Search results show chapter and excerpt and navigate to a stable heading anchor.
 
-Use one page scroll on mobile with a compact sticky header and safe-area padding. Recompose the archive background for the viewport and let it extend edge to edge; avoid making the entire mobile page look like an inset dialog. Keep the return link at page level and the article surface below the title and Chapters control. Let the footer flow after the article on short screens rather than cover the last paragraph. The card example reflows into Before / Played card / After groups with a text caption; never shrink the desktop bitmap to fit a phone. Minimum 44px touch targets; visible native scrollbar; no horizontal body scroll at 320px portrait or 568 × 320 landscape. These are implementation requirements, not layouts validated by the desktop concept images.
+Use one page scroll on mobile with a compact sticky header and safe-area padding. Recompose the archive background for the viewport and let it extend edge to edge; avoid making the entire mobile page look like an inset dialog. Keep the return link at page level and the article surface below the title and Chapters control. Let the footer flow after the article on short screens rather than cover the last paragraph. The card example reflows into Before / Played card / After groups with a text caption; never shrink the desktop bitmap to fit a phone. Minimum 44px touch targets; hidden scrollbar with native scrolling retained; no horizontal body scroll at 320px portrait or 568 × 320 landscape. These are implementation requirements, not layouts validated by the desktop concept images.
 
 ## Responsive background plan for implementation
 
@@ -209,3 +209,5 @@ horizontal overflow in Captures, Sings or Scoring at 320px.
 The [Your Turn preview](implementation-turn.png) shows the taller contents backdrop and the chapter footer aligned to the bottom of a short article. The glossary uses “Sing” without the Spanish alias.
 
 The [search preview](implementation-search.png) shows case-insensitive matches highlighted in the chapter label, result title and excerpt. Highlighting uses the same terms as filtering and keeps focus in the search field while typing.
+
+The [landscape verification](implementation-landscape.png) used the running guide at 844 × 390 with simulated 48px left and 36px right safe-area insets. The page retained both insets plus its responsive gutter, had no horizontal overflow, and scrolled normally with the scrollbar hidden. The archive still fills the screen.
