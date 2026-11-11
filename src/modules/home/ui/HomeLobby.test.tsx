@@ -2,8 +2,10 @@ import { ThemeProvider } from "next-themes";
 import { MemoryRouter, Route, Routes } from "react-router";
 
 import { StorageKeys, StorageService } from "@/application/services/StorageService";
+import { MatchScreen } from "@/modules/match";
+import { MATCH_PATH } from "@/routes/Routes";
 
-import { render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { HomeLobby } from "./HomeLobby";
@@ -24,6 +26,7 @@ function renderLobby(entry = "/") {
       <MemoryRouter initialEntries={[entry]}>
         <Routes>
           <Route path="/" element={<HomeLobby />} />
+          <Route path={MATCH_PATH} element={<MatchScreen />} />
           <Route path="/game" element={<h1>Game scene</h1>} />
           <Route path="/rules" element={<h1>Rules scene</h1>} />
           <Route path="/sings" element={<h1>Sings scene</h1>} />
@@ -101,21 +104,37 @@ test("onboarding updates the HUD immediately and only then allows play", async (
   expect(setupGame).not.toHaveBeenCalled();
 });
 
-test.each(["Duel", "Free-for-All", "Team Match"])(
-  "%s accepts clicks and keyboard activation without starting a game",
-  async (label) => {
-    const user = userEvent.setup();
-    renderLobby();
-    await user.click(screen.getByRole("button", { name: "Tavern" }));
-    const mode = screen.getByRole("button", { name: label });
+test.each([
+  ["Duel", 2, "{Enter}"],
+  ["Free-for-All", 3, null],
+  ["Team Match", 4, "{Enter}"],
+])("%s opens its waiting table and returns focus on cancel", async (label, seatCount, key) => {
+  const user = userEvent.setup();
+  renderLobby();
+  await user.click(screen.getByRole("button", { name: "Tavern" }));
+  const mode = screen.getByRole("button", { name: label });
+  if (key) {
+    act(() => mode.focus());
+    await user.keyboard(key);
+  } else {
     await user.click(mode);
-    expect(mode).toHaveFocus();
-    await user.keyboard("{Enter}");
-    expect(setupGame).not.toHaveBeenCalled();
-    expect(screen.queryByRole("heading", { name: "Game scene" })).not.toBeInTheDocument();
-    expect(screen.getByRole("dialog", { name: "Tavern" })).toBeVisible();
-  },
-);
+  }
+  expect(await screen.findByRole("main", { name: label }, { timeout: 2000 })).toBeVisible();
+  expect(screen.getByRole("list", { name: "Table seats" }).children).toHaveLength(seatCount);
+  expect(screen.getByRole("status")).toHaveTextContent(`1/${seatCount}`);
+  await waitFor(() => expect(screen.getByText("You")).toBeVisible());
+  expect(screen.getByText("You").closest("li")).toHaveTextContent("Your turn");
+  const cancel = screen.getByRole("button", { name: "Cancel matchmaking" });
+  expect(cancel).toHaveFocus();
+  if (label === "Team Match") await user.keyboard("{Escape}");
+  else await user.click(cancel);
+  await waitFor(() => expect(screen.getByRole("button", { name: label })).toHaveFocus(), {
+    timeout: 2500,
+  });
+  expect(screen.getByRole("dialog", { name: "Tavern" })).toBeVisible();
+  expect(setupGame).not.toHaveBeenCalled();
+  expect(screen.queryByRole("heading", { name: "Game scene" })).not.toBeInTheDocument();
+});
 
 test("touch previews one Tavern format and clears selection on the second tap", async () => {
   const user = userEvent.setup();
@@ -132,7 +151,7 @@ test("touch previews one Tavern format and clears selection on the second tap", 
   expect(team).toHaveAttribute("data-selected", "true");
   await tap(team);
   expect(team).toHaveAttribute("data-selected", "false");
-  expect(screen.getByRole("dialog", { name: "Tavern" })).toBeVisible();
+  expect(await screen.findByRole("main", { name: "Team Match" }, { timeout: 2000 })).toBeVisible();
   expect(setupGame).not.toHaveBeenCalled();
 });
 
@@ -148,7 +167,7 @@ test("the game-mode deep link waits for onboarding rather than opening two dialo
   expect(await screen.findByRole("dialog", { name: "Tavern" })).toBeVisible();
   await user.click(screen.getByRole("button", { name: "Duel" }));
   expect(setupGame).not.toHaveBeenCalled();
-  expect(screen.getByRole("dialog", { name: "Tavern" })).toBeVisible();
+  expect(await screen.findByRole("main", { name: "Duel" }, { timeout: 2000 })).toBeVisible();
 });
 
 test.each([

@@ -1,0 +1,34 @@
+{
+  "art_direction": "../art-direction.md",
+  "outputs": [
+    {
+      "file": "mockup-simplified.png",
+      "method": "reconstructed",
+      "references": ["../tavern/mockup-detailed.png"],
+      "prompt": "Create three views of the same 2v2 oak table from a fixed near-overhead camera. The waiting state shows a mode title, three occupied seats, one open seat and a cancel action. Opening play clears those controls, shows four shared face-up cards, puts the deck by the dealer and highlights the active portrait. A later view tests the space with sixteen shared cards."
+    },
+    {
+      "file": "mockup-detailed.png",
+      "method": "reconstructed",
+      "references": ["mockup-simplified.png", "../tavern/mockup-detailed.png"],
+      "prompt": "Show the crowded 2v2 table with four compact edge portraits. Give each seat a small collector pile separate from its hand, and put the draw deck beside the dealer. Keep the local hand visible and highlight the active portrait with a brass ring and caret. Keep shared cards legible and the oak free of props.",
+      "refinements": [
+        "Label the top seat Ally · Dealer and the right seat Opponent. Preserve the draw deck and all four collector piles in place."
+      ]
+    },
+    {
+      "file": "background.png",
+      "method": "reconstructed",
+      "references": ["mockup-simplified.png"],
+      "prompt": "Wide landscape standalone painting based on the top waiting panel. Match the steep view from the local seat. Keep the far edge narrower than the near edge, with the near lip in the foreground and the oak surface occupying almost the entire frame. Leave a narrow strip of the inn above it, with a blue window and shelf candle on the left and a hearth on the right. Keep the tabletop clear and omit UI, text and furniture around the table.",
+      "notes": "Export the full 1672 × 941 image at WebP quality 85."
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern-match/table-portrait.webp",
+      "method": "reconstructed",
+      "references": ["mockup-simplified.png"],
+      "prompt": "Tall phone portrait standalone painting based on the top waiting panel. Match the steep view from the local seat. Keep the far edge narrower than the near edge, with the near lip in the foreground and the oak surface occupying almost the entire frame. Leave a narrow strip of the inn above it, with a blue window and shelf candle on the left and a hearth on the right. Keep the tabletop clear and omit UI, text and furniture around the table.",
+      "notes": "Export the full 899 × 1750 image at WebP quality 85."
+    }
+  ]
+}

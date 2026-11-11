@@ -2,6 +2,7 @@ import { useId, useRef, useState } from "react";
 
 import { CardBorderGlint } from "@/components/cards/CardBorderGlint";
 import { frameClassName } from "@/components/surfaces/surfaceStyles";
+import type { GameMode } from "@/domain/entities/GameState";
 
 import { useTavernCardMotion } from "./useTavernCardMotion";
 
@@ -13,21 +14,25 @@ const ribbonBox =
   "relative -ml-px h-20 w-[92%] min-w-0 landscape:mx-auto landscape:-mt-px landscape:h-14 landscape:w-[84%] compact-landscape:h-12";
 
 type TavernFormatCardProps = {
+  mode: GameMode;
   title: string;
   players: string;
   description: string;
   artwork: string;
   selected: boolean;
   onTouchFocus: (selected: boolean) => void;
+  onActivate: () => void;
 };
 
 export function TavernFormatCard({
+  mode,
   title,
   players,
   description,
   artwork,
   selected,
   onTouchFocus,
+  onActivate,
 }: TavernFormatCardProps) {
   const id = useId();
   const button = useRef<HTMLButtonElement>(null);
@@ -44,6 +49,7 @@ export function TavernFormatCard({
       aria-describedby={`${id}-players ${id}-description`}
       ref={button}
       data-tavern-card=""
+      data-tavern-mode={mode}
       data-active={active}
       data-selected={selected}
       onPointerDown={(event) => {
@@ -73,6 +79,7 @@ export function TavernFormatCard({
           return;
         }
         onTouchFocus(false);
+        onActivate();
       }}
       className="group relative isolate min-w-0 cursor-pointer touch-manipulation rounded-md text-center outline-none select-none [-webkit-touch-callout:none] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring active:brightness-95"
     >

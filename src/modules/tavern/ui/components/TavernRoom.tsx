@@ -1,8 +1,7 @@
 import gsap from "gsap";
 import { useRef } from "react";
 
-import inn from "@/assets/lobby/tavern/inn-landscape.webp";
-import innPortrait from "@/assets/lobby/tavern/inn-portrait.webp";
+import { TavernBackdrop } from "@/components/surfaces/TavernBackdrop";
 import { useReducedMotion } from "@/infrastructure/ui/hooks/useGamePreferences";
 
 import { useGSAP } from "@gsap/react";
@@ -45,10 +44,7 @@ export function TavernRoom() {
     >
       {/* The painting and lights share the same centered cover crop. */}
       <div className="absolute top-1/2 left-1/2 aspect-[1672/941] w-[max(100cqw,177.6834cqh)] -translate-x-1/2 -translate-y-1/2 portrait:aspect-[852/1846] portrait:w-[max(100cqw,46.1538cqh)]">
-        <picture className="absolute inset-0 block">
-          <source media="(orientation: portrait)" srcSet={innPortrait} />
-          <img src={inn} alt="" width={1672} height={941} className="size-full" />
-        </picture>
+        <TavernBackdrop />
         {!reducedMotion && (
           <div className="absolute inset-0 mix-blend-screen">
             <span

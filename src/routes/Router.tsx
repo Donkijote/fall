@@ -13,6 +13,7 @@ import {
   GAME_PATH,
   HOME_PATH,
   LOGIN_PATH,
+  MATCH_PATH,
   RULES_PATH,
   SINGS_SHEETS,
 } from "./Routes";
@@ -40,6 +41,13 @@ const router = createBrowserRouter([
   {
     path: HOME_PATH,
     element: <HomeScreen />,
+  },
+  {
+    path: MATCH_PATH,
+    lazy: async () => {
+      const { MatchScreen } = await import("@/modules/match");
+      return { Component: MatchScreen };
+    },
   },
   {
     path: GAME_PATH,

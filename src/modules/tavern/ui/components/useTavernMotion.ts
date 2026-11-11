@@ -7,7 +7,11 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(useGSAP);
 
-export function useTavernMotion(popup: HTMLDivElement | null, origin?: HTMLElement | null) {
+export function useTavernMotion(
+  popup: HTMLDivElement | null,
+  origin?: HTMLElement | null,
+  returningFromTable = false,
+) {
   const reducedMotion = useReducedMotion();
   const animation = useRef<{ timeline: gsap.core.Timeline; width: number; height: number } | null>(
     null,
@@ -32,6 +36,13 @@ export function useTavernMotion(popup: HTMLDivElement | null, origin?: HTMLEleme
       const width = popup.clientWidth;
       const height = popup.clientHeight;
       animation.current = { timeline, width, height };
+
+      if (returningFromTable) {
+        timeline.from("[data-tavern-picker-content]", { opacity: 0, duration: 0.22 });
+        return () => {
+          animation.current = null;
+        };
+      }
 
       const source = origin?.querySelector(".game-activity-art") ?? origin;
       const bounds = source?.getBoundingClientRect();
@@ -91,7 +102,7 @@ export function useTavernMotion(popup: HTMLDivElement | null, origin?: HTMLEleme
     },
     {
       scope: popup ?? undefined,
-      dependencies: [popup, origin, reducedMotion],
+      dependencies: [popup, origin, reducedMotion, returningFromTable],
       revertOnUpdate: true,
     },
   );
@@ -100,6 +111,7 @@ export function useTavernMotion(popup: HTMLDivElement | null, origin?: HTMLEleme
     const current = animation.current;
     if (
       !popup ||
+      returningFromTable ||
       !current ||
       current.timeline.time() === 0 ||
       popup.clientWidth !== current.width ||
