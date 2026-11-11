@@ -26,9 +26,8 @@ the authoritative first-release rules. Gameplay corrections stay in issue #109.
 - `ui/RulebookScreen.tsx`: exported composition root; assembles the model, router
   adapter and supporting UI. Only this screen and its integration test live at
   the UI root.
-- `ui/components/layout`: page header and framed article, delegating motion to
-  the adapter. The shared archive backdrop and Hall return action also serve
-  the standalone Sings reference.
+- `ui/components/layout`: archive background source selection, page header and
+  framed article, delegating motion to the adapter.
 - `ui/components/navigation`: desktop chapter rail, mobile disclosure, chapter
   footer and link presentation.
 - `ui/components/chapters`: quick start, source rule sections, Sings summary,
@@ -58,10 +57,11 @@ navigation and Back to Hall stay outside the article frame. Previous/Next follow
 the learning order without completion gates. Reduced motion skips the article
 fade, with immediate native focus and hover cues.
 
-The standalone [Sings reference](../sings-reference/README.md) uses the same
-archive scene. The guide passes an explicit return destination and position key;
-the reference's Back action restores the chapter and reading position. Direct
-guide/reference visits have a Hall fallback.
+Sings remains a separate, existing searchable page. The guide passes an explicit
+return destination and position key; its Back action restores the guide chapter
+and reading position. Direct guide/reference visits always have a Hall fallback.
+The in-match Sings modal and gameplay state are unchanged. A separate Sings-page
+visual redesign is not part of this implementation.
 
 Runtime paintings and provenance are documented in `src/assets/rulebook/README.md`.
 Design masters remain under `docs/design/how-to-play` and are not runtime imports.

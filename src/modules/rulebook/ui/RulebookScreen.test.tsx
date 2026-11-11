@@ -115,7 +115,7 @@ test("Sings round trip restores the chapter and reading position, with Hall fall
   await user.click(
     within(screen.getByRole("article")).getByRole("link", { name: "Sings reference" }),
   );
-  await user.click(screen.getByRole("link", { name: "Back to How to play" }));
+  await user.click(screen.getByRole("button", { name: "Back to How to play" }));
   expect(screen.getByRole("heading", { name: "Know your combinations" })).toBeVisible();
   expect(screen.getByRole("main").scrollTop).toBe(250);
   await user.click(screen.getAllByRole("link", { name: "Back to Hall" })[0]);

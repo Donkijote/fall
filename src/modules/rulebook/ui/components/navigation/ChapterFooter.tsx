@@ -2,10 +2,10 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Link } from "react-router";
 
 import { ActionButton } from "@/components";
-import { HallReturnAction } from "@/components/navigation/HallReturnAction";
 
 import { chapterUrl } from "../../../adapters/rulebookRoutes";
 import { chapters } from "../../../application/rulebookContent";
+import { HallReturnAction } from "./HallReturnAction";
 
 export function ChapterFooter({ chapterIndex }: { chapterIndex: number }) {
   return (
