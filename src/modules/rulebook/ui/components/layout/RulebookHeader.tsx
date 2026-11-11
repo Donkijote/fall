@@ -16,9 +16,7 @@ export function RulebookHeader({
     <header className="space-y-4 lg:col-start-2 lg:pb-2">
       <div className="lg:hidden">{backLink}</div>
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="font-heading text-[clamp(1.8rem,3.5vw,3.8rem)] leading-tight font-bold text-artwork-foreground uppercase [text-shadow:0_2px_5px_var(--artwork-shadow)]">
-          How to play
-        </h1>
+        <h1 className="artwork-title text-[clamp(1.8rem,3.5vw,3.8rem)]">How to play</h1>
         <form
           role="search"
           className="relative w-full sm:w-64"

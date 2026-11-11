@@ -16,9 +16,9 @@ illustration and composition.
   quiet shadows with warm oak, parchment, and restrained oxblood and brass.
   Use Spanish-suit details (coins, cups, swords and clubs) where they belong
   in the world or clarify a control.
-- **Type and hierarchy.** Use Cinzel for titles and Spline Sans for reading,
+- **Type and hierarchy.** Use Cinzel Regular (400) for titles and Spline Sans for reading,
   labels and controls. The shared `artwork-title` utility defines the Hub
-  wordmark and mode titles, with bold uppercase display type, warm parchment
+  wordmark and mode titles, with regular-weight uppercase display type, warm parchment
   contrast and a soft shadow. Keep readable live text over artwork. Give the
   main action the clearest contrast. Use shared gold for illustrated frames
   and selection cues, and shadcn border and focus tokens for ordinary controls. Reserve the brand red for primary actions where a separate
@@ -76,7 +76,7 @@ most of the frame. Keep red to the primary action and small accents. Preserve th
 same color balance across treatments. Avoid a scene-wide orange or burgundy wash,
 saturated yellow gold, bloom, and glossy or heavily beveled surfaces.
 
-For UI mockups, use Cinzel for headings and Spline Sans for functional text.
+For UI mockups, use Cinzel Regular (400) for headings and Spline Sans for functional text.
 Use warm ivory for text over art, quiet charcoal for dark surfaces, and pale
 parchment with dark ink for light surfaces. Follow the live theme for controls:
 primary for the main action, gold for selective trim or emphasis, and semantic

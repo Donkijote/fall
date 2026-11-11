@@ -120,7 +120,7 @@ export function TavernFormatCard({
               aria-hidden="true"
               className="absolute inset-px -z-10 rounded-r-md bg-card landscape:rounded-none landscape:[clip-path:polygon(0_0,100%_0,100%_86%,95%_100%,5%_100%,0_86%)]"
             />
-            <span id={`${id}-title`} className="font-heading text-sm font-bold landscape:sr-only">
+            <span id={`${id}-title`} className="title-type text-sm landscape:sr-only">
               {title}
             </span>
             <span id={`${id}-players`} className="text-sm font-semibold compact-landscape:text-xs">

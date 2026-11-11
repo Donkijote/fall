@@ -32,7 +32,7 @@ const appearances = [
   { value: "system", label: "System", icon: Monitor },
 ];
 const rowClassName = "flex min-h-16 flex-wrap items-center justify-between gap-x-4 gap-y-2 py-3";
-const sectionClassName = "font-heading text-base font-semibold";
+const sectionClassName = "text-base";
 
 function SettingsContent({ onOpenChange }: Pick<HomeSettingsProps, "onOpenChange">) {
   const { theme, setTheme } = useTheme();
@@ -43,7 +43,7 @@ function SettingsContent({ onOpenChange }: Pick<HomeSettingsProps, "onOpenChange
   return (
     <ModalContent className="home-settings max-h-[calc(100dvh-var(--safe-area-top)-var(--safe-area-bottom)-2rem)] grid-rows-[auto_minmax(0,1fr)_auto] gap-4 overflow-hidden sm:max-w-xl">
       <DialogHeader className="min-h-11 justify-center pr-12">
-        <DialogTitle className="text-2xl font-bold">
+        <DialogTitle className="text-2xl font-normal">
           {credits ? "Credits & licenses" : "Settings"}
         </DialogTitle>
         <DialogDescription className="sr-only">

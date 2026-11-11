@@ -31,7 +31,7 @@ export const WelcomeModal = ({ onSave }: WelcomeModalProps) => {
     <Dialog open={isOpen} disablePointerDismissal>
       <ModalContent showCloseButton={false}>
         <DialogHeader>
-          <DialogTitle>Welcome to Fall!</DialogTitle>
+          <DialogTitle className="font-normal">Welcome to Fall!</DialogTitle>
           <DialogDescription>Enter your username to get started.</DialogDescription>
         </DialogHeader>
         <form

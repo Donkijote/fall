@@ -49,7 +49,7 @@ export function ChapterNavigation({
             aria-hidden="true"
             className="pointer-events-none absolute -inset-x-4 -inset-y-24 -z-10 bg-artwork-shadow/85 [mask-image:linear-gradient(to_bottom,transparent,black_12%,black_88%,transparent)]"
           />
-          <h2 className="px-3 font-heading text-xl font-bold uppercase">Contents</h2>
+          <h2 className="px-3 text-xl uppercase">Contents</h2>
           {links}
           <div className="px-3">{singsLink}</div>
         </div>

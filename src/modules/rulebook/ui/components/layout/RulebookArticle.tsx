@@ -41,7 +41,7 @@ export function RulebookArticle({
             <h2
               id="chapter-heading"
               tabIndex={-1}
-              className="scroll-mt-6 font-heading text-[clamp(1.65rem,2.8vw,2.7rem)] leading-tight font-bold uppercase outline-none"
+              className="scroll-mt-6 text-[clamp(1.65rem,2.8vw,2.7rem)] leading-tight uppercase outline-none"
             >
               {chapter.heading}
             </h2>

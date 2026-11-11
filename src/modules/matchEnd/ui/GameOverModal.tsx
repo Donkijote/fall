@@ -32,7 +32,7 @@ export const GameOverModal = () => {
           <ResultIcon className="size-14" />
         </div>
         <DialogHeader className="text-center">
-          <DialogTitle data-testid={`gameOverModal-title-${gameResult}`}>
+          <DialogTitle className="font-normal" data-testid={`gameOverModal-title-${gameResult}`}>
             {TEXTS[gameResult].title}
           </DialogTitle>
           <DialogDescription>{TEXTS[gameResult].message}</DialogDescription>

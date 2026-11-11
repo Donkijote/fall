@@ -95,7 +95,7 @@ export function TavernPicker({ open, canPlay, origin, onClose }: TavernPickerPro
                   render={<DialogClose />}
                   className="justify-self-start max-[420px]:px-2.5 compact-landscape:py-1 max-[375px]:[&_[data-hall-return-label]]:sr-only"
                 />
-                <DialogTitle className="artwork-title text-[clamp(1.5rem,4vw,3.35rem)] compact-landscape:text-2xl">
+                <DialogTitle className="artwork-title text-[clamp(1.5rem,4vw,3.35rem)] font-normal compact-landscape:text-2xl">
                   Tavern
                 </DialogTitle>
                 <DialogDescription className="sr-only">Choose a match format.</DialogDescription>

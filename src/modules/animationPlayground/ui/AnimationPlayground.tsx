@@ -125,7 +125,7 @@ export function AnimationPlayground() {
               <ArrowLeft className="size-4" /> Back to The Fall
             </Link>
             <div className="flex flex-wrap items-center gap-3">
-              <h1 className="font-heading text-2xl font-bold sm:text-3xl">Animation playground</h1>
+              <h1 className="text-2xl sm:text-3xl">Animation playground</h1>
               <Badge variant="secondary">Development only</Badge>
             </div>
           </div>
@@ -155,7 +155,7 @@ export function AnimationPlayground() {
             <div className="grid items-start gap-6 lg:grid-cols-[15rem_minmax(0,1fr)_18rem]">
               <Card>
                 <CardHeader>
-                  <CardTitle>Animation catalog</CardTitle>
+                  <CardTitle className="title-type font-normal">Animation catalog</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-1">
                   {lessons.map((item) => (
@@ -202,7 +202,7 @@ export function AnimationPlayground() {
               </div>
               <Card>
                 <CardHeader>
-                  <CardTitle>Live tuning</CardTitle>
+                  <CardTitle className="title-type font-normal">Live tuning</CardTitle>
                   <p className="text-xs text-muted-foreground">
                     Changes restart the current preview.
                   </p>

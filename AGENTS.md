@@ -8,6 +8,10 @@
   token only for a distinct, reusable role across features, such as the shared
   gold trim or artwork contrast. Give it a semantic name and define it in
   OKLCH. Avoid component palettes, raw hex UI colours, and duplicate tokens.
+- Use Cinzel Regular (400), the Tavern title style, for page, dialog, card,
+  and section titles. Semantic headings inherit it. Use `title-type` for
+  other title elements and `artwork-title` over illustrations. Use
+  `font-normal` when a generated title primitive supplies a heavier weight.
 - Keep reusable styled components in `src/components`, outside the generated
   shadcn/Base UI primitives in `src/components/ui`. Do not customise generated core
   files to implement game-specific visuals.
