@@ -126,8 +126,38 @@ searchEntries.push(
   },
 );
 
+export function ruleSearchTerms(query: string) {
+  return [...new Set(query.toLocaleLowerCase().split(/\s+/).filter(Boolean))];
+}
+
+export function ruleMatchRanges(text: string, terms: readonly string[]) {
+  const normalized = text.toLocaleLowerCase();
+  const ranges = terms
+    .flatMap((term) => {
+      if (!term) return [];
+      const matches: { start: number; end: number }[] = [];
+      for (
+        let start = normalized.indexOf(term);
+        start !== -1;
+        start = normalized.indexOf(term, start + 1)
+      ) {
+        matches.push({ start, end: start + term.length });
+      }
+      return matches;
+    })
+    .sort((first, second) => first.start - second.start);
+
+  const merged: typeof ranges = [];
+  for (const range of ranges) {
+    const previous = merged.at(-1);
+    if (previous && range.start <= previous.end) previous.end = Math.max(previous.end, range.end);
+    else merged.push(range);
+  }
+  return merged;
+}
+
 export function findRules(query: string): RuleResult[] {
-  const terms = query.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
+  const terms = ruleSearchTerms(query);
   if (!terms.length) return [];
   return searchEntries.filter((entry) =>
     terms.every((term) =>

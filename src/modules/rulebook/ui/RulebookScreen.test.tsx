@@ -62,10 +62,15 @@ test("search indexes combination values and navigates to the matching heading wi
   const user = userEvent.setup();
   renderGuide();
   const input = screen.getByRole("searchbox", { name: "Find a rule" });
-  await user.type(input, "Big House");
+  await user.type(input, "bIG hoUse");
   expect(input).toHaveFocus();
   expect(screen.getByRole("status")).toHaveTextContent("results for");
-  await user.click(screen.getByRole("link", { name: /Sings Big House/ }));
+  const result = screen.getByRole("link", { name: /Sings Big House/ });
+  expect([...result.querySelectorAll("mark")].map((mark) => mark.textContent)).toEqual([
+    "Big",
+    "House",
+  ]);
+  await user.click(result);
   expect(screen.getByLabelText("Current route")).toHaveTextContent("chapter=sings&rule=sing-0");
   expect(screen.getByRole("heading", { name: "Big House 12 points" })).toHaveFocus();
   expect(screen.getByRole("searchbox")).toHaveValue("");

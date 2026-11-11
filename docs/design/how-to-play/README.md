@@ -207,3 +207,5 @@ and title decoration with a single outer edge. The final browser check found no
 horizontal overflow in Captures, Sings or Scoring at 320px.
 
 The [Your Turn preview](implementation-turn.png) shows the taller contents backdrop and the chapter footer aligned to the bottom of a short article. The glossary uses “Sing” without the Spanish alias.
+
+The [search preview](implementation-search.png) shows case-insensitive matches highlighted in the chapter label, result title and excerpt. Highlighting uses the same terms as filtering and keeps focus in the search field while typing.
