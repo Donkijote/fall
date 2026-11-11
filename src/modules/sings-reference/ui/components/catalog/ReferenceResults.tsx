@@ -25,19 +25,17 @@ export function ReferenceResults({
       {count ? (
         <ul
           aria-label="Combinations"
-          className="grid grid-cols-1 gap-4 py-4 @2xl:grid-cols-2 @5xl:grid-cols-3 @5xl:gap-6 @min-[26rem]:compact-landscape:grid-cols-2"
+          className="grid grid-cols-1 @2xl:grid-cols-2 @5xl:grid-cols-3 @min-[26rem]:@max-2xl:compact-landscape:grid-cols-2"
         >
           {results.map((sing) => (
             <CombinationEntry key={sing.id} sing={sing} query={query} />
           ))}
         </ul>
       ) : (
-        <div className="mt-4 grid justify-items-center gap-3 rounded-md bg-card px-4 py-8 text-center text-card-foreground">
+        <div className="mt-4 grid justify-items-center gap-3 px-4 py-8 text-center text-artwork-foreground">
           <p className="font-semibold">No combinations match your filters.</p>
-          <p className="text-sm text-muted-foreground">
-            Try another name or pattern, or reset the filters.
-          </p>
-          <ActionButton tone="outline" type="button" onClick={onReset}>
+          <p className="text-sm">Try another name or pattern, or reset the filters.</p>
+          <ActionButton tone="outline" className="bg-background" type="button" onClick={onReset}>
             Reset filters
           </ActionButton>
         </div>

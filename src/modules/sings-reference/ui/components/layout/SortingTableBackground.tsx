@@ -14,7 +14,6 @@ export function SortingTableBackground() {
         <source media="(max-aspect-ratio: 3/2)" srcSet={tabletLandscape} />
         <img src={desktop} alt="" width={1672} height={941} className="size-full object-cover" />
       </picture>
-      <div className="absolute inset-0 bg-linear-to-b from-artwork-shadow/60 via-transparent to-artwork-shadow/20" />
     </div>
   );
 }

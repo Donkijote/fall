@@ -20,7 +20,7 @@ function MatchText({ text, query }: { text: string; query: string }) {
 export function CombinationEntry({ sing, query }: { sing: SingResult; query: string }) {
   const term = query.trim().toLowerCase();
   return (
-    <li className="flex min-w-0 flex-col gap-2 rounded-md bg-card/95 p-3 text-card-foreground shadow-sm shadow-artwork-shadow/40 @2xl:p-4 dark:bg-artwork-shadow/80">
+    <li className="relative flex min-w-0 flex-col gap-2 px-3 py-4 text-artwork-foreground before:absolute before:inset-y-2 before:left-0 before:hidden before:w-px before:bg-linear-to-b before:from-transparent before:via-gold/65 before:to-transparent after:absolute after:inset-x-2 after:bottom-0 after:h-px after:bg-linear-to-r after:from-transparent after:via-gold/75 after:to-transparent @2xl:px-5 @2xl:py-5 @2xl:@max-5xl:[&:not(:nth-child(2n+1))]:before:block @min-[26rem]:@max-2xl:compact-landscape:[&:not(:nth-child(2n+1))]:before:block @5xl:[&:not(:nth-child(3n+1))]:before:block">
       <div className="flex items-start justify-between gap-2">
         <h2 className="pt-1 font-heading text-lg leading-tight font-bold @2xl:text-xl @5xl:text-2xl">
           <MatchText text={sing.name} query={term} />
@@ -38,7 +38,7 @@ export function CombinationEntry({ sing, query }: { sing: SingResult; query: str
         </p>
       </div>
       {sing.matchingTags.length > 0 && (
-        <p className="mt-1 text-xs text-muted-foreground">
+        <p className="mt-1 text-xs text-artwork-foreground">
           Matching tags:{" "}
           {sing.matchingTags.map((tag, index) => (
             <Fragment key={tag}>
@@ -51,7 +51,7 @@ export function CombinationEntry({ sing, query }: { sing: SingResult; query: str
       <CardFaces
         label={`${sing.name} example hand`}
         cards={sing.example}
-        className="mt-auto grid grid-cols-3 gap-2 border-b border-gold/60 pt-3 pb-4 [&_[role=img]]:w-full [&_[role=img]]:shadow-artwork-shadow/40"
+        className="mt-auto grid grid-cols-3 gap-2 pt-2 [&_[role=img]]:w-full [&_[role=img]]:shadow-artwork-shadow/40"
       />
     </li>
   );

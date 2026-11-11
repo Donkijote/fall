@@ -76,14 +76,14 @@ export function ReferenceFilters({
         </Select>
       </div>
       <Label
-        className="min-h-11 cursor-pointer rounded-md border border-gold/65 bg-background px-2.5 text-foreground"
+        className="min-h-11 cursor-pointer px-2.5 text-artwork-foreground"
         htmlFor="only-mandatory"
       >
         <Checkbox
           id="only-mandatory"
           checked={filters.onlyMandatory}
           onCheckedChange={(onlyMandatory) => onChange({ ...filters, onlyMandatory })}
-          className="border-muted-foreground transition-none"
+          className="border-artwork-foreground/75 bg-transparent transition-none focus-visible:border-artwork-foreground focus-visible:ring-artwork-foreground/50"
         />
         Mandatory only
       </Label>
