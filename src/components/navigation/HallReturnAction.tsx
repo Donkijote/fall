@@ -1,22 +1,32 @@
+import { cn } from "cn";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router";
 
 import { ActionButton } from "@/components";
+import type { ActionButtonProps } from "@/components/actions/ActionButton";
 import { HOME_PATH } from "@/routes/Routes";
 
-export function HallReturnAction({ overArtwork = false }: { overArtwork?: boolean }) {
+type HallReturnActionProps = Pick<ActionButtonProps, "className" | "render"> & {
+  overArtwork?: boolean;
+};
+
+export function HallReturnAction({
+  overArtwork = false,
+  className,
+  render,
+}: HallReturnActionProps) {
   return (
     <ActionButton
       tone="quiet"
-      className={
-        overArtwork
-          ? "text-artwork-foreground hover:bg-transparent hover:text-gold dark:hover:bg-transparent"
-          : "hover:bg-transparent dark:hover:bg-transparent"
-      }
-      render={<Link to={HOME_PATH} state={{ focusHelp: true }} />}
+      className={cn(
+        "hover:bg-transparent dark:hover:bg-transparent",
+        overArtwork && "text-artwork-foreground hover:text-gold",
+        className,
+      )}
+      render={render ?? <Link to={HOME_PATH} state={{ focusHelp: true }} />}
     >
       <ArrowLeft aria-hidden="true" className="size-4" />
-      Back to Hall
+      <span data-hall-return-label="">Back to Hall</span>
     </ActionButton>
   );
 }

@@ -71,8 +71,12 @@ body {
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+@utility title-type {
+  @apply font-heading font-normal;
+}
+
 @utility artwork-title {
-  @apply font-heading leading-tight font-bold tracking-wide text-artwork-foreground uppercase;
+  @apply title-type leading-tight tracking-wide text-artwork-foreground uppercase;
   text-shadow:
     0 2px 3px var(--artwork-shadow),
     0 0 8px var(--artwork-shadow),
@@ -159,6 +163,10 @@ body {
 }
 
 @layer base {
+  :where(h1, h2, h3, h4, h5, h6) {
+    @apply title-type;
+  }
+
   * {
     @apply border-border outline-ring/50;
   }

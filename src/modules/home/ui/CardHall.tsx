@@ -47,7 +47,7 @@ export type CardHallProps = {
     diamonds?: number;
   };
   canPlay: boolean;
-  onPlay: () => void;
+  onPlay: (trigger: HTMLButtonElement) => void;
   onSettings: () => void;
 };
 
@@ -157,7 +157,7 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
 
     setTouchFocusedId(null);
     event.currentTarget.focus({ preventScroll: true });
-    onPlay();
+    onPlay(event.currentTarget);
   }
 
   function navigateActivities(event: KeyboardEvent<HTMLButtonElement>, index: number) {

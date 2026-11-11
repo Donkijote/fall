@@ -164,6 +164,8 @@ Native focus, dismissal, refs, keyboard, and touch behavior come from the primit
 See [the design-system and migration guide](docs/shadcn-migration.md) for conventions and the component inventory.
 [Fall art direction](docs/design/art-direction.md) covers the visual language.
 The [design library](docs/design/README.md) indexes approved mockups, background masters, and reusable prompts, and explains how to organize new design work.
+Record design decisions in the feature's README under `docs/design` and keep temporary reviews outside the repository.
+Generate production illustrations as standalone artwork at the required aspect ratio and resolution. Use full mockups as visual references and export runtime assets from the standalone originals. Do not crop illustrations out of a full mockup.
 
 ## 📖 Overview
 

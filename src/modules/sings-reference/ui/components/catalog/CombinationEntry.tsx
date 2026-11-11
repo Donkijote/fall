@@ -26,7 +26,7 @@ export function CombinationEntry({ sing, query }: { sing: SingResult; query: str
       className="relative flex min-w-0 flex-col gap-2 px-3 py-4 text-artwork-foreground before:absolute before:inset-y-2 before:left-0 before:hidden before:w-px before:bg-linear-to-b before:from-transparent before:via-gold/65 before:to-transparent after:absolute after:inset-x-2 after:bottom-0 after:h-px after:bg-linear-to-r after:from-transparent after:via-gold/75 after:to-transparent @2xl:px-5 @2xl:py-5 @2xl:@max-5xl:[&:not(:nth-child(2n+1))]:before:block @min-[26rem]:@max-2xl:compact-landscape:[&:not(:nth-child(2n+1))]:before:block @5xl:[&:not(:nth-child(3n+1))]:before:block"
     >
       <div className="flex items-start justify-between gap-2">
-        <h2 className="pt-1 font-heading text-lg leading-tight font-bold @2xl:text-xl @5xl:text-2xl">
+        <h2 className="pt-1 text-lg leading-tight @2xl:text-xl @5xl:text-2xl">
           <MatchText text={sing.name} query={term} />
         </h2>
         <p className="shrink-0 rounded-full bg-primary px-2.5 py-1 text-base font-bold whitespace-nowrap text-primary-foreground tabular-nums">

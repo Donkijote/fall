@@ -16,7 +16,7 @@ export const SingsList = ({ sings }: { sings: Array<UiHand> }) => (
     {sings.map((hand) => (
       <Card key={hand.id} size="sm">
         <CardHeader>
-          <CardTitle>
+          <CardTitle className="title-type font-normal">
             <h3>{hand.name}</h3>
           </CardTitle>
           <CardAction>

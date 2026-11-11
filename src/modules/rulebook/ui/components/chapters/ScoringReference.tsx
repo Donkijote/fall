@@ -5,11 +5,7 @@ import { fallRankValues } from "../../../application/rulebookContent";
 export function ScoringReference() {
   return (
     <section aria-labelledby="rule-fall-points">
-      <h3
-        id="rule-fall-points"
-        tabIndex={-1}
-        className="scroll-mt-6 text-lg font-semibold outline-none"
-      >
+      <h3 id="rule-fall-points" tabIndex={-1} className="scroll-mt-6 text-lg outline-none">
         Fall points by rank
       </h3>
       <dl className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">

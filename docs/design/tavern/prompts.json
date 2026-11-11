@@ -1,0 +1,72 @@
+{
+  "art_direction": "../art-direction.md#shared-generation-prompt",
+  "outputs": [
+    {
+      "file": "background.png",
+      "method": "recorded",
+      "references": ["../../../src/assets/lobby/card-hall/tavern.webp"],
+      "prompt": "Create a clean 16:9 painting of the actual Tavern interior we step into after opening the live Tavern card. The attached image is the live Tavern card's artwork, the environment and mood reference. Expand its sense of warm community and worn timber into a new distinct room, at seated eye level across an oak gaming table. A cozy, low-ceilinged medieval Iberian inn with a low heavy ceiling of dark rough-hewn timbers, amber hearth tucked at far right, warm pools of candlelight, shelves with pottery and pewter at far left, and a modest square shuttered window with cool evening blue light in the upper left. Soft indistinct patrons at the distant sides only. Keep the central background quiet and darker with visible wood beams and layered depth; keep open worn tabletop across the lower quarter with a small scatter of Spanish-suit cards, a candle and a cup at the very edges. Same tactile, grounded brushwork as the live Tavern painting. Strong distinction from Card Hall: intimate tavern scale, timber interior, no tall arches or banners. Restrained warm accents over dark brown and slate shadows, no orange wash. Scene only, zero UI, no lettering."
+    },
+    {
+      "file": "mockup-detailed.png",
+      "method": "reconstructed",
+      "references": ["background.png", "../../../src/assets/lobby/card-hall/tavern.webp"],
+      "prompt": "Match the live Home cards with three tall full-bleed illustrations and thin brass frames. Show two facing players, a triangle of three, and a square table with one player centered on each side. Put red partners at north and south and blue partners at east and west. Set the card titles in ivory Cinzel over the lower art. Tuck a dark layered ribbon behind each card with small folded ends, clipped corners and a thin brass line. Set the two lines of player count and description in Spline Sans. Keep the fireplace, square window and table visible around the controls. Detail the focused Duel rim with shallow brass engraving.",
+      "refinements": [
+        "Edit only the painting inside the rightmost Team Match card in the supplied desktop mockup. Preserve every other region, text and ribbons. This is a SQUARE oak table seen from elevated overhead 3/4 perspective, with exactly ONE PERSON centered on EACH of its four sides, forming a plus-sign seating diagram, four distinct edges clearly visible. Clockwise starting at the TOP: north/far center RED, east/right center BLUE, south/near center RED, west/left center BLUE. Reds face each other along one axis and blues face each other along the perpendicular axis. No one sits at a corner. No two people share any edge. All four turn inward toward the center of the table. Keep full-bleed painterly period art, muted blue and oxblood clothing, Spanish cards. Preserve the rightmost title and all surrounding UI.",
+        "Surgical edit of the small playing cards ONLY within this original high-quality Fall Tavern mockup. Preserve the source sharpness, painted brushwork, faces, hands, clothes, exact seating, foreground, text and UI. Every player holds EXACTLY THREE overlapping cards, individually countable. Duel: the far man holds three dark brown backs with thin brass trim, the near player holds three ivory Spanish-suited faces. Free-for-All: the center woman holds three dark brown backs; the two men both hold exactly three ivory Spanish-suited faces visible in the camera perspective. Team Match: the far woman holds three dark brown backs; all three men (left, right, near) each show three ivory Spanish-suited faces. Keep one person centered on each of the four edges with red-blue-red-blue alternating. Cards lying face down on the gaming tables INSIDE the three illustrations have dark backs. The three face-up cards on the large foreground table outside the illustrated cards are untouched. Make no global redraw, restyling, softening, or change to framing; only edit the small playing cards."
+      ],
+      "notes": "Gwent's Classic tab in the supplied select-mode clip guided placement and layering. The final seating edit used the immediately preceding mockup."
+    },
+    {
+      "file": "mockup-simplified.png",
+      "method": "recorded",
+      "references": ["mockup-detailed.png"],
+      "prompt": "Edit this exact desktop UI mockup to the simplified treatment. Preserve all proportions, composition, backdrop, every illustration including the exact four-person red-blue-red-blue seating, exact typography, the layered ribbon shape and all exact copy. Remove only the Duel frame’s corner flourishes and ribbon material grain. Use a subtle thin brass focus line. Change nothing else.",
+      "refinements": [
+        "Surgical edit of the small playing cards ONLY within this original high-quality Fall Tavern mockup. Preserve the source sharpness, painted brushwork, faces, hands, clothes, exact seating, foreground, text and UI. Every player holds EXACTLY THREE overlapping cards, individually countable. Duel: the far man holds three dark brown backs with thin brass trim, the near player holds three ivory Spanish-suited faces. Free-for-All: the center woman holds three dark brown backs; the two men both hold exactly three ivory Spanish-suited faces visible in the camera perspective. Team Match: the far woman holds three dark brown backs; all three men (left, right, near) each show three ivory Spanish-suited faces. Keep one person centered on each of the four edges with red-blue-red-blue alternating. Cards lying face down on the gaming tables INSIDE the three illustrations have dark backs. The three face-up cards on the large foreground table outside the illustrated cards are untouched. Make no global redraw, restyling, softening, or change to framing; only edit the small playing cards.",
+        "Make ONE tiny edit to this image. Locate the far-side red-cloaked woman in the rightmost TEAM MATCH painting. Replace the entire small fan of cards between her hands with EXACTLY THREE distinct dark-backed cards: left card tilted left, middle card upright, right card tilted right. Each card has one simple thin gold edge, with three distinct top edges total. There must be NO fourth sliver, extra card, doubled edge or fourth top corner. Keep the size, shape and position of her hands, preserve every other player’s hand and everything else in the image exactly."
+      ]
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern/inn-landscape.webp",
+      "method": "recorded",
+      "references": ["background.png"],
+      "prompt": "Export the clean landscape master as WebP at quality 85, method 6, at its native resolution."
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern/inn-portrait.webp",
+      "method": "recorded",
+      "references": ["background.png"],
+      "prompt": "Create a 9:19.5 portrait reframe of this exact clean Fall tavern background for phone screens. Same low timber ceiling, low oak tabletop, soft background patrons in their original group, same slate-blue window at left and small amber hearth at right. Bring the window and hearth into the narrow frame, keep the center dark and quiet behind three stacked live UI rows. Keep a candle and pewter mug in the bottom corners. Match the painting style, light direction and visual identity. No text, no UI, no additional foreground people.",
+      "refinements": ["Export the portrait edit at 852 × 1846 as WebP at quality 84, method 6."]
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern/duel.webp",
+      "method": "recorded",
+      "references": ["mockup-simplified.png"],
+      "prompt": "Create a fresh standalone game illustration for Fall, a medieval Iberian card game. Deliver one high-resolution portrait 2:3 painting, target 1024×1536. The attached full mockup is concept and palette reference only. Paint the illustration as its own full image from scratch. No UI, frame, title, ribbon, or lettering. Grounded painterly realism, textured oak and worn fabric, blue-gray shadow, warm ivory, localized candlelight, richly legible hands and cards. Stage all participants and hands comfortably inside the central 80% of the composition, bottom 15% quiet for a live label. Keep the cards anatomically and geometrically correct: each participant holds exactly THREE separate cards in one modest fan, with exactly three distinct top edges. Ivory fronts have one simple Spanish suit emblem (cup, coin, sword or club); dark backs are charcoal brown with a simple thin bronze rectangle. Keep table clear of extra clutter. Use only the left Duel panel for concept. Two men across the oak table, near red-cloaked man seen from over his shoulder, older man in a dark cap facing the camera. Three ivory card fronts visible in the near man's hand and exactly three dark backs visible in the older man's hand. A single pewter mug. No loose cards on the table.",
+      "refinements": [
+        "Export the entire 1024 × 1536 standalone original as WebP at quality 94, method 6."
+      ]
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern/free-for-all.webp",
+      "method": "recorded",
+      "references": ["mockup-simplified.png"],
+      "prompt": "Create a fresh standalone game illustration for Fall, a medieval Iberian card game. Deliver one high-resolution portrait 2:3 painting, target 1024×1536. The attached full mockup is concept and palette reference only. Paint the illustration as its own full image from scratch. No UI, frame, title, ribbon, or lettering. Grounded painterly realism, textured oak and worn fabric, blue-gray shadow, warm ivory, localized candlelight, richly legible hands and cards. Stage all participants and hands comfortably inside the central 80% of the composition, bottom 15% quiet for a live label. Keep the cards anatomically and geometrically correct: each participant holds exactly THREE separate cards in one modest fan, with exactly three distinct top edges. Ivory fronts have one simple Spanish suit emblem (cup, coin, sword or club); dark backs are charcoal brown with a simple thin bronze rectangle. Keep table clear of extra clutter. Use only the middle Free-for-All panel for concept. Three people in a triangular arrangement around a small oak table. Center far-side woman facing camera holds exactly three dark backs, side men each hold three ivory card fronts visible from the oblique viewpoint. Use three distinct poses, readable hands, a small candle and two separate rectangular dark-backed cards flat on the table.",
+      "refinements": [
+        "Export the entire 1024 × 1536 standalone original as WebP at quality 94, method 6."
+      ]
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern/team-match.webp",
+      "method": "recorded",
+      "references": ["mockup-simplified.png"],
+      "prompt": "Create a fresh standalone game illustration for Fall, a medieval Iberian card game. Deliver one high-resolution portrait 2:3 painting, target 1024×1536. The attached full mockup is concept and palette reference only. Paint the illustration as its own full image from scratch. No UI, frame, title, ribbon, or lettering. Grounded painterly realism, textured oak and worn fabric, blue-gray shadow, warm ivory, localized candlelight, richly legible hands and cards. Stage all participants and hands comfortably inside the central 80% of the composition, bottom 15% quiet for a live label. Keep the cards anatomically and geometrically correct: each participant holds exactly THREE separate cards in one modest fan, with exactly three distinct top edges. Ivory fronts have one simple Spanish suit emblem (cup, coin, sword or club); dark backs are charcoal brown with a simple thin bronze rectangle. Keep table clear of extra clutter. Use only the right Team Match panel for concept. Elevated view over a square oak table. Exactly one player centered on each side. Clockwise from far center: red woman, blue man on right, red man in near foreground, blue man on left. Red teammates face each other across the table, as do blue teammates. Far woman holds exactly THREE plain dark-backed cards (left tilted left, center upright, right tilted right; no fourth edge). The three men each visibly hold three ivory card fronts. Small candle in center. Exactly two separate dark-backed cards flat on the tabletop, with clean straight edges, rectangular shapes and coherent perspective; no stacks, no odd-shaped cards.",
+      "refinements": [
+        "Export the entire 1024 × 1536 standalone original as WebP at quality 94, method 6."
+      ]
+    }
+  ]
+}

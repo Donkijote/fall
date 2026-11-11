@@ -32,11 +32,7 @@ export function RuleSearchResults({
   const resultId = useId();
   return (
     <>
-      <h2
-        id="chapter-heading"
-        tabIndex={-1}
-        className="font-heading text-2xl font-bold outline-none"
-      >
+      <h2 id="chapter-heading" tabIndex={-1} className="text-2xl outline-none">
         Find a rule
       </h2>
       <p role="status" className="mt-3 text-sm text-muted-foreground">
@@ -57,7 +53,7 @@ export function RuleSearchResults({
               <span className="text-xs text-muted-foreground">
                 <HighlightedRuleText text={result.chapterTitle} terms={terms} />
               </span>
-              <h3 className="mt-1 text-base font-semibold text-foreground">
+              <h3 className="mt-1 text-base text-foreground">
                 <HighlightedRuleText text={result.title} terms={terms} />
               </h3>
               <p

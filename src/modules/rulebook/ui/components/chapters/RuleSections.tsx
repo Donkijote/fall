@@ -12,11 +12,7 @@ export function RuleSections({
     <>
       {items.map((item) => (
         <section key={item.id} aria-labelledby={`rule-${item.id}`}>
-          <h3
-            id={`rule-${item.id}`}
-            tabIndex={-1}
-            className="scroll-mt-6 text-lg font-semibold outline-none"
-          >
+          <h3 id={`rule-${item.id}`} tabIndex={-1} className="scroll-mt-6 text-lg outline-none">
             {item.title}
           </h3>
           <p className="mt-2 max-w-[75ch] leading-relaxed whitespace-pre-line">{item.body}</p>

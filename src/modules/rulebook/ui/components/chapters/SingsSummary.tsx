@@ -15,11 +15,7 @@ export function SingsSummary({ singsLink }: { singsLink: ReactNode }) {
             className="grid items-center gap-4 py-5 sm:grid-cols-[minmax(0,1fr)_auto]"
           >
             <div>
-              <h3
-                id={`rule-sing-${index}`}
-                tabIndex={-1}
-                className="scroll-mt-6 font-semibold outline-none"
-              >
+              <h3 id={`rule-sing-${index}`} tabIndex={-1} className="scroll-mt-6 outline-none">
                 {sing.name}{" "}
                 <span className="ml-2 inline-block rounded-full bg-primary px-3 py-1 text-sm text-primary-foreground">
                   {singPointsLabel(sing.points)}

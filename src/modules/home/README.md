@@ -18,10 +18,9 @@ See `src/components/README.md` for the styled/core component boundary.
 
 ## Behaviour
 
-Tavern opens the existing `BottomSidebar` format picker. A mouse click or
+Tavern opens the [Tavern picker](../tavern/README.md), passing the activated card as the animation origin. A mouse click or
 keyboard activation opens it directly. On touch, one tap focuses the card and a
-second tap on the same card opens it. The existing game IDs, bot defaults and
-`/game` navigation are preserved.
+second tap on the same card opens it. The format cards are interactive previews during this design iteration.
 
 Campaign and Arena remain greyscale Coming soon previews. Hero, Collection,
 Journal, Guild and Market are also unavailable. Help sits next to Settings and links to How to play and Sings reference. The

@@ -91,7 +91,7 @@ export function LoginScreen() {
             </p>
             <h1
               id="login-title"
-              className="font-heading text-3xl leading-[1.15] font-bold [text-shadow:none] lg:text-5xl xl:text-6xl 2xl:text-7xl sm:portrait:text-5xl max-xl:landscape:text-2xl"
+              className="text-3xl leading-[1.15] [text-shadow:none] lg:text-5xl xl:text-6xl 2xl:text-7xl sm:portrait:text-5xl max-xl:landscape:text-2xl"
             >
               Every hand
               <br />{" "}
@@ -136,9 +136,7 @@ export function LoginScreen() {
               <span className="mb-1 flex size-10 items-center justify-center rounded-full border border-gold/60 bg-linear-to-b from-secondary to-card text-muted-foreground shadow-sm sm:size-12 xl:size-16 max-xl:landscape:mb-0 max-xl:landscape:size-[clamp(2rem,10dvh,2.75rem)] max-xl:landscape:shrink-0">
                 <Icon icon={appEmblem} className="size-5 sm:size-6 xl:size-8" />
               </span>
-              <h2 className="font-heading text-2xl font-bold sm:text-3xl max-xl:landscape:text-2xl">
-                The Fall
-              </h2>
+              <h2 className="text-2xl sm:text-3xl max-xl:landscape:text-2xl">The Fall</h2>
             </CardHeader>
 
             <CardContent className="grid grid-cols-1 max-xl:landscape:grid-cols-[repeat(auto-fit,minmax(min(100%,13rem),1fr))] max-xl:landscape:gap-6">
