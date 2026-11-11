@@ -155,7 +155,7 @@ composition with live Cinzel/Spline Sans text, open chapter navigation, the
 shared FramedCard/ActionButton/TextInput components, and real Spanish-deck SVGs.
 All existing written Rules items remain in seven chapters, including the
 complete Sings ranking and glossary. Search covers rule text, examples,
-callouts, combination values and definitions. No domain rule data was changed.
+callouts, combination values and definitions. The prose is edited at its source for readability; rule IDs, scoring values, conditions, and gameplay behavior remain intact.
 
 Ownership is documented in [the rulebook module](../../../src/modules/rulebook/README.md).
 The application projection is framework-independent; routing, focus, reading
@@ -176,7 +176,7 @@ identity. Their [exact built-in ImageGen prompts](prompts-responsive.json) and
 provenance, dimensions and WebP exports. The runtime picture selects phone,
 tablet or landscape by aspect ratio. No design PNG is imported into app code.
 
-The desktop rail becomes a native Chapters disclosure on compact widths. The
+The desktop rail has a dark backing that fades above and below the contents, a lighter hover cue, and a separate outlined Back to Hall action. The card examples use parchment shading, static grain, and engraved-style dividers. Step markers and scoring badges are round, and the quick-start scoring note uses lighter italic text. The desktop rail becomes a native Chapters disclosure on compact widths. The
 page has one scroll region; the read-only card diagram reflows into labeled
 groups. Touch targets, heading focus, search status/empty state, safe-area
 padding and reduced motion are preserved. Semantic light/dark surfaces keep

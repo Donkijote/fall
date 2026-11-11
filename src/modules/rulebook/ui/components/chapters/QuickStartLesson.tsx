@@ -1,3 +1,4 @@
+import { cn } from "cn";
 import { Link } from "react-router";
 
 import { CardPlayFigure } from "@/components/cards/CardPlayFigure";
@@ -10,7 +11,8 @@ export function QuickStartLesson() {
   return (
     <>
       <p className="mt-3 text-base leading-relaxed">
-        Reach {RULES.scoring.goal} points by capturing cards and scoring bonuses.
+        Be the first player or team to reach {RULES.scoring.goal} points. Capture cards and earn
+        bonuses to get there.
       </p>
       <ol className="my-5 space-y-3">
         {quickSteps.map((step, index) => (
@@ -18,7 +20,7 @@ export function QuickStartLesson() {
             key={step.title}
             className="flex items-start gap-3 text-sm leading-relaxed sm:text-base"
           >
-            <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-primary font-semibold text-primary-foreground">
+            <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary font-semibold text-primary-foreground">
               {index + 1}
             </span>
             <p>
@@ -39,8 +41,14 @@ export function QuickStartLesson() {
           <strong className="mr-3 tracking-wide uppercase">At a glance</strong>Goal:{" "}
           {RULES.scoring.goal} points · Hand: 3 cards · Deck: 40 cards
         </p>
-        <Link className={`${linkClass} underline`} to={chapterUrl("scoring")}>
-          See Scoring & winning for bonuses and format quotas.
+        <Link
+          className={cn(
+            linkClass,
+            "font-sans font-normal text-muted-foreground italic hover:text-foreground hover:no-underline",
+          )}
+          to={chapterUrl("scoring")}
+        >
+          See Scoring & winning for bonus points and card quotas.
         </Link>
       </div>
     </>

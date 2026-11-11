@@ -1,6 +1,9 @@
 import type { ReactNode } from "react";
 
 import { RULES } from "@/domain/constants/rules";
+
+import { singPointsLabel } from "../../../application/rulebookContent";
+
 export function SingsSummary({ singsLink }: { singsLink: ReactNode }) {
   return (
     <>
@@ -13,8 +16,8 @@ export function SingsSummary({ singsLink }: { singsLink: ReactNode }) {
               className="scroll-mt-6 font-semibold outline-none"
             >
               {sing.name}{" "}
-              <span className="ml-2 inline-block rounded-md bg-primary px-2 py-1 text-sm text-primary-foreground">
-                {sing.points} points
+              <span className="ml-2 inline-block rounded-full bg-primary px-3 py-1 text-sm text-primary-foreground">
+                {singPointsLabel(sing.points)}
               </span>
             </h3>
             <p className="mt-1 text-sm text-muted-foreground">
@@ -25,7 +28,7 @@ export function SingsSummary({ singsLink }: { singsLink: ReactNode }) {
         ))}
       </div>
       <p className="text-sm leading-relaxed text-muted-foreground">
-        Find illustrated hands and filter combinations in the Sings reference.
+        See example hands and filter by points in the Sings reference.
       </p>
       {singsLink}
     </>

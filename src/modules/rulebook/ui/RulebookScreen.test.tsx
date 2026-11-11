@@ -53,7 +53,7 @@ test("chapter links and Previous/Next navigate, focus the heading and retain sou
   expect(screen.getByLabelText("Current route")).toHaveTextContent("?chapter=setup");
   expect(screen.getByRole("heading", { name: "Take your seat", level: 2 })).toHaveFocus();
   const items = RULES.sections.find((section) => section.id === "setup")!.items;
-  for (const item of items) expect(screen.getByText(item.body)).toBeVisible();
+  for (const item of items) expect(screen.getByText(item.body.replace(/\s+/g, " "))).toBeVisible();
   await user.click(screen.getByRole("link", { name: "Previous" }));
   expect(screen.getByRole("heading", { name: "Your first capture" })).toBeVisible();
 });
@@ -65,7 +65,7 @@ test("search indexes combination values and navigates to the matching heading wi
   await user.type(input, "Big House");
   expect(input).toHaveFocus();
   expect(screen.getByRole("status")).toHaveTextContent("results for");
-  await user.click(screen.getByRole("link", { name: /Sings \(Cantos\) Big House/ }));
+  await user.click(screen.getByRole("link", { name: /Sings Big House/ }));
   expect(screen.getByLabelText("Current route")).toHaveTextContent("chapter=sings&rule=sing-0");
   expect(screen.getByRole("heading", { name: "Big House 12 points" })).toHaveFocus();
   expect(screen.getByRole("searchbox")).toHaveValue("");
@@ -77,7 +77,7 @@ test("deep links preserve scoring, glossary and variations, with safe fallback f
   const view = renderGuide("/rules?chapter=scoring&rule=fall-points");
   expect(screen.getByRole("heading", { name: "Fall points by rank" })).toHaveFocus();
   expect(screen.getByRole("table", { name: "Captured-card quotas" })).toHaveTextContent(
-    "12; dealer 13",
+    "12 per player; 13 for the dealer",
   );
   view.unmount();
   const glossary = renderGuide("/rules?chapter=variations");

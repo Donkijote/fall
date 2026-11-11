@@ -23,7 +23,7 @@ export const chapters: Chapter[] = [
   { id: "captures", title: "Captures", heading: "Read the table", items: items("captures") },
   {
     id: "sings",
-    title: "Sings (Cantos)",
+    title: "Sings",
     heading: "Know your combinations",
     items: items("sings"),
   },
@@ -42,14 +42,17 @@ export const chapters: Chapter[] = [
 ];
 
 export const quickSteps = [
-  { title: "Take your seat", body: "Choose 1v1, three-player free-for-all, or 2v2." },
+  {
+    title: "Take your seat",
+    body: "Choose a duel, a three-player free-for-all, or two teams of two.",
+  },
   {
     title: "Read the table",
-    body: "At the opening deal, each player receives 3 cards. Four start face up.",
+    body: "You get three cards. The dealer puts four cards face up on the table.",
   },
   {
     title: "Play one card",
-    body: "Match a rank to capture. If there is no match, leave your card on the table.",
+    body: "Match the rank of a card on the table to capture it. If nothing matches, leave your card face up.",
   },
 ];
 
@@ -73,6 +76,10 @@ export type RuleResult = {
   title: string;
   text: string;
 };
+
+export function singPointsLabel(points: number | string) {
+  return typeof points === "number" ? `${points} points` : points;
+}
 
 // Search indexes the same written rules and values rendered in the guide.
 const searchEntries: RuleResult[] = chapters.flatMap((chapter) => [
@@ -103,10 +110,10 @@ searchEntries.push(
   })),
   ...RULES.singsRanking.map((entry, index) => ({
     chapter: "sings",
-    chapterTitle: "Sings (Cantos)",
+    chapterTitle: "Sings",
     id: `sing-${index}`,
     title: entry.name,
-    text: `${entry.pattern}. ${entry.points} points. ${entry.optional ? "Optional" : "Mandatory"}. ${entry.notes ?? ""}`,
+    text: `${entry.pattern}. ${singPointsLabel(entry.points)}. ${entry.optional ? "Optional" : "Mandatory"}. ${entry.notes ?? ""}`,
   })),
   {
     chapter: "scoring",

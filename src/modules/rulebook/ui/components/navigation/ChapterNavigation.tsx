@@ -24,14 +24,14 @@ export function ChapterNavigation({
     if (disclosure.current) disclosure.current.open = false;
   }
   const links = (
-    <nav aria-label="Rulebook chapters" className="space-y-1">
+    <nav aria-label="Rulebook chapters" className="space-y-1.5">
       {chapters.map((entry, index) => (
         <Link
           key={entry.id}
           to={chapterUrl(entry.id)}
           onClick={choose}
           aria-current={chapter.id === entry.id && !searching ? "page" : undefined}
-          className="flex min-h-12 items-center gap-3 rounded-md border-l-4 border-transparent px-3 py-2.5 text-base text-artwork-foreground hover:bg-artwork-shadow/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring aria-[current=page]:border-gold aria-[current=page]:bg-gold/20 aria-[current=page]:font-semibold"
+          className="flex min-h-11 items-center gap-3 rounded-md border-l-4 border-transparent px-3 py-2 text-base text-artwork-foreground hover:border-gold/45 hover:bg-artwork-foreground/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring aria-[current=page]:border-gold aria-[current=page]:bg-gold/25 aria-[current=page]:font-semibold aria-[current=page]:hover:border-gold aria-[current=page]:hover:bg-gold/25"
         >
           <span className="text-sm tabular-nums opacity-80">
             {String(index + 1).padStart(2, "0")}
@@ -43,10 +43,16 @@ export function ChapterNavigation({
   );
   return (
     <>
-      <aside className="hidden h-fit space-y-6 text-artwork-foreground [text-shadow:0_1px_4px_var(--artwork-shadow)] lg:sticky lg:top-6 lg:row-start-2 lg:flex lg:min-h-[min(70dvh,700px)] lg:flex-col">
-        <h2 className="px-3 font-heading text-xl font-bold uppercase">Contents</h2>
-        {links}
-        <div className="px-3">{singsLink}</div>
+      <aside className="hidden h-fit text-artwork-foreground [text-shadow:0_1px_4px_var(--artwork-shadow)] lg:sticky lg:top-6 lg:row-start-2 lg:flex lg:min-h-[min(70dvh,700px)] lg:flex-col">
+        <div className="relative isolate space-y-4">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -inset-x-4 -inset-y-9 -z-10 bg-artwork-shadow/85 [mask-image:linear-gradient(to_bottom,transparent,black_12%,black_88%,transparent)]"
+          />
+          <h2 className="px-3 font-heading text-xl font-bold uppercase">Contents</h2>
+          {links}
+          <div className="px-3">{singsLink}</div>
+        </div>
         <div className="mt-auto px-3 pt-8">{backLink}</div>
       </aside>
       <details

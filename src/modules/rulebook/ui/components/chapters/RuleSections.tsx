@@ -11,7 +11,7 @@ export function RuleSections({ items }: { items: RuleItem[] }) {
           >
             {item.title}
           </h3>
-          <p className="mt-2 leading-relaxed">{item.body}</p>
+          <p className="mt-2 leading-relaxed whitespace-pre-line">{item.body}</p>
           {item.callouts?.map((callout) => (
             <p
               key={callout.text}

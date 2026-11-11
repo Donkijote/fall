@@ -10,7 +10,7 @@ export function ArchiveBackground() {
         <source media="(max-aspect-ratio: 5/4)" srcSet={tablet} />
         <img src={archive} alt="" width={1672} height={941} className="size-full object-cover" />
       </picture>
-      <div className="absolute inset-y-0 left-0 w-full bg-linear-to-r from-artwork-shadow/80 via-artwork-shadow/40 to-transparent lg:w-[32%]" />
+      <div className="absolute inset-y-0 left-0 w-full bg-linear-to-r from-artwork-shadow/80 via-artwork-shadow/40 to-transparent lg:hidden" />
     </div>
   );
 }

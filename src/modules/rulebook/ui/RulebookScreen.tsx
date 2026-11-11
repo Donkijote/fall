@@ -2,6 +2,7 @@ import { ArrowLeft, ExternalLink } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router";
 
+import { ActionButton } from "@/components";
 import { HOME_PATH, SINGS_SHEETS } from "@/routes/Routes";
 
 import { useRulebookRoute } from "../adapters/useRulebookRoute";
@@ -22,14 +23,14 @@ export function RulebookScreen() {
     </Link>
   );
   const backLink = (
-    <Link
-      to={HOME_PATH}
-      state={{ focusHelp: true }}
-      className={`${linkClass} text-artwork-foreground`}
+    <ActionButton
+      tone="outline"
+      className="dark:bg-background"
+      render={<Link to={HOME_PATH} state={{ focusHelp: true }} />}
     >
       <ArrowLeft aria-hidden="true" className="size-4" />
       Back to Hall
-    </Link>
+    </ActionButton>
   );
   return (
     <main
