@@ -205,3 +205,5 @@ with a worked duel example: 23 captured cards minus a quota of 20 earns 3 points
 which takes a score of 21 to the winning 24. Figures retain the parchment grain
 and title decoration with a single outer edge. The final browser check found no
 horizontal overflow in Captures, Sings or Scoring at 320px.
+
+The [Your Turn preview](implementation-turn.png) shows the taller contents backdrop and the chapter footer aligned to the bottom of a short article. The glossary uses “Sing” without the Spanish alias.

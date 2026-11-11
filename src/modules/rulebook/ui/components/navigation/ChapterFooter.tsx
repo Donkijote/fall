@@ -9,7 +9,7 @@ import { HallReturnAction } from "./HallReturnAction";
 
 export function ChapterFooter({ chapterIndex }: { chapterIndex: number }) {
   return (
-    <footer className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
+    <footer className="mt-auto flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
       <p className="text-sm text-muted-foreground">
         Chapter {chapterIndex + 1} of {chapters.length}
       </p>

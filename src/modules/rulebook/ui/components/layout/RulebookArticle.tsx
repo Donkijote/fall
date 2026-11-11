@@ -29,7 +29,7 @@ export function RulebookArticle({
       <article
         ref={articleRef}
         aria-labelledby="chapter-heading"
-        className="min-w-0 p-4 sm:p-7 xl:p-8"
+        className="flex min-w-0 flex-1 flex-col p-4 sm:p-7 xl:p-8"
       >
         {query.trim() ? (
           <RuleSearchResults query={query} chooseChapter={onChoose} />
@@ -45,7 +45,9 @@ export function RulebookArticle({
             >
               {chapter.heading}
             </h2>
-            <ChapterLesson chapter={chapter} singsLink={singsLink} />
+            <div className="pb-6">
+              <ChapterLesson chapter={chapter} singsLink={singsLink} />
+            </div>
             <ChapterFooter chapterIndex={chapterIndex} />
           </>
         )}

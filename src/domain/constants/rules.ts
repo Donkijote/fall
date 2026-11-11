@@ -196,7 +196,7 @@ export const RULES: RulesContent = {
   ],
   glossary: [
     {
-      term: "Canto / Sing",
+      term: "Sing",
       def: "A scoring combination of three cards that you announce before playing.",
     },
     {
