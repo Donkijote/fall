@@ -5,10 +5,11 @@ import { createGameService } from "@/application/services/GameService";
 import { initialState, mockedState, mockedStateWithPlayers } from "@/application/store/gameStore";
 import type { Card, CardWithKey } from "@/domain/entities/Card";
 import type { GameState } from "@/domain/entities/GameState";
+import { toCardKey } from "@/domain/helpers/card";
 import { createDeck } from "@/domain/rules/deck";
 
 vi.mock("@/application/services/AnimationService", () => ({
-  AnimationKeys: { GAME_CARDS: "GAME_CARDS" },
+  AnimationKeys: { GAME_CARDS: "GAME_CARDS", PILE_COLLECT: "PILE_COLLECT" },
   animationService: {
     run: vi.fn().mockResolvedValue(undefined),
   },
@@ -237,6 +238,82 @@ describe("Game Service", () => {
     expect(finalCall.table).toEqual([]); // swept on finalize
     expect(finalCall.lastPlayedCard).toEqual(expect.any(Object));
   });
+
+  it.each([
+    { format: "1v1", type: "individual", pileSizes: [15, 19], points: { 1: 1 } },
+    { format: "1v1v1", type: "individual", pileSizes: [7, 14, 13], points: { 1: 1, 2: 1, 3: 1 } },
+    { format: "2v2", type: "team", pileSizes: [9, 10, 6, 9], points: { 1: 1 } },
+  ] as const)(
+    "conserves the deck and scores extras in $format",
+    async ({ type, pileSizes, points }) => {
+      const deck = createDeck();
+      const played: Card = { suit: "cups", rank: 4 };
+      const finalPlay: Card = { suit: "cups", rank: 2 };
+      const targets: Card[] = [
+        { suit: "coins", rank: 4 },
+        { suit: "clubs", rank: 5 },
+        { suit: "swords", rank: 6 },
+      ];
+      const leftover: Card = { suit: "clubs", rank: 12 };
+      const table = [...targets, leftover];
+      const reservedKeys = new Set([played, finalPlay, ...table].map(toCardKey));
+      const capturedEarlier = deck.filter((card) => !reservedKeys.has(toCardKey(card)));
+      const players = pileSizes.map((size, index) => ({
+        id: String(index + 1),
+        team: type === "team" ? (index % 2) + 1 : index + 1,
+        hand: [[played], [finalPlay]][index] ?? [],
+        collected: capturedEarlier.splice(0, size),
+        score: 0,
+      }));
+
+      let state: GameState = {
+        ...initialState,
+        phase: "play",
+        deck: [],
+        table,
+        players,
+        currentPlayer: "1",
+        dealer: "2",
+        scores: { type, values: {} },
+      };
+      const playStates: GameState[] = [];
+      const service = createGameService(
+        () => state,
+        (next) => {
+          state = next;
+          playStates.push(next);
+        },
+      );
+
+      await service.playCard("1", 0);
+      const capture = [played, ...targets].map(toCardKey).sort();
+      expect(state.table).toEqual([leftover]);
+      expect(state.players[0].collected.slice(pileSizes[0]).map(toCardKey).sort()).toEqual(capture);
+
+      await service.playCard("2", 0);
+      expect(state.phase).toBe("roundEnd");
+      expect(state.table).toEqual([]);
+      expect(state.players[0].collected.slice(pileSizes[0] + capture.length)).toEqual([
+        leftover,
+        finalPlay,
+      ]);
+
+      const deckKeys = deck.map(toCardKey).sort();
+      for (const snapshot of playStates) {
+        const inPlay = [
+          ...snapshot.deck,
+          ...snapshot.table,
+          ...snapshot.players.flatMap(({ hand, collected }) => [...hand, ...collected]),
+        ];
+        expect(inPlay.map(toCardKey).sort()).toEqual(deckKeys);
+      }
+
+      await service.endRound();
+      expect(state.phase).toBe("dealerChoice");
+      expect(state.scores.values).toEqual(points);
+      expect(state.players.every(({ collected }) => collected.length === 0)).toBe(true);
+    },
+  );
 
   it("should not play card due to invalid phase", async () => {
     await createGameService(

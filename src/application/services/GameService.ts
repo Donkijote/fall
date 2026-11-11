@@ -186,14 +186,16 @@ export function createGameService(getState: () => GameState, setState: (s: GameS
         }
       }
 
-      const stateAfterUpdateTableAndHandCards = updateTableAndHandCards(
-        stateAfterAddRemovedCardToTable,
-        playerId,
-        card,
-        analysis.capturePlan,
-      );
-
-      setState(stateAfterUpdateTableAndHandCards);
+      let stateAfterCapture = stateAfterAddRemovedCardToTable;
+      if (analysis.capturePlan.kind !== "none") {
+        stateAfterCapture = updateTableAndHandCards(
+          stateAfterAddRemovedCardToTable,
+          playerId,
+          card,
+          analysis.capturePlan,
+        );
+        setState(stateAfterCapture);
+      }
       uiService.clearUI();
 
       if (analysis.capturePlan.kind !== "none") {
@@ -205,11 +207,7 @@ export function createGameService(getState: () => GameState, setState: (s: GameS
         ]);
       }
 
-      let stateAfterFinalizeAfterPlay = finalizeAfterPlay(
-        stateAfterUpdateTableAndHandCards,
-        playerId,
-        card,
-      );
+      let stateAfterFinalizeAfterPlay = finalizeAfterPlay(stateAfterCapture, playerId, card);
 
       const allHandsEmpty = stateAfterFinalizeAfterPlay.players.every((p) => p.hand.length === 0);
       if (allHandsEmpty && stateAfterFinalizeAfterPlay.deck.length === 0) {
