@@ -57,11 +57,10 @@ navigation and Back to Hall stay outside the article frame. Previous/Next follow
 the learning order without completion gates. Reduced motion skips the article
 fade, with immediate native focus and hover cues.
 
-Sings remains a separate, existing searchable page. The guide passes an explicit
+The standalone [Sings reference](../sings-reference/README.md) has its own searchable gallery. The guide passes an explicit
 return destination and position key; its Back action restores the guide chapter
 and reading position. Direct guide/reference visits always have a Hall fallback.
-The in-match Sings modal and gameplay state are unchanged. A separate Sings-page
-visual redesign is not part of this implementation.
+The in-match Sings modal and gameplay state are unchanged.
 
 Runtime paintings and provenance are documented in `src/assets/rulebook/README.md`.
 Design masters remain under `docs/design/how-to-play` and are not runtime imports.
