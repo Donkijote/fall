@@ -1,0 +1,34 @@
+.sings-reference-shade {
+  --side-feather: clamp(3rem, 10vw, 12rem);
+  --end-feather: clamp(4rem, 14dvh, 9rem);
+
+  /* Ease the opacity at both ends of each feather to soften the perimeter. */
+  mask-image:
+    linear-gradient(
+      to right,
+      transparent,
+      rgb(0 0 0 / 8%) calc(var(--side-feather) * 0.2),
+      rgb(0 0 0 / 50%) calc(var(--side-feather) * 0.5),
+      rgb(0 0 0 / 92%) calc(var(--side-feather) * 0.8),
+      black var(--side-feather),
+      black calc(100% - var(--side-feather)),
+      rgb(0 0 0 / 92%) calc(100% - var(--side-feather) * 0.8),
+      rgb(0 0 0 / 50%) calc(100% - var(--side-feather) * 0.5),
+      rgb(0 0 0 / 8%) calc(100% - var(--side-feather) * 0.2),
+      transparent
+    ),
+    linear-gradient(
+      to bottom,
+      transparent,
+      rgb(0 0 0 / 8%) calc(var(--end-feather) * 0.2),
+      rgb(0 0 0 / 50%) calc(var(--end-feather) * 0.5),
+      rgb(0 0 0 / 92%) calc(var(--end-feather) * 0.8),
+      black var(--end-feather),
+      black calc(100% - var(--end-feather)),
+      rgb(0 0 0 / 92%) calc(100% - var(--end-feather) * 0.8),
+      rgb(0 0 0 / 50%) calc(100% - var(--end-feather) * 0.5),
+      rgb(0 0 0 / 8%) calc(100% - var(--end-feather) * 0.2),
+      transparent
+    );
+  mask-composite: intersect;
+}

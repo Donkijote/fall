@@ -2,6 +2,7 @@ import { ExternalLink } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router";
 
+import { HallReturnAction } from "@/components/navigation/HallReturnAction";
 import { SINGS_SHEETS } from "@/routes/Routes";
 
 import { useRulebookRoute } from "../adapters/useRulebookRoute";
@@ -9,7 +10,6 @@ import { ArchiveBackground } from "./components/layout/ArchiveBackground";
 import { RulebookArticle } from "./components/layout/RulebookArticle";
 import { RulebookHeader } from "./components/layout/RulebookHeader";
 import { ChapterNavigation } from "./components/navigation/ChapterNavigation";
-import { HallReturnAction } from "./components/navigation/HallReturnAction";
 import { linkClass } from "./components/navigation/rulebookStyles";
 
 export function RulebookScreen() {

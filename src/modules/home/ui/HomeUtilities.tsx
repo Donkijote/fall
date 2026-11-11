@@ -1,6 +1,6 @@
 import { ChevronRight } from "lucide-react";
 import { useEffect, useId, useRef } from "react";
-import { Link, useLocation, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate, useNavigationType } from "react-router";
 
 import help from "@/assets/lobby/card-hall/icons/help.svg";
 import logout from "@/assets/lobby/card-hall/icons/logout.svg";
@@ -24,6 +24,7 @@ function HelpLinks() {
       align="start"
       sideOffset={8}
       aria-label="Help"
+      initialFocus={(openType) => openType === "keyboard"}
       className="max-h-[var(--available-height)] w-[min(21rem,var(--available-width),calc(100vw_-_var(--safe-area-left)_-_var(--safe-area-right)_-_2rem))] [scrollbar-width:none] gap-0 overflow-auto overscroll-contain [&::-webkit-scrollbar]:hidden"
     >
       {guides.map(({ to, label, description }, index) => (
@@ -52,10 +53,14 @@ function HelpLinks() {
 export function HomeUtilities({ onSettings }: { onSettings: () => void }) {
   const navigate = useNavigate();
   const location = useLocation();
+  const navigationType = useNavigationType();
   const helpRef = useRef<HTMLButtonElement>(null);
   useEffect(() => {
-    if (location.state?.focusHelp === true) helpRef.current?.focus();
-  }, [location.key, location.state]);
+    // Reloads and history traversal can replay the guide's saved return state.
+    if (navigationType !== "POP" && location.state?.focusHelp === true) {
+      helpRef.current?.focus();
+    }
+  }, [location.key, location.state, navigationType]);
   return (
     <nav aria-label="Utilities" className="ml-auto flex gap-1 sm:gap-2.5">
       <NavigationGroup label="Communication">
