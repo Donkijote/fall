@@ -1,8 +1,8 @@
 import { cn } from "cn";
 import type { CSSProperties } from "react";
 
+import { SuitGlyph } from "@/components/cards/SuitGlyph";
 import { type Rank, type Suit } from "@/domain/entities/Card";
-import { SuitGlyph } from "@/infrastructure/ui/components/card/SuitGlyph";
 import { useReducedMotion } from "@/infrastructure/ui/hooks/useGamePreferences";
 
 export type CardProps = {

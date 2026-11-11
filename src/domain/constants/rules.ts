@@ -12,8 +12,8 @@ export const RULES: RulesContent = {
       items: [
         {
           id: "what",
-          title: "What is Fall",
-          body: "Traditional Venezuelan card game using the 40-card Spanish deck. Modes: 1v1, 1v1v1, 2v2. Goal: reach 24 points.",
+          title: "The goal",
+          body: "Fall is a Venezuelan game played with a 40-card Spanish deck. Play one-on-one, with three players competing individually, or in teams of two. The first player or team to reach 24 points wins.",
           badges: ["Quick Start"],
         },
       ],
@@ -25,23 +25,23 @@ export const RULES: RulesContent = {
         {
           id: "deck",
           title: "Deck",
-          body: "40 cards (suits: golds, cups, spades, sticks). Ranks: 1–7, 10–12.",
+          body: "The four suits are coins, cups, swords and clubs. Each suit has ranks 1–7 and 10–12. There are no 8s or 9s.",
           badges: ["Required"],
         },
         {
           id: "dealer",
           title: "Choose the dealer",
-          body: "Each player draws 1; highest is dealer. Play proceeds counter-clockwise (right of dealer starts).",
-          examples: ["If there’s a tie, redraw among tied players."],
+          body: "Each player draws a card. Whoever draws the highest rank deals. The player to the dealer’s right goes first, and play moves counterclockwise.",
+          examples: ["If players tie for the highest rank, only those players draw again."],
         },
         {
           id: "deal-choices",
-          title: "Dealer choices",
-          body: "Deal order: players first (3 each, then table) or table first (table, then 3 each). Table pattern: ascending (1–2–3–4) or descending (4–3–2–1); reveal 4 cards.",
+          title: "Deal the hands and table",
+          body: "Give each player three cards and reveal four cards on the table. The dealer chooses whether to deal the hands or the table first.\n\nBefore revealing the table cards, choose an ascending (1–2–3–4) or descending (4–3–2–1) pattern.",
           callouts: [
             {
               type: "warning",
-              text: "If the revealed table matches the chosen pattern, the dealer/team gains a pattern bonus (points TBD).",
+              text: "If the four table cards match the chosen pattern, the dealer or their team earns a bonus. The point value has not been set.",
             },
           ],
         },
@@ -53,14 +53,14 @@ export const RULES: RulesContent = {
       items: [
         {
           id: "announce",
-          title: "Announce a sing (if eligible)",
-          body: "If you hold exactly 3 cards, you may announce a qualifying canto before playing.",
+          title: "Check for a Sing",
+          body: "If you have exactly three cards and they form a scoring combination, you may announce the Sing before you play.",
           badges: ["Timing"],
         },
         {
           id: "play",
           title: "Play one card",
-          body: "Either capture (same-rank; may cascade) or throw (leave it on the table).",
+          body: "Play one card from your hand. You can capture a card of the same rank and any following ranks in a cascade, or leave your played card face up on the table.",
         },
       ],
     },
@@ -71,34 +71,42 @@ export const RULES: RulesContent = {
         {
           id: "same-rank",
           title: "Same-rank capture",
-          body: "Play a card to take table card(s) of the same rank; played card + captured cards go to your capture pile.",
+          body: "Play a card that matches a rank on the table. Put the card you played and the cards you took into your capture pile.",
         },
         {
           id: "cascade",
           title: "Cascade",
-          body: "If the captured card continues a face-up sequence (e.g., you take a 2 and table shows 3,4,5…), you take the whole chain.",
+          body: "After a match, take the cards that follow it in rank order. Stop at the first missing rank.",
+          examples: [
+            "If you match a 2 and the table also has a 3, 4 and 5, take that whole sequence.",
+          ],
         },
         {
           id: "fall",
-          title: "Special — Fall",
-          body: "If a player throws a card and the next player immediately captures that exact rank, it’s a Fall.",
-          callouts: [{ type: "info", text: "Scoring varies by rank (see Scoring)." }],
+          title: "Fall",
+          body: "When a player leaves a card on the table and the very next player captures it by matching its rank, that capture is a Fall.",
+          callouts: [
+            {
+              type: "info",
+              text: "The rank you match determines how many points the Fall earns. See Scoring & winning for the values.",
+            },
+          ],
         },
         {
           id: "clean",
           title: "Clean Table",
-          body: "If your capture empties the table, gain +4 points — except in the last round (when the deck is empty).",
+          body: "If your capture leaves no cards on the table, you earn 4 points. This bonus does not apply once the deck is empty.",
         },
       ],
     },
     {
       id: "sings",
-      title: "Sings (Cantos)",
+      title: "Sings",
       items: [
         {
           id: "rules",
-          title: "How sings work",
-          body: "Announce only with 3 cards in hand before playing. If multiple players announce, highest-ranking sing wins; ties go to the player closest to the dealer.",
+          title: "When to announce a Sing",
+          body: "A Sing is a scoring combination of three cards. Announce it while you still hold all three, before you play. If several players announce Sings, the highest-ranking combination wins. If they tie, the player closest to the dealer wins.",
         },
       ],
     },
@@ -108,18 +116,18 @@ export const RULES: RulesContent = {
       items: [
         {
           id: "quotas",
-          title: "Round quotas & extras",
-          body: "1v1: count to 20; extras +1 each. 1v1v1: each to 12, dealer to 13; extras +1 each. 2v2: team to 20; extras +1 each.",
+          title: "Count your captured cards",
+          body: "At the end of the round, earn 1 point for each captured card above your format’s quota. In 2v2, count both teammates’ capture piles together. See the quota table below.",
         },
         {
           id: "leftovers",
-          title: "Last-round leftovers",
-          body: "If anyone captured this round, the last capturer takes table leftovers; otherwise the dealer takes them.",
+          title: "Award the remaining cards",
+          body: "After the last cards are played, the last player who captured that round takes any cards left on the table. If no one captured that round, the dealer takes them.",
         },
         {
           id: "end",
-          title: "End of game",
-          body: "First player/team to 24 points wins immediately. Three of a kind may be instant win if agreed.",
+          title: "Win the match",
+          body: "The first player or team to reach 24 points wins immediately. If you agreed before the match that Three of a Kind is an instant win, announcing it also ends the match.",
         },
       ],
     },
@@ -129,8 +137,8 @@ export const RULES: RulesContent = {
       items: [
         {
           id: "opts",
-          title: "Pre-game agreements",
-          body: "Enable Big/Small House; set Three of a kind to 5 points or instant win; dealer may choose deal style each round.",
+          title: "Agree on variations before playing",
+          body: "Decide whether to include Big House and Small House, and whether Three of a Kind scores 5 points or wins the match outright. The dealer may choose the deal order each round.",
         },
       ],
     },
@@ -141,7 +149,7 @@ export const RULES: RulesContent = {
         {
           id: "defs",
           title: "Key terms",
-          body: "Canto/Sing, Cascade, Fall, Clean Table, Capture pile.",
+          body: "Use these definitions to look up terms as you read.",
         },
       ],
     },
@@ -163,39 +171,46 @@ export const RULES: RulesContent = {
     { name: "Big House", pattern: "12–12–1", points: 12, optional: true },
     { name: "Small House", pattern: "11–11–1", points: 10, optional: true },
     { name: "Register", pattern: "12–11–1", points: 8, mandatory: true },
-    { name: "Watchtower", pattern: "x–x–(x±1)", points: 7, mandatory: true },
-    { name: "Patrol", pattern: "3 consecutive", points: 6, mandatory: true },
+    {
+      name: "Watchtower",
+      pattern: "A pair and one card directly above or below it in rank",
+      points: 7,
+      mandatory: true,
+    },
+    { name: "Patrol", pattern: "Three ranks in a row", points: 6, mandatory: true },
     {
       name: "Three of a kind",
-      pattern: "x–x–x",
-      points: "5 or instant",
+      pattern: "Three cards of the same rank",
+      points: "5 points or an instant win",
       mandatory: true,
-      notes: "Instant win if agreed before game.",
+      notes: "The instant win applies only if agreed before the match.",
     },
     {
       name: "Pair + any",
-      pattern: "x–x–y",
-      points: "1 (10=2,11=3,12=4)",
+      pattern: "A pair and any third card",
+      points: "1–4 points",
       mandatory: true,
+      notes:
+        "Most pairs score 1 point. A pair of 10s scores 2, a pair of 11s scores 3, and a pair of 12s scores 4.",
     },
   ],
   glossary: [
     {
-      term: "Canto / Sing",
-      def: "A 3-card scoring pattern announced before playing.",
+      term: "Sing",
+      def: "A scoring combination of three cards that you announce before playing.",
     },
     {
       term: "Cascade",
-      def: "Chain capture of sequential table cards after a same-rank capture.",
+      def: "A capture that continues through consecutive ranks after the first match.",
     },
     {
       term: "Fall",
-      def: "Immediate same-rank capture of a just-thrown card by the next player.",
+      def: "A capture made by matching the rank of the card the previous player just left on the table.",
     },
     {
       term: "Clean Table",
-      def: "Capture that empties the table; +4 except in last round.",
+      def: "A capture that clears the table. It earns 4 points unless the deck is empty.",
     },
-    { term: "Capture pile", def: "Your/team’s stack of captured cards." },
+    { term: "Capture pile", def: "The cards you or your team have collected through captures." },
   ],
 };

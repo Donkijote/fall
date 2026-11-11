@@ -1,0 +1,16 @@
+{
+  "tool": "built-in image_gen",
+  "status": "Approved open archive page references; subtitle removed; implementation deferred",
+  "outputs": [
+    {
+      "file": "how-to-play-page-simple-approved.png",
+      "references": ["how-to-play-page-simple-v2.png"],
+      "prompt": "Use case: text-localization\nAsset type: final approved Fall How to Play simple desktop mockup.\nEdit the reference image with ONE precise change only: remove the entire subtitle line \"Caída • The table guide\" immediately underneath the main \"HOW TO PLAY\" heading. Restore the matching dark archive background where those subtitle letters were. Leave that area empty.\nPreserve everything else exactly: image dimensions 1672x941, main HOW TO PLAY heading in its current position and size, all other text and typography, page layout, article frame, search field, chapter navigation, Back to Hall, illustrated cards, all materials, background room and lighting. Do not move or resize the heading or article to fill the removed line. Do not add replacement text or new ornament. No redesign."
+    },
+    {
+      "file": "how-to-play-page-detailed-approved.png",
+      "references": ["how-to-play-page-detailed-v2.png"],
+      "prompt": "Use case: text-localization\nAsset type: final approved Fall How to Play detailed desktop mockup.\nEdit the reference image with ONE precise change only: remove the entire subtitle line \"Caída • The table guide\" immediately underneath the main \"HOW TO PLAY\" heading. Restore the matching dark archive background where those subtitle letters were. Leave that area empty.\nPreserve everything else exactly: image dimensions 1672x941, main HOW TO PLAY heading in its current position and size, all other text and typography, page layout, article frame, search field, chapter navigation, Back to Hall, illustrated cards, all materials, background room and lighting. Do not move or resize the heading or article to fill the removed line. Do not add replacement text or new ornament. No redesign."
+    }
+  ]
+}
