@@ -53,3 +53,7 @@ the component's own name.
 Use GSAP for DOM motion and honor both the stored and device reduced-motion
 preference. Clean up animation contexts and listeners. Decorative artwork stays
 outside the accessibility tree and never intercepts input.
+
+`surfaces/ArchiveBackground` shares the archive artwork and responsive source
+selection between How to Play and the Sings reference. Both screens reuse
+`navigation/HallReturnAction` to return keyboard focus to Help in Card Hall.
