@@ -1,0 +1,47 @@
+{
+  "art_direction": "../art-direction.md#shared-generation-prompt",
+  "outputs": [
+    {
+      "file": "background.png",
+      "method": "reconstructed",
+      "references": ["../home-lobby/background.png"],
+      "prompt": "Paint an empty medieval card sorting table in the Fall world. Use the approved sorting-table master as the edit input. Preserve its camera, table geometry, subdued contrast, cool daylight and warm aged wood. Keep the center quiet for a gallery of cards. No cards, words, labels or UI baked into the painting."
+    },
+    {
+      "file": "mockup-simplified.png",
+      "method": "reconstructed",
+      "references": ["background.png"],
+      "prompt": "Use the approved Sings reference mockup as the composition reference. Design a standalone Fall reference with a clear heading, compact filters, an open grid of Spanish-card combinations and a Back to Hall action. Keep Cinzel headings, readable Spline Sans labels and restrained brass accents. Use the current Sings catalog for names, points and examples."
+    },
+    {
+      "file": "mockup-detailed.png",
+      "method": "reconstructed",
+      "references": ["mockup-simplified.png", "background.png"],
+      "prompt": "Keep the Sings page hierarchy and catalog intact. Follow the approved detailed mockup for the richer material treatment: engraved brass, textured dark surfaces and parchment. Leave card ranks, suits and scores easy to read."
+    },
+    {
+      "file": "../../../src/assets/sings-reference/phone-landscape.webp",
+      "method": "reconstructed",
+      "references": ["background.png"],
+      "prompt": "Recompose the approved sorting table for phone landscape. Preserve its angle, wood, lighting and quiet central card area. Keep artwork free of text and UI; reframe the same table without stretching the scene."
+    },
+    {
+      "file": "../../../src/assets/sings-reference/phone-portrait.webp",
+      "method": "reconstructed",
+      "references": ["background.png"],
+      "prompt": "Recompose the approved sorting table for phone portrait. Preserve its angle, wood, lighting and quiet central card area. Keep artwork free of text and UI; reframe the same table without stretching the scene."
+    },
+    {
+      "file": "../../../src/assets/sings-reference/tablet-landscape.webp",
+      "method": "reconstructed",
+      "references": ["background.png"],
+      "prompt": "Recompose the approved sorting table for tablet landscape. Preserve its angle, wood, lighting and quiet central card area. Keep artwork free of text and UI; reframe the same table without stretching the scene."
+    },
+    {
+      "file": "../../../src/assets/sings-reference/tablet-portrait.webp",
+      "method": "reconstructed",
+      "references": ["background.png"],
+      "prompt": "Recompose the approved sorting table for tablet portrait. Preserve its angle, wood, lighting and quiet central card area. Keep artwork free of text and UI; reframe the same table without stretching the scene."
+    }
+  ]
+}

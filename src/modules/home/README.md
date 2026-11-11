@@ -1,10 +1,8 @@
 # Home: Card Hall
 
-The Home/lobby now implements the revised Card Hall master in
-`docs/design/main-menu-research/image-concepts/card-hall.png`. It replaces the
-multi-building Living Town scene. Existing source art and manual design deletions
-are preserved; the running menu uses a clean background and real UI controls,
-not the flattened screenshot.
+The lobby implements the [Card Hall design](../../../docs/design/home-lobby/README.md)
+using live controls and responsive artwork. [Settings](../../../docs/design/settings/README.md)
+uses the same backdrop.
 
 ## Ownership
 
@@ -16,8 +14,7 @@ not the flattened screenshot.
 - `src/components`: reusable themed components and component styles.
 - `src/components/ui`: upstream shadcn primitives; no edits for this implementation.
 
-See `src/components/README.md` for the styled/core component boundary and
-`docs/design/home-lobby/card-hall.md` for design mapping and responsive behaviour.
+See `src/components/README.md` for the styled/core component boundary.
 
 ## Behaviour
 

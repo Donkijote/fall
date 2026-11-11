@@ -1,0 +1,17 @@
+{
+  "art_direction": "../art-direction.md#shared-generation-prompt",
+  "outputs": [
+    {
+      "file": "mockup-simplified.png",
+      "method": "reconstructed",
+      "references": ["../home-lobby/background.png", "../home-lobby/mockup-simplified.png"],
+      "prompt": "Compose a desktop Settings dialog over the existing Fall Card Hall at 1600 × 900. Keep the Hall, activity cards and HUD in place under a dim scrim. Use the approved simplified mockup as the layout reference when editing. Center a compact charcoal panel with a fine brass edge, Cinzel title and Spline Sans controls. Align General, Audio and Accessibility controls in quiet rows; make the active appearance and motion options clear. Keep Close, Done and a subdued Credits link easy to find. Use the app’s existing type, color and radius tokens."
+    },
+    {
+      "file": "mockup-detailed.png",
+      "method": "reconstructed",
+      "references": ["mockup-simplified.png", "../home-lobby/mockup-detailed.png"],
+      "prompt": "Keep the same Card Hall backdrop, centered dialog, copy, controls and section order. Render a more ornate material study with engraved brass trim, subtly textured charcoal, recessed controls and a framed oxblood Done action. Keep labels and selected states crisp."
+    }
+  ]
+}

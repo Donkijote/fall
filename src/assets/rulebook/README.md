@@ -1,11 +1,9 @@
 # Rulebook archive artwork
 
-The approved clean landscape master lives at
-`docs/design/how-to-play/archive-background-v1.png`. The phone and tablet masters
-are `archive-background-phone.png` and `archive-background-tablet.png` alongside
-it. Built-in ImageGen recomposed those two views from the approved room; exact
-prompts are in `prompts-responsive.json`. These paintings contain no controls,
-labels or instructional card art.
+The approved [clean landscape master](../../../docs/design/how-to-play/background.png)
+is the source for the default export. The [prompt manifest](../../../docs/design/how-to-play/prompts.json)
+records the phone and tablet recompositions of the same room. These paintings
+contain no controls, labels or instructional card art.
 
 | Runtime file             | Source dimensions | Export                             |
 | ------------------------ | ----------------- | ---------------------------------- |

@@ -63,7 +63,8 @@ and reading position. Direct guide/reference visits always have a Hall fallback.
 The in-match Sings modal and gameplay state are unchanged.
 
 Runtime paintings and provenance are documented in `src/assets/rulebook/README.md`.
-Design masters remain under `docs/design/how-to-play` and are not runtime imports.
+See the [approved designs](../../../docs/design/how-to-play/README.md) and
+[content audit](content-plan.md) for the visual and teaching references.
 
 ## Verification
 
