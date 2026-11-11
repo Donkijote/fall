@@ -1,0 +1,23 @@
+{
+  "art_direction": "../art-direction.md#shared-generation-prompt",
+  "outputs": [
+    {
+      "file": "mockup-simplified.png",
+      "method": "recorded",
+      "references": ["../home-lobby/mockup-simplified.png"],
+      "prompt": "Edit image 1, the existing FALL login mockup. Image 2 is the corresponding main menu style reference, not the layout to copy. Produce one polished 16:9 desktop login reference from the exact same medieval card game. Match the menu’s handcrafted painterly slate stone hall, cool natural light from tall left windows, warm oak table, parchment serif and the proportions, edge highlights and shadows of its card frames. Give it a strong focal point and tactile, game-quality material definition. Preserve email/password and provider affordances. Precisely typeset “FALL”, “Welcome to the table”, “Email address”, “Password”, “Forgot password?”, “Take your seat”, “Or continue with”, “New to the table?”, “Create account”. Four discreet recognizable provider icons, Google Apple Microsoft Facebook. No game HUD, navigation, style switch, extra text, candles, bloom, particles or watermarks. Match the simplified reference. Put the FALL wordmark centered above a single centered login card. Make the upper quarter of that card a genuinely beautiful painted vignette of a worn deck of cards and a folded rust-red cloth on the oak tabletop in blue window light, rich painterly color blocks like the three menu illustrations. The remaining three quarters are a clean charcoal form with a fine rounded bronze border, crisp cream sans labels and a compact red primary button, no filigree. Make it feel like a fourth card in the menu family. Show recognizable windows and oak across the frame. All controls fully visible."
+    },
+    {
+      "file": "mockup-detailed.png",
+      "method": "recorded",
+      "references": ["../home-lobby/mockup-detailed.png"],
+      "prompt": "Edit image 1, the existing FALL login mockup. Image 2 is the corresponding main menu style reference, not the layout to copy. Produce one polished 16:9 desktop login reference from the exact same medieval card game. Match the menu’s handcrafted painterly slate stone hall, cool natural light from tall left windows, warm oak table, parchment serif and the proportions, edge highlights and shadows of its card frames. Give it a strong focal point and tactile, game-quality material definition. Preserve email/password and provider affordances. Precisely typeset “FALL”, “Welcome to the table”, “Email address”, “Password”, “Forgot password?”, “Take your seat”, “Or continue with”, “New to the table?”, “Create account”. Four discreet recognizable provider icons, Google Apple Microsoft Facebook. No game HUD, navigation, style switch, extra text, candles, bloom, particles or watermarks. Match the ornate reference precisely. Keep left brand and right form layout, but give the left side a beautiful collectible portrait card showing the recognizable dark-haired traveller in a muted burgundy cloak placing a deck on the oak table, under a large FALL wordmark with engraved leaf divider. Ground the scene with natural textures and cool daylight. The right form is framed as the ornate menu cards, bevelled aged brass with engraved corner suit marks and a small crimson heraldic tab, ink-black inset field wells, bone-colored labels and a warm red bevelled primary action. Keep the form readable and comfortably spaced, with no ornament crossing text. Keep all controls fully visible."
+    },
+    {
+      "file": "../../../src/assets/login/mountain-castle.png",
+      "method": "supplied",
+      "references": [],
+      "notes": "Original supplied at 512 × 512. See src/modules/login/README.md for its source and foreground mask."
+    }
+  ]
+}

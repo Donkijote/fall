@@ -37,7 +37,7 @@ use CSS keyframes, CSS transitions, or Tailwind animation utilities. Disable
 inherited transitions and keep focus cues visible with reduced motion. Scope timelines to the feature and clean them up on unmount.
 
 See [AGENTS.md](AGENTS.md) for the implementation rules and the
-[login screen](docs/login-screen.md#interface-motion) for a working example.
+[login screen](src/modules/login/README.md#interface-motion) for a working example.
 
 ### Module architecture
 
@@ -162,7 +162,8 @@ Other radius tokens remain available for distinct roles. Shared styled component
 own brass frames and action presentation. Feature code supplies layout.
 Native focus, dismissal, refs, keyboard, and touch behavior come from the primitives.
 See [the design-system and migration guide](docs/shadcn-migration.md) for conventions and the component inventory.
-[Fall art direction](docs/design/art-direction.md) covers the visual language, artwork, and image prompts.
+[Fall art direction](docs/design/art-direction.md) covers the visual language.
+The [design library](docs/design/README.md) indexes approved mockups, background masters, and reusable prompts, and explains how to organize new design work.
 
 ## 📖 Overview
 

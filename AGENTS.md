@@ -46,6 +46,19 @@
 - The user already runs the app on port 3000. Reuse it; do not start another server.
 - Preserve manual edits and deletions. Do not commit or push without a request.
 
+# Design documentation
+
+- Follow [the design folder standard](docs/design/README.md) for investigations,
+  approvals and artwork revisions. Use one flat folder per feature under
+  `docs/design` with a README, one prompt manifest, the approved simplified
+  and detailed mockups where available, and one clean default background master.
+- Link to the owning feature when sharing a backdrop. Keep responsive exports
+  in `src/assets`, and keep draft concepts and superseded images or prompt
+  versions out of the approved reference tree.
+- Preserve reusable generation and final edit instructions with relative paths.
+  Label reconstructed prompts and supplied artwork. Update references and
+  runtime exports when an approved design changes.
+
 # Module architecture
 
 - Organize features as modules under `src/modules/<feature>` and follow hexagonal

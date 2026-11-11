@@ -19,11 +19,11 @@
   read-only Spanish-deck example, its pattern, points, and declaration status.
   Resetting the filters returns focus to search.
 
-The approved [simplified PNG](../../../docs/design/sings-reference/sings-reference-simplified.png)
-is the implementation reference. The [detailed PNG](../../../docs/design/sings-reference/sings-reference-detailed.png)
-records the more ornamental design. Clean PNG masters are in the same design
-folder. The page loads one WebP from `src/assets/sings-reference` based on viewport
-shape, with separate desktop, tablet, and phone compositions.
+The approved [simplified PNG](../../../docs/design/sings-reference/mockup-simplified.png)
+is the implementation reference. The [detailed PNG](../../../docs/design/sings-reference/mockup-detailed.png)
+records the more ornamental design. The [default sorting-table master](../../../docs/design/sings-reference/background.png)
+is the source reference. The page selects one of five [runtime WebPs](../../assets/sings-reference/README.md)
+based on viewport shape and height.
 
 The in-match Sings modal still uses its existing list and adapter. Scoring and
 eligibility stay in the domain; related discrepancies are tracked in #109.
