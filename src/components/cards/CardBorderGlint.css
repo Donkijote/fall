@@ -1,4 +1,4 @@
-.game-activity-glint {
+.card-border-glint {
   padding: 2px;
   background: conic-gradient(
     from var(--glint-angle, 0deg),
@@ -15,7 +15,7 @@
   mask-composite: exclude;
 }
 
-.game-activity-card[data-active="true"] .game-activity-glint {
+.card-border-glint[data-active="true"] {
   padding: 3px;
   background: conic-gradient(
     from var(--glint-angle, 0deg),

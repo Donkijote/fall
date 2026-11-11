@@ -8,7 +8,7 @@ import { useReducedMotion } from "@/infrastructure/ui/hooks/useGamePreferences";
 import { useGSAP } from "@gsap/react";
 
 import { frameClassName } from "../surfaces/surfaceStyles";
-import "./ActivityCard.css";
+import { CardBorderGlint } from "./CardBorderGlint";
 
 gsap.registerPlugin(useGSAP);
 
@@ -72,7 +72,7 @@ export function ActivityCard({
           const motionLayer = card.querySelector(".game-activity-motion");
           const effects = card.querySelector(".game-activity-effects");
           const rim = card.querySelector(".game-activity-rim");
-          const glint = card.querySelector(".game-activity-glint");
+          const glint = card.querySelector("[data-card-border-glint]");
           const image = card.querySelector("img");
           const shimmer = card.querySelector(".game-activity-shimmer");
           const particles = card.querySelectorAll(".game-activity-spark");
@@ -278,7 +278,7 @@ export function ActivityCard({
       type="button"
       disabled={disabled}
       className={cn(
-        "game-activity-card group relative isolate grid aspect-2/3 w-full cursor-pointer rounded-md bg-transparent p-0 text-center focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-gold disabled:cursor-default disabled:opacity-65",
+        "game-activity-card group relative isolate grid aspect-2/3 w-full cursor-pointer rounded-md bg-transparent p-0 text-center select-none [-webkit-touch-callout:none] focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-gold disabled:cursor-default disabled:opacity-65",
         className,
       )}
       aria-describedby={
@@ -325,7 +325,7 @@ export function ActivityCard({
             {failedImage !== imageUrl && (
               <img
                 className={cn(
-                  "block size-full scale-[1.035] object-cover",
+                  "pointer-events-none block size-full scale-[1.035] object-cover",
                   unavailable && "brightness-75 grayscale",
                 )}
                 src={imageUrl}
@@ -364,10 +364,7 @@ export function ActivityCard({
               {title}
             </span>
           </span>
-          <span
-            className="game-activity-glint pointer-events-none absolute -inset-px rounded-[inherit] opacity-0"
-            aria-hidden="true"
-          />
+          <CardBorderGlint active={active} />
         </span>
       </span>
       {description && (

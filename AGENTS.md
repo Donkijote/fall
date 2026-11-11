@@ -43,6 +43,10 @@
   tests. Feature integration tests may exercise their composed dependencies.
 - Runtime artwork belongs under `src/assets`. Files in `docs/design` are reference
   masters only; export optimised runtime assets rather than importing from docs.
+- Generate each illustration used at runtime as a standalone image at the
+  intended aspect ratio and resolution. Use simplified and detailed mockups
+  as visual references. Do not crop embedded illustrations out of full mockups
+  for production assets.
 - The user already runs the app on port 3000. Reuse it; do not start another server.
 - Preserve manual edits and deletions. Do not commit or push without a request.
 
@@ -52,6 +56,9 @@
   approvals and artwork revisions. Use one flat folder per feature under
   `docs/design` with a README, one prompt manifest, the approved simplified
   and detailed mockups where available, and one clean default background master.
+- Record feature reviews and decisions in its README under `docs/design`.
+  Keep temporary review material in the working chat or outside the repo,
+  remove it when finished, and avoid parallel design-review folders.
 - Link to the owning feature when sharing a backdrop. Keep responsive exports
   in `src/assets`, and keep draft concepts and superseded images or prompt
   versions out of the approved reference tree.

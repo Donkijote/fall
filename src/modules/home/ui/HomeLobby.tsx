@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router";
 import { StorageKeys, StorageService } from "@/application/services/StorageService";
 import type { User } from "@/domain/entities/User";
 import { WelcomeModal } from "@/infrastructure/ui/components/modal/WelcomeModal";
-import { BottomSidebar } from "@/infrastructure/ui/components/navbar/BottomSidebar";
+import { TavernPicker } from "@/modules/tavern";
 
 import { CardHall } from "./CardHall";
 import { HomeSettings } from "./HomeSettings";
@@ -16,6 +16,7 @@ const previewResources = { energy: { value: 78, maximum: 120 }, coins: 1240, dia
 export function HomeLobby() {
   const [searchParams] = useSearchParams();
   const [player, setPlayer] = useState(() => StorageService.get<User>(StorageKeys.FALL_USER));
+  const [tavernOrigin, setTavernOrigin] = useState<HTMLButtonElement | null>(null);
   const [panel, setPanel] = useState<"play" | "settings" | null>(() =>
     searchParams.get("bottomSidebar") ? "play" : null,
   );
@@ -31,9 +32,17 @@ export function HomeLobby() {
         resources={hudPreview ? previewResources : undefined}
         onSettings={() => setPanel("settings")}
         canPlay={Boolean(player)}
-        onPlay={() => setPanel("play")}
+        onPlay={(trigger) => {
+          setTavernOrigin(trigger);
+          setPanel("play");
+        }}
       />
-      <BottomSidebar isOpen={Boolean(player) && panel === "play"} onClose={() => setPanel(null)} />
+      <TavernPicker
+        open={panel === "play"}
+        canPlay={Boolean(player?.id)}
+        origin={tavernOrigin}
+        onClose={() => setPanel(null)}
+      />
       <HomeSettings
         open={Boolean(player) && panel === "settings"}
         onOpenChange={(open) => setPanel(open ? "settings" : null)}

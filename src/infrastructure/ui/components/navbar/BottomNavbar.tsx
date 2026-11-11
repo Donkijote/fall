@@ -3,9 +3,11 @@ import type { ReactNode } from "react";
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 
+import { StorageKeys, StorageService } from "@/application/services/StorageService";
 import { Button } from "@/components/ui/button";
-import { BottomSidebar } from "@/infrastructure/ui/components/navbar/BottomSidebar";
+import type { User } from "@/domain/entities/User";
 import { ThemeToggle } from "@/infrastructure/ui/components/theme/ThemeToggle";
+import { TavernPicker } from "@/modules/tavern";
 import { RULES_PATH, SINGS_SHEETS } from "@/routes/Routes";
 
 export const BottomNavbar = () => {
@@ -16,8 +18,9 @@ export const BottomNavbar = () => {
 
   return (
     <>
-      <BottomSidebar
-        isOpen={isOpen}
+      <TavernPicker
+        open={isOpen}
+        canPlay={Boolean(StorageService.get<User>(StorageKeys.FALL_USER)?.id)}
         onClose={() => {
           setIsOpen(false);
           setActive("");

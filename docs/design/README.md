@@ -7,6 +7,7 @@ running app to check current controls and behavior.
 | Feature     | Approved references                          |
 | ----------- | -------------------------------------------- |
 | Home lobby  | [Card Hall](home-lobby/README.md)            |
+| Tavern      | [Tavern format picker](tavern/README.md)     |
 | Login       | [Login](login/README.md)                     |
 | Settings    | [Card Hall Settings](settings/README.md)     |
 | How to Play | [Rulebook](how-to-play/README.md)            |
@@ -26,6 +27,10 @@ Use a flat, lowercase kebab-case feature folder named for the screen or feature.
   When a feature shares a scene or uses a supplied original already in
   `src/assets`, link to that canonical image instead of duplicating it. Put
   optimized default exports and all viewport variants in `src/assets`.
+- Generate each illustration destined for `src/assets` as a standalone image
+  at the target aspect ratio and resolution. Use full mockups as visual
+  references. Never crop artwork out of a simplified or detailed mockup for
+  production. Record the standalone generation and export in the manifest.
 - **`prompts.json`** is the single prompt manifest. Its `art_direction` field
   links to the shared generation prompt. Prepend that prompt to the feature
   brief and name the treatment you want. Each entry in `outputs` names its
@@ -41,8 +46,10 @@ Use a flat, lowercase kebab-case feature folder named for the screen or feature.
 
 ## Iterating on a design
 
-Keep candidates and reference research in the working chat or outside this tree
-during review. Once approved, replace the affected master and update its prompt,
+Record feature reviews and design decisions in the owning feature's README.
+Keep temporary review material in the working chat or outside the repository
+and remove temporary files when the review is done. Use the existing feature
+folder for all lasting design documentation. Once approved, replace the affected master and update its prompt,
 README, and runtime exports together. Remove superseded files and prompts, and
 verify that documentation paths and runtime imports still resolve. Git history
 keeps earlier versions available. Use module docs for implementation details,
