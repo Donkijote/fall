@@ -1,15 +1,15 @@
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router";
 
-import { ActionButton } from "@/components";
-import { HOME_PATH, SINGS_SHEETS } from "@/routes/Routes";
+import { SINGS_SHEETS } from "@/routes/Routes";
 
 import { useRulebookRoute } from "../adapters/useRulebookRoute";
 import { ArchiveBackground } from "./components/layout/ArchiveBackground";
 import { RulebookArticle } from "./components/layout/RulebookArticle";
 import { RulebookHeader } from "./components/layout/RulebookHeader";
 import { ChapterNavigation } from "./components/navigation/ChapterNavigation";
+import { HallReturnAction } from "./components/navigation/HallReturnAction";
 import { linkClass } from "./components/navigation/rulebookStyles";
 
 export function RulebookScreen() {
@@ -22,16 +22,7 @@ export function RulebookScreen() {
       <ExternalLink aria-hidden="true" className="size-4" />
     </Link>
   );
-  const backLink = (
-    <ActionButton
-      tone="outline"
-      className="dark:bg-background"
-      render={<Link to={HOME_PATH} state={{ focusHelp: true }} />}
-    >
-      <ArrowLeft aria-hidden="true" className="size-4" />
-      Back to Hall
-    </ActionButton>
-  );
+  const backLink = <HallReturnAction overArtwork />;
   return (
     <main
       ref={route.mainRef}

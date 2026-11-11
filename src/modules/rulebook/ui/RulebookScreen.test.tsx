@@ -116,3 +116,41 @@ test("Sings round trip restores the chapter and reading position, with Hall fall
   await user.click(screen.getAllByRole("link", { name: "Back to Hall" })[0]);
   expect(screen.getByRole("heading", { name: "Card Hall" })).toBeVisible();
 });
+
+test("capture illustrations sit within the rules they explain", () => {
+  renderGuide("/rules?chapter=captures");
+  for (const [name, caption] of [
+    ["Same-rank capture", /7 of clubs and 11 of swords stay/],
+    ["Cascade", /there is no 6/i],
+    ["Fall", /earn 3 points/],
+    ["Clean Table", /clearing the table earns 4 points/],
+  ] as const) {
+    expect(
+      within(screen.getByRole("region", { name })).getByRole("figure", {
+        name: caption,
+      }),
+    ).toBeVisible();
+  }
+});
+
+test("the Sings chapter renders example hands as readable, non-interactive cards", () => {
+  renderGuide("/rules?chapter=sings");
+  const hand = within(screen.getByRole("list", { name: "Big House example hand" }));
+  expect(hand.getByRole("img", { name: "12 of coins" })).toBeVisible();
+  expect(hand.getByRole("img", { name: "1 of swords" })).toBeVisible();
+  expect(hand.queryByRole("button")).not.toBeInTheDocument();
+});
+
+test("scoring examples explain the quota and winning threshold alongside their rules", () => {
+  renderGuide("/rules?chapter=scoring");
+  expect(
+    within(screen.getByRole("region", { name: "Count your captured cards" })).getByRole("figure", {
+      name: /23 captured cards.*earns 3 points/,
+    }),
+  ).toBeVisible();
+  expect(
+    within(screen.getByRole("region", { name: "Win the match" })).getByRole("figure", {
+      name: /21 points.*bring you to 24/,
+    }),
+  ).toBeVisible();
+});

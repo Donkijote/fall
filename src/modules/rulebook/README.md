@@ -13,6 +13,9 @@ the authoritative first-release rules. Gameplay corrections stay in issue #109.
   seven chapters, local search entries, introductory steps and the card example.
   It imports no React, router, browser or infrastructure APIs. Existing rule
   items are retained by reference, so editorial improvements are made in the source rather than copied into a competing catalog.
+- `application/rulebookExamples.ts`: capture and scoring fixtures and the
+  projection of existing Sings example hands. Tests check the illustrated
+  outcomes against domain behavior.
 - `adapters/rulebookRoutes.ts`: encodes chapter/rule URLs.
 - `adapters/useRulebookRoute.ts`: React Router/browser integration, heading focus,
   history entry positions and the Sings return context. Browser state stays out

@@ -2,10 +2,11 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Link } from "react-router";
 
 import { ActionButton } from "@/components";
-import { HOME_PATH } from "@/routes/Routes";
 
 import { chapterUrl } from "../../../adapters/rulebookRoutes";
 import { chapters } from "../../../application/rulebookContent";
+import { HallReturnAction } from "./HallReturnAction";
+
 export function ChapterFooter({ chapterIndex }: { chapterIndex: number }) {
   return (
     <footer className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
@@ -29,14 +30,7 @@ export function ChapterFooter({ chapterIndex }: { chapterIndex: number }) {
             <ArrowRight aria-hidden="true" className="size-4" />
           </ActionButton>
         ) : (
-          <ActionButton
-            className="max-w-full text-left whitespace-normal"
-            tone="primary"
-            render={<Link to={HOME_PATH} state={{ focusHelp: true }} />}
-          >
-            Back to Hall
-            <ArrowRight aria-hidden="true" className="size-4" />
-          </ActionButton>
+          <HallReturnAction />
         )}
       </div>
     </footer>

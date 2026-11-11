@@ -176,7 +176,7 @@ identity. Their [exact built-in ImageGen prompts](prompts-responsive.json) and
 provenance, dimensions and WebP exports. The runtime picture selects phone,
 tablet or landscape by aspect ratio. No design PNG is imported into app code.
 
-The desktop rail has a dark backing that fades above and below the contents, a lighter hover cue, and a separate outlined Back to Hall action. The card examples use parchment shading, static grain, and engraved-style dividers. Step markers and scoring badges are round, and the quick-start scoring note uses lighter italic text. The desktop rail becomes a native Chapters disclosure on compact widths. The
+The desktop rail has a dark backing that fades above and below the contents, a lighter hover cue, and a separate ghost-style Back to Hall action. The card examples use parchment shading, static grain, and engraved-style dividers. Step markers and scoring badges are round, and the quick-start scoring note uses lighter italic text. The desktop rail becomes a native Chapters disclosure on compact widths. The
 page has one scroll region; the read-only card diagram reflows into labeled
 groups. Touch targets, heading focus, search status/empty state, safe-area
 padding and reduced motion are preserved. Semantic light/dark surfaces keep
@@ -192,6 +192,16 @@ reset. The desktop image above is a browser capture, unlike the design studies.
 
 Automated verification: application source retention/search tests, composed
 screen tests for chapter URLs, deep links, search, mobile navigation, Sings
-return and saved positions, plus Hall focus restoration. Final verification passed: `pnpm check`, 301 tests across 60 files,
+return and saved positions, plus Hall focus restoration. Final verification passed: `pnpm check`, 310 tests across 61 files,
 `pnpm run build`, and `git diff --check`. Results are also recorded in the PR. Existing
 Three.js deprecation and bundle-size warnings are unrelated to this module.
+
+The [Captures preview](implementation-captures.png) shows the same-rank example
+immediately below its explanation. Cascade, Fall and Clean Table each have a
+separate figure under their own rule. The cascade figure teaches which ranks
+form the chain; it leaves pile accounting to #109. The Sings chapter reuses the
+existing reference’s example hands. The scoring chapter pairs its quota table
+with a worked duel example: 23 captured cards minus a quota of 20 earns 3 points,
+which takes a score of 21 to the winning 24. Figures retain the parchment grain
+and title decoration with a single outer edge. The final browser check found no
+horizontal overflow in Captures, Sings or Scoring at 320px.

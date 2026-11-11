@@ -47,7 +47,7 @@ export function ChapterNavigation({
         <div className="relative isolate space-y-4">
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute -inset-x-4 -inset-y-9 -z-10 bg-artwork-shadow/85 [mask-image:linear-gradient(to_bottom,transparent,black_12%,black_88%,transparent)]"
+            className="pointer-events-none absolute -inset-x-4 -inset-y-14 -z-10 bg-artwork-shadow/85 [mask-image:linear-gradient(to_bottom,transparent,black_12%,black_88%,transparent)]"
           />
           <h2 className="px-3 font-heading text-xl font-bold uppercase">Contents</h2>
           {links}
