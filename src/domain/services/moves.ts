@@ -83,32 +83,18 @@ export const updateTableAndHandCards = (
     return next;
   }
 
-  // Remove matched + cascade targets from table (by rank occurrences in order)
-  const tableAfter = [...next.table];
+  // The play service stages the played card on the table for animation.
+  const playedIdx = next.table.findIndex((c) => c.rank === card.rank && c.suit === card.suit);
+  if (playedIdx !== -1) next.table.splice(playedIdx, 1);
 
-  const playedIdx = tableAfter.findIndex((c) => c.rank === card.rank && c.suit === card.suit);
-  if (playedIdx !== -1) tableAfter.splice(playedIdx, 1);
-
-  for (const t of plan.targets) {
-    const idx = tableAfter.findIndex((c) => c.rank === t.rank);
-    if (idx !== -1) tableAfter.splice(idx, 1);
+  for (const target of plan.targets) {
+    const idx = next.table.findIndex((c) => c.rank === target.rank && c.suit === target.suit);
+    if (idx !== -1) {
+      const [captured] = next.table.splice(idx, 1);
+      me.collected.push(captured);
+    }
   }
-  next.table = tableAfter;
-
-  const captured: Card[] = [];
-  const baseTarget = plan.targets[0];
-
-  if (baseTarget) {
-    const baseCard = { suit: baseTarget.suit, rank: baseTarget.rank } as Card;
-    captured.push(baseCard, card);
-  }
-
-  for (const t of plan.targets) {
-    const idx = tableAfter.findIndex((c) => c.rank === t.rank && c.suit === t.suit);
-    if (idx !== -1) tableAfter.splice(idx, 1);
-  }
-
-  me.collected.push(...captured);
+  me.collected.push(card);
   if (isLastRound) next.lastCaptureBy = playerId;
 
   return next;

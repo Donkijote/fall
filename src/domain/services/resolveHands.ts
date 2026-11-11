@@ -1,7 +1,7 @@
 import type { Card } from "@/domain/entities/Card";
 
 import type { GameState } from "../entities/GameState";
-import { HANDS } from "../rules/hands";
+import { HANDS, type Hand } from "../rules/hands";
 import { awardPoints, checkGameOver } from "./scoring";
 
 type Match = {
@@ -11,14 +11,19 @@ type Match = {
   strength: number;
 };
 
-/**
- * Determine the best hand for a given 3-card.
- */
-function bestHand(hand: Card[]) {
-  const matches = HANDS.filter((c) => c.pattern(hand));
-  if (matches.length === 0) return null;
+function bestHand(hand: Card[], allowOptional: boolean) {
+  let chosen: Hand | undefined;
+  for (const combination of HANDS) {
+    if (
+      (combination.mandatory || allowOptional) &&
+      combination.points > (chosen?.points ?? 0) &&
+      combination.pattern(hand)
+    ) {
+      chosen = combination;
+    }
+  }
+  if (!chosen) return null;
 
-  const chosen = matches[0];
   return {
     name: chosen.name,
     points: chosen.points,
@@ -42,7 +47,7 @@ export function resolveHands(state: GameState): GameState {
   // Gather each player's best hand (if any)
   const matches: Match[] = [];
   for (const p of state.players) {
-    const best = bestHand(p.hand);
+    const best = bestHand(p.hand, state.config.allowOptional);
     if (best) {
       matches.push({
         playerId: p.id,

@@ -1,5 +1,7 @@
 import { mockedStateWithPlayers } from "@/application/store/gameStore";
+import type { CardKey } from "@/domain/entities/Card";
 import type { GameState } from "@/domain/entities/GameState";
+import { toCardKey } from "@/domain/helpers/card";
 import { createDeck } from "@/domain/rules/deck";
 
 import {
@@ -127,19 +129,47 @@ describe("Moves", () => {
     expect(newState.scores.values[mockedStateWithPlayers.players[0].id]).toBe(4);
   });
 
-  it("should capture in cascade", () => {
-    const state: GameState = {
-      ...mockedStateWithPlayers,
-      deck,
-      currentPlayer: mockedStateWithPlayers.players[0].id,
-      table: [deck[0], deck[1], deck[7]],
-      lastPlayedCard: deck[7],
-    };
-    state.players[0].hand = [deck[0], deck[7], deck[4]];
-    const newState = runPlay(state, mockedStateWithPlayers.players[0].id, deck[0]);
-    expect(newState.table).toHaveLength(1);
-    expect(newState.players[0].collected.length).toBeGreaterThanOrEqual(2);
-  });
+  it.each<{
+    played: CardKey;
+    targets: CardKey[];
+    leftovers: CardKey[];
+  }>([
+    { played: "cups-4", targets: ["coins-4"], leftovers: ["swords-6"] },
+    { played: "cups-4", targets: ["coins-4", "clubs-5", "swords-6"], leftovers: [] },
+    {
+      played: "cups-7",
+      targets: ["coins-7", "clubs-10"],
+      leftovers: ["swords-7", "cups-10", "clubs-12"],
+    },
+  ])(
+    "collects every planned target once when playing $played onto $targets",
+    ({ played, targets, leftovers }) => {
+      const cardFor = (key: CardKey) => deck.find((card) => toCardKey(card) === key)!;
+      const card = cardFor(played);
+      const table = [...targets, ...leftovers].map(cardFor);
+      const player = { ...mockedStateWithPlayers.players[0], hand: [card], collected: [] };
+      const state: GameState = {
+        ...mockedStateWithPlayers,
+        currentPlayer: player.id,
+        players: [player],
+        table,
+      };
+
+      const { capturePlan } = analyzePlay(state, player.id, card);
+      expect(capturePlan).toMatchObject({
+        kind: targets.length === 1 ? "match" : "cascade",
+        targets: targets.map((key) => ({ key })),
+      });
+
+      const afterPlacement = {
+        ...removeCardsFromHand(state, player.id, card),
+        table: [...table, card],
+      };
+      const next = updateTableAndHandCards(afterPlacement, player.id, card, capturePlan);
+      expect(next.table.map(toCardKey)).toEqual(leftovers);
+      expect(next.players[0].collected.map(toCardKey).sort()).toEqual([played, ...targets].sort());
+    },
+  );
 
   it("should redeal if all players hands are empty", () => {
     const state: GameState = {
@@ -164,8 +194,8 @@ describe("Moves", () => {
       table: [deck[0]],
       lastPlayedCard: deck[1],
     };
-    state.players[0].hand = [deck[0], deck[2], deck[3]];
-    const newState = runPlay(state, mockedStateWithPlayers.players[0].id, deck[0]);
+    state.players[0].hand = [deck[10], deck[2], deck[3]];
+    const newState = runPlay(state, mockedStateWithPlayers.players[0].id, deck[10]);
     expect(newState.table).toHaveLength(0);
     expect(newState.players[0].collected.length).toBe(2);
     expect(newState.scores.values[mockedStateWithPlayers.players[0].id] ?? 0).toBe(0);
