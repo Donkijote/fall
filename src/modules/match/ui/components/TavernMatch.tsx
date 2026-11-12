@@ -9,7 +9,8 @@ import type { GameMode } from "@/domain/entities/GameState";
 
 import { useGSAP } from "@gsap/react";
 
-import { getMatchSeats, previewGuests } from "../../application/matchPreview";
+import { getMatchSeats, getPreviewBoard, previewGuests } from "../../application/matchPreview";
+import { MatchSeatCards, MatchTableCards } from "./MatchBoardCards";
 import { MatchSeatMarker, type SeatPlayer } from "./MatchSeatMarker";
 import { TavernMatchAtmosphere } from "./TavernMatchAtmosphere";
 import { useMatchPreview } from "./useMatchPreview";
@@ -46,7 +47,10 @@ export function TavernMatch({
   const ready = connectedCount === seats.length;
   const [waitingFaded, setWaitingFaded] = useState(false);
   const waitingOverlay = useRef<HTMLDivElement>(null);
+  const scene = useRef<HTMLDivElement>(null);
   const showWaiting = !ready || (!reducedMotion && !waitingFaded);
+  const board = showWaiting ? undefined : getPreviewBoard(mode);
+  const showBoard = Boolean(board);
 
   useGSAP(
     () => {
@@ -62,12 +66,20 @@ export function TavernMatch({
     { scope: waitingOverlay, dependencies: [ready, showWaiting], revertOnUpdate: true },
   );
 
+  useGSAP(
+    () => {
+      if (!showBoard || reducedMotion) return;
+      gsap.from("[data-preview-cards]", { opacity: 0, duration: 0.35, ease: "sine.out" });
+    },
+    { scope: scene, dependencies: [showBoard, reducedMotion], revertOnUpdate: true },
+  );
+
   return (
     <div
       data-tavern-match=""
       className="[container-type:size] absolute inset-0 isolate overflow-hidden bg-background"
     >
-      <div data-tavern-table-scene="" className="absolute inset-0 isolate">
+      <div ref={scene} data-tavern-table-scene="" className="absolute inset-0 isolate">
         <picture
           data-match-artwork=""
           aria-hidden="true"
@@ -77,6 +89,7 @@ export function TavernMatch({
           <img src={landscape} alt="" className="size-full object-fill" />
         </picture>
         <TavernMatchAtmosphere playing={!reducedMotion && !returning} />
+        {board && <MatchTableCards cards={board.table} />}
         <ul
           aria-label="Table seats"
           className="pointer-events-none absolute inset-[var(--safe-area-top)_var(--safe-area-right)_var(--safe-area-bottom)_var(--safe-area-left)]"
@@ -90,8 +103,23 @@ export function TavernMatch({
               }
               reducedMotion={reducedMotion}
               turnPreview={index === 0}
-              dealer={seats.length === 2 ? index === 0 : index === 1 && guestCount > 0}
-            />
+              dealer={board?.dealerIndex === index}
+            >
+              {board && (
+                <MatchSeatCards
+                  {...board.players[index]}
+                  drawPile={board.dealerIndex === index ? board.drawPile : undefined}
+                  local={position === "bottom"}
+                  align={
+                    position === "bottom" || position === "top"
+                      ? "center"
+                      : position === "right" || position === "upper-right"
+                        ? "right"
+                        : "left"
+                  }
+                />
+              )}
+            </MatchSeatMarker>
           ))}
         </ul>
       </div>

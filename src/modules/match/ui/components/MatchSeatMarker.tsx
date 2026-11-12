@@ -1,6 +1,7 @@
 import { cn } from "cn";
 import gsap from "gsap";
 import { useRef } from "react";
+import type { ReactNode } from "react";
 
 import woodenChair from "@/assets/lobby/tavern-match/wooden-chair.svg";
 import { Icon } from "@/components/icons/Icon";
@@ -13,13 +14,12 @@ import type { MatchSeat } from "../../application/matchPreview";
 export type SeatPlayer = { name: string; avatarUrl?: string };
 
 const positions: Record<MatchSeat, string> = {
-  bottom:
-    "left-1/2 top-[88%] -translate-x-1/2 portrait:top-[85%] compact-landscape:top-auto compact-landscape:bottom-2 compact-landscape:translate-y-0",
-  top: "left-1/2 top-[22%] -translate-x-1/2 portrait:top-[23%] compact-landscape:top-4 compact-landscape:translate-y-0",
-  left: "left-[4%] top-1/2 portrait:left-[5%] compact-landscape:left-2",
-  right: "right-[4%] top-1/2 flex-row-reverse portrait:right-[5%] compact-landscape:right-2",
-  "upper-left": "left-[12%] top-[28%] portrait:left-[6%] portrait:top-[29%]",
-  "upper-right": "right-[12%] top-[28%] flex-row-reverse portrait:right-[6%] portrait:top-[29%]",
+  bottom: "left-1/2 top-[87%] -translate-x-1/2",
+  top: "left-1/2 top-[21%] -translate-x-1/2",
+  left: "left-[4%] top-1/2 compact-landscape:left-2",
+  right: "right-[4%] top-1/2 flex-row-reverse compact-landscape:right-2",
+  "upper-left": "left-[8%] top-[35%] portrait:left-[4%]",
+  "upper-right": "right-[8%] top-[35%] flex-row-reverse portrait:right-[4%]",
 };
 
 const plaqueEdge =
@@ -34,12 +34,14 @@ export function MatchSeatMarker({
   reducedMotion,
   turnPreview,
   dealer,
+  children,
 }: {
   position: MatchSeat;
   player?: SeatPlayer;
   reducedMotion: boolean;
   turnPreview: boolean;
   dealer: boolean;
+  children?: ReactNode;
 }) {
   const portrait = useRef<HTMLDivElement>(null);
   useGSAP(
@@ -129,6 +131,7 @@ export function MatchSeatMarker({
           </span>
         )}
       </span>
+      {children}
     </li>
   );
 }

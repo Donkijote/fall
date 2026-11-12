@@ -55,15 +55,20 @@ The first implementation ends at the waiting table. It demonstrates travel
 from the Tavern picker, the selected format and live waiting count, and
 the reverse trip on Cancel, Close table, or Escape. The mode title,
 seat progress, and cancel action sit in the middle of the table until all
-mock guests have arrived. Then the waiting panel clears.
+mock guests have arrived. Then the waiting panel clears and a mock mid-round
+board appears for layout review. The six shared cards occupy the center. Each
+seat has a three-card fan and a collector pile beside its profile. The dealer
+also has the draw deck. Across screen sizes, the top and bottom seats put
+their hands to the right and their piles to the left. The side seats put
+their piles above their profiles and their hands below.
 
 ## Seat badges
 
 Use a round brass medallion for an occupied seat and a chamfered brass frame
 with a chair icon for an open seat. Join each medallion to a dark, clipped-end
 nameplate. A lit rim and small pointer aimed at the portrait identify the active seat. The waiting
-preview shows that cue on the local seat and displays a Dealer badge on an
-occupied seat. The glow and drifting hearth ash follow the light sources in
+preview shows that cue on the local seat. The mock board displays a Dealer
+badge when play begins. The glow and drifting hearth ash follow the light sources in
 each orientation. Three Quarks renders tumbling ash flakes as small angular meshes. The [wooden chair credit](../../../src/assets/lobby/tavern-match/README.md)
 records the supplied empty-seat icon. The upper-right close control follows
 the supplied Teamfight Tactics match-found reference and retains the
