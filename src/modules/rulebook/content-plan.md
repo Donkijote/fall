@@ -10,7 +10,6 @@ The owner confirmed that the existing Rules page and Sings reference are the int
 | `src/modules/rulebook/application` and `ui/components`                                    | Implemented chapter organization, search and focused page components; source content remains in the domain. |
 | `src/infrastructure/ui/screens/SingsSheet.tsx`                                            | Search by name/tag, minimum points, mandatory-only filter, descending points order, empty state.            |
 | `src/infrastructure/adapters/handWithMeta.ts`, `src/domain/rules/hands.ts`, `handMeta.ts` | Reference entries: names, patterns, points, mandatory flags, descriptions, tags and illustrated examples.   |
-| `src/infrastructure/ui/components/modal/SingsModal.tsx`                                   | Existing in-match lookup; preserve match state and dismissal.                                               |
 
 ## Original presentation audit (before implementation)
 

@@ -63,7 +63,7 @@ These conventions are also part of [AGENTS.md](AGENTS.md).
 
 The app is hosted at the domain root on Cloudflare Workers using static assets.
 `wrangler.jsonc` serves `dist` and uses SPA not-found handling so direct requests
-and refreshes on `/login`, `/game`, `/cards`, `/sings`, and `/rules` load the app.
+and refreshes on `/login`, `/game/tavern-7f3a`, `/cards`, `/sings`, and `/rules` load the app.
 There is no `/fall` URL prefix or GitHub Pages deployment workflow.
 
 For local deployment, authenticate with `pnpm exec wrangler login`, then run:

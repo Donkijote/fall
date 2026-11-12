@@ -13,6 +13,7 @@ import { RULES_PATH, SINGS_SHEETS } from "@/routes/Routes";
 export const BottomNavbar = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const player = StorageService.get<User>(StorageKeys.FALL_USER);
   const [active, setActive] = useState("");
   const [isOpen, setIsOpen] = useState(Boolean(searchParams.get("bottomSidebar")));
 
@@ -20,7 +21,7 @@ export const BottomNavbar = () => {
     <>
       <TavernPicker
         open={isOpen}
-        canPlay={Boolean(StorageService.get<User>(StorageKeys.FALL_USER)?.id)}
+        canPlay={Boolean(player?.id)}
         onClose={() => {
           setIsOpen(false);
           setActive("");

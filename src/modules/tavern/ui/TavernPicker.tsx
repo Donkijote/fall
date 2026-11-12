@@ -1,6 +1,6 @@
 import { useState } from "react";
+import { useLocation, useNavigate, useNavigationType } from "react-router";
 
-import tavernArtwork from "@/assets/lobby/card-hall/tavern.webp";
 import duel from "@/assets/lobby/tavern/duel.webp";
 import freeForAll from "@/assets/lobby/tavern/free-for-all.webp";
 import teamMatch from "@/assets/lobby/tavern/team-match.webp";
@@ -12,33 +12,40 @@ import {
   DialogPortal,
   DialogTitle,
 } from "@/components/ui/dialog";
+import type { GameMode } from "@/domain/entities/GameState";
+import { GAME_PATH, PREVIEW_MATCH_ID } from "@/routes/Routes";
 
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
 
 import { TavernFormatCard } from "./components/TavernFormatCard";
 import { TavernRoom } from "./components/TavernRoom";
+import { useMatchTravel } from "./components/useMatchTravel";
 import { useTavernMotion } from "./components/useTavernMotion";
 
 const formats = [
   {
+    mode: "1vs1",
     title: "Duel",
     players: "2 players",
     description: "Face one opponent.",
     artwork: duel,
   },
   {
+    mode: "1vs2",
     title: "Free-for-All",
     players: "3 players",
     description: "Everyone plays solo.",
     artwork: freeForAll,
   },
   {
+    mode: "2vs2",
     title: "Team Match",
     players: "4 players",
     description: "Play two against two.",
     artwork: teamMatch,
   },
-] satisfies {
+] as const satisfies {
+  mode: GameMode;
   title: string;
   players: string;
   description: string;
@@ -55,36 +62,67 @@ type TavernPickerProps = {
 export function TavernPicker({ open, canPlay, origin, onClose }: TavernPickerProps) {
   const [selectedFormat, setSelectedFormat] = useState<string | null>(null);
   const [popup, setPopup] = useState<HTMLDivElement | null>(null);
-  const { dismiss } = useTavernMotion(popup, origin);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const navigationType = useNavigationType();
+  const openedFromUrl = Boolean(new URLSearchParams(location.search).get("bottomSidebar"));
+  const focusMode =
+    navigationType === "REPLACE"
+      ? formats.find(({ mode }) => mode === location.state?.returnFocusMode)?.mode
+      : undefined;
+  const { dismiss } = useTavernMotion(popup, origin, Boolean(focusMode));
+  const { departing, depart } = useMatchTravel(popup);
 
   return (
     <Dialog
       open={open && canPlay}
-      onOpenChange={(nextOpen) => {
-        if (!nextOpen)
-          dismiss(() => {
-            setSelectedFormat(null);
-            onClose();
-          });
+      onOpenChange={(nextOpen, details) => {
+        if (nextOpen) return;
+        if (departing) {
+          details.cancel();
+          return;
+        }
+        dismiss(() => {
+          setSelectedFormat(null);
+          onClose();
+          if (openedFromUrl) {
+            const params = new URLSearchParams(location.search);
+            params.delete("bottomSidebar");
+            navigate({ search: params.toString(), hash: location.hash }, { replace: true });
+          }
+        });
       }}
     >
       <DialogPortal>
         <DialogPrimitive.Popup
           ref={setPopup}
+          initialFocus={
+            focusMode
+              ? () =>
+                  popup?.querySelector<HTMLButtonElement>(`[data-tavern-mode="${focusMode}"]`) ??
+                  undefined
+              : openedFromUrl
+                ? () => popup ?? false
+                : undefined
+          }
           finalFocus={origin ? () => origin : undefined}
-          className="fixed inset-0 z-50 h-dvh overflow-clip outline-none"
+          data-departing={departing}
+          className="fixed inset-0 z-50 h-dvh overflow-clip outline-none data-[departing=true]:bg-artwork-shadow"
         >
           <TavernRoom />
           {origin && (
-            <img
+            <div
               data-tavern-zoom=""
-              src={tavernArtwork}
-              alt=""
               aria-hidden="true"
-              className="pointer-events-none invisible absolute z-10 rounded-md object-cover"
+              inert
+              className="pointer-events-none invisible absolute z-10"
             />
           )}
-          <div className="relative size-full overflow-y-auto overscroll-contain">
+          <div
+            data-tavern-picker-content=""
+            inert={departing}
+            className="relative size-full overflow-y-auto overscroll-contain"
+          >
             <div className="mx-auto flex min-h-full max-w-7xl flex-col px-[calc(1rem+var(--safe-area-left))] pt-[calc(0.75rem+var(--safe-area-top))] pr-[calc(1rem+var(--safe-area-right))] pb-[calc(1rem+var(--safe-area-bottom))] compact-landscape:pt-[calc(0.25rem+var(--safe-area-top))] compact-landscape:pb-[calc(0.5rem+var(--safe-area-bottom))]">
               <header
                 data-tavern-chrome=""
@@ -107,6 +145,13 @@ export function TavernPicker({ open, canPlay, origin, onClose }: TavernPickerPro
                     {...format}
                     selected={selectedFormat === format.title}
                     onTouchFocus={(selected) => setSelectedFormat(selected ? format.title : null)}
+                    onActivate={() =>
+                      depart(() =>
+                        navigate(`${GAME_PATH}/${PREVIEW_MATCH_ID}?mode=${format.mode}`, {
+                          state: { fromTavern: true },
+                        }),
+                      )
+                    }
                   />
                 ))}
               </div>
