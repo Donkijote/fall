@@ -38,7 +38,7 @@ function CardStack({
   return (
     <div
       role="img"
-      aria-label={`${draw ? "Draw deck" : "Collected"}: ${count} cards`}
+      aria-label={draw ? "Draw deck" : "Collected pile"}
       data-draw-pile={draw ? player : undefined}
       data-collector={draw ? undefined : player}
       className="grid min-w-[2.1rem] shrink-0 justify-items-center gap-0.5"
@@ -46,9 +46,7 @@ function CardStack({
       <div aria-hidden="true" className="relative w-(--match-card-width)">
         {count > 0 ? (
           <>
-            {count > 1 && (
-              <div className="absolute inset-0 translate-x-0.5 translate-y-0.5 rounded-[10%] bg-slate-700" />
-            )}
+            <div className="absolute inset-0 translate-x-0.5 translate-y-0.5 rounded-[10%] bg-slate-700" />
             <div className="relative">
               <CardImage />
             </div>
@@ -61,7 +59,7 @@ function CardStack({
         aria-hidden="true"
         className="rounded-sm bg-artwork-shadow/90 px-1 py-0.5 text-[clamp(0.55rem,1.35cqmin,0.75rem)] leading-none whitespace-nowrap text-artwork-foreground"
       >
-        {label} {count}
+        {label}
       </span>
     </div>
   );
@@ -154,6 +152,12 @@ export function MatchSeatCards({
             className={cn(
               "relative",
               local && "has-[:focus-visible]:z-10 has-[:hover]:z-10",
+              local &&
+                hand.length === 3 &&
+                ["translate-y-[6%] -rotate-9", "-translate-y-[6%]", "translate-y-[6%] rotate-9"][
+                  index
+                ],
+              local && hand.length === 2 && (index === 0 ? "-rotate-6" : "rotate-6"),
               !local && index === 0 && "-rotate-12",
               !local && index === 2 && "rotate-12",
             )}

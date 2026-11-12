@@ -43,11 +43,15 @@ export function measureCardScene(root: Element, frame: MatchFrame) {
     faceUp: boolean,
   ): SceneCard => {
     const rect = (element.querySelector("img") ?? element).getBoundingClientRect();
+    const angle = measureAngle(element);
+    // A rotated card's bounding box is taller than the card itself.
+    const height =
+      rect.height / (Math.abs(Math.cos(angle)) + (63 / 88) * Math.abs(Math.sin(angle)));
     hidden.push(element);
     return {
       art: faceUp ? cards.get(key) : undefined,
-      origin: anchor(rect, measureAngle(element), faceUp),
-      size: (rect.height * unit) / 2.88,
+      origin: anchor(rect, angle, faceUp),
+      size: (height * unit) / 2.88,
     };
   };
   const stackAt = (attribute: string, player: string) => find(attribute, player)?.firstElementChild;

@@ -79,7 +79,7 @@ accessible name Close table. A gold dealer badge overlaps the lower-right corner
 [Issue #117](https://github.com/Donkijote/fall/issues/117) uses the existing
 table and seats for live local play. The local hand is face up and only accepts
 input on your turn. Cards occupy open spots in a fixed grid, and existing cards keep their spots when other cards land or are captured.
-Deck and collector labels report the number of cards, including empty piles.
+The draw deck and collector piles show whether they are empty, without revealing their sizes during play.
 The score panel sits above the board, with the active turn shown both in text
 and by the seat pointer. The dealer's opening choices, the round count, and
 the result use the shared framed surface in the middle of the table.

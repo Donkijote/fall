@@ -76,7 +76,11 @@ function CardSequence({ scene, audio, complete, handoff, count }: PlaybackProps)
       ),
     ),
   ];
-  const textures = useCardFaceTextures(images);
+  // Use the same paper as the board's bg-amber-50 artwork.
+  const paper = getComputedStyle(document.documentElement)
+    .getPropertyValue("--color-amber-50")
+    .trim();
+  const textures = useCardFaceTextures(images, paper || undefined);
   const meshes = useRef<Group[]>([]);
   const timelineRef = useRef<gsap.core.Timeline>(null);
   const shadow = useRef<FallShadowMesh>(null);
@@ -318,6 +322,8 @@ function Scene({ playback }: { playback?: PlaybackProps }) {
 export default function MatchCardCanvas({ playback }: { playback?: PlaybackProps }) {
   return (
     <Canvas
+      // Keep the SVG colors consistent with the DOM card during the handoff.
+      flat
       dpr={[1, 2]}
       style={{ pointerEvents: "none" }}
       gl={{ alpha: true, antialias: true }}
