@@ -2,7 +2,6 @@ import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 
 import { CardList } from "@/infrastructure/ui/components/card/CardList";
-import { GameScreen } from "@/infrastructure/ui/screens/Game";
 import { HomeScreen } from "@/infrastructure/ui/screens/Home";
 import { RulesScreen } from "@/infrastructure/ui/screens/Rules";
 import { SingsSheetScreen } from "@/infrastructure/ui/screens/SingsSheet";
@@ -10,7 +9,6 @@ import { SingsSheetScreen } from "@/infrastructure/ui/screens/SingsSheet";
 import {
   ANIMATION_PLAYGROUND_PATH,
   CARDS_PATH,
-  GAME_PATH,
   HOME_PATH,
   LOGIN_PATH,
   MATCH_PATH,
@@ -48,10 +46,6 @@ const router = createBrowserRouter([
       const { MatchScreen } = await import("@/modules/match");
       return { Component: MatchScreen };
     },
-  },
-  {
-    path: GAME_PATH,
-    element: <GameScreen />,
   },
   {
     path: CARDS_PATH,

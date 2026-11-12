@@ -4,6 +4,7 @@ import {
   GAME_PATH,
   HOME_PATH,
   LOGIN_PATH,
+  PREVIEW_MATCH_ID,
   RULES_PATH,
   SINGS_SHEETS,
 } from "@/routes/Routes";
@@ -13,8 +14,8 @@ import { cleanup, render, screen } from "@testing-library/react";
 vi.mock("@/infrastructure/ui/screens/Home", () => ({
   HomeScreen: () => <div data-testid="home">Home</div>,
 }));
-vi.mock("@/infrastructure/ui/screens/Game", () => ({
-  GameScreen: () => <div data-testid="game">Game</div>,
+vi.mock("@/modules/match", () => ({
+  MatchScreen: () => <div data-testid="match">Match</div>,
 }));
 vi.mock("@/infrastructure/ui/components/card/CardList", () => ({
   CardList: () => <div data-testid="cards">Cards</div>,
@@ -56,11 +57,11 @@ describe("AppRouter", () => {
     expect(screen.getByTestId("home")).toBeInTheDocument();
   });
 
-  it("renders GameScreen at GAME_PATH", async () => {
-    window.history.pushState({}, "", GAME_PATH);
+  it("loads the match screen from a direct match URL", async () => {
+    window.history.pushState({}, "", `${GAME_PATH}/${PREVIEW_MATCH_ID}`);
     const AppRouter = await importRouter();
     render(<AppRouter />);
-    expect(screen.getByTestId("game")).toBeInTheDocument();
+    expect(await screen.findByTestId("match")).toBeInTheDocument();
   });
 
   it.each([true, false])(

@@ -27,7 +27,6 @@ function renderLobby(entry = "/") {
         <Routes>
           <Route path="/" element={<HomeLobby />} />
           <Route path={MATCH_PATH} element={<MatchScreen />} />
-          <Route path="/game" element={<h1>Game scene</h1>} />
           <Route path="/rules" element={<h1>Rules scene</h1>} />
           <Route path="/sings" element={<h1>Sings scene</h1>} />
           <Route path="/dev/animations" element={<h1>Animation playground scene</h1>} />
@@ -133,7 +132,6 @@ test.each([
   });
   expect(screen.getByRole("dialog", { name: "Tavern" })).toBeVisible();
   expect(setupGame).not.toHaveBeenCalled();
-  expect(screen.queryByRole("heading", { name: "Game scene" })).not.toBeInTheDocument();
 });
 
 test("touch previews one Tavern format and clears selection on the second tap", async () => {
