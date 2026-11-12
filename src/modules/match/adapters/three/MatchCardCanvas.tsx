@@ -48,6 +48,7 @@ type PlaybackProps = {
   scene: CardScene;
   audio: CardMotionAudio;
   complete: () => void;
+  handoff: () => void;
   count: (side: number, snapshot: CountingSnapshot) => void;
 };
 
@@ -59,7 +60,7 @@ function applyPose(mesh: Group | undefined, pose: CardPose, size: number) {
   mesh.visible = true;
 }
 
-function CardSequence({ scene, audio, complete, count }: PlaybackProps) {
+function CardSequence({ scene, audio, complete, handoff, count }: PlaybackProps) {
   const cards =
     scene.kind === "deal"
       ? scene.cards
@@ -77,6 +78,7 @@ function CardSequence({ scene, audio, complete, count }: PlaybackProps) {
   ];
   const textures = useCardFaceTextures(images);
   const meshes = useRef<Group[]>([]);
+  const timelineRef = useRef<gsap.core.Timeline>(null);
   const shadow = useRef<FallShadowMesh>(null);
   const playback = useMemo(
     () => ({
@@ -92,6 +94,7 @@ function CardSequence({ scene, audio, complete, count }: PlaybackProps) {
       side: 0,
       rest: 0,
       finished: false,
+      started: false,
     }),
     [scene, audio],
   );
@@ -99,7 +102,8 @@ function CardSequence({ scene, audio, complete, count }: PlaybackProps) {
   useGSAP(
     () => {
       if (scene.kind === "count") return;
-      const timeline = gsap.timeline({ onComplete: complete });
+      const timeline = gsap.timeline({ paused: true, onComplete: complete });
+      timelineRef.current = timeline;
       if (scene.kind === "play") appendPlay(timeline, playback.play, audio);
       if (scene.kind === "collect")
         appendCapture(timeline, playback.capture, scene.capture, scene.targets.length, audio);
@@ -116,6 +120,9 @@ function CardSequence({ scene, audio, complete, count }: PlaybackProps) {
         }
       }
       if (!timeline.duration()) complete();
+      return () => {
+        timelineRef.current = null;
+      };
     },
     { dependencies: [scene, playback], revertOnUpdate: true },
   );
@@ -135,7 +142,7 @@ function CardSequence({ scene, audio, complete, count }: PlaybackProps) {
       applyPose(
         nodes[0],
         samplePlay(playback.play.progress, scene.card.origin, scene.target),
-        scene.card.size,
+        MathUtils.lerp(scene.card.size, scene.targetSize, playback.play.progress),
       );
     } else if (scene.kind === "collect") {
       const progress = playback.capture.progress;
@@ -252,6 +259,11 @@ function CardSequence({ scene, audio, complete, count }: PlaybackProps) {
         playback.finished = true;
         complete();
       }
+    }
+    if (!playback.started) {
+      playback.started = true;
+      handoff();
+      timelineRef.current?.play();
     }
   });
 

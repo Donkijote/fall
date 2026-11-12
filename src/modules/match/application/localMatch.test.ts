@@ -102,6 +102,7 @@ test("an immediate clean-table win stops the match without dealing another hand"
 
   const frames = playMatchCard(state, localPlayerId, card);
   expect(frames.map(({ motion }) => motion?.kind)).toEqual(["collect", undefined]);
+  expect(frames[0].state).toBe(state);
   expect(frames.at(-1)?.state).toMatchObject({
     phase: "gameOver",
     winner: "1",
@@ -137,6 +138,7 @@ test.each([
     const frames = playMatchCard(state, localPlayerId, card);
 
     expect(frames.map(({ motion }) => motion?.kind)).toEqual(["collect", undefined]);
+    expect(frames[0].state).toBe(state);
     expect(frames[0].motion).toEqual({
       kind: "collect",
       capture,
@@ -146,3 +148,28 @@ test.each([
     });
   },
 );
+
+test("a non-capture holds its hand and table state until the card has landed", () => {
+  const card: Card = { suit: "coins", rank: 3 };
+  const table: Card[] = [{ suit: "cups", rank: 2 }];
+  const match = startMatch("1vs1")[0].state;
+  const state: GameState = {
+    ...match,
+    phase: "play",
+    currentPlayer: localPlayerId,
+    table,
+    players: match.players.map((player) =>
+      player.id === localPlayerId
+        ? { ...player, hand: [card, { suit: "clubs", rank: 4 }] }
+        : player,
+    ),
+  };
+
+  const frames = playMatchCard(state, localPlayerId, card);
+  expect(frames[0]).toEqual({
+    state,
+    motion: { kind: "play", card: "coins-3", player: localPlayerId },
+  });
+  expect(frames[1].state.table).toEqual([...table, card]);
+  expect(frames[1].state.players[0].hand).not.toContainEqual(card);
+});

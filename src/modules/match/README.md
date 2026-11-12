@@ -12,12 +12,15 @@ Back to Tavern, and Escape return to the format picker.
   table pattern. Sings are evaluated automatically at each deal.
 - `ui/components/flow` owns the simulated arrivals, turn timers, and the
   handoff from the board to the 3D scene. It measures the current card, deck,
-  and pile positions and hides only the cards being rendered in 3D. Motion
-  frames lock input until the scene finishes. Reduced motion and unavailable
+  and pile positions. For a play or capture, the hand and table stay in place
+  until the first 3D frame takes over. Motion frames lock input until the
+  scene finishes. Reduced motion and unavailable
   WebGL settle frames immediately with a sound cue. Leaving the table
   cancels pending timers, motion, and audio.
 - `ui/components/board` renders seats, cards, scores, dealer controls and the
-  match result. `adapters/three` renders the animated cards and decorative
+  match result. Table cards keep their assigned grid slots. A play reserves a
+  free slot until the card lands; a capture flies directly to its targets.
+  `adapters/three` renders the animated cards and decorative
   hearth ash. The Playground and match use the same R3F card mesh,
   GSAP timelines, 3D poses, counting playback, and Howler card sounds.
   The match supplies actual card faces and measured board positions. A

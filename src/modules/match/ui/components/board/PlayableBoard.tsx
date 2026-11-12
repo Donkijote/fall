@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef } from "react";
 
 import type { GameMode, GameState } from "@/domain/entities/GameState";
+import { toCardKey } from "@/domain/helpers/card";
 
 import { localPlayerId, playMatchCard, type MatchFrame } from "../../../application/localMatch";
 import { getMatchSeats, simulatedGuests } from "../../../application/matchSeats";
@@ -35,6 +36,12 @@ export function PlayableBoard({
   const restoreHandFocus = useRef(false);
   const { state, motion } = frame;
   const seats = getMatchSeats(mode);
+  const landing =
+    motion?.kind === "play"
+      ? state.players
+          .find(({ id }) => id === motion.player)
+          ?.hand.find((card) => toCardKey(card) === motion.card)
+      : undefined;
   const canPlay =
     !returning && !motion && state.phase === "play" && state.currentPlayer === localPlayerId;
   const finished = !motion && state.phase === "gameOver";
@@ -69,7 +76,7 @@ export function PlayableBoard({
   return (
     <div ref={scope} className="absolute inset-0" inert={returning}>
       <MatchScoreboard title={title} frame={frame} sideName={sideName} playerName={playerName} />
-      <MatchTableCards cards={state.table} />
+      <MatchTableCards cards={state.table} landing={landing} />
       <ul
         aria-label="Table seats"
         className="pointer-events-none absolute inset-[var(--safe-area-top)_var(--safe-area-right)_var(--safe-area-bottom)_var(--safe-area-left)]"
@@ -98,6 +105,7 @@ export function PlayableBoard({
                 player={seat.id}
                 local={index === 0}
                 canPlay={canPlay}
+                reducedMotion={reducedMotion}
                 play={(card) => {
                   restoreHandFocus.current = Boolean(
                     scope.current

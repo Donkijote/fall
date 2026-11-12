@@ -88,7 +88,7 @@ export function playMatchCard(state: GameState, player: string, card: Card): Mat
   const cardKey = toCardKey(card);
   const frames: MatchFrame[] = [
     {
-      state: played,
+      state,
       motion:
         plan.kind === "none"
           ? { kind: "play", card: cardKey, player }

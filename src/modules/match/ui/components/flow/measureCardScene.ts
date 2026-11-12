@@ -9,34 +9,12 @@ import {
 } from "../../../adapters/three/matchCardScene";
 import type { MatchFrame } from "../../../application/localMatch";
 
-export type HandLayout = Map<string, { rect: DOMRect; angle: number; faceUp: boolean }>;
-
 function measureAngle(element: Element) {
   const style = getComputedStyle(element);
   return ((parseFloat(style.rotate) || 0) * Math.PI) / 180;
 }
 
-export function measureHands(root: Element): HandLayout {
-  return new Map(
-    [...root.querySelectorAll<HTMLElement>("[data-hand-card]")].flatMap((element) => {
-      const image = element.querySelector("img");
-      return image && element.dataset.handCard
-        ? [
-            [
-              element.dataset.handCard,
-              {
-                rect: image.getBoundingClientRect(),
-                angle: measureAngle(element),
-                faceUp: Boolean(image.alt),
-              },
-            ],
-          ]
-        : [];
-    }),
-  );
-}
-
-export function measureCardScene(root: Element, frame: MatchFrame, hands: HandLayout) {
+export function measureCardScene(root: Element, frame: MatchFrame) {
   const { state, motion } = frame;
   if (!motion) return;
   const bounds = root.getBoundingClientRect();
@@ -100,22 +78,16 @@ export function measureCardScene(root: Element, frame: MatchFrame, hands: HandLa
     };
   } else if (motion.kind === "play" || motion.kind === "collect") {
     const key = "card" in motion ? motion.card : undefined;
-    const playedElement = key && find("table-card", key);
-    const tableCard = playedElement && cardAt(playedElement, key, true);
-    const hand = (key && hands.get(key)) || undefined;
-    const fallback = find("match-hand", motion.player);
-    const played = tableCard && {
-      ...tableCard,
-      origin: hand
-        ? anchor(hand.rect, hand.angle, hand.faceUp)
-        : fallback
-          ? anchor(fallback.getBoundingClientRect())
-          : tableCard.origin,
-      size: hand ? (hand.rect.height * unit) / 2.88 : tableCard.size,
-    };
+    const hand = key && find("hand-card", key);
+    const played = hand && cardAt(hand, key, Boolean(hand.querySelector("img")?.alt));
+    // Opponent cards start face down, but reveal the actual artwork in flight.
+    if (played && key) played.art = cards.get(key);
+
     if (motion.kind === "play") {
-      if (!played || !tableCard) return;
-      scene = { kind: "play", card: played, target: tableCard.origin };
+      const landing = find("table-card", motion.card);
+      if (!played || !landing) return;
+      const target = cardAt(landing, motion.card, true);
+      scene = { kind: "play", card: played, target: target.origin, targetSize: target.size };
     } else {
       const pile = stackAt("collector", motion.player);
       if (!pile) return;

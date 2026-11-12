@@ -10,7 +10,7 @@ export type SceneCard = {
 
 export type CardScene =
   | { kind: "deal"; deck: CardPoint; cards: (SceneCard & { center: boolean })[] }
-  | { kind: "play"; card: SceneCard; target: CardAnchor }
+  | { kind: "play"; card: SceneCard; target: CardAnchor; targetSize: number }
   | {
       kind: "collect";
       capture: CaptureKind;

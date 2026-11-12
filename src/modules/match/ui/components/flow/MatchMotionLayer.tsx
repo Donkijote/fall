@@ -1,4 +1,4 @@
-import { lazy, Suspense, useLayoutEffect, useMemo, useRef, useState, type RefObject } from "react";
+import { lazy, Suspense, useLayoutEffect, useMemo, useState, type RefObject } from "react";
 
 import type { CountingSnapshot } from "@/components/cards/motion/cardCounting";
 import { SceneBoundary } from "@/components/surfaces/SceneBoundary";
@@ -6,7 +6,7 @@ import { useCardAudio } from "@/infrastructure/ui/hooks/useCardAudio";
 
 import type { CardScene } from "../../../adapters/three/matchCardScene";
 import type { MatchFrame } from "../../../application/localMatch";
-import { measureCardScene, measureHands, type HandLayout } from "./measureCardScene";
+import { measureCardScene } from "./measureCardScene";
 
 const MatchCardCanvas = lazy(() => import("../../../adapters/three/MatchCardCanvas"));
 
@@ -24,7 +24,6 @@ export function MatchMotionLayer({
   complete: () => void;
 }) {
   const { motion } = frame;
-  const handLayout = useRef<HandLayout>(new Map());
   const audioRef = useCardAudio(!returning);
   const audio = useMemo(
     () => ({
@@ -34,21 +33,17 @@ export function MatchMotionLayer({
     [audioRef],
   );
   const [failed, setFailed] = useState(false);
-  const [stage, setStage] = useState<{ motion: MatchFrame["motion"]; scene: CardScene }>();
+  const [stage, setStage] = useState<{
+    motion: MatchFrame["motion"];
+    scene: CardScene;
+    handoff: () => void;
+  }>();
   const animate = !reducedMotion && !failed && typeof WebGL2RenderingContext !== "undefined";
 
   useLayoutEffect(() => {
     const root = board.current;
-    if (!root || returning) return;
-    if (!motion) {
-      const measure = () => {
-        handLayout.current = measureHands(root);
-      };
-      measure();
-      window.addEventListener("resize", measure);
-      return () => window.removeEventListener("resize", measure);
-    }
-    const measured = animate && measureCardScene(root, frame, handLayout.current);
+    if (!root || !motion || returning) return;
+    const measured = animate && measureCardScene(root, frame);
     if (!measured) {
       // Motion preferences do not mute the game; use a single cue for an instant event.
       if (motion.kind === "deal" || motion.kind === "count") audio.playDealCard();
@@ -58,10 +53,18 @@ export function MatchMotionLayer({
     }
 
     const original = measured.hidden.map((element) => [element, element.style.visibility] as const);
-    for (const [element] of original) element.style.visibility = "hidden";
-    setStage({ motion, scene: measured.scene });
+    let active = true;
+    const handoff = () => {
+      if (!active) return;
+      for (const [element] of original) element.style.visibility = "hidden";
+    };
+    // A deal introduces new cards. For plays and captures the board still shows
+    // the old position until the canvas paints the exact starting pose.
+    if (motion.kind === "deal") handoff();
+    setStage({ motion, scene: measured.scene, handoff });
     window.addEventListener("resize", complete);
     return () => {
+      active = false;
       for (const [element, visibility] of original) element.style.visibility = visibility;
       window.removeEventListener("resize", complete);
     };
@@ -88,6 +91,7 @@ export function MatchMotionLayer({
               stage && motion && stage.motion === motion
                 ? {
                     scene: stage.scene,
+                    handoff: stage.handoff,
                     audio,
                     complete,
                     count,
