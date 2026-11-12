@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useLocation, useNavigate, useNavigationType } from "react-router";
 
-import tavernArtwork from "@/assets/lobby/card-hall/tavern.webp";
 import duel from "@/assets/lobby/tavern/duel.webp";
 import freeForAll from "@/assets/lobby/tavern/free-for-all.webp";
 import teamMatch from "@/assets/lobby/tavern/team-match.webp";
@@ -112,12 +111,11 @@ export function TavernPicker({ open, canPlay, origin, onClose }: TavernPickerPro
         >
           <TavernRoom />
           {origin && (
-            <img
+            <div
               data-tavern-zoom=""
-              src={tavernArtwork}
-              alt=""
               aria-hidden="true"
-              className="pointer-events-none invisible absolute z-10 rounded-md object-cover"
+              inert
+              className="pointer-events-none invisible absolute z-10"
             />
           )}
           <div
