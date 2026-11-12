@@ -6,7 +6,7 @@ import {
 import { cardFlights } from "@/components/cards/motion/cardFlights";
 
 type Point = { x: number; y: number; z: number };
-type HandPose = Point & { angle: number };
+type HandPose = Point & { angle: number; faceUp?: boolean };
 const smooth = (value: number, start: number, end: number) => {
   const t = Math.max(0, Math.min(1, (value - start) / (end - start)));
   return t * t * (3 - 2 * t);
@@ -38,7 +38,7 @@ export function sampleCardCapture(
       ],
       rotation: [
         gesture.pitch,
-        Math.PI * smooth(travel, 0.08, 0.92) + gesture.roll,
+        (hand.faceUp ? Math.PI : Math.PI * smooth(travel, 0.08, 0.92)) + gesture.roll,
         lerp(hand.angle, landing.yaw, travel) + gesture.yaw,
       ],
     };

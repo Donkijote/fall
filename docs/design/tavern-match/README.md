@@ -84,6 +84,8 @@ The score panel sits above the board, with the active turn shown both in text
 and by the seat pointer. The dealer's opening choices, the round count, and
 the result use the shared framed surface in the middle of the table.
 
-The local table adapts the Playground's card motion to the active dealer,
-hand, table cards and collector. Reduced motion uses immediate board updates.
+The local table runs the Playground's 3D card sequences and sounds with the
+active dealer, real card artwork and the positions of the hand, table cards,
+and collector. Reduced motion uses immediate board updates and keeps sound
+available through the same game preferences.
 The same composition supports desktop and phone portrait and landscape.

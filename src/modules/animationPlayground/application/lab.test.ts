@@ -1,5 +1,6 @@
+import { cardImpactProfiles, sampleCardImpact } from "@/components/cards/motion/cardImpactMotion";
+
 import { createZustandLabState } from "../adapters/state/zustandLabState";
-import { cardImpactProfiles, sampleCardImpact } from "../adapters/three/cardImpactMotion";
 import { lessonsByStudy } from "./catalog";
 import { createLab } from "./lab";
 import type { CardDropEffect } from "./lab";

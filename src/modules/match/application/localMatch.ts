@@ -1,4 +1,4 @@
-import type { Card } from "@/domain/entities/Card";
+import type { Card, CardKey } from "@/domain/entities/Card";
 import type { DealOrder, GameMode, GameState, TablePattern } from "@/domain/entities/GameState";
 import { toCardKey } from "@/domain/helpers/card";
 import { dealRound } from "@/domain/services/deal";
@@ -10,19 +10,26 @@ import {
   removeCardsFromHand,
   updateTableAndHandCards,
 } from "@/domain/services/moves";
-import { resolveHands } from "@/domain/services/resolveHands";
+import { orderFromDealerRight, resolveHands } from "@/domain/services/resolveHands";
 import { applyCountingRule, getCountingGroups } from "@/domain/services/scoring";
 
 export const localPlayerId = "local";
 
 export type MatchMotion =
-  | { kind: "deal"; cards: string[]; dealer: string }
-  | { kind: "play"; card: string; player: string }
-  | { kind: "collect"; cards: string[]; player: string }
+  | { kind: "deal"; cards: CardKey[]; dealer: string }
+  | { kind: "play"; card: CardKey; player: string }
+  | {
+      kind: "collect";
+      capture: "fall" | "card" | "cascade";
+      card: CardKey;
+      targets: CardKey[];
+      player: string;
+    }
+  | { kind: "collect"; capture: "sweep"; targets: CardKey[]; player: string }
   | {
       kind: "count";
       groups: ReturnType<typeof getCountingGroups>;
-      piles: { player: string; side: number; cards: number }[];
+      piles: { player: string; side: number; cards: Card[] }[];
     };
 
 export type MatchFrame = { state: GameState; motion?: MatchMotion };
@@ -43,7 +50,12 @@ export function startMatch(mode: GameMode): MatchFrame[] {
 }
 
 function dealFrames(state: GameState, table: Card[] = []): MatchFrame[] {
-  const hands = state.players.flatMap(({ hand }) => hand);
+  const orderedHands = orderFromDealerRight(state).map(
+    (id) => state.players.find((player) => player.id === id)!.hand,
+  );
+  const hands = Array.from({ length: state.config.handSize }, (_, index) =>
+    orderedHands.flatMap((hand) => (hand[index] ? [hand[index]] : [])),
+  ).flat();
   const cards = (
     state.config.dealOrder === "playersThenTable" ? [...hands, ...table] : [...table, ...hands]
   ).map(toCardKey);
@@ -74,15 +86,23 @@ export function playMatchCard(state: GameState, player: string, card: Card): Mat
     table: [...state.table, card],
   };
   const cardKey = toCardKey(card);
-  const frames: MatchFrame[] = [{ state: played, motion: { kind: "play", card: cardKey, player } }];
+  const frames: MatchFrame[] = [
+    {
+      state: played,
+      motion:
+        plan.kind === "none"
+          ? { kind: "play", card: cardKey, player }
+          : {
+              kind: "collect",
+              capture: plan.kind === "cascade" ? "cascade" : analysis.isFall ? "fall" : "card",
+              card: cardKey,
+              targets: plan.targets.map(toCardKey),
+              player,
+            },
+    },
+  ];
   const captured =
     plan.kind === "none" ? played : updateTableAndHandCards(played, player, card, plan);
-  if (plan.kind !== "none") {
-    frames.push({
-      state: played,
-      motion: { kind: "collect", cards: [cardKey, ...plan.targets.map(({ key }) => key)], player },
-    });
-  }
 
   const next = finalizeAfterPlay(captured, player, card, analysis.isFall);
   if (next.phase === "announceSings") return [...frames, ...dealFrames(next)];
@@ -92,7 +112,8 @@ export function playMatchCard(state: GameState, player: string, card: Card): Mat
         state: captured,
         motion: {
           kind: "collect",
-          cards: captured.table.map(toCardKey),
+          capture: "sweep",
+          targets: captured.table.map(toCardKey),
           player: captured.lastCaptureBy ?? captured.dealer,
         },
       });
@@ -113,7 +134,7 @@ export function countRound(state: GameState): MatchFrame[] {
         piles: state.players.map(({ id, team, collected }) => ({
           player: id,
           side: team,
-          cards: collected.length,
+          cards: collected,
         })),
       },
     },

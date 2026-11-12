@@ -4,20 +4,20 @@ import { MathUtils } from "three";
 import type { Group, MeshBasicMaterial, PointLight } from "three";
 
 import shadowTexture from "@/assets/effects/ember.svg";
+import {
+  cardImpactProfiles,
+  cardLandingPose,
+  flameCooldownDuration,
+  sampleCardImpact,
+} from "@/components/cards/motion/cardImpactMotion";
+import type { HeatUniforms } from "@/components/cards/three/cardHeat";
+import { CardMesh } from "@/components/cards/three/CardMesh";
 
 import { useGSAP } from "@gsap/react";
 import { PerspectiveCamera, RoundedBox, useTexture } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 
 import type { CardDropEffect } from "../../application/lab";
-import { CardMesh } from "./Card";
-import type { HeatUniforms } from "./cardHeat";
-import {
-  cardImpactProfiles,
-  cardLandingPose,
-  flameCooldownDuration,
-  sampleCardImpact,
-} from "./cardImpactMotion";
 import { FlameEnvelope } from "./FlameEnvelope";
 import { FlameImpact } from "./FlameImpact";
 import { HeatImpactWave } from "./HeatImpactWave";

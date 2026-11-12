@@ -81,7 +81,7 @@ export function MatchControls({
             {motion.groups.map(({ side, cards, quota }) => (
               <li key={side} className="grid gap-1">
                 <strong>{sideName(String(side))}</strong>
-                <span data-count-side={side} aria-hidden="true">
+                <span data-count-side={side} data-total={cards} aria-hidden="true">
                   0/{cards} cards · +0
                 </span>
                 <span className="sr-only">

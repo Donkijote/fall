@@ -101,7 +101,7 @@ test("an immediate clean-table win stops the match without dealing another hand"
   };
 
   const frames = playMatchCard(state, localPlayerId, card);
-  expect(frames.map(({ motion }) => motion?.kind)).toEqual(["play", "collect", undefined]);
+  expect(frames.map(({ motion }) => motion?.kind)).toEqual(["collect", undefined]);
   expect(frames.at(-1)?.state).toMatchObject({
     phase: "gameOver",
     winner: "1",
@@ -110,3 +110,39 @@ test("an immediate clean-table win stops the match without dealing another hand"
     scores: { values: { 1: 24 } },
   });
 });
+
+test.each([
+  ["card", false, false],
+  ["fall", true, false],
+  ["cascade", false, true],
+] as const)(
+  "drives the %s sequence directly with the played card and its targets",
+  (capture, fall, cascade) => {
+    const card: Card = { suit: "coins", rank: 3 };
+    const match = startMatch("1vs1")[0].state;
+    const target: Card = { suit: "swords", rank: 3 };
+    const extra: Card = { suit: "cups", rank: 4 };
+    const state: GameState = {
+      ...match,
+      phase: "play",
+      currentPlayer: localPlayerId,
+      lastPlayedCard: fall ? target : undefined,
+      table: cascade ? [target, extra] : [target],
+      players: match.players.map((player) =>
+        player.id === localPlayerId
+          ? { ...player, hand: [card, { suit: "clubs", rank: 2 }] }
+          : player,
+      ),
+    };
+    const frames = playMatchCard(state, localPlayerId, card);
+
+    expect(frames.map(({ motion }) => motion?.kind)).toEqual(["collect", undefined]);
+    expect(frames[0].motion).toEqual({
+      kind: "collect",
+      capture,
+      player: localPlayerId,
+      card: "coins-3",
+      targets: cascade ? ["swords-3", "cups-4"] : ["swords-3"],
+    });
+  },
+);

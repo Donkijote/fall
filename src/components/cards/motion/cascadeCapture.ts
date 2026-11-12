@@ -5,7 +5,7 @@ import {
 } from "@/components/cards/motion/captureGesture";
 
 type Point = { x: number; y: number; z: number };
-type HandPose = Point & { angle: number };
+type HandPose = Point & { angle: number; faceUp?: boolean };
 const lerp = (from: number, to: number, t: number) => from + (to - from) * t;
 const smooth = (value: number) => {
   const t = Math.max(0, Math.min(1, value));
@@ -14,14 +14,23 @@ const smooth = (value: number) => {
 
 export const cascadeOrder = [0, 1, 3, 2] as const;
 // A short contact pause and varied cadence avoid four identical mechanical hops.
-export const cascadeSteps = [0.78, 0.69, 0.84, 0.72].map((duration, index, durations) => ({
-  start: durations.slice(0, index).reduce((sum, value) => sum + value, 0),
-  duration,
-  travel: duration * 0.76,
-}));
-const pickupDuration = cascadeSteps.reduce((sum, step) => sum + step.duration, 0);
-const returnTime = 0.96;
-export const cascadeCaptureDuration = pickupDuration + returnTime;
+const cadence = [0.78, 0.69, 0.84, 0.72];
+function stepsFor(count: number) {
+  let start = 0;
+  return Array.from({ length: count }, (_, index) => {
+    const duration = cadence[index % cadence.length];
+    const step = { start, duration, travel: duration * 0.76 };
+    start += duration;
+    return step;
+  });
+}
+export const cascadeSteps = stepsFor(cascadeOrder.length);
+export const cascadeReturnTime = 0.96;
+export function getCascadeDuration(count: number) {
+  const last = stepsFor(count).at(-1);
+  return (last ? last.start + last.duration : 0) + cascadeReturnTime;
+}
+export const cascadeCaptureDuration = getCascadeDuration(cascadeOrder.length);
 
 // Each layer lands slightly askew, then squares up during the following pickup.
 // Uncollected cards stay stationary, and the final stack is aligned precisely.
@@ -33,8 +42,11 @@ export function sampleCascadeCapture(
   pile: Point,
   pitch: number,
 ) {
-  const seconds = Math.max(0, Math.min(1, progress)) * cascadeCaptureDuration;
-  const leg = cascadeSteps.findIndex((step) => seconds < step.start + step.duration);
+  const steps = targets.length === cascadeOrder.length ? cascadeSteps : stepsFor(targets.length);
+  const lastStep = steps.at(-1)!;
+  const pickupDuration = lastStep.start + lastStep.duration;
+  const seconds = Math.max(0, Math.min(1, progress)) * (pickupDuration + cascadeReturnTime);
+  const leg = steps.findIndex((step) => seconds < step.start + step.duration);
   const ordinal = cardIndex + 1;
   if (leg !== -1) {
     const target = targets[leg];
@@ -42,7 +54,7 @@ export function sampleCascadeCapture(
       const own = targets[cardIndex];
       return { position: [own.x, own.y, own.z], rotation: [0, Math.PI, 0] };
     }
-    const step = cascadeSteps[leg];
+    const step = steps[leg];
     const gesture = captureGesture(
       (seconds - step.start) / step.travel,
       leg,
@@ -64,12 +76,12 @@ export function sampleCascadeCapture(
       ],
       rotation: [
         gesture.pitch,
-        (leg === 0 ? Math.PI * travel : Math.PI) + gesture.roll,
+        (leg === 0 && !hand.faceUp ? Math.PI * travel : Math.PI) + gesture.roll,
         lerp(leg === 0 ? hand.angle : from.yaw * fromLayer, to.yaw * toLayer, travel) + gesture.yaw,
       ],
     };
   }
-  const gesture = captureGesture((seconds - pickupDuration) / returnTime, 5, 0.42);
+  const gesture = captureGesture((seconds - pickupDuration) / cascadeReturnTime, 5, 0.42);
   const collect = gesture.travel;
   const bend = captureBend(targets[targets.length - 1], pile, gesture.side);
   const flip = Math.PI * smooth((collect - 0.14) / 0.76);

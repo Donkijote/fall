@@ -48,3 +48,27 @@ export function useCardArtwork() {
   if (!textures) throw new Error("Card meshes must be inside CardArtworkProvider.");
   return textures;
 }
+
+export function useCardFaceTextures(urls: string[]) {
+  const artwork = useTexture(urls);
+  const signature = urls.join("\n");
+  const faces = useMemo(
+    () =>
+      new Map(
+        signature
+          .split("\n")
+          .map((url, index) => [
+            url,
+            createCardFaceTexture(artwork[index].image as HTMLImageElement),
+          ]),
+      ),
+    [signature, artwork],
+  );
+  useEffect(
+    () => () => {
+      for (const face of faces.values()) face.dispose();
+    },
+    [faces],
+  );
+  return faces;
+}

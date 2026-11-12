@@ -3,13 +3,13 @@ import { lazy, Suspense, useEffect, useRef } from "react";
 import type { ReactNode } from "react";
 
 import emberTexture from "@/assets/effects/ember.svg";
+import { CardArtworkProvider, cardArtwork } from "@/components/cards/three/CardArtwork";
 
 import { Grid, useTexture } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 
 import type { Experiment, Lab, LabState, Study } from "../../application/lab";
 import { Card } from "./Card";
-import { CardArtworkProvider, cardArtwork } from "./CardArtwork";
 import { CardDrop } from "./CardDrop";
 import { CountingStudy } from "./CountingStudy";
 import { DeckStack } from "./DeckStack";

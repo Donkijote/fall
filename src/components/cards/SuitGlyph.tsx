@@ -32,8 +32,7 @@ type SuitGlyphProps = {
 };
 
 export const SuitGlyph: FC<SuitGlyphProps> = ({ suit, rank, className, imgProps }) => {
-  const key = buildImageKey(suit, rank);
-  const src = key ? images[key] : undefined;
+  const src = getCardFaceUrl(suit, rank);
 
   if (!src) {
     return null;
@@ -56,3 +55,8 @@ const buildImageKey = (suit: Suit, rank: Rank): string | null => {
 const capitalize = (word: string) => {
   return word.charAt(0).toUpperCase() + word.slice(1);
 };
+
+export function getCardFaceUrl(suit: Suit, rank: Rank) {
+  const key = buildImageKey(suit, rank);
+  return key ? images[key] : undefined;
+}

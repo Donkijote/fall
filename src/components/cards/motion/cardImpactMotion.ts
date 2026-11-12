@@ -1,4 +1,4 @@
-import type { CardDropEffect } from "../../application/lab";
+import type { CardDropEffect } from "./cardFlights";
 
 type ImpactProfile = {
   height: number;

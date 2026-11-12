@@ -1,0 +1,52 @@
+import gsap from "gsap";
+
+import { cardFlights } from "./cardFlights";
+import { appendCapture, appendDeal, appendPlay } from "./cardTimelines";
+import { captureDuration } from "./tableCapture";
+
+test("deals each card with the original stagger and its own sound cue", () => {
+  const playDealCard = vi.fn();
+  const audio = { playDealCard, playCard: vi.fn() };
+  const first = { progress: 0 };
+  const second = { progress: 0 };
+  const timeline = appendDeal(gsap.timeline({ paused: true }), [first, second], false, audio);
+  try {
+    timeline.time(0.01, false);
+    expect(playDealCard).toHaveBeenCalledTimes(1);
+    expect(first.progress).toBeGreaterThan(0);
+    expect(second.progress).toBe(0);
+
+    timeline.time(cardFlights.deal.stagger + 0.01, false);
+    expect(playDealCard).toHaveBeenCalledTimes(2);
+    expect(second.progress).toBeGreaterThan(0);
+  } finally {
+    timeline.kill();
+  }
+});
+
+test("a Fall plays two card cues in the capture sequence; a normal play plays one", () => {
+  const playCard = vi.fn();
+  const audio = { playDealCard: vi.fn(), playCard };
+  const play = appendPlay(gsap.timeline({ paused: true }), { progress: 0 }, audio);
+  const fall = appendCapture(
+    gsap.timeline({ paused: true }),
+    { progress: 0, cooldown: 0 },
+    "fall",
+    1,
+    audio,
+  );
+  try {
+    play.progress(1, false);
+    expect(playCard).toHaveBeenCalledTimes(1);
+
+    fall.time(0.01, false);
+    expect(playCard).toHaveBeenCalledTimes(2);
+
+    fall.time(captureDuration("plain") * 0.27 + 0.01, false);
+    expect(playCard).toHaveBeenCalledTimes(3);
+    expect(audio.playDealCard).not.toHaveBeenCalled();
+  } finally {
+    play.kill();
+    fall.kill();
+  }
+});

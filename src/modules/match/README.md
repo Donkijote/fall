@@ -10,14 +10,18 @@ Back to Tavern, and Escape return to the format picker.
   board frames and motion events. Seats draw for the first dealer
   automatically; the local dealer can choose the opening deal order and
   table pattern. Sings are evaluated automatically at each deal.
-- `ui/components/flow` owns the simulated arrivals, turn timers, and GSAP
-  timeline lifecycle. Motion frames lock input and keep the board in sync with
-  animations. Reduced motion settles each frame immediately. Leaving the
-  table cancels pending timers and motion.
+- `ui/components/flow` owns the simulated arrivals, turn timers, and the
+  handoff from the board to the 3D scene. It measures the current card, deck,
+  and pile positions and hides only the cards being rendered in 3D. Motion
+  frames lock input until the scene finishes. Reduced motion and unavailable
+  WebGL settle frames immediately with a sound cue. Leaving the table
+  cancels pending timers, motion, and audio.
 - `ui/components/board` renders seats, cards, scores, dealer controls and the
-  match result. The Playground and board share card flight timings, capture
-  gestures and counting cadence under `src/components/cards/motion`.
-  `adapters/three` renders the decorative hearth ash.
+  match result. `adapters/three` renders the animated cards and decorative
+  hearth ash. The Playground and match use the same R3F card mesh,
+  GSAP timelines, 3D poses, counting playback, and Howler card sounds.
+  The match supplies actual card faces and measured board positions. A
+  single capture, cascade, or Fall is one sequence from hand to pile.
 
 `localMatch.test.ts` plays each format through to a winner, checking full
 deck accounting during motion and rules resolution. Home navigation tests

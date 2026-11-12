@@ -4,7 +4,7 @@ import type { GameMode, GameState } from "@/domain/entities/GameState";
 
 import { localPlayerId, playMatchCard, type MatchFrame } from "../../../application/localMatch";
 import { getMatchSeats, simulatedGuests } from "../../../application/matchSeats";
-import { useMatchMotion } from "../flow/useMatchMotion";
+import { MatchMotionLayer } from "../flow/MatchMotionLayer";
 import { MatchSeatCards, MatchTableCards } from "./MatchBoardCards";
 import { MatchControls } from "./MatchControls";
 import { MatchScoreboard } from "./MatchScoreboard";
@@ -38,7 +38,6 @@ export function PlayableBoard({
   const canPlay =
     !returning && !motion && state.phase === "play" && state.currentPlayer === localPlayerId;
   const finished = !motion && state.phase === "gameOver";
-  useMatchMotion(scope, motion, reducedMotion, returning, completeMotion);
 
   useLayoutEffect(() => {
     if (returning) return;
@@ -120,10 +119,12 @@ export function PlayableBoard({
         })}
       </ul>
       <MatchControls frame={frame} sideName={sideName} act={act} close={close} />
-      <div
-        data-card-flights=""
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-20"
+      <MatchMotionLayer
+        board={scope}
+        frame={frame}
+        reducedMotion={reducedMotion}
+        returning={returning}
+        complete={completeMotion}
       />
     </div>
   );
