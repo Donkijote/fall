@@ -19,7 +19,7 @@ describe("Moves", () => {
     if (!analysis.ok) return state;
     const s1 = removeCardsFromHand(state, playerId, card);
     const s2 = updateTableAndHandCards(s1, playerId, card, analysis.capturePlan);
-    return finalizeAfterPlay(s2, playerId, card);
+    return finalizeAfterPlay(s2, playerId, card, analysis.isFall);
   };
 
   it("should return state if not current player", () => {

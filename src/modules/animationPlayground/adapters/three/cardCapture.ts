@@ -1,4 +1,9 @@
-import { captureBend, captureGesture, captureLanding } from "./captureGesture";
+import {
+  captureBend,
+  captureGesture,
+  captureLanding,
+} from "@/components/cards/motion/captureGesture";
+import { cardFlights } from "@/components/cards/motion/cardFlights";
 
 type Point = { x: number; y: number; z: number };
 type HandPose = Point & { angle: number };
@@ -9,6 +14,7 @@ const smooth = (value: number, start: number, end: number) => {
 const lerp = (from: number, to: number, t: number) => from + (to - from) * t;
 
 export const cardCaptureDuration = 2.1;
+const pickupEnd = 1 - cardFlights.collect.duration / cardCaptureDuration;
 
 export function sampleCardCapture(
   progress: number,
@@ -19,7 +25,7 @@ export function sampleCardCapture(
   pitch: number,
 ) {
   const landing = captureLanding(0);
-  if (progress <= 0.58) {
+  if (progress <= pickupEnd) {
     if (!topCard) return { position: [table.x, table.y, table.z], rotation: [0, Math.PI, 0] };
     const gesture = captureGesture(progress / 0.42, 0, 0.32);
     const { travel } = gesture;
@@ -37,7 +43,7 @@ export function sampleCardCapture(
       ],
     };
   }
-  const gesture = captureGesture((progress - 0.58) / 0.42, 2, 0.4);
+  const gesture = captureGesture((progress - pickupEnd) / (1 - pickupEnd), 2, 0.4);
   const collect = gesture.travel;
   const bend = captureBend(table, pile, gesture.side);
   const flip = Math.PI * smooth(collect, 0.14, 0.9);

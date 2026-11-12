@@ -9,11 +9,12 @@ import type { GameMode } from "@/domain/entities/GameState";
 
 import { useGSAP } from "@gsap/react";
 
-import { getMatchSeats, getPreviewBoard, previewGuests } from "../../application/matchPreview";
-import { MatchSeatCards, MatchTableCards } from "./MatchBoardCards";
-import { MatchSeatMarker, type SeatPlayer } from "./MatchSeatMarker";
+import { getMatchSeats, simulatedGuests } from "../../../application/matchSeats";
+import { MatchSeatMarker, type SeatPlayer } from "../board/MatchSeatMarker";
+import { PlayableBoard } from "../board/PlayableBoard";
+import { useLocalMatch } from "../flow/useLocalMatch";
+import { useSimulatedLobby } from "../flow/useSimulatedLobby";
 import { TavernMatchAtmosphere } from "./TavernMatchAtmosphere";
-import { useMatchPreview } from "./useMatchPreview";
 
 export function TavernMatchArtworkPreload() {
   return (
@@ -42,15 +43,13 @@ export function TavernMatch({
   cancel,
 }: TavernMatchProps) {
   const seats = getMatchSeats(mode);
-  const guestCount = useMatchPreview(seats.length, returning);
+  const guestCount = useSimulatedLobby(seats.length, returning);
   const connectedCount = guestCount + 1;
   const ready = connectedCount === seats.length;
   const [waitingFaded, setWaitingFaded] = useState(false);
   const waitingOverlay = useRef<HTMLDivElement>(null);
-  const scene = useRef<HTMLDivElement>(null);
   const showWaiting = !ready || (!reducedMotion && !waitingFaded);
-  const board = showWaiting ? undefined : getPreviewBoard(mode);
-  const showBoard = Boolean(board);
+  const match = useLocalMatch(mode, !showWaiting, returning, reducedMotion);
 
   useGSAP(
     () => {
@@ -66,20 +65,12 @@ export function TavernMatch({
     { scope: waitingOverlay, dependencies: [ready, showWaiting], revertOnUpdate: true },
   );
 
-  useGSAP(
-    () => {
-      if (!showBoard || reducedMotion) return;
-      gsap.from("[data-preview-cards]", { opacity: 0, duration: 0.35, ease: "sine.out" });
-    },
-    { scope: scene, dependencies: [showBoard, reducedMotion], revertOnUpdate: true },
-  );
-
   return (
     <div
       data-tavern-match=""
       className="[container-type:size] absolute inset-0 isolate overflow-hidden bg-background"
     >
-      <div ref={scene} data-tavern-table-scene="" className="absolute inset-0 isolate">
+      <div data-tavern-table-scene="" className="absolute inset-0 isolate">
         <picture
           data-match-artwork=""
           aria-hidden="true"
@@ -89,39 +80,41 @@ export function TavernMatch({
           <img src={landscape} alt="" className="size-full object-fill" />
         </picture>
         <TavernMatchAtmosphere playing={!reducedMotion && !returning} />
-        {board && <MatchTableCards cards={board.table} />}
-        <ul
-          aria-label="Table seats"
-          className="pointer-events-none absolute inset-[var(--safe-area-top)_var(--safe-area-right)_var(--safe-area-bottom)_var(--safe-area-left)]"
-        >
-          {seats.map((position, index) => (
-            <MatchSeatMarker
-              key={position}
-              position={position}
-              player={
-                index === 0 ? player : index <= guestCount ? previewGuests[index - 1] : undefined
-              }
-              reducedMotion={reducedMotion}
-              turnPreview={index === 0}
-              dealer={board?.dealerIndex === index}
-            >
-              {board && (
-                <MatchSeatCards
-                  {...board.players[index]}
-                  drawPile={board.dealerIndex === index ? board.drawPile : undefined}
-                  local={position === "bottom"}
-                  align={
-                    position === "bottom" || position === "top"
-                      ? "center"
-                      : position === "right" || position === "upper-right"
-                        ? "right"
-                        : "left"
-                  }
-                />
-              )}
-            </MatchSeatMarker>
-          ))}
-        </ul>
+        {match.frame ? (
+          <PlayableBoard
+            mode={mode}
+            title={title}
+            player={player}
+            frame={match.frame}
+            act={match.act}
+            completeMotion={match.completeMotion}
+            reducedMotion={reducedMotion}
+            returning={returning}
+            close={cancel}
+          />
+        ) : (
+          <ul
+            aria-label="Table seats"
+            className="pointer-events-none absolute inset-[var(--safe-area-top)_var(--safe-area-right)_var(--safe-area-bottom)_var(--safe-area-left)]"
+          >
+            {seats.map((position, index) => (
+              <MatchSeatMarker
+                key={position}
+                position={position}
+                player={
+                  index === 0
+                    ? player
+                    : index <= guestCount
+                      ? simulatedGuests[index - 1]
+                      : undefined
+                }
+                reducedMotion={reducedMotion}
+                active={false}
+                dealer={false}
+              />
+            ))}
+          </ul>
+        )}
       </div>
       <div
         ref={waitingOverlay}
@@ -134,21 +127,13 @@ export function TavernMatch({
             className="absolute top-1/2 left-1/2 h-[min(112cqw,100cqh,34rem)] w-[min(124%,114cqh,39rem)] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(ellipse,var(--artwork-shadow)_0%,transparent_73%)]"
           />
         )}
-        <div
-          className={
-            !showWaiting
-              ? "sr-only"
-              : "relative grid justify-items-center gap-[clamp(0.75rem,3vmin,1.5rem)]"
-          }
-        >
-          <h1 className="artwork-title text-[clamp(1.5rem,6vmin,3rem)] font-normal">{title}</h1>
-          <div
-            role="status"
-            className="grid justify-items-center gap-3 text-sm text-artwork-foreground drop-shadow-sm sm:text-base"
-          >
-            {!showWaiting ? (
-              "All players connected"
-            ) : (
+        {showWaiting && (
+          <div className="relative grid justify-items-center gap-[clamp(0.75rem,3vmin,1.5rem)]">
+            <h1 className="artwork-title text-[clamp(1.5rem,6vmin,3rem)] font-normal">{title}</h1>
+            <div
+              role="status"
+              className="grid justify-items-center gap-3 text-sm text-artwork-foreground drop-shadow-sm sm:text-base"
+            >
               <span>
                 Finding players ·{" "}
                 <span className="tabular-nums">
@@ -156,8 +141,6 @@ export function TavernMatch({
                 </span>{" "}
                 seated
               </span>
-            )}
-            {showWaiting && (
               <span aria-hidden="true" className="flex gap-2">
                 {seats.map((seat, index) => (
                   <span
@@ -167,9 +150,9 @@ export function TavernMatch({
                   />
                 ))}
               </span>
-            )}
+            </div>
           </div>
-        </div>
+        )}
         <ActionButton
           data-tavern-cancel=""
           tone="quiet"

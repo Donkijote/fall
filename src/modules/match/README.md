@@ -1,22 +1,29 @@
-# Match preview
+# Local Tavern match
 
-`index.ts` exports `MatchScreen`, the screen registered at `/game/:matchId`.
-The local preview uses `tavern-7f3a` and carries the selected format in the
-`mode` query. Opening the URL directly or refreshing starts a fresh mock
-waiting session. Cancel, Close table, and Escape return to the Tavern picker
-and focus the selected format.
+`index.ts` exports `MatchScreen` at `/game/:matchId`. The local table uses
+`tavern-7f3a` and reads the selected format from the `mode` query. Opening
+the URL directly or refreshing starts a fresh session. Cancel, Close table,
+Back to Tavern, and Escape return to the format picker.
 
-The application model maps the shared `GameMode` to seat positions and
-provides mock guests and a repeatable mid-round snapshot. After the last guest
-arrives, the board shows six shared cards, a three-card hand and collector pile
-at each seat, and the remaining draw deck by the dealer. The local hand is
-face up. Each snapshot uses every card of the shared 40-card deck once.
-The UI owns the arrival timers and reads the local
-profile through the existing storage service. The Three Quarks adapter
-renders hearth ash. The [shared domain](../../domain) remains the source of
-game rules.
+- `application/localMatch.ts` composes the shared, framework-independent
+  dealer selection, deal, Sing, play, capture, and counting rules. It returns
+  board frames and motion events. Seats draw for the first dealer
+  automatically; the local dealer can choose the opening deal order and
+  table pattern. Sings are evaluated automatically at each deal.
+- `ui/components/flow` owns the simulated arrivals, turn timers, and GSAP
+  timeline lifecycle. Motion frames lock input and keep the board in sync with
+  animations. Reduced motion settles each frame immediately. Leaving the
+  table cancels pending timers and motion.
+- `ui/components/board` renders seats, cards, scores, dealer controls and the
+  match result. The Playground and board share card flight timings, capture
+  gestures and counting cadence under `src/components/cards/motion`.
+  `adapters/three` renders the decorative hearth ash.
 
-The route is ready to receive server-assigned IDs when match state and player
-membership move to the server. See the
-[table design notes](../../../docs/design/tavern-match/README.md).
-Home and legacy navigation tests exercise the route through both entry points.
+`localMatch.test.ts` plays each format through to a winner, checking full
+deck accounting during motion and rules resolution. Home navigation tests
+cover entering the table and returning focus on cancel. The
+[table design notes](../../../docs/design/tavern-match/README.md) describe
+the composition and responsive checks.
+
+There is no server state: guests are local bots, and leaving the table
+discards the match.

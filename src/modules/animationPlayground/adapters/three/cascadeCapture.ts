@@ -1,4 +1,8 @@
-import { captureBend, captureGesture, captureLanding } from "./captureGesture";
+import {
+  captureBend,
+  captureGesture,
+  captureLanding,
+} from "@/components/cards/motion/captureGesture";
 
 type Point = { x: number; y: number; z: number };
 type HandPose = Point & { angle: number };

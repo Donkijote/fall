@@ -1,32 +1,13 @@
 import gsap from "gsap";
-import { Component, lazy, Suspense, useCallback, useRef, useState } from "react";
-import type { ReactNode } from "react";
+import { lazy, Suspense, useCallback, useRef, useState } from "react";
 
 import mountainCastle from "@/assets/login/mountain-castle.png";
+import { SceneBoundary } from "@/components/surfaces/SceneBoundary";
 import { useAtmospherePreferences } from "@/infrastructure/ui/hooks/useAtmospherePreferences";
 
 import { useGSAP } from "@gsap/react";
 
 const AtmosphereCanvas = lazy(() => import("./scene/AtmosphereCanvas"));
-
-class SceneBoundary extends Component<
-  { children: ReactNode; onFailure: () => void },
-  { failed: boolean }
-> {
-  state = { failed: false };
-
-  static getDerivedStateFromError() {
-    return { failed: true };
-  }
-
-  componentDidCatch() {
-    this.props.onFailure();
-  }
-
-  render() {
-    return this.state.failed ? null : this.props.children;
-  }
-}
 
 export function LoginAtmosphere() {
   const { animate, compact, visible } = useAtmospherePreferences();

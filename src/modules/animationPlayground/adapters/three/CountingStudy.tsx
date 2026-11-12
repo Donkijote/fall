@@ -1,13 +1,18 @@
 import { useEffect, useRef } from "react";
 import type { Group } from "three";
 
+import {
+  countingArrival,
+  countingProgress,
+  sampleCountingCard,
+} from "@/components/cards/motion/cardCounting";
+
 import { Html, OrthographicCamera, RoundedBox } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 
 import { deckCardCount } from "../../application/lab";
 import type { Lab } from "../../application/lab";
 import { CardMesh } from "./Card";
-import { countingArrival, countingProgress, sampleCountingCard } from "./cardCounting";
 import { useMotionSettings } from "./MotionSettings";
 
 export function CountingStudy({ lab, total, quota }: { lab: Lab; total: number; quota: number }) {

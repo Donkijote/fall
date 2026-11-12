@@ -5,6 +5,7 @@ import { MathUtils } from "three";
 import type { Group, Mesh, MeshBasicMaterial } from "three";
 
 import shadowTexture from "@/assets/effects/ember.svg";
+import { cardFlights } from "@/components/cards/motion/cardFlights";
 
 import { useGSAP } from "@gsap/react";
 import { OrthographicCamera, RoundedBox, useTexture } from "@react-three/drei";
@@ -345,10 +346,11 @@ export function TableStudy({
             {
               progress: 1,
               duration,
-              ease: motionSettings.ease === "original" ? "power1.out" : motionSettings.ease,
+              ease:
+                motionSettings.ease === "original" ? cardFlights.deal.ease : motionSettings.ease,
               onStart: lab.playDealCard,
             },
-            index * 0.24,
+            index * cardFlights.deal.stagger,
           );
         });
         return deal;
@@ -369,16 +371,16 @@ export function TableStudy({
         }
       }
 
-      const handDeal = timeline(hands, 0.54);
-      const centerDeal = timeline(center, 0.68);
+      const handDeal = timeline(hands, cardFlights.deal.hand);
+      const centerDeal = timeline(center, cardFlights.deal.table);
       const play = gsap
         .timeline({ paused: true })
         .timeScale(motionSettings.speed)
         .to(playMotion, {
           progress: 1,
-          duration: 0.75,
+          duration: cardFlights.play.duration,
           onStart: lab.playCard,
-          ease: motionSettings.ease === "original" ? "power1.inOut" : motionSettings.ease,
+          ease: motionSettings.ease === "original" ? cardFlights.play.ease : motionSettings.ease,
         });
 
       const capture = gsap

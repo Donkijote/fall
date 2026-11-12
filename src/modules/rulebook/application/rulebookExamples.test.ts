@@ -58,7 +58,7 @@ test.each([
       example.played,
       analysis.capturePlan,
     );
-    const next = finalizeAfterPlay(captured, player.id, example.played);
+    const next = finalizeAfterPlay(captured, player.id, example.played, analysis.isFall);
     expect(next.table).toHaveLength(remaining);
     expect(next.scores.values[String(player.team)] ?? 0).toBe(deckEmpty ? 0 : example.points);
   },

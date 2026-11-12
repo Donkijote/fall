@@ -2,10 +2,11 @@ import { AnimationKeys, animationService } from "@/application/services/Animatio
 import { initialState } from "@/application/store/gameStore";
 import { useUIGameStore } from "@/application/store/uiGameStore";
 import type { Card } from "@/domain/entities/Card";
-import type { GameMode, GameState, Player } from "@/domain/entities/GameState";
+import type { GameMode, GameState } from "@/domain/entities/GameState";
 import { toCardKey } from "@/domain/helpers/card";
 import { dealRound } from "@/domain/services/deal";
 import { dealerCardSelection, setUpDealerSelection } from "@/domain/services/dealer";
+import { createMatchState, rotateDealer } from "@/domain/services/matchSetup";
 import {
   analyzePlay,
   finalizeAfterPlay,
@@ -38,36 +39,10 @@ export function createGameService(getState: () => GameState, setState: (s: GameS
     setupGame: async (mainPlayerId: string, gameMode: GameMode, useBots = true) => {
       const state = getState();
       if (state.phase !== "init") return;
-      const players = [mainPlayerId];
-
-      if (gameMode === "1vs1") {
-        if (useBots) players.push("bot-1");
-      }
-      if (gameMode === "1vs2") {
-        if (useBots) players.push("bot-1", "bot-2");
-      }
-      if (gameMode === "2vs2") {
-        if (useBots) players.push("bot-1", "bot-2", "bot-3");
-      }
-
-      const isTeamPlay = gameMode === "2vs2" && players.length === 4;
-      const playersConfig: Array<Player> = players.map((id, index) => ({
-        id,
-        hand: [],
-        collected: [],
-        score: 0,
-        team: isTeamPlay ? (players.indexOf(id) % 2) + 1 : index + 1,
-      }));
-
-      const nextState: GameState = {
-        ...state,
-        phase: "deal",
-        players: playersConfig,
-        scores: isTeamPlay ? { type: "team", values: {} } : state.scores,
-        mainPlayer: mainPlayerId,
-      };
-
-      await updateStateAndRunBotsAndContinueFlow(nextState);
+      await updateStateAndRunBotsAndContinueFlow({
+        ...createMatchState(mainPlayerId, gameMode, useBots),
+        config: state.config,
+      });
     },
 
     startGame: async () => {
@@ -207,42 +182,21 @@ export function createGameService(getState: () => GameState, setState: (s: GameS
         ]);
       }
 
-      let stateAfterFinalizeAfterPlay = finalizeAfterPlay(stateAfterCapture, playerId, card);
-
-      const allHandsEmpty = stateAfterFinalizeAfterPlay.players.every((p) => p.hand.length === 0);
-      if (allHandsEmpty && stateAfterFinalizeAfterPlay.deck.length === 0) {
-        stateAfterFinalizeAfterPlay = {
-          ...stateAfterFinalizeAfterPlay,
-          phase: "roundEnd" as const,
-        };
-      }
-
-      await updateStateAndRunBotsAndContinueFlow(stateAfterFinalizeAfterPlay);
+      const nextState = finalizeAfterPlay(stateAfterCapture, playerId, card, analysis.isFall);
+      await updateStateAndRunBotsAndContinueFlow(nextState);
     },
 
     endRound: async () => {
       const state = getState();
       if (state.phase !== "roundEnd") return;
 
-      let nextState = applyCountingRule(state);
+      const nextState = applyCountingRule(state);
       if (nextState.phase === "gameOver") {
         await updateStateAndRunBotsAndContinueFlow(nextState);
         return;
       }
 
-      const dealerIdx = nextState.players.findIndex((p) => p.id === nextState.dealer);
-      const newDealerIdx = (dealerIdx + nextState.players.length + 1) % nextState.players.length;
-      const newDealer = nextState.players[newDealerIdx].id;
-
-      nextState = {
-        ...nextState,
-        dealer: newDealer,
-        deck: [],
-        table: [],
-        phase: "dealerChoice",
-      };
-
-      await updateStateAndRunBotsAndContinueFlow(nextState);
+      await updateStateAndRunBotsAndContinueFlow(rotateDealer(nextState));
     },
 
     playBotTurn: async (botId: string) => {

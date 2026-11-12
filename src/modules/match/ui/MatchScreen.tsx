@@ -14,11 +14,11 @@ import { TavernBackdrop } from "@/components/surfaces/TavernBackdrop";
 import type { GameMode } from "@/domain/entities/GameState";
 import type { User } from "@/domain/entities/User";
 import { useReducedMotion } from "@/infrastructure/ui/hooks/useGamePreferences";
-import { PREVIEW_MATCH_ID, TAVERN_PICKER_PATH } from "@/routes/Routes";
+import { LOCAL_MATCH_ID, TAVERN_PICKER_PATH } from "@/routes/Routes";
 
 import { useGSAP } from "@gsap/react";
 
-import { TavernMatch, TavernMatchArtworkPreload } from "./components/TavernMatch";
+import { TavernMatch, TavernMatchArtworkPreload } from "./components/layout/TavernMatch";
 
 const tableZoomStart = 0.96;
 
@@ -89,7 +89,7 @@ export function MatchScreen() {
       .to("[data-match-travel-backdrop]", { autoAlpha: 1 }, 0);
   });
 
-  if (matchId !== PREVIEW_MATCH_ID) return <Navigate to={TAVERN_PICKER_PATH} replace />;
+  if (matchId !== LOCAL_MATCH_ID) return <Navigate to={TAVERN_PICKER_PATH} replace />;
 
   return (
     <main

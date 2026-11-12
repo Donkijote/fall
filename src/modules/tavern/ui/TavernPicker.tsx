@@ -13,7 +13,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import type { GameMode } from "@/domain/entities/GameState";
-import { GAME_PATH, PREVIEW_MATCH_ID } from "@/routes/Routes";
+import { GAME_PATH, LOCAL_MATCH_ID } from "@/routes/Routes";
 
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
 
@@ -147,7 +147,7 @@ export function TavernPicker({ open, canPlay, origin, onClose }: TavernPickerPro
                     onTouchFocus={(selected) => setSelectedFormat(selected ? format.title : null)}
                     onActivate={() =>
                       depart(() =>
-                        navigate(`${GAME_PATH}/${PREVIEW_MATCH_ID}?mode=${format.mode}`, {
+                        navigate(`${GAME_PATH}/${LOCAL_MATCH_ID}?mode=${format.mode}`, {
                           state: { fromTavern: true },
                         }),
                       )

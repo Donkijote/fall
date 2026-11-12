@@ -55,7 +55,10 @@ export const dealerCardSelection = (state: GameState, cardKey: string): GameStat
   };
 
   if (isSubroundComplete(next)) {
-    const { winnerId, ties } = chooseDealer(newPickedBy);
+    const eligible = sel.tieOnlyPlayers ?? sel.order;
+    const { winnerId, ties } = chooseDealer(
+      Object.fromEntries(eligible.map((id) => [id, newPickedBy[id]])),
+    );
 
     if (winnerId) {
       next = finalizeDealerSelection(next, winnerId);
@@ -70,7 +73,8 @@ export const dealerCardSelection = (state: GameState, cardKey: string): GameStat
 
     const order = sel.order;
     const firstTie = order.find((id) => tieSet.has(id))!;
-    const nextOrder = seatingOrderFrom(firstTie, state.players);
+    const refreshPool = state.table.length - newPickedKeys.size < ties.length;
+    const table = refreshPool ? shuffle(createDeck()).slice(0, sel.poolSize) : state.table;
 
     next = {
       ...next,
@@ -78,8 +82,11 @@ export const dealerCardSelection = (state: GameState, cardKey: string): GameStat
         ...sel,
         pickedByKey: resetPickedBy,
         tieOnlyPlayers: [...tieSet],
+        pickedKeys: refreshPool ? new Set<string>() : newPickedKeys,
+        turnIndex: order.indexOf(firstTie),
       },
-      currentPlayer: nextOrder[0],
+      table,
+      currentPlayer: firstTie,
     };
 
     return next;

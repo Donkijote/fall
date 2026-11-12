@@ -122,7 +122,7 @@ test.each([
   expect(screen.getByRole("list", { name: "Table seats" }).children).toHaveLength(seatCount);
   expect(screen.getByRole("status")).toHaveTextContent(`1/${seatCount}`);
   await waitFor(() => expect(screen.getByText("You")).toBeVisible());
-  expect(screen.getByText("You").closest("li")).toHaveTextContent("Your turn");
+  expect(screen.getByText("You").closest("li")).not.toHaveTextContent("Active seat");
   const cancel = screen.getByRole("button", { name: "Cancel matchmaking" });
   expect(cancel).toHaveFocus();
   if (label === "Team Match") await user.keyboard("{Escape}");
