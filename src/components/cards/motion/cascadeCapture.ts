@@ -69,6 +69,7 @@ export function sampleCascadeCapture(
     const toLayer = (leg + 1 - ordinal) / (leg + 1);
     const offset = (leg - ordinal) * pitch;
     return {
+      handTravel: leg === 0 ? travel : 1,
       position: [
         lerp(start.x + from.x * fromLayer, target.x + to.x * toLayer, travel) + bend.x,
         lerp(start.y + from.y * fromLayer, target.y + to.y * toLayer, travel) + bend.y,

@@ -1,4 +1,4 @@
-import { lazy, Suspense, useLayoutEffect, useMemo, useState, type RefObject } from "react";
+import { lazy, Suspense, useLayoutEffect, useMemo, useRef, useState, type RefObject } from "react";
 
 import type { CountingSnapshot } from "@/components/cards/motion/cardCounting";
 import { SceneBoundary } from "@/components/surfaces/SceneBoundary";
@@ -7,6 +7,7 @@ import { useCardAudio } from "@/infrastructure/ui/hooks/useCardAudio";
 import type { CardScene } from "../../../adapters/three/matchCardScene";
 import type { MatchFrame } from "../../../application/localMatch";
 import { measureCardScene } from "./measureCardScene";
+import { createMotionDeadline } from "./motionDeadline";
 
 const MatchCardCanvas = lazy(() => import("../../../adapters/three/MatchCardCanvas"));
 
@@ -32,11 +33,14 @@ export function MatchMotionLayer({
     }),
     [audioRef],
   );
+  const sequence = useRef(0);
   const [failed, setFailed] = useState(false);
   const [stage, setStage] = useState<{
     motion: MatchFrame["motion"];
     scene: CardScene;
-    handoff: () => void;
+    handoff: (seconds: number) => void;
+    finish: () => void;
+    sequence: number;
   }>();
   const animate = !reducedMotion && !failed && typeof WebGL2RenderingContext !== "undefined";
 
@@ -54,19 +58,39 @@ export function MatchMotionLayer({
 
     const original = measured.hidden.map((element) => [element, element.style.visibility] as const);
     let active = true;
-    const handoff = () => {
-      if (!active) return;
+    let started = false;
+    const hideCards = () => {
       for (const [element] of original) element.style.visibility = "hidden";
+    };
+    const finish = () => {
+      if (!active) return;
+      active = false;
+      deadline.dispose();
+      complete();
+    };
+    const deadline = createMotionDeadline(() => {
+      if (!started) {
+        if (motion.kind === "deal" || motion.kind === "count") audio.playDealCard();
+        else audio.playCard();
+      }
+      finish();
+    });
+    const handoff = (seconds: number) => {
+      if (!active) return;
+      started = true;
+      deadline.started(seconds);
+      hideCards();
     };
     // A deal introduces new cards. For plays and captures the board still shows
     // the old position until the canvas paints the exact starting pose.
-    if (motion.kind === "deal") handoff();
-    setStage({ motion, scene: measured.scene, handoff });
-    window.addEventListener("resize", complete);
+    if (motion.kind === "deal") hideCards();
+    setStage({ motion, scene: measured.scene, handoff, finish, sequence: ++sequence.current });
+    window.addEventListener("resize", finish);
     return () => {
       active = false;
+      deadline.dispose();
       for (const [element, visibility] of original) element.style.visibility = visibility;
-      window.removeEventListener("resize", complete);
+      window.removeEventListener("resize", finish);
     };
   }, [animate, audio, board, frame, motion, returning]);
 
@@ -93,7 +117,8 @@ export function MatchMotionLayer({
                     scene: stage.scene,
                     handoff: stage.handoff,
                     audio,
-                    complete,
+                    complete: stage.finish,
+                    sequence: stage.sequence,
                     count,
                   }
                 : undefined

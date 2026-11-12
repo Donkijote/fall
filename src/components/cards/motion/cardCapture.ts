@@ -31,6 +31,7 @@ export function sampleCardCapture(
     const { travel } = gesture;
     const bend = captureBend(hand, table, gesture.side);
     return {
+      handTravel: travel,
       position: [
         lerp(hand.x, table.x + landing.x, travel) + bend.x,
         lerp(hand.y, table.y + landing.y, travel) + bend.y,

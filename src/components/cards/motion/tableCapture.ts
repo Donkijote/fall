@@ -44,7 +44,10 @@ export function captureFlight(progress: number, effect: CardDropEffect, drop: Ca
 import type { CardAnchor, CardPoint, CardPose } from "./cardFlights";
 import { cardLandingPose } from "./cardImpactMotion";
 
-export type FallPose = CardPose & { shadow?: { lift: number; opacity: number } };
+export type FallPose = CardPose & {
+  handTravel?: number;
+  shadow?: { lift: number; opacity: number };
+};
 
 export function sampleFallCapture(
   progress: number,
@@ -69,11 +72,13 @@ export function sampleFallCapture(
     if (topCard) {
       if (progress <= 0.27)
         return {
+          handTravel: 0,
           position: [origin.x, origin.y, origin.z],
           rotation: [0, origin.faceUp ? Math.PI : 0, origin.angle],
         };
       const flight = captureFlight(progress, effect, impact);
       return {
+        handTravel: flight.travel,
         position: [
           lerp(origin.x, hitX, flight.travel),
           lerp(origin.y, hitY, flight.travel) + flight.lift * 0.22,

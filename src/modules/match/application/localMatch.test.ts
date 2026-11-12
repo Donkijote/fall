@@ -6,6 +6,7 @@ import {
   countRound,
   localPlayerId,
   openDeal,
+  simulateTurn,
   playMatchCard,
   startMatch,
   type MatchFrame,
@@ -70,7 +71,9 @@ test.each([
         active.hand[0];
       const other = state.players.find(({ id }) => id !== active.id)!;
       expect(playMatchCard(state, other.id, card)).toEqual([]);
-      frames = playMatchCard(state, active.id, card);
+      frames =
+        active.id === localPlayerId ? playMatchCard(state, active.id, card) : simulateTurn(state);
+      expect(frames.length).toBeGreaterThan(1);
     }
 
     for (const frame of frames) {

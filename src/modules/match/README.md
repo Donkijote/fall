@@ -14,7 +14,8 @@ Back to Tavern, and Escape return to the format picker.
   handoff from the board to the 3D scene. It measures the current card, deck,
   and pile positions. For a play or capture, the hand and table stay in place
   until the first 3D frame takes over. Motion frames lock input until the
-  scene finishes. Reduced motion and unavailable
+  scene finishes. If playback fails to start or stops responding, the queued move
+  settles so the next turn can proceed. Reduced motion and unavailable
   WebGL settle frames immediately with a sound cue. Leaving the table
   cancels pending timers, motion, and audio.
 - `ui/components/board` renders seats, cards, scores, dealer controls and the

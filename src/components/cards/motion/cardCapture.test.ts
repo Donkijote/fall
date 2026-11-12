@@ -9,6 +9,7 @@ const sample = (progress: number, top: boolean) =>
 
 it("starts with one card in hand and the captured card already face up on the table", () => {
   expect(sample(0, true)).toEqual({
+    handTravel: 0,
     position: [hand.x, hand.y, hand.z],
     rotation: [0, 0, hand.angle],
   });
@@ -22,6 +23,8 @@ it("starts with one card in hand and the captured card already face up on the ta
 
 it("lands the played card on the table card before lifting either one", () => {
   const top = sample(0.5, true);
+  expect(sample(0.21, true).handTravel).toBeGreaterThan(0);
+  expect(top.handTravel).toBe(1);
   expect(Math.abs(top.position[0] - table.x)).toBeLessThan(0.06);
   expect(Math.abs(top.position[1] - table.y)).toBeLessThan(0.06);
   expect(top.position[2]).toBeCloseTo(table.z + pitch);

@@ -4,6 +4,7 @@ import { MathUtils, type Group } from "three";
 
 import { sampleCardCapture } from "@/components/cards/motion/cardCapture";
 import {
+  countingArrival,
   createCountingPlayback,
   type CountingSnapshot,
 } from "@/components/cards/motion/cardCounting";
@@ -48,7 +49,8 @@ type PlaybackProps = {
   scene: CardScene;
   audio: CardMotionAudio;
   complete: () => void;
-  handoff: () => void;
+  handoff: (seconds: number) => void;
+  sequence: number;
   count: (side: number, snapshot: CountingSnapshot) => void;
 };
 
@@ -132,6 +134,9 @@ function CardSequence({ scene, audio, complete, handoff, count }: PlaybackProps)
   );
 
   useFrame((_, delta) => {
+    const timeline = timelineRef.current;
+    if (!playback.started && scene.kind !== "count" && !timeline) return;
+
     const nodes = meshes.current;
     if (scene.kind === "deal") {
       scene.cards.forEach((card, index) => {
@@ -184,7 +189,10 @@ function CardSequence({ scene, audio, complete, handoff, count }: PlaybackProps)
             "plain",
             impact,
           );
-          applyPose(nodes[0], pose, scene.played.size);
+          const size = MathUtils.lerp(scene.played.size, target.size, pose.handTravel ?? 1);
+          // Keep the Fall's lift, then settle to the target card's exact size on impact.
+          const liftScale = MathUtils.lerp(pose.scale ?? 1, 1, impact.fallTime);
+          applyPose(nodes[0], { ...pose, scale: liftScale }, size);
           updateFallShadow(shadow.current, pose, -0.003, target.size / 0.34);
           applyPose(
             nodes[1],
@@ -215,7 +223,11 @@ function CardSequence({ scene, audio, complete, handoff, count }: PlaybackProps)
                     scene.pile,
                     cardPitch,
                   );
-            applyPose(nodes[index], pose, card.size);
+            const size =
+              index === 0
+                ? MathUtils.lerp(card.size, target.size, pose.handTravel ?? 1)
+                : card.size;
+            applyPose(nodes[index], pose, size);
           });
         }
       }
@@ -266,8 +278,18 @@ function CardSequence({ scene, audio, complete, handoff, count }: PlaybackProps)
     }
     if (!playback.started) {
       playback.started = true;
-      handoff();
-      timelineRef.current?.play();
+      const seconds =
+        scene.kind === "count"
+          ? scene.groups.reduce(
+              (total, group) =>
+                total +
+                0.65 +
+                (group.cards.length ? countingArrival(group.cards.length - 1, group.quota) : 0),
+              0,
+            )
+          : timeline!.duration();
+      handoff(seconds);
+      timeline?.play();
     }
   });
 
@@ -311,7 +333,7 @@ function Scene({ playback }: { playback?: PlaybackProps }) {
       {playback && (
         <Suspense fallback={null}>
           <CardArtworkProvider>
-            <CardSequence {...playback} />
+            <CardSequence key={playback.sequence} {...playback} />
           </CardArtworkProvider>
         </Suspense>
       )}
