@@ -118,6 +118,7 @@ test("an immediate clean-table win stops the match without dealing another hand"
 test.each([
   ["card", false, false],
   ["fall", true, false],
+  ["fall", true, true],
   ["cascade", false, true],
 ] as const)(
   "drives the %s sequence directly with the played card and its targets",

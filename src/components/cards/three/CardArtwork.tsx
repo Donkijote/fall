@@ -16,15 +16,16 @@ const CardArtworkContext = createContext<readonly [Texture, Texture] | null>(nul
 export function createCardFaceTexture(
   image: CanvasImageSource & { width: number; height: number },
   paper = "#fafafa",
+  resolution = 512,
 ) {
   const canvas = document.createElement("canvas");
-  canvas.width = 512;
-  canvas.height = 720;
+  canvas.width = resolution;
+  canvas.height = resolution * (720 / 512);
   const context = canvas.getContext("2d");
   if (!context) throw new Error("Card artwork requires a 2D canvas context.");
   context.fillStyle = paper;
   context.fillRect(0, 0, canvas.width, canvas.height);
-  const inset = 40;
+  const inset = resolution * (40 / 512);
   const scale = Math.min(
     (canvas.width - inset * 2) / image.width,
     (canvas.height - inset * 2) / image.height,
@@ -50,7 +51,7 @@ export function useCardArtwork() {
   return textures;
 }
 
-export function useCardFaceTextures(urls: string[], paper?: string) {
+export function useCardFaceTextures(urls: string[], paper?: string, resolution?: number) {
   const artwork = useTexture(urls);
   const signature = urls.join("\n");
   const faces = useMemo(
@@ -60,10 +61,10 @@ export function useCardFaceTextures(urls: string[], paper?: string) {
           .split("\n")
           .map((url, index) => [
             url,
-            createCardFaceTexture(artwork[index].image as HTMLImageElement, paper),
+            createCardFaceTexture(artwork[index].image as HTMLImageElement, paper, resolution),
           ]),
       ),
-    [signature, artwork, paper],
+    [signature, artwork, paper, resolution],
   );
   useEffect(
     () => () => {

@@ -308,7 +308,7 @@ export function TableStudy({
         paused(),
         captureMotion,
         cascadeCapture ? "cascade" : simpleCapture ? "card" : "fall",
-        cascadeOrder.length,
+        cascadeCapture ? cascadeOrder.length : 1,
         lab,
       );
 

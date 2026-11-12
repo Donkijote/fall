@@ -7,8 +7,6 @@ import {
   type Texture,
 } from "three";
 
-import { extend } from "@react-three/fiber";
-
 import { useCardArtwork } from "./CardArtwork";
 import { addCardFrost, type FrostUniform } from "./cardFrost";
 import { addCardHeat, type HeatUniforms } from "./cardHeat";
@@ -59,7 +57,7 @@ class CardGeometry extends ExtrudeGeometry {
   }
 }
 
-const CardSurface = extend(CardGeometry);
+const cardGeometry = new CardGeometry();
 
 export function CardMesh({
   frost,
@@ -87,8 +85,7 @@ export function CardMesh({
   }, [frost, heat]);
   const [face, back] = useCardArtwork();
   return (
-    <mesh>
-      <CardSurface />
+    <mesh geometry={cardGeometry}>
       <meshStandardMaterial attach="material-0" color="#e4e4e7" roughness={0.75} />
       <meshBasicMaterial
         attach="material-1"

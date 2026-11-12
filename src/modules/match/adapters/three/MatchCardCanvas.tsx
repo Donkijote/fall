@@ -1,21 +1,26 @@
 import gsap from "gsap";
-import { Suspense, useMemo, useRef } from "react";
-import { MathUtils, type Group } from "three";
+import {
+  Suspense,
+  memo,
+  useSyncExternalStore,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  type RefObject,
+} from "react";
+import { MathUtils, type Group, type Texture } from "three";
 
+import emberTexture from "@/assets/effects/ember.svg";
 import { sampleCardCapture } from "@/components/cards/motion/cardCapture";
+import { countingArrival, createCountingPlayback } from "@/components/cards/motion/cardCounting";
 import {
-  countingArrival,
-  createCountingPlayback,
-  type CountingSnapshot,
-} from "@/components/cards/motion/cardCounting";
-import { sampleDeal, samplePlay, type CardPose } from "@/components/cards/motion/cardFlights";
+  cardFlights,
+  sampleDeal,
+  samplePlay,
+  type CardPose,
+} from "@/components/cards/motion/cardFlights";
 import { sampleCardImpact } from "@/components/cards/motion/cardImpactMotion";
-import {
-  appendCapture,
-  appendDeal,
-  appendPlay,
-  type CardMotionAudio,
-} from "@/components/cards/motion/cardTimelines";
+import { appendCapture, appendDeal, appendPlay } from "@/components/cards/motion/cardTimelines";
 import {
   getCascadeDuration,
   cascadeReturnTime,
@@ -23,6 +28,7 @@ import {
 } from "@/components/cards/motion/cascadeCapture";
 import {
   captureDuration,
+  collectAt,
   impactAt,
   sampleFallCapture,
 } from "@/components/cards/motion/tableCapture";
@@ -38,31 +44,45 @@ import {
   updateFallShadow,
   type FallShadowMesh,
 } from "@/components/cards/three/FallShadow";
+import { createDeck } from "@/domain/rules/deck";
 
 import { useGSAP } from "@gsap/react";
-import { OrthographicCamera } from "@react-three/drei";
+import { OrthographicCamera, useTexture } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 
-import { cardPitch, viewHeight, type CardScene } from "./matchCardScene";
+import { cardPitch, viewHeight, type PlaybackChannel, type PlaybackProps } from "./matchCardScene";
+import { sampleFallCascade } from "./sampleFallCascade";
 
-type PlaybackProps = {
-  scene: CardScene;
-  audio: CardMotionAudio;
-  complete: () => void;
-  handoff: (seconds: number) => void;
-  sequence: number;
-  count: (side: number, snapshot: CountingSnapshot) => void;
-};
+const faceUrls = createDeck().flatMap(({ suit, rank }) => getCardFaceUrl(suit, rank) ?? []);
+
+export function preloadMatchCardArt() {
+  useTexture.preload(faceUrls);
+  useTexture.preload([cardArtwork.face, cardArtwork.back]);
+  useTexture.preload(emberTexture);
+}
 
 function applyPose(mesh: Group | undefined, pose: CardPose, size: number) {
   if (!mesh) return;
   mesh.position.fromArray(pose.position);
-  mesh.rotation.set(pose.rotation[0], pose.rotation[1], pose.rotation[2]);
+  mesh.rotation.set(pose.rotation[0], pose.rotation[1], pose.rotation[2], "ZYX");
   mesh.scale.setScalar(size * (pose.scale ?? 1));
   mesh.visible = true;
 }
 
-function CardSequence({ scene, audio, complete, handoff, count }: PlaybackProps) {
+function CardSequence({
+  scene,
+  audio,
+  complete,
+  handoff,
+  count,
+  sequence,
+  textures,
+  shadow,
+}: PlaybackProps & {
+  textures: Map<string, Texture>;
+  shadow: RefObject<FallShadowMesh | null>;
+}) {
+  const invalidate = useThree((state) => state.invalidate);
   const cards =
     scene.kind === "deal"
       ? scene.cards
@@ -71,26 +91,13 @@ function CardSequence({ scene, audio, complete, handoff, count }: PlaybackProps)
         : scene.kind === "collect"
           ? [...(scene.played ? [scene.played] : []), ...scene.targets]
           : scene.groups.flatMap((group) => group.cards);
-  const images = [
-    ...new Set(
-      cards.map(({ art }) =>
-        art ? (getCardFaceUrl(art.suit, art.rank) ?? cardArtwork.face) : cardArtwork.face,
-      ),
-    ),
-  ];
-  // Use the same paper as the board's bg-amber-50 artwork.
-  const paper = getComputedStyle(document.documentElement)
-    .getPropertyValue("--color-amber-50")
-    .trim();
-  const textures = useCardFaceTextures(images, paper || undefined);
   const meshes = useRef<Group[]>([]);
   const timelineRef = useRef<gsap.core.Timeline>(null);
-  const shadow = useRef<FallShadowMesh>(null);
   const playback = useMemo(
     () => ({
-      flights: scene.kind === "deal" ? scene.cards.map(() => ({ progress: 0 })) : [],
+      flights: scene.kind === "deal" ? scene.cards.map(() => ({ progress: 0, fan: 0 })) : [],
       play: { progress: 0 },
-      capture: { progress: 0, cooldown: 0 },
+      capture: { progress: 0, cooldown: 0, followThrough: 0 },
       count:
         scene.kind === "count"
           ? scene.groups.map(({ cards, quota }) =>
@@ -102,12 +109,22 @@ function CardSequence({ scene, audio, complete, handoff, count }: PlaybackProps)
       finished: false,
       started: false,
     }),
-    [scene, audio],
+    [sequence, audio],
   );
+
+  useLayoutEffect(() => {
+    const mesh = shadow.current;
+    return () => {
+      if (mesh) mesh.visible = false;
+    };
+  }, [shadow]);
 
   useGSAP(
     () => {
-      if (scene.kind === "count") return;
+      if (scene.kind === "count") {
+        invalidate();
+        return;
+      }
       const timeline = gsap.timeline({ paused: true, onComplete: complete });
       timelineRef.current = timeline;
       if (scene.kind === "play") appendPlay(timeline, playback.play, audio);
@@ -115,37 +132,58 @@ function CardSequence({ scene, audio, complete, handoff, count }: PlaybackProps)
         appendCapture(timeline, playback.capture, scene.capture, scene.targets.length, audio);
       if (scene.kind === "deal") {
         for (const first of [scene.cards[0]?.center, !scene.cards[0]?.center]) {
+          const indices = scene.cards.flatMap((card, index) =>
+            card.center === first ? [index] : [],
+          );
+          const start = timeline.duration();
           appendDeal(
             timeline,
-            playback.flights.filter((_, index) => scene.cards[index].center === first),
+            indices.map((index) => playback.flights[index]),
             Boolean(first),
             audio,
             "original",
-            timeline.duration(),
+            start,
           );
+          indices.forEach((index, order) => {
+            if (!scene.cards[index].fan) return;
+            timeline.to(
+              playback.flights[index],
+              { fan: 1, duration: 0.2, ease: "power2.out" },
+              start + order * cardFlights.deal.stagger + cardFlights.deal.hand,
+            );
+          });
         }
       }
       if (!timeline.duration()) complete();
+      invalidate();
       return () => {
         timelineRef.current = null;
       };
     },
-    { dependencies: [scene, playback], revertOnUpdate: true },
+    { dependencies: [playback], revertOnUpdate: true },
   );
 
   useFrame((_, delta) => {
     const timeline = timelineRef.current;
     if (!playback.started && scene.kind !== "count" && !timeline) return;
 
+    if (playback.started && timeline && timeline.progress() < 1) {
+      timeline.time(Math.min(timeline.duration(), timeline.time() + Math.min(delta, 0.05)), false);
+    }
+
     const nodes = meshes.current;
     if (scene.kind === "deal") {
       scene.cards.forEach((card, index) => {
         const deck = { ...scene.deck, z: scene.deck.z - index * cardPitch };
-        applyPose(
-          nodes[index],
-          sampleDeal(playback.flights[index].progress, deck, card.origin, card.center),
-          card.size,
-        );
+        const flight = playback.flights[index];
+        const target = card.fan
+          ? {
+              ...card.origin,
+              y: MathUtils.lerp(card.origin.y, card.fan.y, flight.fan),
+              angle: MathUtils.lerp(card.origin.angle, card.fan.angle, flight.fan),
+            }
+          : card.origin;
+        applyPose(nodes[index], sampleDeal(flight.progress, deck, target, card.center), card.size);
       });
     } else if (scene.kind === "play") {
       applyPose(
@@ -178,37 +216,53 @@ function CardSequence({ scene, audio, complete, handoff, count }: PlaybackProps)
             "plain",
             (progress - impactAt) * duration + playback.capture.cooldown,
           );
-          const pose = sampleFallCapture(
-            progress,
-            true,
-            from,
-            target.origin,
-            scene.pile,
-            cardPitch,
-            target.size / 0.83,
-            "plain",
-            impact,
-          );
-          const size = MathUtils.lerp(scene.played.size, target.size, pose.handTravel ?? 1);
-          // Keep the Fall's lift, then settle to the target card's exact size on impact.
-          const liftScale = MathUtils.lerp(pose.scale ?? 1, 1, impact.fallTime);
-          applyPose(nodes[0], { ...pose, scale: liftScale }, size);
-          updateFallShadow(shadow.current, pose, -0.003, target.size / 0.34);
-          applyPose(
-            nodes[1],
+          const landing = (top: boolean, position: number) =>
             sampleFallCapture(
-              progress,
-              false,
-              target.origin,
+              position,
+              top,
+              top ? from : target.origin,
               target.origin,
               scene.pile,
               cardPitch,
               target.size / 0.83,
               "plain",
               impact,
-            ),
-            target.size,
-          );
+            );
+          const pose = landing(true, progress);
+          if (scene.targets.length > 1 && progress >= collectAt) {
+            const origins = scene.targets.map(({ origin }) => origin);
+            cards.forEach((card, index) => {
+              const pair = index < 2 ? landing(index === 0, collectAt) : undefined;
+              const continued = sampleFallCascade(
+                playback.capture.followThrough,
+                index - 1,
+                from,
+                origins,
+                scene.pile,
+                cardPitch,
+                pair,
+              );
+              applyPose(nodes[index], continued, index === 0 ? target.size : card.size);
+            });
+            updateFallShadow(shadow.current, pose, -0.003, target.size / 0.34);
+          } else {
+            const size = MathUtils.lerp(scene.played.size, target.size, pose.handTravel ?? 1);
+            // Keep the Fall's lift, then settle to the target card's exact size on impact.
+            const liftScale = MathUtils.lerp(pose.scale ?? 1, 1, impact.fallTime);
+            applyPose(nodes[0], { ...pose, scale: liftScale }, size);
+            updateFallShadow(shadow.current, pose, -0.003, target.size / 0.34);
+            applyPose(nodes[1], landing(false, progress), target.size);
+            scene.targets.slice(1).forEach((card, index) => {
+              applyPose(
+                nodes[index + 2],
+                {
+                  position: [card.origin.x, card.origin.y, card.origin.z],
+                  rotation: [0, Math.PI, card.origin.angle],
+                },
+                card.size,
+              );
+            });
+          }
         } else {
           const origins = scene.targets.map(({ origin }) => origin);
           cards.forEach((card, index) => {
@@ -289,13 +343,12 @@ function CardSequence({ scene, audio, complete, handoff, count }: PlaybackProps)
             )
           : timeline!.duration();
       handoff(seconds);
-      timeline?.play();
     }
+    if (!playback.finished && (!timeline || timeline.progress() < 1)) invalidate();
   });
 
   return (
     <>
-      {scene.kind === "collect" && scene.capture === "fall" && <FallShadow mesh={shadow} />}
       {cards.map(({ art }, index) => (
         <group
           key={index}
@@ -319,7 +372,37 @@ function CardSequence({ scene, audio, complete, handoff, count }: PlaybackProps)
   );
 }
 
-function Scene({ playback }: { playback?: PlaybackProps }) {
+function MatchSequences({ playback }: { playback?: PlaybackProps }) {
+  const { gl, camera, scene } = useThree();
+  const warmup = useRef<Group>(null);
+  const shadow = useRef<FallShadowMesh>(null);
+  const paper = getComputedStyle(document.documentElement)
+    .getPropertyValue("--color-amber-50")
+    .trim();
+  const textures = useCardFaceTextures(faceUrls, paper || undefined, 256);
+  useLayoutEffect(() => {
+    for (const texture of textures.values()) gl.initTexture(texture);
+    if (warmup.current) void gl.compileAsync(warmup.current, camera, scene).catch(() => {});
+  }, [gl, textures, camera, scene]);
+  return (
+    <>
+      <group ref={warmup}>
+        <group visible={false}>
+          <CardMesh />
+        </group>
+        <FallShadow mesh={shadow} />
+      </group>
+      {playback && (
+        <CardSequence key={playback.sequence} {...playback} textures={textures} shadow={shadow} />
+      )}
+    </>
+  );
+}
+
+function Scene({ channel }: { channel: PlaybackChannel }) {
+  // Subscribe inside the existing R3F root so each move can start without
+  // going back through the Canvas configuration and React root bridge.
+  const playback = useSyncExternalStore(channel.subscribe, channel.getSnapshot);
   const height = useThree(({ size }) => size.height);
   return (
     <>
@@ -330,18 +413,16 @@ function Scene({ playback }: { playback?: PlaybackProps }) {
       />
       <ambientLight intensity={1.75} />
       <directionalLight position={[3, 5, 4]} intensity={2.8} color="#fff0df" />
-      {playback && (
-        <Suspense fallback={null}>
-          <CardArtworkProvider>
-            <CardSequence key={playback.sequence} {...playback} />
-          </CardArtworkProvider>
-        </Suspense>
-      )}
+      <Suspense fallback={null}>
+        <CardArtworkProvider>
+          <MatchSequences playback={playback} />
+        </CardArtworkProvider>
+      </Suspense>
     </>
   );
 }
 
-export default function MatchCardCanvas({ playback }: { playback?: PlaybackProps }) {
+const MatchCardCanvas = memo(function MatchCardCanvas({ channel }: { channel: PlaybackChannel }) {
   return (
     <Canvas
       // Keep the SVG colors consistent with the DOM card during the handoff.
@@ -349,9 +430,11 @@ export default function MatchCardCanvas({ playback }: { playback?: PlaybackProps
       dpr={[1, 2]}
       style={{ pointerEvents: "none" }}
       gl={{ alpha: true, antialias: true }}
-      frameloop={playback ? "always" : "demand"}
+      frameloop="demand"
     >
-      <Scene playback={playback} />
+      <Scene channel={channel} />
     </Canvas>
   );
-}
+});
+
+export default MatchCardCanvas;

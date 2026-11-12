@@ -1,8 +1,12 @@
 import { cardCaptureDuration } from "./cardCapture";
 import { cardFlights } from "./cardFlights";
 import { flameCooldownDuration } from "./cardImpactMotion";
-import { cascadeReturnTime, getCascadeDuration } from "./cascadeCapture";
-import { captureDuration } from "./tableCapture";
+import {
+  cascadeFirstPickupDuration,
+  cascadeReturnTime,
+  getCascadeDuration,
+} from "./cascadeCapture";
+import { captureDuration, collectAt } from "./tableCapture";
 
 export type CardMotionAudio = { playDealCard: () => void; playCard: () => void };
 export type CaptureKind = "fall" | "card" | "cascade" | "sweep";
@@ -47,7 +51,7 @@ export function appendPlay(
 
 export function appendCapture(
   timeline: gsap.core.Timeline,
-  motion: FlightProgress & { cooldown: number },
+  motion: FlightProgress & { cooldown: number; followThrough?: number },
   kind: CaptureKind,
   targets: number,
   audio: CardMotionAudio,
@@ -60,14 +64,28 @@ export function appendCapture(
         : kind === "sweep"
           ? cascadeReturnTime
           : captureDuration("plain");
-  timeline.to(motion, { progress: 1, duration, ease: "none", onStart: audio.playCard });
+  const fallCascade = kind === "fall" && targets > 1;
+  timeline.to(motion, {
+    progress: fallCascade ? collectAt : 1,
+    duration: fallCascade ? duration * collectAt : duration,
+    ease: "none",
+    onStart: audio.playCard,
+  });
   if (kind === "fall") {
     timeline.call(audio.playCard, [], duration * 0.27);
-    timeline.to(motion, {
-      cooldown: flameCooldownDuration,
-      duration: flameCooldownDuration,
-      ease: "none",
-    });
+    if (fallCascade) {
+      timeline.to(motion, {
+        followThrough: 1,
+        duration: getCascadeDuration(targets) - cascadeFirstPickupDuration,
+        ease: "none",
+      });
+    } else {
+      timeline.to(motion, {
+        cooldown: flameCooldownDuration,
+        duration: flameCooldownDuration,
+        ease: "none",
+      });
+    }
   }
   return timeline;
 }

@@ -94,7 +94,7 @@ export function playMatchCard(state: GameState, player: string, card: Card): Mat
           ? { kind: "play", card: cardKey, player }
           : {
               kind: "collect",
-              capture: plan.kind === "cascade" ? "cascade" : analysis.isFall ? "fall" : "card",
+              capture: analysis.isFall ? "fall" : plan.kind === "cascade" ? "cascade" : "card",
               card: cardKey,
               targets: plan.targets.map(toCardKey),
               player,

@@ -30,6 +30,7 @@ export function getCascadeDuration(count: number) {
   const last = stepsFor(count).at(-1);
   return (last ? last.start + last.duration : 0) + cascadeReturnTime;
 }
+export const cascadeFirstPickupDuration = cadence[0];
 export const cascadeCaptureDuration = getCascadeDuration(cascadeOrder.length);
 
 // Each layer lands slightly askew, then squares up during the following pickup.

@@ -7,7 +7,7 @@ import {
   type CardScene,
   type SceneCard,
 } from "../../../adapters/three/matchCardScene";
-import type { MatchFrame } from "../../../application/localMatch";
+import { localPlayerId, type MatchFrame } from "../../../application/localMatch";
 
 function measureAngle(element: Element) {
   const style = getComputedStyle(element);
@@ -60,6 +60,8 @@ export function measureCardScene(root: Element, frame: MatchFrame) {
   if (motion.kind === "deal") {
     const deck = stackAt("draw-pile", motion.dealer);
     if (!deck) return;
+    const localHand = find("match-hand", localPlayerId);
+    const handLine = localHand ? anchor(localHand.getBoundingClientRect()).y : undefined;
     scene = {
       kind: "deal",
       deck: {
@@ -70,14 +72,19 @@ export function measureCardScene(root: Element, frame: MatchFrame) {
         const table = find("table-card", key);
         const hand = find("hand-card", key);
         const element = table ?? hand;
-        return element
-          ? [
-              {
-                ...cardAt(element, key, Boolean(table || element.querySelector("img")?.alt)),
-                center: Boolean(table),
-              },
-            ]
-          : [];
+        if (!element) return [];
+        const card = cardAt(element, key, Boolean(table || element.querySelector("img")?.alt));
+        if (handLine !== undefined && localHand?.contains(element)) {
+          return [
+            {
+              ...card,
+              center: false,
+              fan: card.origin,
+              origin: { ...card.origin, y: handLine, angle: 0 },
+            },
+          ];
+        }
+        return [{ ...card, center: Boolean(table) }];
       }),
     };
   } else if (motion.kind === "play" || motion.kind === "collect") {

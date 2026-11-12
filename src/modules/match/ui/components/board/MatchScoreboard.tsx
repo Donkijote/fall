@@ -20,9 +20,11 @@ export function MatchScoreboard({
       : motion?.kind === "play"
         ? `${playerName(motion.player)} played a card`
         : motion?.kind === "collect"
-          ? motion.player === localPlayerId
-            ? "Collecting your cards"
-            : `${playerName(motion.player)} is collecting cards`
+          ? `${motion.capture === "fall" ? "Fall · " : ""}${
+              motion.player === localPlayerId
+                ? "Collecting your cards"
+                : `${playerName(motion.player)} is collecting cards`
+            }`
           : state.phase === "gameOver"
             ? "Match complete"
             : state.phase === "roundEnd"

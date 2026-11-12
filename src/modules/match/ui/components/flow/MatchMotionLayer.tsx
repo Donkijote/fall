@@ -4,7 +4,7 @@ import type { CountingSnapshot } from "@/components/cards/motion/cardCounting";
 import { SceneBoundary } from "@/components/surfaces/SceneBoundary";
 import { useCardAudio } from "@/infrastructure/ui/hooks/useCardAudio";
 
-import type { CardScene } from "../../../adapters/three/matchCardScene";
+import { createPlaybackChannel } from "../../../adapters/three/matchCardScene";
 import type { MatchFrame } from "../../../application/localMatch";
 import { measureCardScene } from "./measureCardScene";
 import { createMotionDeadline } from "./motionDeadline";
@@ -35,13 +35,7 @@ export function MatchMotionLayer({
   );
   const sequence = useRef(0);
   const [failed, setFailed] = useState(false);
-  const [stage, setStage] = useState<{
-    motion: MatchFrame["motion"];
-    scene: CardScene;
-    handoff: (seconds: number) => void;
-    finish: () => void;
-    sequence: number;
-  }>();
+  const [channel] = useState(createPlaybackChannel);
   const animate = !reducedMotion && !failed && typeof WebGL2RenderingContext !== "undefined";
 
   useLayoutEffect(() => {
@@ -84,22 +78,36 @@ export function MatchMotionLayer({
     // A deal introduces new cards. For plays and captures the board still shows
     // the old position until the canvas paints the exact starting pose.
     if (motion.kind === "deal") hideCards();
-    setStage({ motion, scene: measured.scene, handoff, finish, sequence: ++sequence.current });
-    window.addEventListener("resize", finish);
+    const id = ++sequence.current;
+    const count = (side: number, snapshot: CountingSnapshot) => {
+      const label = root.querySelector<HTMLElement>(`[data-count-side="${side}"]`);
+      if (!label) return;
+      const text = `${snapshot.counted}/${label.dataset.total} cards · +${snapshot.points}`;
+      if (label.textContent !== text) label.textContent = text;
+    };
+    channel.publish({
+      scene: measured.scene,
+      handoff,
+      complete: finish,
+      count,
+      audio,
+      sequence: id,
+    });
+    const remeasure = () => {
+      const updated = measureCardScene(root, frame);
+      const current = channel.getSnapshot();
+      if (updated && current?.sequence === id)
+        channel.publish({ ...current, scene: updated.scene });
+    };
+    window.addEventListener("resize", remeasure);
     return () => {
       active = false;
       deadline.dispose();
+      if (channel.getSnapshot()?.sequence === id) channel.publish();
       for (const [element, visibility] of original) element.style.visibility = visibility;
-      window.removeEventListener("resize", finish);
+      window.removeEventListener("resize", remeasure);
     };
-  }, [animate, audio, board, frame, motion, returning]);
-
-  function count(side: number, snapshot: CountingSnapshot) {
-    const label = board.current?.querySelector<HTMLElement>(`[data-count-side="${side}"]`);
-    if (!label) return;
-    const text = `${snapshot.counted}/${label.dataset.total} cards · +${snapshot.points}`;
-    if (label.textContent !== text) label.textContent = text;
-  }
+  }, [animate, audio, board, channel, frame, motion, returning]);
 
   if (!animate || returning) return null;
   return (
@@ -110,20 +118,7 @@ export function MatchMotionLayer({
     >
       <SceneBoundary onFailure={() => setFailed(true)}>
         <Suspense fallback={null}>
-          <MatchCardCanvas
-            playback={
-              stage && motion && stage.motion === motion
-                ? {
-                    scene: stage.scene,
-                    handoff: stage.handoff,
-                    audio,
-                    complete: stage.finish,
-                    sequence: stage.sequence,
-                    count,
-                  }
-                : undefined
-            }
-          />
+          <MatchCardCanvas channel={channel} />
         </Suspense>
       </SceneBoundary>
     </div>

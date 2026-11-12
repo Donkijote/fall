@@ -1,6 +1,6 @@
 import gsap from "gsap";
 import { X } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import landscape from "@/assets/lobby/tavern-match/table-landscape.webp";
 import portrait from "@/assets/lobby/tavern-match/table-portrait.webp";
@@ -50,6 +50,13 @@ export function TavernMatch({
   const waitingOverlay = useRef<HTMLDivElement>(null);
   const showWaiting = !ready || (!reducedMotion && !waitingFaded);
   const match = useLocalMatch(mode, !showWaiting, returning, reducedMotion);
+
+  useEffect(() => {
+    if (reducedMotion || typeof WebGL2RenderingContext === "undefined") return;
+    void import("../../../adapters/three/MatchCardCanvas")
+      .then(({ preloadMatchCardArt }) => preloadMatchCardArt())
+      .catch(() => {}); // The match canvas handles unavailable graphics.
+  }, [reducedMotion]);
 
   useGSAP(
     () => {

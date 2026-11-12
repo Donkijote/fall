@@ -14,10 +14,12 @@ Back to Tavern, and Escape return to the format picker.
   handoff from the board to the 3D scene. It measures the current card, deck,
   and pile positions. For a play or capture, the hand and table stay in place
   until the first 3D frame takes over. Motion frames lock input until the
-  scene finishes. If playback fails to start or stops responding, the queued move
-  settles so the next turn can proceed. Reduced motion and unavailable
-  WebGL settle frames immediately with a sound cue. Leaving the table
-  cancels pending timers, motion, and audio.
+  scene finishes. The canvas advances card timelines with the same frame
+  clock it uses to render and remeasures destinations when the window changes.
+  If playback fails to start or stops responding, the queued move settles so
+  the next turn can proceed. Reduced motion and unavailable WebGL settle
+  frames immediately with a sound cue. Leaving the table cancels pending
+  timers, motion, and audio.
 - `ui/components/board` renders seats, cards, scores, dealer controls and the
   match result. Table cards keep their assigned grid slots. A play reserves a
   free slot until the card lands; a capture flies directly to its targets.
@@ -25,7 +27,9 @@ Back to Tavern, and Escape return to the format picker.
   hearth ash. The Playground and match use the same R3F card mesh,
   GSAP timelines, 3D poses, counting playback, and Howler card sounds.
   The match supplies actual card faces and measured board positions. A
-  single capture, cascade, or Fall is one sequence from hand to pile.
+  single capture, cascade, or Fall is one sequence from hand to pile. If a
+  Fall also takes a cascade, the shared Fall impact plays before the extra
+  pickups. Artwork is loaded during the lobby and retained for the match.
 
 `localMatch.test.ts` plays each format through to a winner, checking full
 deck accounting during motion and rules resolution. Home navigation tests

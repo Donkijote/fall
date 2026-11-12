@@ -50,3 +50,21 @@ test("a Fall plays two card cues in the capture sequence; a normal play plays on
     fall.kill();
   }
 });
+
+test("a Fall cascade plays both Fall cues before continuing the remaining pickups", () => {
+  const playCard = vi.fn();
+  const audio = { playDealCard: vi.fn(), playCard };
+  const motion = { progress: 0, cooldown: 0, followThrough: 0 };
+  const timeline = appendCapture(gsap.timeline({ paused: true }), motion, "fall", 3, audio);
+  try {
+    timeline.time(1, false);
+    expect(playCard).toHaveBeenCalledTimes(2);
+    expect(motion.followThrough).toBe(0);
+    timeline.progress(1, false);
+    expect(motion.progress).toBeCloseTo(0.79);
+    expect(motion.followThrough).toBe(1);
+    expect(playCard).toHaveBeenCalledTimes(2);
+  } finally {
+    timeline.kill();
+  }
+});
