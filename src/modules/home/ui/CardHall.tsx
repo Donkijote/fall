@@ -257,6 +257,7 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
               }}
               title={activity.title}
               imageUrl={activity.imageUrl}
+              frameUrl={activity.frameUrl}
               imageWidth={activity.imageWidth}
               imageHeight={activity.imageHeight}
               caption={activity.available ? undefined : "Coming soon"}

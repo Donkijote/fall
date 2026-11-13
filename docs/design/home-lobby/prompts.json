@@ -45,6 +45,36 @@
       "refinements": [
         "Keep exactly the same very tall 9:19.5 painting. Move only the quartered red-and-gold banner on the right into the upper quarter, where its silhouette and four motifs will be readable above the UI. Hang it from the upper right wall or pillar, with its rod around 14% down and tip around 28% down. It should sit around 77% of the image width, with clear space to its right. Remove it from its previous lower position and restore the exposed stone there. Preserve the windows, arches, chair, lighting, books, map, table and muted colors as closely as possible. Artwork only, no graphics or text."
       ]
+    },
+    {
+      "file": "../../../src/assets/ui/activity-card/tavern-frame.webp",
+      "method": "recorded",
+      "references": [],
+      "prompt": "Edit this standalone portrait frame keeping same silhouette and rail positions, transparent exterior and open alpha center. Enlarge the four blackened diagonal corner plates moderately and embed tiny embossed golden symbols as physically engraved metal, entirely inside each plate. Worn antique brass, preserve thin rails and scratched patina. No text, title panel, background or center illustration. Tavern: coin upper left, chalice upper right, sword lower left, unmistakable wooden cudgel lower right, no poker club.",
+      "notes": "Used an earlier generated empty frame as the image input. Export at 480 × 720 WebP with alpha.",
+      "refinements": [
+        "Edit this tavern frame. Preserve the exact 2:3 canvas and worn antique brass frame, with all four original symbols in their original corners. The only change: reduce each emblem to about 60% of its current size and center it inside its triangular black iron corner plate, leaving generous dark space between the emblem and all three edges, particularly the diagonal brass rail. Keep the original corners and rails, fully transparent empty center and exterior. No new marks or text."
+      ]
+    },
+    {
+      "file": "../../../src/assets/ui/activity-card/campaign-frame.webp",
+      "method": "recorded",
+      "references": [],
+      "prompt": "Edit this standalone portrait frame keeping same silhouette and rail positions, transparent exterior and open alpha center. Enlarge the four blackened diagonal corner plates moderately and embed tiny embossed golden symbols as physically engraved metal, entirely inside each plate. Worn antique brass, preserve thin rails and scratched patina. No text, title panel, background or center illustration. Campaign: rolled map upper left, compass rose upper right, boot lower left, heraldic shield lower right.",
+      "notes": "Used an earlier generated empty frame as the image input. Export at 480 × 720 WebP with alpha.",
+      "refinements": [
+        "Edit this campaign frame. Preserve the exact 2:3 canvas and worn antique brass frame, with all four original symbols in their original corners. The only change: reduce each emblem to about 60% of its current size and center it inside its triangular black iron corner plate, leaving generous dark space between the emblem and all three edges, particularly the diagonal brass rail. Keep the original corners and rails, fully transparent empty center and exterior. No new marks or text."
+      ]
+    },
+    {
+      "file": "../../../src/assets/ui/activity-card/arena-frame.webp",
+      "method": "recorded",
+      "references": [],
+      "prompt": "Edit this standalone portrait frame keeping same silhouette and rail positions, transparent exterior and open alpha center. Enlarge the four blackened diagonal corner plates moderately and embed tiny embossed golden symbols as physically engraved metal, entirely inside each plate. Worn antique brass, preserve thin rails and scratched patina. No text, title panel, background or center illustration. Arena: helmet upper left, crossed swords upper right, round shield lower left, trophy lower right.",
+      "notes": "Used an earlier generated empty frame as the image input. Export at 480 × 720 WebP with alpha.",
+      "refinements": [
+        "Edit this arena frame. Preserve the exact 2:3 canvas and worn antique brass frame, with all four original symbols in their original corners. The only change: reduce each emblem to about 60% of its current size and center it inside its triangular black iron corner plate, leaving generous dark space between the emblem and all three edges, particularly the diagonal brass rail. Keep the original corners and rails, fully transparent empty center and exterior. No new marks or text."
+      ]
     }
   ]
 }

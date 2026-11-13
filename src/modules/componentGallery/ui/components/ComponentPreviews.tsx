@@ -1,6 +1,5 @@
 import { Settings } from "lucide-react";
 
-import tavern from "@/assets/lobby/card-hall/tavern.webp";
 import {
   ActionButton,
   ActivityCard,
@@ -14,6 +13,7 @@ import { CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/
 import { Dialog, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Popover, PopoverTitle, PopoverTrigger } from "@/components/ui/popover";
 import { ToggleGroup } from "@/components/ui/toggle-group";
+import { homeActivities } from "@/modules/home";
 
 export function ActionPreview() {
   return (
@@ -57,11 +57,27 @@ export function SelectPreview() {
 }
 
 export function ActivityPreview() {
-  const artwork = { imageUrl: tavern, imageWidth: 374, imageHeight: 386 };
   return (
-    <div className="grid max-w-xs grid-cols-2 gap-3">
-      <ActivityCard {...artwork} title="Tavern" selected />
-      <ActivityCard {...artwork} title="Tavern" caption="Unavailable" unavailable disabled />
+    <div className="grid gap-5">
+      {homeActivities.map(({ id, title, imageUrl, frameUrl, imageWidth, imageHeight }) => {
+        const artwork = { title, imageUrl, frameUrl, imageWidth, imageHeight };
+        return (
+          <div key={id} className="grid max-w-lg grid-cols-3 gap-3">
+            <div className="grid gap-1 text-center">
+              <ActivityCard {...artwork} />
+              <span className="text-xs text-muted-foreground">Idle</span>
+            </div>
+            <div className="grid gap-1 text-center">
+              <ActivityCard {...artwork} selected />
+              <span className="text-xs text-muted-foreground">Active</span>
+            </div>
+            <div className="grid gap-1 text-center">
+              <ActivityCard {...artwork} unavailable disabled />
+              <span className="text-xs text-muted-foreground">Unavailable</span>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }

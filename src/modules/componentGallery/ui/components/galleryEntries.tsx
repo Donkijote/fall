@@ -92,7 +92,7 @@ export const gallerySections: { title: string; folder: string; entries: Entry[] 
     entries: [
       {
         name: "ActivityCard",
-        variants: "Selected, unavailable and disabled",
+        variants: "Idle, active, and unavailable across three modes",
         usage: "Card Hall activity picker",
         Preview: ActivityPreview,
       },

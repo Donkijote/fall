@@ -17,3 +17,10 @@ preview share the selection cues, and reduced motion keeps the static cues.
 Settings opens over this same Hall. See the [Home module](../../../src/modules/home/README.md)
 for behavior and verification and the [runtime artwork inventory](../../../src/assets/lobby/card-hall/README.md)
 for viewport exports and exact crop coordinates.
+
+Card Hall and the Component Gallery use the same ActivityCard frames. Each
+activity has standalone portrait artwork with larger diagonal corner plates
+and symbols engraved into the metal. Tavern uses the Spanish suits, including
+a wooden club. Campaign uses exploration symbols and Arena uses arms and
+tournament symbols. Idle uses the worn frame, active brightens it, and
+unavailable cards use a matte finish.

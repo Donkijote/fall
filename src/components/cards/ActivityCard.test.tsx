@@ -13,6 +13,7 @@ test("exposes controlled card selection, native ref and an image-independent lab
       title="Activity"
       description="Description"
       imageUrl="/missing.webp"
+      frameUrl="/frame.webp"
       imageWidth={400}
       imageHeight={400}
       selected
@@ -30,6 +31,7 @@ test("exposes controlled card selection, native ref and an image-independent lab
       title="Activity"
       description="Description"
       imageUrl="/new.webp"
+      frameUrl="/frame.webp"
       imageWidth={400}
       imageHeight={400}
     />,
@@ -45,6 +47,7 @@ test("keeps decorative motion separate from accessible card content and native s
     <ActivityCard
       title="Campaign"
       imageUrl="/campaign.webp"
+      frameUrl="/frame.webp"
       imageWidth={400}
       imageHeight={400}
       caption="Coming soon"
@@ -65,6 +68,7 @@ test("keeps decorative motion separate from accessible card content and native s
     <ActivityCard
       title="Campaign"
       imageUrl="/campaign.webp"
+      frameUrl="/frame.webp"
       imageWidth={400}
       imageHeight={400}
       caption="Coming soon"
