@@ -1,10 +1,10 @@
-import { Search, Swords } from "lucide-react";
+import { Search } from "lucide-react";
 import type { ComponentType } from "react";
 
 import levelCrest from "@/assets/lobby/card-hall/icons/rank-1.svg";
 import coins from "@/assets/lobby/card-hall/icons/two-coins.svg";
 import traveller from "@/assets/lobby/card-hall/traveller.webp";
-import { ContextStrip, PlayerIdentity, ResourceReadout, TextInput } from "@/components";
+import { PlayerIdentity, ResourceReadout, TextInput } from "@/components";
 import { homeGallery } from "@/modules/home";
 import { loginGallery } from "@/modules/login";
 import { matchGallery } from "@/modules/match";
@@ -119,12 +119,6 @@ export const gallerySections: { title: string; folder: string; entries: Entry[] 
     title: "HUD",
     folder: "hud",
     entries: [
-      {
-        name: "ContextStrip",
-        variants: "Icon, label, detail",
-        usage: "Available shared component",
-        Preview: () => <ContextStrip icon={Swords} label="Tavern" detail="Local match" />,
-      },
       {
         name: "PlayerIdentity",
         variants: "Traveller avatar, level crest, experience",

@@ -2,7 +2,6 @@ export { ActivityCard } from "./cards/ActivityCard";
 export type { ActivityCardProps } from "./cards/ActivityCard";
 export { ActionButton } from "./actions/ActionButton";
 export type { ActionButtonProps } from "./actions/ActionButton";
-export { ContextStrip } from "./hud/ContextStrip";
 export { ModalContent } from "./surfaces/ModalContent";
 export { Navigation } from "./navigation/Navigation";
 export type { NavigationItem } from "./navigation/Navigation";

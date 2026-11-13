@@ -11,7 +11,7 @@ grouped by purpose beside that directory. Import public styled components from
 | `cards/`      | `ActivityCard` owns illustrated activity selection, focus, fallback, and motion.                            |
 | `navigation/` | `Navigation`, `NavigationButton`, and `NavigationGroup` keep both Hall docks consistent.                    |
 | `surfaces/`   | `FramedCard`, `ModalContent`, and `PopoverPanel` share the brass frame in `surfaceStyles.ts`.               |
-| `hud/`        | `PlayerIdentity`, `ResourceReadout`, and `ContextStrip` present identity and status.                        |
+| `hud/`        | `PlayerIdentity` and `ResourceReadout` present identity and status.                                         |
 | `icons/`      | `Icon` renders artwork masks and Lucide icons.                                                              |
 | `ui/`         | Generated primitives own native accessibility and interaction defaults.                                     |
 
