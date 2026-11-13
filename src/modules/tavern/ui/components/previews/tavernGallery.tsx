@@ -1,24 +1,24 @@
 import { useState } from "react";
 
-import duel from "@/assets/lobby/tavern/duel.webp";
-
 import { TavernFormatCard } from "../TavernFormatCard";
+import { tavernFormats } from "../tavernFormats";
 import { TavernRoom } from "../TavernRoom";
 
 function FormatPreview() {
-  const [selected, setSelected] = useState(false);
+  const [selected, setSelected] = useState<string | null>(null);
   return (
-    <div className="mx-auto max-w-52 [--tavern-card-height:14rem]">
-      <TavernFormatCard
-        mode="1vs1"
-        title="Duel"
-        players="2 players"
-        description="Face one opponent."
-        artwork={duel}
-        selected={selected}
-        onTouchFocus={setSelected}
-        onActivate={() => setSelected((previous) => !previous)}
-      />
+    <div className="mx-auto grid w-full max-w-2xl gap-3 [--tavern-card-height:14rem] landscape:grid-cols-3">
+      {tavernFormats.map((format) => (
+        <TavernFormatCard
+          key={format.mode}
+          {...format}
+          selected={selected === format.mode}
+          onTouchFocus={(focused) => setSelected(focused ? format.mode : null)}
+          onActivate={() =>
+            setSelected((previous) => (previous === format.mode ? null : format.mode))
+          }
+        />
+      ))}
     </div>
   );
 }
