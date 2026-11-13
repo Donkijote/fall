@@ -38,8 +38,8 @@ foreground, input, border, and focus roles aligned in both themes.
 
 Use `ActionButton tone="primary"` for the main action, its quiet default for
 secondary actions, and `tone="outline"` for outlined actions. `ChoiceButton`
-adds a pointer cursor and a selected state with a primary fill, matching
-foreground, and gold border. It preserves the ToggleGroup keyboard and
+uses a pressed wax surface for selected choices and a subdued preview on hover or
+keyboard focus. It preserves the ToggleGroup keyboard and
 selection behavior.
 
 ## Ownership and behavior

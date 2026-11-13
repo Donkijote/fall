@@ -15,6 +15,7 @@ running app to check current controls and behavior.
 | Sings             | [Sings reference](sings-reference/README.md)           |
 | Component gallery | [Component gallery](component-gallery/README.md)       |
 | Action button     | [Action button skins](action-button/README.md)         |
+| Choice button     | [Choice button artwork](choice-button/README.md)       |
 
 ## Feature folder standard
 

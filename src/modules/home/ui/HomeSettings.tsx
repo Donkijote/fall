@@ -93,7 +93,13 @@ function SettingsContent({ onOpenChange }: Pick<HomeSettingsProps, "onOpenChange
                   variant="outline"
                 >
                   {appearances.map(({ value, label, icon: Icon }) => (
-                    <ChoiceButton key={value} value={value} aria-label={label} title={label}>
+                    <ChoiceButton
+                      iconOnly
+                      key={value}
+                      value={value}
+                      aria-label={label}
+                      title={label}
+                    >
                       <Icon aria-hidden="true" className="size-5" />
                     </ChoiceButton>
                   ))}
