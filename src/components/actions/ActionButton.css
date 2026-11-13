@@ -7,7 +7,8 @@
   --action-art: url("../../assets/ui/actions/primary.webp");
 }
 
-.game-button[data-frame]::before {
+.game-button[data-frame]::before,
+.game-button[data-glint]::after {
   position: absolute;
   inset: 0;
   z-index: -1;
@@ -19,17 +20,34 @@
   border-image: var(--action-art) 0 52 fill stretch;
 }
 
+.game-button[data-glint]:is(:disabled, [aria-disabled="true"])::after {
+  display: none;
+}
+
+.game-button[data-glint]::after {
+  opacity: var(--action-glint, 0);
+  filter: brightness(2.35) saturate(0.8);
+  mask-image: radial-gradient(
+    1.8rem 5px at var(--action-glint-x, 50%) var(--action-glint-y, 0%),
+    black 12%,
+    transparent
+  );
+}
+
+.game-button[data-glint]:is(:hover, :focus-visible):not(:disabled, [aria-disabled="true"])::before {
+  filter: brightness(1.16);
+}
+
 .game-button[data-frame][data-tone="quiet"]::before {
   opacity: var(--action-reveal, 0);
   clip-path: inset(0 calc((1 - var(--action-reveal, 0)) * 30%));
   transform: scaleY(calc(0.86 + var(--action-reveal, 0) * 0.14));
 }
 
-.game-button[data-frame]:is(:hover, [aria-expanded="true"]):not(
-    :disabled,
-    [aria-disabled="true"]
-  )::before {
-  filter: brightness(1.15);
+.game-button[data-glint][data-tone="quiet"]::after {
+  opacity: calc(var(--action-glint, 0) * var(--action-reveal, 0));
+  clip-path: inset(0 calc((1 - var(--action-reveal, 0)) * 30%));
+  transform: scaleY(calc(0.86 + var(--action-reveal, 0) * 0.14));
 }
 
 .game-button[data-frame]:active:not(:disabled, [aria-disabled="true"])::before {
@@ -87,6 +105,10 @@
 }
 
 @media (forced-colors: active) {
+  .game-button[data-glint]::after {
+    display: none;
+  }
+
   .game-button[data-frame]::before {
     border: 1px solid ButtonText;
   }

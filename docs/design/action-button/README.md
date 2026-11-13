@@ -13,3 +13,7 @@ The [runtime exports](../../../src/assets/ui/actions) are transparent WebP
 images. ActionButton uses three full-height slices to keep the end ornaments and
 bevel intact while the label determines the width. React renders the text and
 icons and the button keeps its native focus and interaction behavior.
+
+Both skins use even satin brass. Each illustrated button picks one random
+rail position when it mounts. The quiet glint follows the artwork reveal. GSAP gently varies the glint intensity
+in place. Reduced motion holds the glint steady, and disabled buttons hide it.
