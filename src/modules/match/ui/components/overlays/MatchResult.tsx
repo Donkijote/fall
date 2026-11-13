@@ -108,6 +108,7 @@ export function MatchResult({
         </div>
         <ActionButton
           tone="primary"
+          framed={false}
           className="group relative isolate min-h-12 min-w-48 border-transparent bg-transparent px-6 title-type text-sm font-normal shadow-none hover:bg-transparent"
           onClick={close}
           aria-disabled={returning}

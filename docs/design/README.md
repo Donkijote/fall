@@ -14,6 +14,7 @@ running app to check current controls and behavior.
 | How to Play       | [Rulebook](how-to-play/README.md)                      |
 | Sings             | [Sings reference](sings-reference/README.md)           |
 | Component gallery | [Component gallery](component-gallery/README.md)       |
+| Action button     | [Action button skins](action-button/README.md)         |
 
 ## Feature folder standard
 

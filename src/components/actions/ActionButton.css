@@ -1,0 +1,51 @@
+.game-button[data-frame] {
+  isolation: isolate;
+  --action-art: url("../../assets/ui/actions/outline.webp");
+}
+
+.game-button[data-frame][data-tone="primary"] {
+  --action-art: url("../../assets/ui/actions/primary.webp");
+}
+
+.game-button[data-frame]::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  content: "";
+  border: 10px solid transparent;
+  border-inline-width: 18px;
+  border-image: var(--action-art) 24 52 fill stretch;
+}
+
+.game-button[data-frame][data-tone="quiet"]::before {
+  opacity: 0;
+}
+
+.game-button[data-frame]:is(:hover, [aria-expanded="true"]):not(
+    :disabled,
+    [aria-disabled="true"]
+  )::before {
+  filter: brightness(1.15);
+}
+
+.game-button[data-frame]:active:not(:disabled, [aria-disabled="true"])::before {
+  filter: brightness(0.92);
+}
+
+.game-button[data-frame][data-tone="quiet"]:is(:hover, [aria-expanded="true"]):not(
+    :disabled,
+    [aria-disabled="true"]
+  )::before {
+  opacity: 1;
+}
+
+.game-button[data-frame][aria-disabled="true"] {
+  opacity: 0.5;
+}
+
+@media (forced-colors: active) {
+  .game-button[data-frame]::before {
+    border: 1px solid ButtonText;
+  }
+}

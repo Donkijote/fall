@@ -24,7 +24,7 @@ export function ActionPreview() {
       <ActionButton tone="primary">Primary</ActionButton>
       <ActionButton tone="quiet">Quiet</ActionButton>
       <ActionButton tone="outline">Outline</ActionButton>
-      <ActionButton iconOnly aria-label="Settings">
+      <ActionButton tone="outline" iconOnly aria-label="Settings">
         <Settings aria-hidden="true" />
       </ActionButton>
       <ActionButton tone="primary" disabled>
