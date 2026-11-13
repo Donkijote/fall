@@ -1,0 +1,12 @@
+{
+  "art_direction": "../art-direction.md#shared-generation-prompt",
+  "outputs": [
+    {
+      "file": "../../../src/assets/ui/surfaces/brass-frame.webp",
+      "method": "recorded",
+      "references": [],
+      "prompt": "One standalone square empty frame asset for a premium medieval card game's adaptable UI panel. Isolated on true transparency BOTH outside and completely inside its open center. Front-on precise symmetrical near-square rounded rectangle, full frame entirely visible, margins. Sculpted antique brass, handsome double bevel with narrow bright satin edge and dark bronze inner fillet, subtle aged patina, small engraved leaf curls contained in each corner, straight narrow consistent rails with no motifs on the straight sections, intentionally even lighting without localized hot spots for animated reflections. Rail thickness roughly 2.5% of overall width, corner details reach no more than 10% inward. Art direction of a dark oxblood-and-brass medieval campaign button. No text, backdrop, parchment, wood, drop shadow, perspective or objects. Designed for nine-slice scaling.",
+      "notes": "Trim the standalone image to its alpha bounds and export as 512 × 512 WebP."
+    }
+  ]
+}

@@ -24,7 +24,6 @@ import { useGSAP } from "@gsap/react";
 
 import { LoginAtmosphere } from "./LoginAtmosphere";
 import { ProviderIcon } from "./ProviderIcon";
-import "./LoginScreen.css";
 
 const suitIcons = [coinSuit, cupSuit, swordSuit, clubSuit];
 
@@ -40,7 +39,6 @@ export function LoginScreen() {
   const navigate = useNavigate();
   const screenRef = useRef<HTMLElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
-  const rimRef = useRef<HTMLSpanElement>(null);
 
   useGSAP(
     () => {
@@ -51,19 +49,6 @@ export function LoginScreen() {
           .timeline({ defaults: { ease: "power2.out", clearProps: "opacity,transform" } })
           .from(".login-intro > *", { opacity: 0, y: 18, duration: 0.85, stagger: 0.09 })
           .from(cardRef.current, { opacity: 0, y: 24, duration: 1 }, 0.15);
-
-        const rim = rimRef.current;
-        if (!rim) return;
-
-        gsap
-          .timeline({ delay: 0.9, repeat: -1, repeatDelay: 2.5 })
-          .fromTo(
-            rim,
-            { "--login-rim-angle": "-65deg" },
-            { "--login-rim-angle": "295deg", duration: 8, ease: "none" },
-          )
-          .to(rim, { opacity: 0.9, duration: 1.25, ease: "sine.out" }, 0)
-          .to(rim, { opacity: 0, duration: 1.5, ease: "sine.in" }, 6.5);
       });
       return () => motion.revert();
     },
@@ -127,11 +112,6 @@ export function LoginScreen() {
             ref={cardRef}
             className="login-card relative w-full min-w-0 [--card-spacing:--spacing(4)] sm:[--card-spacing:--spacing(5)] xl:[--card-spacing:--spacing(6)] max-xl:landscape:[--card-spacing:clamp(1rem,calc(12dvh-1.5rem),2rem)]"
           >
-            <span
-              ref={rimRef}
-              aria-hidden="true"
-              className="login-card-rim pointer-events-none absolute inset-0 rounded-[inherit] opacity-0 forced-colors:hidden"
-            />
             <CardHeader className="justify-items-center gap-2 pt-0 text-center sm:gap-3 xl:pt-2 max-xl:landscape:flex max-xl:landscape:items-center max-xl:landscape:justify-center max-xl:landscape:gap-3">
               <span className="mb-1 flex size-10 items-center justify-center rounded-full border border-gold/60 bg-linear-to-b from-secondary to-card text-muted-foreground shadow-sm sm:size-12 xl:size-16 max-xl:landscape:mb-0 max-xl:landscape:size-[clamp(2rem,10dvh,2.75rem)] max-xl:landscape:shrink-0">
                 <Icon icon={appEmblem} className="size-5 sm:size-6 xl:size-8" />
