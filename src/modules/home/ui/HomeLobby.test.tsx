@@ -120,7 +120,7 @@ test.each([
   }
   expect(await screen.findByRole("main", { name: label }, { timeout: 2000 })).toBeVisible();
   expect(screen.getByRole("list", { name: "Table seats" }).children).toHaveLength(seatCount);
-  expect(screen.getByRole("status")).toHaveTextContent(`1/${seatCount}`);
+  expect(screen.getByRole("status")).toHaveTextContent(`1 of ${seatCount} seats filled`);
   await waitFor(() => expect(screen.getByText("You")).toBeVisible());
   expect(screen.getByText("You").closest("li")).not.toHaveTextContent("Active seat");
   const cancel = screen.getByRole("button", { name: "Cancel matchmaking" });

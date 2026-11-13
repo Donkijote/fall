@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useGSAP } from "@gsap/react";
 
 import type { MatchSeat } from "../../../application/matchSeats";
+import { scoreSideStyle } from "./scoreSideStyle";
 
 export type SeatPlayer = { name: string; avatarUrl?: string };
 
@@ -31,7 +32,7 @@ const medallionSize = "size-(--seat-size)";
 export function MatchSeatMarker({
   position,
   playerId,
-  team,
+  scoreSide,
   player,
   reducedMotion,
   active,
@@ -40,13 +41,14 @@ export function MatchSeatMarker({
 }: {
   position: MatchSeat;
   playerId?: string;
-  team?: string;
+  scoreSide?: string;
   player?: SeatPlayer;
   reducedMotion: boolean;
   active: boolean;
   dealer: boolean;
   children?: ReactNode;
 }) {
+  const side = scoreSide && scoreSideStyle(scoreSide);
   const portrait = useRef<HTMLDivElement>(null);
   useGSAP(
     () => {
@@ -93,7 +95,12 @@ export function MatchSeatMarker({
               )}
             >
               <AvatarImage src={player.avatarUrl} alt="" />
-              <AvatarFallback className="bg-linear-to-b from-slate-700 to-artwork-shadow title-type text-base text-artwork-foreground sm:text-lg">
+              <AvatarFallback
+                className={cn(
+                  "bg-linear-to-b title-type text-base text-artwork-foreground sm:text-lg",
+                  side ? side.plate : "from-slate-700 to-artwork-shadow",
+                )}
+              >
                 {Array.from(player.name)[0]?.toUpperCase()}
               </AvatarFallback>
             </Avatar>
@@ -122,24 +129,16 @@ export function MatchSeatMarker({
           <span
             className={cn(
               "title-type block max-w-[29cqw] portrait:max-w-[23cqw] portrait:pr-2 portrait:pl-3 portrait:group-data-[side=right]:pr-3 portrait:group-data-[side=right]:pl-2 truncate pr-3 pl-4 text-center whitespace-nowrap h-[calc(var(--seat-size)*0.58)] content-center leading-none text-[clamp(0.625rem,calc(var(--seat-size)*0.28),1rem)] group-data-[side=right]:pr-4 group-data-[side=right]:pl-3",
-              player ? "bg-linear-to-b from-slate-700 to-artwork-shadow" : "bg-artwork-shadow",
+              player
+                ? ["bg-linear-to-b", side ? side.plate : "from-slate-700 to-artwork-shadow"]
+                : "bg-artwork-shadow",
               plaqueEdge,
             )}
           >
             {position === "bottom" ? "You" : (player?.name ?? "Open seat")}
           </span>
         </span>
-        {team && (
-          <span
-            className={cn(
-              "absolute left-1 rounded-sm bg-artwork-shadow px-1 text-[0.55rem] leading-tight whitespace-nowrap",
-              position === "bottom" ? "sr-only" : dealer ? "bottom-full" : "top-full",
-              team === "Your team" ? "text-gold" : "text-artwork-foreground",
-            )}
-          >
-            {team === "Your team" ? (position === "bottom" ? "Your team" : "Ally") : "Opponent"}
-          </span>
-        )}
+        {side && <span className="sr-only">{side.name} side</span>}
         {dealer && (
           <span className="absolute -right-1.5 bottom-0 z-10 translate-y-[65%] rounded-sm border border-gold bg-gold px-0.75 py-px title-type text-[0.5rem] leading-none whitespace-nowrap text-artwork-shadow shadow-sm shadow-artwork-shadow/70">
             Dealer

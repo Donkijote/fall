@@ -1,6 +1,6 @@
 import gsap from "gsap";
-import { X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { DoorOpen } from "lucide-react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import landscape from "@/assets/lobby/tavern-match/table-landscape.webp";
 import portrait from "@/assets/lobby/tavern-match/table-portrait.webp";
@@ -14,6 +14,8 @@ import { MatchSeatMarker, type SeatPlayer } from "../board/MatchSeatMarker";
 import { PlayableBoard } from "../board/PlayableBoard";
 import { useLocalMatch } from "../flow/useLocalMatch";
 import { useSimulatedLobby } from "../flow/useSimulatedLobby";
+import { LeaveMatchDialog } from "../overlays/LeaveMatchDialog";
+import { WaitingSign } from "../overlays/WaitingSign";
 import { TavernMatchAtmosphere } from "./TavernMatchAtmosphere";
 
 export function TavernMatchArtworkPreload() {
@@ -47,9 +49,14 @@ export function TavernMatch({
   const connectedCount = guestCount + 1;
   const ready = connectedCount === seats.length;
   const [waitingFaded, setWaitingFaded] = useState(false);
+  const [leaveOpen, setLeaveOpen] = useState(false);
+  const leaveButton = useRef<HTMLButtonElement>(null);
   const waitingOverlay = useRef<HTMLDivElement>(null);
   const showWaiting = !ready || (!reducedMotion && !waitingFaded);
-  const match = useLocalMatch(mode, !showWaiting, returning, reducedMotion);
+  const match = useLocalMatch(mode, !showWaiting, returning, reducedMotion, leaveOpen);
+
+  const hasBoard = Boolean(match.frame);
+  const finished = match.frame?.state.phase === "gameOver" && !match.frame.motion;
 
   useEffect(() => {
     if (reducedMotion || typeof WebGL2RenderingContext === "undefined") return;
@@ -57,6 +64,30 @@ export function TavernMatch({
       .then(({ preloadMatchCardArt }) => preloadMatchCardArt())
       .catch(() => {}); // The match canvas handles unavailable graphics.
   }, [reducedMotion]);
+
+  useLayoutEffect(() => {
+    if (hasBoard && !returning && document.activeElement === document.body) {
+      leaveButton.current?.focus({ preventScroll: true });
+    }
+  }, [hasBoard, returning]);
+
+  useEffect(() => {
+    function handleEscape(event: KeyboardEvent) {
+      if (
+        event.key !== "Escape" ||
+        event.defaultPrevented ||
+        event.repeat ||
+        leaveOpen ||
+        returning
+      )
+        return;
+      if (showWaiting || finished) cancel();
+      else setLeaveOpen(true);
+    }
+
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [cancel, finished, leaveOpen, returning, showWaiting]);
 
   useGSAP(
     () => {
@@ -97,7 +128,20 @@ export function TavernMatch({
             completeMotion={match.completeMotion}
             reducedMotion={reducedMotion}
             returning={returning}
+            paused={leaveOpen}
             close={cancel}
+            leaveControl={
+              <ActionButton
+                ref={leaveButton}
+                iconOnly
+                tone="quiet"
+                aria-label="Leave match"
+                className="pointer-events-auto col-start-3 row-start-1 border-transparent bg-transparent text-artwork-foreground drop-shadow-[0_2px_3px_var(--artwork-shadow)] hover:bg-transparent hover:text-gold"
+                onClick={() => setLeaveOpen(true)}
+              >
+                <DoorOpen aria-hidden="true" />
+              </ActionButton>
+            }
           />
         ) : (
           <ul
@@ -123,59 +167,27 @@ export function TavernMatch({
           </ul>
         )}
       </div>
-      <div
-        ref={waitingOverlay}
-        data-tavern-match-detail=""
-        className="pointer-events-none absolute inset-[var(--safe-area-top)_var(--safe-area-right)_var(--safe-area-bottom)_var(--safe-area-left)] z-10 flex flex-col items-center justify-center gap-[clamp(0.875rem,3.5vmin,1.75rem)] px-4 text-center"
-      >
-        {showWaiting && (
-          <div
-            aria-hidden="true"
-            className="absolute top-1/2 left-1/2 h-[min(112cqw,100cqh,34rem)] w-[min(124%,114cqh,39rem)] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(ellipse,var(--artwork-shadow)_0%,transparent_73%)]"
-          />
-        )}
-        {showWaiting && (
-          <div className="relative grid justify-items-center gap-[clamp(0.75rem,3vmin,1.5rem)]">
-            <h1 className="artwork-title text-[clamp(1.5rem,6vmin,3rem)] font-normal">{title}</h1>
-            <div
-              role="status"
-              className="grid justify-items-center gap-3 text-sm text-artwork-foreground drop-shadow-sm sm:text-base"
-            >
-              <span>
-                Finding players ·{" "}
-                <span className="tabular-nums">
-                  {connectedCount}/{seats.length}
-                </span>{" "}
-                seated
-              </span>
-              <span aria-hidden="true" className="flex gap-2">
-                {seats.map((seat, index) => (
-                  <span
-                    key={seat}
-                    data-connected={index < connectedCount}
-                    className="h-1 w-[clamp(1.25rem,5vmin,2.5rem)] rounded-full bg-gold/25 data-[connected=true]:bg-gold"
-                  />
-                ))}
-              </span>
-            </div>
-          </div>
-        )}
-        <ActionButton
-          data-tavern-cancel=""
-          tone="quiet"
-          iconOnly={!showWaiting}
-          className={
-            !showWaiting
-              ? "pointer-events-auto absolute top-2 right-2 border-0 bg-transparent text-artwork-foreground drop-shadow-md hover:bg-transparent hover:text-gold"
-              : "pointer-events-auto relative border border-gold/45 bg-artwork-shadow/65 text-artwork-foreground hover:bg-artwork-shadow hover:text-artwork-foreground"
-          }
-          onClick={cancel}
-          aria-label={!showWaiting ? "Close table" : undefined}
-          aria-disabled={returning}
+      {showWaiting && (
+        <div
+          ref={waitingOverlay}
+          data-tavern-match-detail=""
+          className="absolute inset-[var(--safe-area-top)_var(--safe-area-right)_var(--safe-area-bottom)_var(--safe-area-left)] z-10 grid place-items-center px-4 portrait:pt-[12dvh]"
         >
-          {!showWaiting ? <X aria-hidden="true" /> : "Cancel matchmaking"}
-        </ActionButton>
-      </div>
+          <WaitingSign
+            title={title}
+            filled={connectedCount}
+            total={seats.length}
+            cancel={cancel}
+            returning={returning}
+          />
+        </div>
+      )}
+      <LeaveMatchDialog
+        open={leaveOpen && !returning}
+        setOpen={setLeaveOpen}
+        leaveButton={leaveButton}
+        leave={cancel}
+      />
     </div>
   );
 }

@@ -122,7 +122,7 @@ export function measureCardScene(root: Element, frame: MatchFrame) {
     scene = {
       kind: "count",
       groups: motion.groups.map(({ side, quota }) => {
-        const label = find("count-side", String(side));
+        const label = find("capture-anchor", String(side));
         const target = label ? anchor(label.getBoundingClientRect()) : { x: 0, y: 0, z: 0 };
         return {
           side,

@@ -96,9 +96,6 @@ export function MatchScreen() {
       ref={screen}
       aria-label={titles[mode]}
       className="relative h-dvh overflow-clip bg-artwork-shadow"
-      onKeyDown={(event) => {
-        if (event.key === "Escape") close();
-      }}
     >
       <TavernMatchArtworkPreload />
       <TavernMatch
