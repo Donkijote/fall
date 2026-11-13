@@ -1,0 +1,35 @@
+.game-activity-frame {
+  --activity-shine-angle: 0deg;
+}
+
+.game-activity-frame::before,
+.game-activity-frame::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: var(--activity-frame-image) center / 100% 100% no-repeat;
+}
+
+.game-activity-frame::before {
+  filter: brightness(calc(1 + 0.35 * var(--activity-frame-light, 0)));
+}
+
+.game-activity-frame::after {
+  opacity: calc(0.86 * var(--activity-frame-light, 0));
+  filter: brightness(2.4) saturate(0.8);
+  mask-image: conic-gradient(
+    from var(--activity-shine-angle, 0deg),
+    transparent 0deg,
+    black 13deg,
+    transparent 33deg
+  );
+}
+
+.game-activity-card[data-active="true"][data-unavailable="false"] .game-activity-frame {
+  --activity-frame-light: 1;
+}
+
+.game-activity-card[data-unavailable="true"] .game-activity-frame::after,
+.game-activity-card:disabled .game-activity-frame::after {
+  opacity: 0;
+}

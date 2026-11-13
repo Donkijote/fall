@@ -1,10 +1,18 @@
 import { useId, useRef, useState } from "react";
 
-import { CardBorderGlint } from "@/components/cards/CardBorderGlint";
-import { frameClassName } from "@/components/surfaces/surfaceStyles";
+import duelFrame from "@/assets/lobby/tavern/duel-frame.webp";
+import freeForAllFrame from "@/assets/lobby/tavern/free-for-all-frame.webp";
+import teamMatchFrame from "@/assets/lobby/tavern/team-match-frame.webp";
 import type { GameMode } from "@/domain/entities/GameState";
 
 import { useTavernCardMotion } from "./useTavernCardMotion";
+import "./TavernFormatCard.css";
+
+const modeFrames: Record<GameMode, string> = {
+  "1vs1": duelFrame,
+  "1vs2": freeForAllFrame,
+  "2vs2": teamMatchFrame,
+};
 
 const layout =
   "grid grid-cols-[minmax(4rem,0.47fr)_minmax(0,1fr)] items-center landscape:grid-cols-1 landscape:content-start";
@@ -83,62 +91,56 @@ export function TavernFormatCard({
       }}
       className="group relative isolate min-w-0 cursor-pointer touch-manipulation rounded-md text-center outline-none select-none [-webkit-touch-callout:none] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring active:brightness-95"
     >
-      <span data-tavern-card-idle="" className="block">
-        <span data-tavern-card-attention="" className={layout}>
-          <span className={`${artBox} z-10 rounded-md`}>
-            <span
-              className={`${frameClassName} absolute inset-0 overflow-hidden rounded-md bg-card shadow-lg shadow-artwork-shadow/45 group-data-[active=true]:border-gold`}
-            >
-              <img
-                src={artwork}
-                alt=""
-                width={1024}
-                height={1536}
-                decoding="async"
-                draggable={false}
-                className="pointer-events-none absolute inset-0 size-full object-cover"
-              />
-              <span
-                aria-hidden="true"
-                data-tavern-card-light=""
-                className="pointer-events-none absolute -inset-y-8 -left-1/2 w-1/2 rotate-12 bg-linear-to-r from-transparent via-gold/35 to-transparent opacity-0 mix-blend-screen"
-              />
-              <span
-                aria-hidden="true"
-                className="absolute inset-x-0 bottom-0 hidden bg-linear-to-t from-artwork-shadow/85 via-artwork-shadow/60 to-transparent px-1 pt-5 pb-[7%] artwork-title text-[clamp(0.85rem,1.75vw,1.55rem)] leading-tight landscape:block compact-landscape:pt-4 compact-landscape:pb-[6%]"
-              >
-                {title}
+      <span className={layout}>
+        <span className={`${artBox} z-10 rounded-md`}>
+          <span data-tavern-card-idle="" className="absolute inset-0">
+            <span data-tavern-card-attention="" className="absolute inset-0">
+              <span className="absolute inset-[1.5%] overflow-hidden rounded-[7%] bg-card shadow-lg shadow-artwork-shadow/45">
+                <img
+                  src={artwork}
+                  alt=""
+                  width={1024}
+                  height={1536}
+                  decoding="async"
+                  draggable={false}
+                  className="pointer-events-none absolute inset-0 size-full object-cover"
+                />
+                <span
+                  aria-hidden="true"
+                  data-tavern-card-light=""
+                  className="pointer-events-none absolute -inset-y-8 -left-1/2 w-1/2 rotate-12 bg-linear-to-r from-transparent via-gold/35 to-transparent opacity-0 mix-blend-screen"
+                />
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-x-0 bottom-0 hidden bg-linear-to-t from-artwork-shadow/85 via-artwork-shadow/60 to-transparent px-1 pt-5 pb-[7%] artwork-title text-[clamp(0.85rem,1.75vw,1.55rem)] leading-tight landscape:block compact-landscape:pt-4 compact-landscape:pb-[6%]"
+                >
+                  {title}
+                </span>
               </span>
+              <img
+                src={modeFrames[mode]}
+                alt=""
+                data-tavern-card-frame=""
+                draggable={false}
+                className="pointer-events-none absolute inset-0 size-full"
+              />
             </span>
-            <CardBorderGlint active={active} className="brightness-125" />
+          </span>
+        </span>
+        <span
+          className={`${ribbonBox} tavern-format-ribbon isolate grid content-center gap-0.5 px-4 text-left text-artwork-foreground landscape:justify-items-center landscape:px-4 landscape:text-center compact-landscape:gap-0`}
+        >
+          <span id={`${id}-title`} className="title-type text-sm landscape:sr-only">
+            {title}
+          </span>
+          <span id={`${id}-players`} className="text-sm font-semibold compact-landscape:text-xs">
+            {players}
           </span>
           <span
-            className={`${ribbonBox} isolate grid content-center gap-0.5 px-2.5 text-left text-card-foreground landscape:justify-items-center landscape:px-1.5 landscape:text-center compact-landscape:gap-0`}
+            id={`${id}-description`}
+            className="text-xs leading-tight text-artwork-foreground/85 compact-landscape:text-[0.7rem]"
           >
-            <span
-              aria-hidden="true"
-              className="absolute -inset-x-0.5 top-0.5 -z-10 hidden h-3 bg-gold/45 landscape:block landscape:[clip-path:polygon(0_0,100%_0,97%_100%,3%_100%)]"
-            />
-            <span
-              aria-hidden="true"
-              className="absolute inset-0 -z-10 rounded-r-md bg-gold/70 landscape:rounded-none landscape:[clip-path:polygon(0_0,100%_0,100%_86%,95%_100%,5%_100%,0_86%)]"
-            />
-            <span
-              aria-hidden="true"
-              className="absolute inset-px -z-10 rounded-r-md bg-card landscape:rounded-none landscape:[clip-path:polygon(0_0,100%_0,100%_86%,95%_100%,5%_100%,0_86%)]"
-            />
-            <span id={`${id}-title`} className="title-type text-sm landscape:sr-only">
-              {title}
-            </span>
-            <span id={`${id}-players`} className="text-sm font-semibold compact-landscape:text-xs">
-              {players}
-            </span>
-            <span
-              id={`${id}-description`}
-              className="text-xs leading-tight text-muted-foreground compact-landscape:text-[0.7rem]"
-            >
-              {description}
-            </span>
+            {description}
           </span>
         </span>
       </span>

@@ -3,8 +3,7 @@ import type { ComponentProps } from "react";
 
 import { Card } from "@/components/ui/card";
 
-import { panelClassName } from "./surfaceStyles";
-
+import { brassPanelClassName } from "./surfaceStyles";
 export function FramedCard({ className, ...props }: ComponentProps<typeof Card>) {
-  return <Card {...props} className={cn(panelClassName, className)} />;
+  return <Card {...props} className={cn(brassPanelClassName, "relative", className)} />;
 }

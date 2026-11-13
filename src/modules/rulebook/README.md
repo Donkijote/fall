@@ -77,3 +77,7 @@ tests cover the route boundary and reference filters. Run `pnpm check`,
 
 Use the existing port 3000 app for visual checks across light/dark, narrow phone,
 tablet, short landscape, desktop and ultrawide. Do not start another server.
+
+The module entry point also exports `rulebookGallery` for the development-only
+Component gallery. Preview fixtures live under `ui/components/previews` and
+render this module’s styled components with sample props.

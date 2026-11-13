@@ -4,7 +4,7 @@ import { Link, useLocation, useNavigate, useNavigationType } from "react-router"
 
 import help from "@/assets/lobby/card-hall/icons/help.svg";
 import logout from "@/assets/lobby/card-hall/icons/logout.svg";
-import { NavigationButton, NavigationGroup, PopoverPanel } from "@/components";
+import { Navigation, PopoverPanel } from "@/components";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import { LOGIN_PATH, RULES_PATH, SINGS_SHEETS } from "@/routes/Routes";
 
@@ -62,44 +62,57 @@ export function HomeUtilities({ onSettings }: { onSettings: () => void }) {
     }
   }, [location.key, location.state, navigationType]);
   return (
-    <nav aria-label="Utilities" className="ml-auto flex gap-1 sm:gap-2.5">
-      <NavigationGroup label="Communication">
-        <li title="Messages (coming soon)">
-          <NavigationButton
-            icon={cardHallIcons.messages}
-            disabled
-            aria-label="Messages (coming soon)"
-          />
-        </li>
-      </NavigationGroup>
-      <NavigationGroup label="Help and settings">
-        <li>
-          <Popover>
-            <PopoverTrigger
-              render={<NavigationButton ref={helpRef} icon={help} aria-label="Help" title="Help" />}
-            />
-            <HelpLinks />
-          </Popover>
-        </li>
-        <li>
-          <NavigationButton
-            icon={cardHallIcons.settings}
-            aria-label="Settings"
-            title="Settings"
-            onClick={onSettings}
-          />
-        </li>
-      </NavigationGroup>
-      <NavigationGroup label="Session">
-        <li>
-          <NavigationButton
-            icon={logout}
-            aria-label="Log out"
-            title="Log out"
-            onClick={() => navigate(LOGIN_PATH)}
-          />
-        </li>
-      </NavigationGroup>
-    </nav>
+    <Navigation
+      label="Utilities"
+      className="ml-auto"
+      groups={[
+        {
+          label: "Communication",
+          items: [
+            {
+              id: "messages",
+              label: "Messages",
+              icon: cardHallIcons.messages,
+              disabled: true,
+              unavailableLabel: "coming soon",
+            },
+          ],
+        },
+        {
+          label: "Help and settings",
+          items: [
+            {
+              id: "help",
+              label: "Help",
+              icon: help,
+              ref: helpRef,
+              wrapButton: (button) => (
+                <Popover>
+                  <PopoverTrigger render={button} />
+                  <HelpLinks />
+                </Popover>
+              ),
+            },
+            {
+              id: "settings",
+              label: "Settings",
+              icon: cardHallIcons.settings,
+              onClick: onSettings,
+            },
+          ],
+        },
+        {
+          label: "Session",
+          items: [
+            {
+              id: "logout",
+              label: "Log out",
+              icon: logout,
+              onClick: () => navigate(LOGIN_PATH),
+            },
+          ],
+        },
+      ]}
+    />
   );
 }

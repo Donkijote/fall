@@ -1,9 +1,9 @@
-import { ArrowLeft, FlaskConical, Monitor, Moon, Sun } from "lucide-react";
+import { ArrowLeft, FlaskConical, LayoutGrid, Monitor, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useId, useState } from "react";
 import { Link } from "react-router";
 
-import { ActionButton, ChoiceButton, ModalContent, SelectPanel, SelectTrigger } from "@/components";
+import { ActionButton, BronzeArrow, ChoiceButton, ModalContent, SelectField } from "@/components";
 import {
   Dialog,
   DialogClose,
@@ -12,8 +12,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Select, SelectItem, SelectValue } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { ToggleGroup } from "@/components/ui/toggle-group";
@@ -22,7 +20,7 @@ import {
   updateGamePreferences,
 } from "@/infrastructure/preferences/gamePreferences";
 import { useGamePreferences } from "@/infrastructure/ui/hooks/useGamePreferences";
-import { ANIMATION_PLAYGROUND_PATH } from "@/routes/Routes";
+import { ANIMATION_PLAYGROUND_PATH, COMPONENT_GALLERY_PATH } from "@/routes/Routes";
 
 type HomeSettingsProps = { open: boolean; onOpenChange: (open: boolean) => void };
 
@@ -94,14 +92,20 @@ function SettingsContent({ onOpenChange }: Pick<HomeSettingsProps, "onOpenChange
                   variant="outline"
                 >
                   {appearances.map(({ value, label, icon: Icon }) => (
-                    <ChoiceButton key={value} value={value} aria-label={label} title={label}>
+                    <ChoiceButton
+                      iconOnly
+                      key={value}
+                      value={value}
+                      aria-label={label}
+                      title={label}
+                    >
                       <Icon aria-hidden="true" className="size-5" />
                     </ChoiceButton>
                   ))}
                 </ToggleGroup>
               </div>
             </section>
-            <Separator className="my-3" />
+            <BronzeArrow tone="faded" className="my-3 h-0.5 w-full" />
             <section aria-labelledby={`${id}-audio`}>
               <h2 id={`${id}-audio`} className={sectionClassName}>
                 Audio
@@ -146,7 +150,7 @@ function SettingsContent({ onOpenChange }: Pick<HomeSettingsProps, "onOpenChange
                 </div>
               </div>
             </section>
-            <Separator className="my-3" />
+            <BronzeArrow tone="faded" className="my-3 h-0.5 w-full" />
             <section aria-labelledby={`${id}-accessibility`}>
               <h2 id={`${id}-accessibility`} className={sectionClassName}>
                 Accessibility
@@ -160,29 +164,25 @@ function SettingsContent({ onOpenChange }: Pick<HomeSettingsProps, "onOpenChange
                     Follow your device or reduce motion in Fall.
                   </p>
                 </div>
-                <Select
+                <SelectField
                   value={motion}
                   onValueChange={(value) => {
                     if (value === "system" || value === "reduced")
                       updateGamePreferences({ motion: value });
                   }}
-                  items={{ system: "System", reduced: "Reduced" }}
-                >
-                  <SelectTrigger
-                    aria-labelledby={`${id}-motion`}
-                    aria-describedby={`${id}-motion-description`}
-                    className="min-h-11 min-w-32 transition-none"
-                  >
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectPanel>
-                    <SelectItem value="system">System</SelectItem>
-                    <SelectItem value="reduced">Reduced</SelectItem>
-                  </SelectPanel>
-                </Select>
+                  options={[
+                    { value: "system", label: "System" },
+                    { value: "reduced", label: "Reduced" },
+                  ]}
+                  triggerProps={{
+                    "aria-labelledby": `${id}-motion`,
+                    "aria-describedby": `${id}-motion-description`,
+                    className: "min-h-11 min-w-32",
+                  }}
+                />
               </div>
             </section>
-            <Separator className="my-3" />
+            <BronzeArrow tone="faded" className="my-3 h-0.5 w-full" />
             <div className="flex flex-wrap items-center justify-between gap-2">
               <ActionButton
                 tone="quiet"
@@ -194,15 +194,30 @@ function SettingsContent({ onOpenChange }: Pick<HomeSettingsProps, "onOpenChange
                 Reset preferences
               </ActionButton>
               {import.meta.env.DEV && (
-                <ActionButton
-                  tone="quiet"
-                  render={
-                    <Link to={ANIMATION_PLAYGROUND_PATH} onClick={() => onOpenChange(false)} />
-                  }
-                >
-                  <FlaskConical aria-hidden="true" />
-                  Animation playground
-                </ActionButton>
+                <div className="flex flex-wrap gap-2">
+                  <ActionButton
+                    tone="quiet"
+                    nativeButton={false}
+                    role="link"
+                    render={
+                      <Link to={ANIMATION_PLAYGROUND_PATH} onClick={() => onOpenChange(false)} />
+                    }
+                  >
+                    <FlaskConical aria-hidden="true" />
+                    Animation playground
+                  </ActionButton>
+                  <ActionButton
+                    tone="quiet"
+                    nativeButton={false}
+                    role="link"
+                    render={
+                      <Link to={COMPONENT_GALLERY_PATH} onClick={() => onOpenChange(false)} />
+                    }
+                  >
+                    <LayoutGrid aria-hidden="true" />
+                    Component gallery
+                  </ActionButton>
+                </div>
               )}
             </div>
           </>

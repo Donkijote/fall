@@ -1,7 +1,10 @@
 import { cn } from "cn";
-import { Coins, Layers2, Sparkles } from "lucide-react";
 
+import cardDraw from "@/assets/icons/card-draw.svg";
+import sparkles from "@/assets/icons/sparkles.svg";
+import coins from "@/assets/lobby/card-hall/icons/two-coins.svg";
 import tray from "@/assets/lobby/tavern-match/capture-tray.webp";
+import { Icon } from "@/components/icons/Icon";
 
 import type { MatchMotion } from "../../../application/localMatch";
 import { scoreSideStyle } from "../board/scoreSideStyle";
@@ -38,7 +41,7 @@ export function CaptureCount({
             </span>
             <div data-capture-counter={side} className="grid justify-items-center gap-1">
               <span className="flex items-center gap-1 whitespace-nowrap tabular-nums">
-                <Layers2 aria-hidden="true" className="size-3.5 text-gold" />
+                <Icon icon={cardDraw} className="size-3.5 text-gold" />
                 <span data-capture-cards className="min-w-[2ch]">
                   0
                 </span>
@@ -48,7 +51,7 @@ export function CaptureCount({
                 data-capture-anchor={side}
                 className="relative flex items-center gap-1 rounded-full border border-gold/50 bg-artwork-shadow px-2 py-1 text-gold tabular-nums shadow-sm"
               >
-                <Coins aria-hidden="true" className="size-4" />
+                <Icon icon={coins} className="size-4" />
                 <span data-capture-points className="min-w-[2ch] text-center font-semibold">
                   0
                 </span>
@@ -58,7 +61,7 @@ export function CaptureCount({
                   data-capture-burst
                   className="invisible absolute bottom-full left-1/2 z-10 flex -translate-x-1/2 items-center gap-1 rounded-full border border-gold bg-artwork-shadow px-2 py-1 text-[0.625rem] font-semibold whitespace-nowrap"
                 >
-                  <Sparkles className="size-3" />
+                  <Icon icon={sparkles} className="size-3" />
                   Extra card!
                 </span>
               </div>

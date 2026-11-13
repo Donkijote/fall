@@ -67,6 +67,34 @@
       "refinements": [
         "Export the entire 1024 × 1536 standalone original as WebP at quality 94, method 6."
       ]
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern/duel-frame.webp",
+      "method": "recorded",
+      "references": ["../../../src/assets/ui/activity-card/tavern-frame.webp"],
+      "prompt": "Edit this portrait medieval card frame. Preserve transparent open center and outside, worn brass, geometry and large diagonal plates. Replace all corner symbols with paired crossed blades in two corners and single shield emblems in the other corners. Make motifs small and embossed in brass with generous clearance from diagonals. No text or illustration.",
+      "notes": "Export at 480 × 720 WebP with alpha."
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern/free-for-all-frame.webp",
+      "method": "recorded",
+      "references": ["../../../src/assets/ui/activity-card/tavern-frame.webp"],
+      "prompt": "Edit this portrait medieval card frame. Preserve transparent open center and outside, worn brass, geometry and large diagonal plates. Replace all corner symbols with small triad of three rivets and three pointed star motifs. Make motifs small and embossed in brass with generous clearance from diagonals. No text or illustration.",
+      "notes": "Export at 480 × 720 WebP with alpha."
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern/team-match-frame.webp",
+      "method": "recorded",
+      "references": ["../../../src/assets/ui/activity-card/tavern-frame.webp"],
+      "prompt": "Edit this portrait medieval card frame. Preserve transparent open center and outside, worn brass, geometry and large diagonal plates. Replace all corner symbols with paired shield emblems with two opposed pennant motifs. Make motifs small and embossed in brass with generous clearance from diagonals. No text or illustration.",
+      "notes": "Export at 480 × 720 WebP with alpha."
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern/format-ribbon.webp",
+      "method": "recorded",
+      "references": [],
+      "prompt": "Standalone text-free medieval UI nameplate ribbon for a fantasy tavern format card, straight-on elongated 4:1 rectangle with short tapered ends, subtly folded leather tabs, dark warm brown worn leather blank center, very fine aged brass stitching and beveled trim. Restrained low contrast, warm antique brass matching medieval card frames. True transparency outside, no text, symbols, scene or shadow. Uniform center, designed for nine-slice.",
+      "notes": "Trim to alpha bounds and export at 640 × 132 WebP."
     }
   ]
 }

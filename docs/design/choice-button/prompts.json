@@ -1,0 +1,12 @@
+{
+  "art_direction": "../art-direction.md#shared-generation-prompt",
+  "outputs": [
+    {
+      "file": "../../../src/assets/ui/controls/choice-wax.webp",
+      "method": "recorded",
+      "references": [],
+      "prompt": "Standalone text-free medieval game toggle tile, compact 2:1 horizontal rounded rectangle with straight rails, nearly rectangular subtly irregular molded wax edges, dark oxblood wax with a restrained pressed flat center and thin raised wax bevel only near perimeter. No seal disc or emblem, no brass, no icons, no text, no parchment, no scenery, no cast shadow outside. True transparent background. Straight-on, designed for nine-slice UI and ivory text overlay. Fine satin material, no large shiny spots.",
+      "notes": "Trim to alpha bounds and export as 288 \u00d7 136 WebP."
+    }
+  ]
+}

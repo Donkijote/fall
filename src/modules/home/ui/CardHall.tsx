@@ -3,8 +3,8 @@ import { useRef, useState } from "react";
 import type { KeyboardEvent, MouseEvent } from "react";
 
 import appEmblem from "@/assets/branding/wingfoot.svg";
-import { ActivityCard, Navigation, PlayerIdentity, ResourceReadout } from "@/components";
-import type { NavigationItem, PlayerIdentityProps } from "@/components";
+import { ActivityCard, PlayerIdentity, ResourceReadout } from "@/components";
+import type { PlayerIdentityProps } from "@/components";
 import { Icon } from "@/components/icons/Icon";
 import { useReducedMotion } from "@/infrastructure/ui/hooks/useGamePreferences";
 
@@ -12,28 +12,8 @@ import { useGSAP } from "@gsap/react";
 
 import { cardHallArtwork, homeActivities } from "./cardHallArtwork";
 import { cardHallIcons } from "./cardHallIcons";
+import { PlayerSystemsDock } from "./components/navigation/PlayerSystemsDock";
 import { HomeUtilities } from "./HomeUtilities";
-
-const playerSystems: { label: string; items: NavigationItem[] }[] = [
-  {
-    label: "Character and progress",
-    items: [
-      { id: "hero", label: "Hero", icon: cardHallIcons.hero },
-      { id: "collection", label: "Collection", icon: cardHallIcons.collection },
-      { id: "journal", label: "Journal", icon: cardHallIcons.journal },
-    ],
-  },
-  {
-    label: "Guild and trade",
-    items: [
-      { id: "guild", label: "Guild", icon: cardHallIcons.guild },
-      { id: "market", label: "Market", icon: cardHallIcons.market },
-    ],
-  },
-].map(({ label, items }) => ({
-  label,
-  items: items.map((item) => ({ ...item, disabled: true, unavailableLabel: "coming soon" })),
-}));
 
 function isTouchFirstDevice() {
   return window.matchMedia?.("(hover: none), (pointer: coarse)").matches ?? false;
@@ -277,6 +257,7 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
               }}
               title={activity.title}
               imageUrl={activity.imageUrl}
+              frameUrl={activity.frameUrl}
               imageWidth={activity.imageWidth}
               imageHeight={activity.imageHeight}
               caption={activity.available ? undefined : "Coming soon"}
@@ -307,7 +288,7 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
         {touchFocusedId === "tavern" ? "Tavern focused." : ""}
       </p>
       <footer className="flex flex-wrap items-end justify-between gap-1 pt-1 pr-[calc(var(--hall-footer-gutter)+var(--safe-area-right))] pb-[calc(var(--hall-footer-bottom)+var(--safe-area-bottom))] pl-[calc(var(--hall-footer-gutter)+var(--safe-area-left))] [--hall-footer-bottom:0.625rem] [--hall-footer-gutter:0.25rem] min-[360px]:[--hall-footer-gutter:0.75rem] sm:[--hall-footer-bottom:0.75rem] sm:[--hall-footer-gutter:1rem] compact-landscape:[--hall-footer-bottom:0.125rem] compact-landscape:[--hall-footer-gutter:0.375rem] [&>nav:last-child]:ml-auto">
-        <Navigation label="Player systems" groups={playerSystems} />
+        <PlayerSystemsDock />
         <HomeUtilities onSettings={onSettings} />
       </footer>
     </div>

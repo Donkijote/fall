@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import { BronzeArrow } from "@/components";
 import { CardFaces } from "@/components/cards/CardFaces";
 
 import { singPointsLabel } from "../../../application/rulebookContent";
@@ -8,12 +9,18 @@ import { illustratedSings } from "../../../application/rulebookExamples";
 export function SingsSummary({ singsLink }: { singsLink: ReactNode }) {
   return (
     <>
-      <div className="divide-y divide-border">
+      <div>
         {illustratedSings.map((sing, index) => (
           <section
             key={sing.name}
-            className="grid items-center gap-4 py-5 sm:grid-cols-[minmax(0,1fr)_auto]"
+            className="relative grid items-center gap-4 py-5 sm:grid-cols-[minmax(0,1fr)_auto]"
           >
+            {index > 0 && (
+              <BronzeArrow
+                tone="faded"
+                className="absolute inset-x-0 top-0 h-0.5 -translate-y-1/2"
+              />
+            )}
             <div>
               <h3 id={`rule-sing-${index}`} tabIndex={-1} className="scroll-mt-6 outline-none">
                 {sing.name}{" "}

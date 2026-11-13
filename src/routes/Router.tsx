@@ -9,6 +9,7 @@ import { SingsSheetScreen } from "@/infrastructure/ui/screens/SingsSheet";
 import {
   ANIMATION_PLAYGROUND_PATH,
   CARDS_PATH,
+  COMPONENT_GALLERY_PATH,
   HOME_PATH,
   LOGIN_PATH,
   MATCH_PATH,
@@ -26,6 +27,13 @@ const router = createBrowserRouter([
   },
   ...(import.meta.env.DEV
     ? [
+        {
+          path: COMPONENT_GALLERY_PATH,
+          lazy: async () => {
+            const { ComponentGallery } = await import("@/modules/componentGallery");
+            return { Component: ComponentGallery };
+          },
+        },
         {
           path: ANIMATION_PLAYGROUND_PATH,
           lazy: async () => {

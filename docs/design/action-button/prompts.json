@@ -1,0 +1,25 @@
+{
+  "art_direction": "../art-direction.md#shared-generation-prompt",
+  "outputs": [
+    {
+      "file": "../../../src/assets/ui/actions/primary.webp",
+      "method": "recorded",
+      "references": ["../home-lobby/mockup-detailed.png"],
+      "prompt": "Generate a standalone transparent cutout game UI button skin, no text, no glyphs, no scenery. Use the supplied Continue Campaign button as visual reference. Straight-on symmetric elongated escutcheon about 5.5:1, subtle concave rounded clipped ends with long shoulders, carefully aged rounded brass fillets, hairline inner highlights, dark lower bevel giving raised face, tiny engraved gold end marks, subdued realistic hand-painted RPG materials. Keep edge close to horizontal across the center for nine-slice scaling; no cast shadow outside alpha. Single button centered, maximal width. Primary: worn raised deep oxblood red face with subtle fine leather grain, richly metallic bevel.",
+      "notes": "The user supplied a close-up of Continue Campaign as the generation reference. Trim the generated image to its alpha bounds and export at 640 \u00d7 116 as WebP with alpha.",
+      "refinements": [
+        "Remove localized bright streaks and hot spots from the brass trim. Use an even satin brass midtone along the rails with subtle bevel shading across their thickness. Preserve the transparent silhouette, face material, and end ornaments."
+      ]
+    },
+    {
+      "file": "../../../src/assets/ui/actions/outline.webp",
+      "method": "recorded",
+      "references": ["../home-lobby/mockup-detailed.png"],
+      "prompt": "Generate a standalone transparent cutout game UI button skin, no text, no glyphs, no scenery. Use the supplied Continue Campaign button as visual reference. Straight-on symmetric elongated escutcheon about 5.5:1, subtle concave rounded clipped ends with long shoulders, carefully aged rounded brass fillets, hairline inner highlights, dark lower bevel giving raised face, tiny engraved gold end marks, subdued realistic hand-painted RPG materials. Keep edge close to horizontal across the center for nine-slice scaling; no cast shadow outside alpha. Single button centered, maximal width. Outline: fine aged brass line, restrained dark charcoal raised face, muted brass, thinner quiet profile but matching silhouette.",
+      "notes": "The user supplied a close-up of Continue Campaign as the generation reference. Trim the generated image to its alpha bounds and export at 640 \u00d7 116 as WebP with alpha.",
+      "refinements": [
+        "Remove localized bright streaks and hot spots from the brass trim. Use an even satin brass midtone along the rails with subtle bevel shading across their thickness. Preserve the transparent silhouette, face material, and end ornaments."
+      ]
+    }
+  ]
+}

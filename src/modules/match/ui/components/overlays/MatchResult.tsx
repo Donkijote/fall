@@ -3,7 +3,6 @@ import gsap from "gsap";
 import { useRef } from "react";
 
 import defeat from "@/assets/lobby/tavern-match/defeat-crest.webp";
-import returnArt from "@/assets/lobby/tavern-match/result-return.webp";
 import standingsArt from "@/assets/lobby/tavern-match/result-standings.webp";
 import victory from "@/assets/lobby/tavern-match/victory-crest.webp";
 import { ActionButton } from "@/components/actions/ActionButton";
@@ -108,15 +107,10 @@ export function MatchResult({
         </div>
         <ActionButton
           tone="primary"
-          className="group relative isolate min-h-12 min-w-48 border-transparent bg-transparent px-6 title-type text-sm font-normal shadow-none hover:bg-transparent"
+          className="min-w-48 text-sm"
           onClick={close}
           aria-disabled={returning}
         >
-          <img
-            src={returnArt}
-            alt=""
-            className="pointer-events-none absolute inset-0 -z-10 size-full group-hover:brightness-110"
-          />
           Back to Tavern
         </ActionButton>
       </div>

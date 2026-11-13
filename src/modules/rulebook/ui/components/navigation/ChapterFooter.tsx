@@ -1,7 +1,7 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Link } from "react-router";
 
-import { ActionButton } from "@/components";
+import { ActionButton, ArrowDivider } from "@/components";
 import { HallReturnAction } from "@/components/navigation/HallReturnAction";
 
 import { chapterUrl } from "../../../adapters/rulebookRoutes";
@@ -9,7 +9,8 @@ import { chapters } from "../../../application/rulebookContent";
 
 export function ChapterFooter({ chapterIndex }: { chapterIndex: number }) {
   return (
-    <footer className="mt-auto flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
+    <footer className="mt-auto flex flex-wrap items-center justify-between gap-3 pt-4">
+      <ArrowDivider className="w-full" />
       <p className="text-sm text-muted-foreground">
         Chapter {chapterIndex + 1} of {chapters.length}
       </p>

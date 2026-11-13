@@ -1,0 +1,115 @@
+.game-button[data-frame] {
+  isolation: isolate;
+  --action-art: url("../../assets/ui/actions/outline.webp");
+}
+
+.game-button[data-frame][data-tone="primary"] {
+  --action-art: url("../../assets/ui/actions/primary.webp");
+}
+
+.game-button[data-frame]::before,
+.game-button[data-glint]::after {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  content: "";
+  /* Keep each full-height strip intact so no slice seam crosses the face. */
+  border: solid transparent;
+  border-width: 0 18px;
+  border-image: var(--action-art) 0 52 fill stretch;
+}
+
+.game-button[data-glint]:is(:disabled, [aria-disabled="true"])::after {
+  display: none;
+}
+
+.game-button[data-glint]::after {
+  opacity: var(--action-glint, 0);
+  filter: brightness(2.35) saturate(0.8);
+  mask-image: radial-gradient(
+    1.8rem 5px at var(--action-glint-x, 50%) var(--action-glint-y, 0%),
+    black 12%,
+    transparent
+  );
+}
+
+.game-button[data-glint]:is(:hover, :focus-visible):not(:disabled, [aria-disabled="true"])::before {
+  filter: brightness(1.16);
+}
+
+.game-button[data-frame][data-tone="quiet"]::before {
+  opacity: var(--action-reveal, 0);
+  clip-path: inset(0 calc((1 - var(--action-reveal, 0)) * 30%));
+  transform: scaleY(calc(0.86 + var(--action-reveal, 0) * 0.14));
+}
+
+.game-button[data-glint][data-tone="quiet"]::after {
+  opacity: calc(var(--action-glint, 0) * var(--action-reveal, 0));
+  clip-path: inset(0 calc((1 - var(--action-reveal, 0)) * 30%));
+  transform: scaleY(calc(0.86 + var(--action-reveal, 0) * 0.14));
+}
+
+.game-button[data-frame]:active:not(:disabled, [aria-disabled="true"])::before {
+  filter: brightness(0.92);
+}
+
+.game-button:is([data-frame][data-tone="quiet"], [data-icon-ornament]):is(
+    :hover,
+    :focus-visible,
+    [aria-expanded="true"]
+  ):not(:disabled, [aria-disabled="true"]) {
+  --action-reveal: 1;
+}
+
+.game-button[data-icon-ornament]::before {
+  position: absolute;
+  inset-inline: 20%;
+  bottom: 3px;
+  height: 5px;
+  pointer-events: none;
+  content: "";
+  opacity: var(--action-reveal, 0);
+  transform: scaleX(calc(0.2 + var(--action-reveal, 0) * 0.8));
+  clip-path: polygon(
+    0 50%,
+    37% 34%,
+    45% 34%,
+    50% 0,
+    55% 34%,
+    63% 34%,
+    100% 50%,
+    63% 66%,
+    55% 66%,
+    50% 100%,
+    45% 66%,
+    37% 66%
+  );
+  background: linear-gradient(
+    to bottom,
+    var(--artwork-foreground),
+    var(--gold) 48%,
+    color-mix(in oklch, var(--gold) 65%, var(--artwork-shadow))
+  );
+}
+
+.game-button:is([data-frame][data-tone="quiet"], [data-icon-ornament]):is(
+    :disabled,
+    [aria-disabled="true"]
+  )::before {
+  opacity: 0;
+}
+
+.game-button[data-frame][aria-disabled="true"] {
+  opacity: 0.5;
+}
+
+@media (forced-colors: active) {
+  .game-button[data-glint]::after {
+    display: none;
+  }
+
+  .game-button[data-frame]::before {
+    border: 1px solid ButtonText;
+  }
+}

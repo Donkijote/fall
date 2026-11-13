@@ -11,3 +11,8 @@ which the app uses directly. It is separate from the scenes painted into the
 mockups. The [prompt manifest](prompts.json) preserves the two mockup prompts.
 The [login implementation notes](../../../src/modules/login/README.md) document the source
 image, foreground mask, fog and ember effects.
+
+The shared TextInput follows the detailed mockup's cut corners, fine brass
+edge, and recessed charcoal face. Login passes its mail and lock icons into
+the same field that Rulebook and Sings use for search. Editable text uses the
+body font, and focus brightens the brass frame with a slow traveling highlight.

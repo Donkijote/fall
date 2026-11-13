@@ -1,0 +1,46 @@
+.game-player-avatar {
+  --portrait-ring: url("../../assets/ui/player-identity/brass-ring.webp");
+  box-shadow: 0 3px 6px var(--artwork-shadow);
+}
+
+.game-player-portrait::after {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow:
+    inset 0 3px 6px var(--artwork-shadow),
+    inset 0 0 5px 1px color-mix(in oklch, var(--artwork-shadow) 90%, transparent);
+  pointer-events: none;
+  content: "";
+}
+
+.game-player-avatar::before,
+.game-player-avatar::after {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  background: var(--portrait-ring) center / 100% 100% no-repeat;
+}
+
+.game-player-avatar::before {
+  z-index: 1;
+}
+
+.game-player-avatar::after {
+  z-index: 2;
+  opacity: var(--portrait-glint, 0);
+  filter: brightness(2.15);
+  mask-image: conic-gradient(
+    from var(--portrait-glint-angle, 0deg),
+    transparent,
+    black 19deg,
+    transparent 45deg
+  );
+}
+
+@media (forced-colors: active) {
+  .game-player-avatar {
+    outline: 1px solid CanvasText;
+  }
+}

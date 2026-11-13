@@ -51,3 +51,7 @@ The capture tray enters before the first card lands and exits after the count
 settles. The next frame then presents the opening deal, a bot deal, or the
 result. Confirming the opening deal fades its controls before card motion
 begins. Reduced motion keeps these handoffs immediate.
+
+The module entry point also exports `matchGallery` for the development-only
+Component gallery. Preview fixtures live under `ui/components/previews` and
+render this module’s styled components with sample props.
