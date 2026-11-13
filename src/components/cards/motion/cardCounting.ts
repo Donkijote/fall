@@ -35,6 +35,7 @@ export function sampleCountingCard(index: number, seconds: number, total: number
   const sourceZ = 0.065 + (total - index) * 0.008;
   const targetZ = bonus ? 0.8 : 0.065 + index * 0.008;
   return {
+    travel,
     position: [
       2.1 + (targetX - 2.1) * travel + arc * 0.12,
       -0.6 + (targetY + 0.6) * travel + arc * (0.25 + jitter),
@@ -47,5 +48,24 @@ export function sampleCountingCard(index: number, seconds: number, total: number
     ] as [number, number, number],
     scale: bonus ? 1 - Math.pow(clamp((progress - 0.66) / 0.34), 2) : 1,
     visible: !bonus || progress < 1,
+  };
+}
+
+export type CountingSnapshot = ReturnType<typeof countingProgress> & { seconds: number };
+
+export function createCountingPlayback(total: number, quota: number, playCard: () => void) {
+  let seconds = 0;
+  let counted = 0;
+  return {
+    advance(delta: number, speed = 1) {
+      seconds += Math.min(delta, 0.05) * speed;
+      const progress = countingProgress(seconds, total, quota);
+      if (progress.counted > counted) playCard();
+      counted = progress.counted;
+      return { ...progress, seconds };
+    },
+    pose(index: number) {
+      return sampleCountingCard(index, seconds, total, quota);
+    },
   };
 }

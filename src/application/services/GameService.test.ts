@@ -358,6 +358,7 @@ describe("Game Service", () => {
       table: [],
       deck: [],
       dealer: mockedStateWithPlayers.players[1].id,
+      currentPlayer: mockedStateWithPlayers.players[1].id,
     });
   });
 

@@ -13,7 +13,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import type { GameMode } from "@/domain/entities/GameState";
-import { GAME_PATH, PREVIEW_MATCH_ID } from "@/routes/Routes";
+import { useCardAudio } from "@/infrastructure/ui/hooks/useCardAudio";
+import { GAME_PATH, LOCAL_MATCH_ID } from "@/routes/Routes";
 
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
 
@@ -63,6 +64,7 @@ export function TavernPicker({ open, canPlay, origin, onClose }: TavernPickerPro
   const [selectedFormat, setSelectedFormat] = useState<string | null>(null);
   const [popup, setPopup] = useState<HTMLDivElement | null>(null);
   const navigate = useNavigate();
+  const audio = useCardAudio(open && canPlay);
   const location = useLocation();
   const navigationType = useNavigationType();
   const openedFromUrl = Boolean(new URLSearchParams(location.search).get("bottomSidebar"));
@@ -145,13 +147,14 @@ export function TavernPicker({ open, canPlay, origin, onClose }: TavernPickerPro
                     {...format}
                     selected={selectedFormat === format.title}
                     onTouchFocus={(selected) => setSelectedFormat(selected ? format.title : null)}
-                    onActivate={() =>
+                    onActivate={() => {
+                      audio.current?.unlock();
                       depart(() =>
-                        navigate(`${GAME_PATH}/${PREVIEW_MATCH_ID}?mode=${format.mode}`, {
+                        navigate(`${GAME_PATH}/${LOCAL_MATCH_ID}?mode=${format.mode}`, {
                           state: { fromTavern: true },
                         }),
-                      )
-                    }
+                      );
+                    }}
                   />
                 ))}
               </div>

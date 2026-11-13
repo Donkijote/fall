@@ -55,7 +55,12 @@ export const analyzePlay = (state: GameState, playerId: string, card: Card): Pla
     };
   }
 
-  const isFall = !!state.lastPlayedCard && state.lastPlayedCard.rank === card.rank;
+  const lastCard = state.lastPlayedCard;
+  const isFall =
+    capturePlan.kind !== "none" &&
+    !!lastCard &&
+    lastCard.rank === card.rank &&
+    capturePlan.targets[0].key === toCardKey(lastCard);
 
   return { ok: true, capturePlan, isFall, isLastRound };
 };
@@ -76,8 +81,6 @@ export const updateTableAndHandCards = (
 ): GameState => {
   const next = cloneState(state);
   const me = next.players.find((p) => p.id === playerId)!;
-  const isLastRound = next.deck.length === 0;
-
   if (plan.kind === "none") {
     next.table = [...next.table, card];
     return next;
@@ -95,12 +98,17 @@ export const updateTableAndHandCards = (
     }
   }
   me.collected.push(card);
-  if (isLastRound) next.lastCaptureBy = playerId;
+  next.lastCaptureBy = playerId;
 
   return next;
 };
 
-export const finalizeAfterPlay = (state: GameState, playerId: string, card: Card): GameState => {
+export const finalizeAfterPlay = (
+  state: GameState,
+  playerId: string,
+  card: Card,
+  isFall: boolean,
+): GameState => {
   let nextState = cloneState(state);
   const isLastRound = nextState.deck.length === 0;
 
@@ -119,22 +127,19 @@ export const finalizeAfterPlay = (state: GameState, playerId: string, card: Card
   }
 
   // Fall rule scoring
-  const lastCard = state.lastPlayedCard;
-  const isFall = !!lastCard && lastCard.rank === card.rank;
   if (isFall) {
     const pts = fallPoints(card.rank);
     nextState = awardPoints(nextState, playerId, pts);
-    nextState = checkGameOver(nextState);
   }
 
-  // End-of-deal handling (your original logic)
+  nextState = checkGameOver(nextState, nextState.config.targetPoints);
+  if (nextState.phase === "gameOver") return nextState;
+
+  // End-of-deal handling
   const allHandsEmpty = nextState.players.every((p) => p.hand.length === 0);
   if (allHandsEmpty) {
     if (nextState.deck.length > 0) {
-      nextState = dealRound(nextState, { isDealerFirstDeal: false });
-      const dealerIndex = nextState.players.findIndex((p) => p.id === nextState.dealer);
-      const firstToPlay = (dealerIndex + 1 + playerCount) % playerCount;
-      nextState.currentPlayer = nextState.players[firstToPlay].id;
+      nextState = dealRound(nextState);
     } else {
       const lastCap: string | null = nextState.lastCaptureBy;
       if (nextState.table.length > 0 && lastCap) {
@@ -149,6 +154,7 @@ export const finalizeAfterPlay = (state: GameState, playerId: string, card: Card
         nextState.table = [];
       }
       nextState.lastCaptureBy = null;
+      nextState.phase = "roundEnd";
     }
   }
 

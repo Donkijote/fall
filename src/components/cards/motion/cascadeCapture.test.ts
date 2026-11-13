@@ -19,11 +19,13 @@ const sample = (seconds: number, index: number) =>
 
 it("visits every table card once in an adjacent sequence", () => {
   expect(cascadeOrder).toEqual([0, 1, 3, 2]);
+  expect(sample(0, -1).handTravel).toBe(0);
   for (let index = 0; index < targets.length; index++) {
     const arrival = cascadeSteps[index].start + cascadeSteps[index].travel;
     const own = targets[index];
     expect(sample(arrival, index).position).toEqual([own.x, own.y, own.z]);
     const played = sample(arrival, -1);
+    expect(played.handTravel).toBeCloseTo(1);
     expect(Math.abs(played.position[0] - own.x)).toBeLessThan(0.06);
     expect(Math.abs(played.position[1] - own.y)).toBeLessThan(0.06);
     expect(played.position[2]).toBeCloseTo(own.z + (index + 1) * pitch);

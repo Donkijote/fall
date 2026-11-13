@@ -1,20 +1,24 @@
-import { useEffect, useRef } from "react";
+import { useMemo, useRef } from "react";
 import type { Group } from "three";
+
+import { countingArrival, createCountingPlayback } from "@/components/cards/motion/cardCounting";
+import { CardMesh } from "@/components/cards/three/CardMesh";
 
 import { Html, OrthographicCamera, RoundedBox } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 
 import { deckCardCount } from "../../application/lab";
 import type { Lab } from "../../application/lab";
-import { CardMesh } from "./Card";
-import { countingArrival, countingProgress, sampleCountingCard } from "./cardCounting";
 import { useMotionSettings } from "./MotionSettings";
 
 export function CountingStudy({ lab, total, quota }: { lab: Lab; total: number; quota: number }) {
   const { size } = useThree();
   const { speed } = useMotionSettings();
   const cards = useRef<Group[]>([]);
-  const elapsed = useRef(0);
+  const playback = useMemo(
+    () => createCountingPlayback(total, quota, lab.playDealCard),
+    [lab, total, quota],
+  );
   const lastCount = useRef(-1);
   const counter = useRef<HTMLSpanElement>(null);
   const points = useRef<HTMLDivElement>(null);
@@ -22,25 +26,18 @@ export function CountingStudy({ lab, total, quota }: { lab: Lab; total: number; 
   const bonusLabel = useRef<HTMLParagraphElement>(null);
   const tableWidth = Math.max(5.6, (size.width / Math.max(1, size.height)) * 6.1 - 0.4);
 
-  useEffect(() => {
-    elapsed.current = 0;
-    lastCount.current = -1;
-  }, [lab, total, quota]);
-
   useFrame((_, delta) => {
-    elapsed.current += Math.min(delta, 0.05) * speed;
-    const seconds = elapsed.current;
-    const progress = countingProgress(seconds, total, quota);
+    const progress = playback.advance(delta, speed);
+    const { seconds } = progress;
     cards.current.forEach((card, index) => {
       if (index >= total) return;
-      const pose = sampleCountingCard(index, seconds, total, quota);
+      const pose = playback.pose(index);
       card.position.set(...pose.position);
       card.rotation.set(...pose.rotation);
       card.scale.setScalar(pose.scale);
       card.visible = pose.visible;
     });
     if (progress.counted !== lastCount.current) {
-      if (progress.counted > 0) lab.playDealCard();
       lastCount.current = progress.counted;
       if (counter.current) counter.current.textContent = `${progress.counted} / ${total}`;
       if (status.current) {

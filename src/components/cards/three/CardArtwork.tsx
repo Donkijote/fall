@@ -15,15 +15,17 @@ const CardArtworkContext = createContext<readonly [Texture, Texture] | null>(nul
 // paper and inset as the app card into one shared texture, preserving its ratio.
 export function createCardFaceTexture(
   image: CanvasImageSource & { width: number; height: number },
+  paper = "#fafafa",
+  resolution = 512,
 ) {
   const canvas = document.createElement("canvas");
-  canvas.width = 512;
-  canvas.height = 720;
+  canvas.width = resolution;
+  canvas.height = resolution * (720 / 512);
   const context = canvas.getContext("2d");
   if (!context) throw new Error("Card artwork requires a 2D canvas context.");
-  context.fillStyle = "#fafafa";
+  context.fillStyle = paper;
   context.fillRect(0, 0, canvas.width, canvas.height);
-  const inset = 40;
+  const inset = resolution * (40 / 512);
   const scale = Math.min(
     (canvas.width - inset * 2) / image.width,
     (canvas.height - inset * 2) / image.height,
@@ -36,10 +38,33 @@ export function createCardFaceTexture(
   return texture;
 }
 
+// Rasterize the SVG pattern into an explicit sRGB texture before WebGL uploads it.
+export function createCardBackTexture(image: CanvasImageSource) {
+  const canvas = document.createElement("canvas");
+  canvas.width = 256;
+  canvas.height = 360;
+  const context = canvas.getContext("2d");
+  if (!context) throw new Error("Card artwork requires a 2D canvas context.");
+  context.drawImage(image, 0, 0, canvas.width, canvas.height);
+  const texture = new CanvasTexture(canvas);
+  texture.colorSpace = SRGBColorSpace;
+  return texture;
+}
+
 export function CardArtworkProvider({ children }: { children: ReactNode }) {
-  const [art, back] = useTexture([cardArtwork.face, cardArtwork.back]);
+  const [art, backArtTexture] = useTexture([cardArtwork.face, cardArtwork.back]);
   const face = useMemo(() => createCardFaceTexture(art.image as HTMLImageElement), [art]);
-  useEffect(() => () => face.dispose(), [face]);
+  const back = useMemo(
+    () => createCardBackTexture(backArtTexture.image as HTMLImageElement),
+    [backArtTexture],
+  );
+  useEffect(
+    () => () => {
+      face.dispose();
+      back.dispose();
+    },
+    [face, back],
+  );
   return <CardArtworkContext value={[face, back]}>{children}</CardArtworkContext>;
 }
 
@@ -47,4 +72,28 @@ export function useCardArtwork() {
   const textures = useContext(CardArtworkContext);
   if (!textures) throw new Error("Card meshes must be inside CardArtworkProvider.");
   return textures;
+}
+
+export function useCardFaceTextures(urls: string[], paper?: string, resolution?: number) {
+  const artwork = useTexture(urls);
+  const signature = urls.join("\n");
+  const faces = useMemo(
+    () =>
+      new Map(
+        signature
+          .split("\n")
+          .map((url, index) => [
+            url,
+            createCardFaceTexture(artwork[index].image as HTMLImageElement, paper, resolution),
+          ]),
+      ),
+    [signature, artwork, paper, resolution],
+  );
+  useEffect(
+    () => () => {
+      for (const face of faces.values()) face.dispose();
+    },
+    [faces],
+  );
+  return faces;
 }

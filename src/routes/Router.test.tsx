@@ -4,7 +4,7 @@ import {
   GAME_PATH,
   HOME_PATH,
   LOGIN_PATH,
-  PREVIEW_MATCH_ID,
+  LOCAL_MATCH_ID,
   RULES_PATH,
   SINGS_SHEETS,
 } from "@/routes/Routes";
@@ -58,7 +58,7 @@ describe("AppRouter", () => {
   });
 
   it("loads the match screen from a direct match URL", async () => {
-    window.history.pushState({}, "", `${GAME_PATH}/${PREVIEW_MATCH_ID}`);
+    window.history.pushState({}, "", `${GAME_PATH}/${LOCAL_MATCH_ID}`);
     const AppRouter = await importRouter();
     render(<AppRouter />);
     expect(await screen.findByTestId("match")).toBeInTheDocument();

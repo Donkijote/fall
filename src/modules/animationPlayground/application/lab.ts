@@ -1,8 +1,10 @@
+import type { CardDropEffect } from "@/components/cards/motion/cardFlights";
+
+export type { CardDropEffect } from "@/components/cards/motion/cardFlights";
+
 export const deckCardCount = 40;
 
 export type Study = "card" | "deck" | "table";
-
-export type CardDropEffect = "plain" | "ice" | "heat" | "flame";
 
 export type Experiment =
   | "flip"

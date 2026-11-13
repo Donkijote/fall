@@ -1,9 +1,11 @@
 import gsap from "gsap";
 import { useRef } from "react";
 
+import { SceneBoundary } from "@/components/surfaces/SceneBoundary";
+
 import { useGSAP } from "@gsap/react";
 
-import { HearthAsh } from "../../adapters/three/HearthAsh";
+import { HearthAsh } from "../../../adapters/three/HearthAsh";
 
 export function TavernMatchAtmosphere({ playing }: { playing: boolean }) {
   const scope = useRef<HTMLDivElement>(null);
@@ -52,7 +54,9 @@ export function TavernMatchAtmosphere({ playing }: { playing: boolean }) {
           data-table-hearth=""
           className="absolute h-[13cqmin] w-[9cqmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,var(--gold),transparent_70%)] opacity-[0.12] mix-blend-screen"
         />
-        <HearthAsh />
+        <SceneBoundary>
+          <HearthAsh />
+        </SceneBoundary>
       </div>
     </div>
   );

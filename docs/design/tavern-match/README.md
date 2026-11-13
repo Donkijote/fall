@@ -73,3 +73,18 @@ each orientation. Three Quarks renders tumbling ash flakes as small angular mesh
 records the supplied empty-seat icon. The upper-right close control follows
 the supplied Teamfight Tactics match-found reference and retains the
 accessible name Close table. A gold dealer badge overlaps the lower-right corner of the nameplate.
+
+## Playable table
+
+[Issue #117](https://github.com/Donkijote/fall/issues/117) uses the existing
+table and seats for live local play. The local hand is face up and only accepts
+input on your turn. Cards occupy open spots in a fixed grid, and existing cards keep their spots when other cards land or are captured.
+The draw deck and collector piles show whether they are empty, without revealing their sizes during play.
+Scores sit in the bottom-left corner. The seat pointer identifies the active player. The dealer's opening choices, the round count, and
+the result use the shared framed surface in the middle of the table.
+
+The local table runs the Playground's 3D card sequences and sounds with the
+active dealer, real card artwork and the positions of the hand, table cards,
+and collector. Reduced motion uses immediate board updates and keeps sound
+available through the same game preferences.
+The same composition supports desktop and phone portrait and landscape.

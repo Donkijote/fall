@@ -86,7 +86,7 @@ export function resolveHands(state: GameState): GameState {
 
   // Award and check game over
   let next = awardPoints(state, winner.playerId, winner.points);
-  next = checkGameOver(next);
+  next = checkGameOver(next, state.config.targetPoints);
 
   return next;
 }

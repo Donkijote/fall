@@ -2,13 +2,14 @@ import gsap from "gsap";
 import { useRef } from "react";
 import type { Group } from "three";
 
+import { CardMesh } from "@/components/cards/three/CardMesh";
+
 import { useGSAP } from "@gsap/react";
 import { PresentationControls } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 
 import { deckCardCount } from "../../application/lab";
 import type { Lab } from "../../application/lab";
-import { CardMesh } from "./Card";
 import { useMotionSettings } from "./MotionSettings";
 
 const cardPitch = 0.028;

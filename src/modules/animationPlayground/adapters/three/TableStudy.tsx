@@ -1,35 +1,39 @@
 import gsap from "gsap";
 import { useRef, useState } from "react";
 import type { RefObject } from "react";
-import { MathUtils } from "three";
-import type { Group, Mesh, MeshBasicMaterial } from "three";
+import type { Group } from "three";
 
-import shadowTexture from "@/assets/effects/ember.svg";
+import { sampleCardCapture } from "@/components/cards/motion/cardCapture";
+import { sampleDeal, samplePlay } from "@/components/cards/motion/cardFlights";
+import { cardLandingPose, sampleCardImpact } from "@/components/cards/motion/cardImpactMotion";
+import { appendCapture, appendDeal, appendPlay } from "@/components/cards/motion/cardTimelines";
+import { cascadeOrder, sampleCascadeCapture } from "@/components/cards/motion/cascadeCapture";
+import {
+  captureDuration,
+  captureElement,
+  sampleFallCapture,
+  impactAt,
+} from "@/components/cards/motion/tableCapture";
+import type { FrostUniform } from "@/components/cards/three/cardFrost";
+import type { HeatUniforms } from "@/components/cards/three/cardHeat";
+import { CardMesh } from "@/components/cards/three/CardMesh";
+import {
+  FallShadow,
+  updateFallShadow,
+  type FallShadowMesh,
+} from "@/components/cards/three/FallShadow";
+import { FlameEnvelope } from "@/components/cards/three/FlameEnvelope";
+import { FlameImpact } from "@/components/cards/three/FlameImpact";
+import { HeatImpactWave } from "@/components/cards/three/HeatImpactWave";
+import { IceShards } from "@/components/cards/three/IceShards";
 
 import { useGSAP } from "@gsap/react";
-import { OrthographicCamera, RoundedBox, useTexture } from "@react-three/drei";
+import { OrthographicCamera, RoundedBox } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 
 import { deckCardCount } from "../../application/lab";
 import type { CardDropEffect, Lab } from "../../application/lab";
-import { CardMesh } from "./Card";
-import { cardCaptureDuration, sampleCardCapture } from "./cardCapture";
-import type { FrostUniform } from "./cardFrost";
-import type { HeatUniforms } from "./cardHeat";
-import { cardLandingPose, flameCooldownDuration, sampleCardImpact } from "./cardImpactMotion";
-import { cascadeCaptureDuration, cascadeOrder, sampleCascadeCapture } from "./cascadeCapture";
-import { FlameEnvelope } from "./FlameEnvelope";
-import { FlameImpact } from "./FlameImpact";
-import { HeatImpactWave } from "./HeatImpactWave";
-import { IceShards } from "./IceShards";
 import { useMotionSettings } from "./MotionSettings";
-import {
-  captureDuration,
-  captureElement,
-  captureFlight,
-  collectAt,
-  impactAt,
-} from "./tableCapture";
 
 const viewHeight = 6.1;
 const tableDepth = 5.55;
@@ -99,9 +103,7 @@ export function TableStudy({
   const flameTrail = useRef<Group>(null);
   const flameOpacity = useRef({ value: 0 });
   const flameIgnition = useRef({ value: 0 });
-  const fallShadow = useRef<Mesh>(null);
-  const shadowMaterial = useRef<MeshBasicMaterial>(null);
-  const shadow = useTexture(shadowTexture);
+  const fallShadow = useRef<FallShadowMesh>(null);
   const cards = useRef<Group[]>([]);
   const [flights] = useState(() =>
     Array.from({ length: movingCardCount }, (_, index) => ({
@@ -139,7 +141,7 @@ export function TableStudy({
     const effect = lab.getState().activeCaptureIntensity;
     const ember = effect === "flame";
     const duration = captureDuration(effect);
-    const afterCollection = (captureMotion.cooldown * duration) / captureDuration("plain");
+    const afterCollection = captureMotion.cooldown;
     const impact = sampleCardImpact(
       effect,
       (capture - impactAt) * duration + afterCollection,
@@ -147,10 +149,6 @@ export function TableStudy({
     );
     const pose = cardLandingPose(effect, impact);
     const impactScale = cardSize / 0.83;
-    const hitX = matchX + (pose.x + 0.18) * impactScale;
-    const hitY = matchY + pose.y * impactScale;
-    const lowerX = matchX + (pose.lowerX + 0.03) * impactScale;
-    const lowerY = matchY + (pose.lowerY + 0.06) * impactScale;
     const prime = captureElement(capture, effect);
     const flamePrime = ember ? prime : 0;
     heatWave.current.value = impact.heatWave;
@@ -172,8 +170,7 @@ export function TableStudy({
       flameTrail.current.visible = ember && flamePrime > 0 && flameOpacity.current.value > 0.002;
       flameTrail.current.scale.setScalar(cardSize);
     }
-    if (fallShadow.current)
-      fallShadow.current.visible = !ordinaryCapture && capture > 0.27 && capture < impactAt;
+    if (fallShadow.current) fallShadow.current.visible = false;
 
     if (tabletop.current) {
       const tableShake = pose.tableShake * impactScale;
@@ -209,30 +206,23 @@ export function TableStudy({
       }
 
       const played = index === playedCardIndex ? playMotion.progress : 0;
-      const lift = (center ? 0.48 : 0.26) * Math.sin(Math.PI * progress);
-      if (played > 0) {
-        card.position.set(
-          MathUtils.lerp(x, Math.min(1.55, sideX * 0.76), played),
-          MathUtils.lerp(y, -1.16, played),
-          MathUtils.lerp(landingZ, stackHeight(0), played) + 0.42 * Math.sin(Math.PI * played),
-        );
-        card.rotation.set(
-          0,
-          Math.PI * MathUtils.smoothstep(played, 0.18, 0.87),
-          MathUtils.lerp(angle, -0.12, played),
-        );
-      } else {
-        card.position.set(
-          MathUtils.lerp(deckX, x, progress),
-          MathUtils.lerp(dealerY, y, progress),
-          MathUtils.lerp(stackHeight(stackIndex), landingZ, progress) + lift,
-        );
-        card.rotation.set(
-          0,
-          center ? Math.PI * MathUtils.smoothstep(progress, 0.16, 0.86) : 0,
-          angle * progress,
-        );
-      }
+      const hand = { x, y, z: landingZ, angle };
+      const flight =
+        played > 0
+          ? samplePlay(played, hand, {
+              x: Math.min(1.55, sideX * 0.76),
+              y: -1.16,
+              z: stackHeight(0),
+              angle: -0.12,
+            })
+          : sampleDeal(
+              progress,
+              { x: deckX, y: dealerY, z: stackHeight(stackIndex) },
+              hand,
+              center,
+            );
+      card.position.fromArray(flight.position);
+      card.rotation.set(flight.rotation[0], flight.rotation[1], flight.rotation[2]);
 
       const topCard = index === playedCardIndex;
       if (topCard) card.scale.setScalar(1);
@@ -272,63 +262,21 @@ export function TableStudy({
       }
       if (!capture || (!topCard && index !== capturedCardIndex)) return;
 
-      if (capture < collectAt) {
-        if (topCard) {
-          if (capture <= 0.27) return;
-          const flight = captureFlight(capture, effect, impact);
-          card.position.set(
-            MathUtils.lerp(x, hitX, flight.travel),
-            MathUtils.lerp(y, hitY, flight.travel) + flight.lift * 0.22,
-            MathUtils.lerp(landingZ, matchZ + cardPitch, flight.travel) + flight.lift,
-          );
-          card.rotation.set(
-            pose.pitch * flight.flip,
-            Math.PI * flight.flip + pose.roll * flight.flip,
-            MathUtils.lerp(angle, -pose.yaw, flight.travel),
-          );
-          // The overhead camera cannot show much vertical motion on its own.
-          card.scale.setScalar(1 + flight.lift * 0.27);
-          if (fallShadow.current && shadowMaterial.current) {
-            fallShadow.current.position.set(
-              card.position.x,
-              card.position.y - flight.lift * 0.35,
-              feltTop + 0.003,
-            );
-            fallShadow.current.scale.setScalar(1 + flight.lift * 0.44);
-            shadowMaterial.current.opacity =
-              flight.travel * (0.36 - Math.min(flight.lift, 1.6) * 0.16);
-          }
-        } else {
-          const earlierPlay = MathUtils.smoothstep(capture, 0, 0.23);
-          card.position.set(
-            MathUtils.lerp(x, lowerX, earlierPlay),
-            MathUtils.lerp(y, lowerY, earlierPlay),
-            MathUtils.lerp(landingZ, matchZ, earlierPlay) + 0.38 * Math.sin(Math.PI * earlierPlay),
-          );
-          card.rotation.y = Math.PI * MathUtils.smoothstep(earlierPlay, 0.12, 0.88);
-          card.rotation.z = angle * (1 - earlierPlay) - (pose.lowerYaw - 0.09);
-        }
-        return;
-      }
-
-      const collect = MathUtils.smoothstep(capture, collectAt, 1);
-      const flip = Math.PI * MathUtils.smoothstep(collect, 0.14, 0.86);
-      const offsetZ = topCard ? cardPitch : 0;
-      const offsetX = topCard ? (hitX - lowerX) * (1 - collect) : 0;
-      const offsetY = topCard ? (hitY - lowerY) * (1 - collect) : 0;
-      // Keep the landing offset when picking up the pair, then square the pile.
-      card.position.set(
-        MathUtils.lerp(lowerX, sideX, collect) +
-          Math.cos(flip) * offsetX +
-          Math.sin(flip) * offsetZ,
-        MathUtils.lerp(lowerY, 1.55, collect) + offsetY,
-        MathUtils.lerp(matchZ, matchZ + cardPitch, collect) +
-          0.52 * Math.sin(Math.PI * collect) +
-          Math.cos(flip) * offsetZ -
-          Math.sin(flip) * offsetX,
+      const sample = sampleFallCapture(
+        capture,
+        topCard,
+        hand,
+        { x: matchX, y: matchY, z: matchZ },
+        { x: sideX, y: 1.55, z: matchZ + cardPitch },
+        cardPitch,
+        impactScale,
+        effect,
+        impact,
       );
-      const landingYaw = topCard ? -pose.yaw : -(pose.lowerYaw - 0.09);
-      card.rotation.set(0, Math.PI + flip, landingYaw * (1 - collect));
+      card.position.fromArray(sample.position);
+      card.rotation.set(sample.rotation[0], sample.rotation[1], sample.rotation[2]);
+      card.scale.setScalar(sample.scale ?? 1);
+      if (topCard) updateFallShadow(fallShadow.current, sample, feltTop + 0.003);
     });
   });
 
@@ -336,23 +284,6 @@ export function TableStudy({
     () => {
       const hands = flights.slice(0, handCardCount);
       const center = flights.slice(handCardCount);
-
-      function timeline(batch: typeof flights, duration: number) {
-        const deal = gsap.timeline({ paused: true }).timeScale(motionSettings.speed);
-        batch.forEach((flight, index) => {
-          deal.to(
-            flight,
-            {
-              progress: 1,
-              duration,
-              ease: motionSettings.ease === "original" ? "power1.out" : motionSettings.ease,
-              onStart: lab.playDealCard,
-            },
-            index * 0.24,
-          );
-        });
-        return deal;
-      }
 
       function stackFrom(batch: typeof flights, top: number) {
         batch.forEach((flight, index) => {
@@ -369,40 +300,18 @@ export function TableStudy({
         }
       }
 
-      const handDeal = timeline(hands, 0.54);
-      const centerDeal = timeline(center, 0.68);
-      const play = gsap
-        .timeline({ paused: true })
-        .timeScale(motionSettings.speed)
-        .to(playMotion, {
-          progress: 1,
-          duration: 0.75,
-          onStart: lab.playCard,
-          ease: motionSettings.ease === "original" ? "power1.inOut" : motionSettings.ease,
-        });
-
-      const capture = gsap
-        .timeline({ paused: true })
-        .timeScale(motionSettings.speed)
-        .to(captureMotion, {
-          progress: 1,
-          onStart: lab.playCard,
-          duration: cascadeCapture
-            ? cascadeCaptureDuration
-            : simpleCapture
-              ? cardCaptureDuration
-              : captureDuration("plain"),
-          ease: "none",
-        });
-      if (!ordinaryCapture) {
-        // Fall capture plays two cards before collecting the pair.
-        capture.call(lab.playCard, [], captureDuration("plain") * 0.27);
-        capture.to(captureMotion, {
-          cooldown: flameCooldownDuration,
-          duration: flameCooldownDuration,
-          ease: "none",
-        });
-      }
+      const paused = () => gsap.timeline({ paused: true }).timeScale(motionSettings.speed);
+      const handDeal = appendDeal(paused(), hands, false, lab, motionSettings.ease);
+      const centerDeal = appendDeal(paused(), center, true, lab, motionSettings.ease);
+      const play = appendPlay(paused(), playMotion, lab, motionSettings.ease);
+      const capture = appendCapture(
+        paused(),
+        captureMotion,
+        cascadeCapture ? "cascade" : simpleCapture ? "card" : "fall",
+        cascadeCapture ? cascadeOrder.length : 1,
+        lab,
+        lab.getState().captureIntensity,
+      );
 
       function startCapture(replay = false) {
         if (
@@ -410,14 +319,7 @@ export function TableStudy({
           handDeal.progress() === 1 &&
           (replay || capture.progress() === 0)
         ) {
-          capture
-            .timeScale(
-              ordinaryCapture
-                ? motionSettings.speed
-                : (motionSettings.speed * captureDuration("plain")) /
-                    captureDuration(lab.getState().activeCaptureIntensity),
-            )
-            .restart();
+          capture.restart();
         }
       }
 
@@ -507,19 +409,7 @@ export function TableStudy({
             <FlameImpact motion={blast} overhead />
           </group>
         )}
-        {capturing && (
-          <mesh ref={fallShadow} visible={false} renderOrder={1}>
-            <planeGeometry args={[1.1, 1.34]} />
-            <meshBasicMaterial
-              ref={shadowMaterial}
-              map={shadow}
-              color="#000"
-              transparent
-              opacity={0}
-              depthWrite={false}
-            />
-          </mesh>
-        )}
+        {capturing && <FallShadow mesh={fallShadow} />}
         {ordinaryCapture &&
           Array.from({ length: 3 }, (_, index) => (
             <group key={`captured-${index}`} position={[sideX, 1.55, stackHeight(index)]}>
