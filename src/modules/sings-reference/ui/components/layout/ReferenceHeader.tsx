@@ -16,6 +16,7 @@ export function ReferenceHeader({ children }: { children: ReactNode }) {
         {guideReturn ? (
           <ActionButton
             tone="quiet"
+            framed={false}
             className="text-artwork-foreground hover:bg-transparent hover:text-gold dark:hover:bg-transparent"
             render={<Link {...guideReturn} replace />}
           >

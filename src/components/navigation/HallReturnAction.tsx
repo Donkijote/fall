@@ -18,6 +18,7 @@ export function HallReturnAction({
   return (
     <ActionButton
       tone="quiet"
+      framed={false}
       className={cn(
         "hover:bg-transparent dark:hover:bg-transparent",
         overArtwork && "text-artwork-foreground hover:text-gold",

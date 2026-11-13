@@ -13,9 +13,10 @@
   z-index: -1;
   pointer-events: none;
   content: "";
-  border: 10px solid transparent;
-  border-inline-width: 18px;
-  border-image: var(--action-art) 24 52 fill stretch;
+  /* Keep each full-height strip intact so no slice seam crosses the face. */
+  border: solid transparent;
+  border-width: 0 18px;
+  border-image: var(--action-art) 0 52 fill stretch;
 }
 
 .game-button[data-frame][data-tone="quiet"]::before {

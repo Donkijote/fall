@@ -49,7 +49,6 @@ export function ActionButton({
         framed &&
           iconOnly &&
           "border-transparent bg-transparent text-foreground hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent",
-
         !framed && tone === "outline" && "border-gold/55",
         iconOnly &&
           "game-button-icon p-2.5 [&_svg:not([class*='size-'])]:size-[clamp(22px,1.9vw,30px)] [&_svg]:stroke-[1.5]",

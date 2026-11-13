@@ -46,11 +46,7 @@ export function LeaveMatchDialog({
           >
             Keep playing
           </DialogClose>
-          <TavernOverlayAction
-            tone="outline"
-            className="text-artwork-shadow hover:bg-artwork-shadow/10 hover:text-artwork-shadow"
-            onClick={leave}
-          >
+          <TavernOverlayAction tone="outline" onClick={leave}>
             Leave match
           </TavernOverlayAction>
         </div>

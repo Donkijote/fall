@@ -8,6 +8,6 @@ hover or expansion. Disabled actions dim their current tone. Icon-only actions
 use a borderless hover surface.
 
 The [runtime exports](../../../src/assets/ui/actions) are transparent WebP
-images. ActionButton uses nine-slice scaling to keep the end ornaments and
+images. ActionButton uses three full-height slices to keep the end ornaments and
 bevel intact while the label determines the width. React renders the text and
 icons and the button keeps its native focus and interaction behavior.

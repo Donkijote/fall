@@ -46,7 +46,7 @@ export function WaitingSign({
       <TavernOverlayAction
         data-tavern-cancel=""
         tone="outline"
-        className="border-gold/65 bg-artwork-shadow/85 text-xs text-artwork-foreground inset-ring-gold/25 hover:bg-artwork-shadow hover:text-gold"
+        className="text-xs"
         onClick={cancel}
         aria-disabled={returning}
       >
