@@ -197,6 +197,7 @@ function SettingsContent({ onOpenChange }: Pick<HomeSettingsProps, "onOpenChange
                 <div className="flex flex-wrap gap-2">
                   <ActionButton
                     tone="quiet"
+                    nativeButton={false}
                     render={
                       <Link to={ANIMATION_PLAYGROUND_PATH} onClick={() => onOpenChange(false)} />
                     }
@@ -206,6 +207,7 @@ function SettingsContent({ onOpenChange }: Pick<HomeSettingsProps, "onOpenChange
                   </ActionButton>
                   <ActionButton
                     tone="quiet"
+                    nativeButton={false}
                     render={
                       <Link to={COMPONENT_GALLERY_PATH} onClick={() => onOpenChange(false)} />
                     }

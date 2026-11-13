@@ -38,7 +38,11 @@ export function ComponentGallery() {
     <main className="h-dvh overflow-y-auto bg-background px-4 py-6 text-foreground sm:px-8">
       <div className="mx-auto grid max-w-7xl gap-8">
         <header className="grid gap-3">
-          <ActionButton render={<Link to={HOME_PATH} />} className="justify-self-start">
+          <ActionButton
+            nativeButton={false}
+            render={<Link to={HOME_PATH} />}
+            className="justify-self-start"
+          >
             <ArrowLeft aria-hidden="true" /> Hall
           </ActionButton>
           <div className="flex flex-wrap items-center justify-between gap-4">
@@ -96,7 +100,7 @@ export function ComponentGallery() {
               {title}
             </h2>
             <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,20rem),1fr))] gap-4">
-              {entries.map(({ name, variants, usage, Preview }) => (
+              {entries.map(({ name, variants, usage, source, Preview }) => (
                 <FramedCard key={name} className="min-w-0 gap-4 p-4">
                   <h3 className="text-lg">{name}</h3>
                   <div className="rounded-md border border-border bg-background p-3 text-foreground">
@@ -115,7 +119,7 @@ export function ComponentGallery() {
                       <dt className="text-muted-foreground">Source</dt>
                       <dd>
                         <code className="text-xs break-all">
-                          src/components/{folder}/{name}.tsx
+                          {source ?? `src/components/${folder}/${name}.tsx`}
                         </code>
                       </dd>
                     </div>

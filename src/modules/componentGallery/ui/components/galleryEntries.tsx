@@ -2,6 +2,12 @@ import { Coins, Swords } from "lucide-react";
 import type { ComponentType } from "react";
 
 import { ContextStrip, PlayerIdentity, ResourceReadout, TextInput } from "@/components";
+import { homeGallery } from "@/modules/home";
+import { loginGallery } from "@/modules/login";
+import { matchGallery } from "@/modules/match";
+import { rulebookGallery } from "@/modules/rulebook";
+import { singsGallery } from "@/modules/sings-reference";
+import { tavernGallery } from "@/modules/tavern";
 
 import {
   ActionPreview,
@@ -19,6 +25,7 @@ type Entry = {
   name: string;
   variants: string;
   usage: string;
+  source?: string;
   Preview: ComponentType;
 };
 
@@ -168,4 +175,10 @@ export const gallerySections: { title: string; folder: string; entries: Entry[] 
       },
     ],
   },
+  homeGallery,
+  loginGallery,
+  matchGallery,
+  tavernGallery,
+  rulebookGallery,
+  singsGallery,
 ];

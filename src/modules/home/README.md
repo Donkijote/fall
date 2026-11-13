@@ -56,3 +56,7 @@ Appearance continues to use the existing `fall-theme` key.
 
 Log out opens `/login` from the right-hand utility dock. It currently serves
 as a navigation placeholder for future logout behavior.
+
+The module entry point also exports `homeGallery` for the development-only
+Component gallery. Preview fixtures live under `ui/components/previews` and
+render this module’s styled components with sample props.
