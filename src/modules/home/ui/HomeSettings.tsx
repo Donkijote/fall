@@ -1,4 +1,4 @@
-import { ArrowLeft, FlaskConical, Monitor, Moon, Sun } from "lucide-react";
+import { ArrowLeft, FlaskConical, LayoutGrid, Monitor, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useId, useState } from "react";
 import { Link } from "react-router";
@@ -22,7 +22,7 @@ import {
   updateGamePreferences,
 } from "@/infrastructure/preferences/gamePreferences";
 import { useGamePreferences } from "@/infrastructure/ui/hooks/useGamePreferences";
-import { ANIMATION_PLAYGROUND_PATH } from "@/routes/Routes";
+import { ANIMATION_PLAYGROUND_PATH, COMPONENT_GALLERY_PATH } from "@/routes/Routes";
 
 type HomeSettingsProps = { open: boolean; onOpenChange: (open: boolean) => void };
 
@@ -194,15 +194,26 @@ function SettingsContent({ onOpenChange }: Pick<HomeSettingsProps, "onOpenChange
                 Reset preferences
               </ActionButton>
               {import.meta.env.DEV && (
-                <ActionButton
-                  tone="quiet"
-                  render={
-                    <Link to={ANIMATION_PLAYGROUND_PATH} onClick={() => onOpenChange(false)} />
-                  }
-                >
-                  <FlaskConical aria-hidden="true" />
-                  Animation playground
-                </ActionButton>
+                <div className="flex flex-wrap gap-2">
+                  <ActionButton
+                    tone="quiet"
+                    render={
+                      <Link to={ANIMATION_PLAYGROUND_PATH} onClick={() => onOpenChange(false)} />
+                    }
+                  >
+                    <FlaskConical aria-hidden="true" />
+                    Animation playground
+                  </ActionButton>
+                  <ActionButton
+                    tone="quiet"
+                    render={
+                      <Link to={COMPONENT_GALLERY_PATH} onClick={() => onOpenChange(false)} />
+                    }
+                  >
+                    <LayoutGrid aria-hidden="true" />
+                    Component gallery
+                  </ActionButton>
+                </div>
               )}
             </div>
           </>

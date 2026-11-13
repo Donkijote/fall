@@ -9,3 +9,4 @@ export const SINGS_SHEETS = "/sings";
 export const RULES_PATH = "/rules";
 
 export const ANIMATION_PLAYGROUND_PATH = "/dev/animations";
+export const COMPONENT_GALLERY_PATH = "/dev/components";

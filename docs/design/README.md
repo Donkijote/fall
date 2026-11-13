@@ -4,15 +4,16 @@ Start with [Fall art direction](art-direction.md) for the shared visual language
 Use the feature references to understand the approved composition, and the
 running app to check current controls and behavior.
 
-| Feature      | Approved references                                    |
-| ------------ | ------------------------------------------------------ |
-| Home lobby   | [Card Hall](home-lobby/README.md)                      |
-| Tavern       | [Tavern format picker](tavern/README.md)               |
-| Tavern match | [Tavern match lobby and board](tavern-match/README.md) |
-| Login        | [Login](login/README.md)                               |
-| Settings     | [Card Hall Settings](settings/README.md)               |
-| How to Play  | [Rulebook](how-to-play/README.md)                      |
-| Sings        | [Sings reference](sings-reference/README.md)           |
+| Feature           | Approved references                                    |
+| ----------------- | ------------------------------------------------------ |
+| Home lobby        | [Card Hall](home-lobby/README.md)                      |
+| Tavern            | [Tavern format picker](tavern/README.md)               |
+| Tavern match      | [Tavern match lobby and board](tavern-match/README.md) |
+| Login             | [Login](login/README.md)                               |
+| Settings          | [Card Hall Settings](settings/README.md)               |
+| How to Play       | [Rulebook](how-to-play/README.md)                      |
+| Sings             | [Sings reference](sings-reference/README.md)           |
+| Component gallery | [Component gallery](component-gallery/README.md)       |
 
 ## Feature folder standard
 
