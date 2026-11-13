@@ -1,5 +1,7 @@
 import { useId, type ReactNode } from "react";
 
+import { ArrowDivider } from "../dividers/ArrowDivider";
+
 export function ParchmentFigure({
   title,
   caption,
@@ -31,17 +33,9 @@ export function ParchmentFigure({
         </filter>
         <rect width="100%" height="100%" filter={`url(#${grain})`} />
       </svg>
-      <div className="mb-5 flex items-center justify-center gap-3 font-heading text-lg font-bold uppercase sm:gap-5 sm:text-xl">
-        <span
-          aria-hidden="true"
-          className="h-px max-w-40 min-w-3 flex-1 bg-linear-to-r from-transparent to-amber-900/60"
-        />
-        {title}
-        <span
-          aria-hidden="true"
-          className="h-px max-w-40 min-w-3 flex-1 bg-linear-to-l from-transparent to-amber-900/60"
-        />
-      </div>
+      <ArrowDivider className="mx-auto mb-5 max-w-2xl justify-center text-center">
+        <span className="title-type text-lg uppercase sm:text-xl">{title}</span>
+      </ArrowDivider>
       {children}
       <figcaption id={id} className="mt-5 text-sm leading-relaxed italic sm:text-base">
         {caption}

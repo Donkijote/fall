@@ -1,6 +1,7 @@
 import { cn } from "cn";
 import { Fragment } from "react";
 
+import { BronzeArrow } from "@/components";
 import { CardFaces } from "@/components/cards/CardFaces";
 
 import type { SingResult } from "../../../application/singsCatalog";
@@ -23,8 +24,17 @@ export function CombinationEntry({ sing, query }: { sing: SingResult; query: str
   return (
     <li
       data-sing-entry={sing.id}
-      className="relative flex min-w-0 flex-col gap-2 px-3 py-4 text-artwork-foreground before:absolute before:inset-y-2 before:left-0 before:hidden before:w-px before:bg-linear-to-b before:from-transparent before:via-gold/65 before:to-transparent after:absolute after:inset-x-2 after:bottom-0 after:h-px after:bg-linear-to-r after:from-transparent after:via-gold/75 after:to-transparent @2xl:px-5 @2xl:py-5 @2xl:@max-5xl:[&:not(:nth-child(2n+1))]:before:block @min-[26rem]:@max-2xl:compact-landscape:[&:not(:nth-child(2n+1))]:before:block @5xl:[&:not(:nth-child(3n+1))]:before:block"
+      className="relative flex min-w-0 flex-col gap-2 px-3 py-4 text-artwork-foreground @2xl:px-5 @2xl:py-5"
     >
+      <BronzeArrow
+        direction="down"
+        tone="faded"
+        className="absolute inset-y-2 start-0 hidden w-0.5 @2xl:@max-5xl:[li:not(:nth-child(2n+1))>&]:block @min-[26rem]:@max-2xl:compact-landscape:[li:not(:nth-child(2n+1))>&]:block @5xl:[li:not(:nth-child(3n+1))>&]:block"
+      />
+      <BronzeArrow
+        tone="faded"
+        className="absolute inset-x-2 bottom-0 h-0.5 [li:last-child>&]:hidden @2xl:@max-5xl:[li:nth-child(2n+1):nth-last-child(-n+2)>&]:hidden @min-[26rem]:@max-2xl:compact-landscape:[li:nth-child(2n+1):nth-last-child(-n+2)>&]:hidden @5xl:[li:nth-child(3n+1):nth-last-child(-n+3)>&]:hidden @5xl:[li:nth-child(3n+2):nth-last-child(-n+2)>&]:hidden"
+      />
       <div className="flex items-start justify-between gap-2">
         <h2 className="pt-1 text-lg leading-tight @2xl:text-xl @5xl:text-2xl">
           <MatchText text={sing.name} query={term} />

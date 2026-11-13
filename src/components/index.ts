@@ -17,3 +17,6 @@ export { PopoverPanel } from "./surfaces/PopoverPanel";
 export { ChoiceButton } from "./controls/ChoiceButton";
 export { TextInput } from "./controls/TextInput";
 export { SelectField } from "./controls/SelectField";
+
+export { ArrowDivider } from "./dividers/ArrowDivider";
+export { BronzeArrow } from "./dividers/BronzeArrow";

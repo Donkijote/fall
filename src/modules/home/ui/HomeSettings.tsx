@@ -3,7 +3,7 @@ import { useTheme } from "next-themes";
 import { useId, useState } from "react";
 import { Link } from "react-router";
 
-import { ActionButton, ChoiceButton, ModalContent, SelectField } from "@/components";
+import { ActionButton, BronzeArrow, ChoiceButton, ModalContent, SelectField } from "@/components";
 import {
   Dialog,
   DialogClose,
@@ -12,7 +12,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { ToggleGroup } from "@/components/ui/toggle-group";
@@ -106,7 +105,7 @@ function SettingsContent({ onOpenChange }: Pick<HomeSettingsProps, "onOpenChange
                 </ToggleGroup>
               </div>
             </section>
-            <Separator className="my-3" />
+            <BronzeArrow tone="faded" className="my-3 h-0.5 w-full" />
             <section aria-labelledby={`${id}-audio`}>
               <h2 id={`${id}-audio`} className={sectionClassName}>
                 Audio
@@ -151,7 +150,7 @@ function SettingsContent({ onOpenChange }: Pick<HomeSettingsProps, "onOpenChange
                 </div>
               </div>
             </section>
-            <Separator className="my-3" />
+            <BronzeArrow tone="faded" className="my-3 h-0.5 w-full" />
             <section aria-labelledby={`${id}-accessibility`}>
               <h2 id={`${id}-accessibility`} className={sectionClassName}>
                 Accessibility
@@ -183,7 +182,7 @@ function SettingsContent({ onOpenChange }: Pick<HomeSettingsProps, "onOpenChange
                 />
               </div>
             </section>
-            <Separator className="my-3" />
+            <BronzeArrow tone="faded" className="my-3 h-0.5 w-full" />
             <div className="flex flex-wrap items-center justify-between gap-2">
               <ActionButton
                 tone="quiet"

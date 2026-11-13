@@ -4,7 +4,13 @@ import type { ComponentType } from "react";
 import levelCrest from "@/assets/lobby/card-hall/icons/rank-1.svg";
 import coins from "@/assets/lobby/card-hall/icons/two-coins.svg";
 import traveller from "@/assets/lobby/card-hall/traveller.webp";
-import { PlayerIdentity, ResourceReadout, TextInput } from "@/components";
+import {
+  ArrowDivider,
+  BronzeArrow,
+  PlayerIdentity,
+  ResourceReadout,
+  TextInput,
+} from "@/components";
 import { homeGallery } from "@/modules/home";
 import { loginGallery } from "@/modules/login";
 import { matchGallery } from "@/modules/match";
@@ -89,6 +95,39 @@ export const gallerySections: { title: string; folder: string; entries: Entry[] 
         variants: "Selected, unavailable and disabled",
         usage: "Card Hall activity picker",
         Preview: ActivityPreview,
+      },
+    ],
+  },
+  {
+    title: "Dividers",
+    folder: "dividers",
+    entries: [
+      {
+        name: "BronzeArrow",
+        variants: "Left, right, vertical, and faded",
+        usage:
+          "Login, ArrowDivider, How to Play’s Sings list, Sings Reference grid, and Hall Settings",
+        Preview: () => (
+          <div className="grid gap-3">
+            <BronzeArrow className="w-14" />
+            <BronzeArrow direction="left" className="w-full" />
+            <BronzeArrow direction="down" className="h-14" />
+            <BronzeArrow tone="faded" className="h-0.5 w-full" />
+          </div>
+        ),
+      },
+      {
+        name: "ArrowDivider",
+        variants: "Oak centerpiece and inline label",
+        usage: "Login, How to Play illustrations and chapter footer, Sings reference",
+        Preview: () => (
+          <div className="grid gap-3">
+            <ArrowDivider />
+            <ArrowDivider>
+              <span>Or continue with</span>
+            </ArrowDivider>
+          </div>
+        ),
       },
     ],
   },

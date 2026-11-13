@@ -11,12 +11,11 @@ import cupSuit from "@/assets/login/icons/jeweled-chalice.svg";
 import passwordIcon from "@/assets/login/icons/padlock.svg";
 import seatIcon from "@/assets/login/icons/plain-arrow.svg";
 import clubSuit from "@/assets/login/icons/wood-club.svg";
-import { ActionButton, FramedCard, TextInput } from "@/components";
+import { ActionButton, ArrowDivider, BronzeArrow, FramedCard, TextInput } from "@/components";
 import { Icon } from "@/components/icons/Icon";
 import { Button } from "@/components/ui/button";
 import { CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 import { useReducedMotion } from "@/infrastructure/ui/hooks/useGamePreferences";
 import { HOME_PATH } from "@/routes/Routes";
 
@@ -68,10 +67,7 @@ export function LoginScreen() {
             className="login-intro min-w-0 space-y-3 text-artwork-foreground [text-shadow:0_1px_4px_var(--artwork-shadow)] sm:space-y-5 lg:space-y-7 max-xl:landscape:space-y-4 max-sm:landscape:hidden"
           >
             <p className="flex items-center gap-2 text-[0.625rem] font-semibold tracking-[0.2em] text-gold uppercase sm:gap-3 sm:text-xs sm:tracking-[0.24em] max-xl:landscape:gap-2 max-xl:landscape:text-[0.625rem] max-xl:landscape:tracking-[0.16em]">
-              <span
-                className="h-px w-6 shrink-0 bg-gold sm:w-10 max-xl:landscape:w-6"
-                aria-hidden="true"
-              />
+              <BronzeArrow className="w-6 shrink-0 sm:w-10 max-xl:landscape:w-6" />
               The classic. Reimagined.
             </p>
             <h1
@@ -84,7 +80,8 @@ export function LoginScreen() {
                 A new story.
               </span>
             </h1>
-            <p className="hidden max-w-md border-l border-gold/60 pl-4 text-sm leading-relaxed lg:block lg:pl-5 lg:text-base xl:text-lg max-xl:landscape:pl-3 max-xl:landscape:text-sm sm:landscape:block">
+            <p className="relative hidden max-w-md pl-4 text-sm leading-relaxed lg:block lg:pl-5 lg:text-base xl:text-lg max-xl:landscape:pl-3 max-xl:landscape:text-sm sm:landscape:block">
+              <BronzeArrow direction="down" className="absolute inset-y-0 left-0" />
               Beyond the mist, a new challenge awaits.
               <span className="max-xl:landscape:hidden">
                 {" "}
@@ -167,11 +164,9 @@ export function LoginScreen() {
               </form>
 
               <div className="login-alternatives flow-root min-w-0 max-xl:landscape:flex max-xl:landscape:flex-col max-xl:landscape:justify-center max-xl:landscape:rounded-2xl max-xl:landscape:bg-muted/30 max-xl:landscape:p-4">
-                <div className="my-4 flex items-center gap-4 sm:my-5 xl:my-7 max-xl:landscape:mt-0 max-xl:landscape:mb-3 max-xl:landscape:justify-center">
-                  <Separator className="flex-1 bg-gold/50 max-xl:landscape:hidden" />
+                <ArrowDivider className="my-4 sm:my-5 xl:my-7 max-xl:landscape:mt-0 max-xl:landscape:mb-3 max-xl:landscape:justify-center max-xl:landscape:[&>span[aria-hidden]]:hidden">
                   <span className="shrink-0 text-xs text-muted-foreground">Or continue with</span>
-                  <Separator className="flex-1 bg-gold/50 max-xl:landscape:hidden" />
-                </div>
+                </ArrowDivider>
                 <div
                   className="flex justify-center gap-4 max-xl:landscape:grid max-xl:landscape:grid-cols-[repeat(2,auto)] max-xl:landscape:gap-4"
                   role="group"
