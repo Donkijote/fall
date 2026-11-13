@@ -54,7 +54,7 @@ export function ReferenceFilters({
           }
           triggerProps={{
             id: "filter-min-points",
-            className: "min-h-11 min-w-28 border-gold/65 bg-background",
+            className: "min-w-28",
           }}
           panelProps={{ align: "start", alignItemWithTrigger: false }}
         />

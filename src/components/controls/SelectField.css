@@ -1,0 +1,91 @@
+.select-field-trigger::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  content: "";
+  border: 7px solid transparent;
+  border-image: url("../../assets/ui/controls/text-input.webp") 22 fill stretch;
+}
+
+.select-field-trigger:is(:hover, :focus-visible, [aria-expanded="true"]):not(:disabled)::before {
+  filter: brightness(1.35);
+}
+
+.select-field-trigger > svg {
+  display: none;
+}
+
+.select-field-chevron {
+  background: linear-gradient(var(--artwork-foreground), var(--gold));
+  clip-path: polygon(0 24%, 50% 65%, 100% 24%, 100% 53%, 50% 94%, 0 53%);
+  transform: rotate(calc(var(--select-chevron-turn, 0) * 1deg));
+}
+
+.select-field-trigger[aria-expanded="true"] {
+  --select-chevron-turn: 180;
+}
+
+.select-field-option[data-highlighted]:not([data-disabled]) {
+  --select-wax-lift: 1;
+}
+
+.select-field-option::before {
+  position: absolute;
+  inset: 1px 2px;
+  z-index: -1;
+  pointer-events: none;
+  content: "";
+  border: 8px solid transparent;
+  border-image: url("../../assets/ui/controls/choice-wax.webp") 25 32 fill stretch;
+  opacity: calc(0.38 * var(--select-wax-lift, 0));
+  filter: grayscale(0.85);
+  transform: scale(calc(0.94 + 0.085 * var(--select-wax-lift, 0)));
+}
+
+.select-field-option[data-selected]::before {
+  opacity: 1;
+  filter: none;
+  inset: calc(1px - 0.5px * var(--select-wax-lift, 0)) calc(2px - 1px * var(--select-wax-lift, 0));
+  transform: none;
+  clip-path: inset(0.5px round var(--radius-md));
+}
+
+.select-field-option > span[aria-hidden="true"] > svg {
+  display: none;
+}
+
+.select-field-option > span[aria-hidden="true"] {
+  filter: drop-shadow(0 -1px 0 color-mix(in oklch, var(--primary) 48%, var(--artwork-shadow)))
+    drop-shadow(0 1px 0 color-mix(in oklch, var(--primary) 76%, var(--artwork-foreground)));
+}
+
+.select-field-option > span[aria-hidden="true"]::after {
+  width: 0.7rem;
+  aspect-ratio: 1;
+  content: "";
+  background: linear-gradient(
+    to bottom,
+    color-mix(in oklch, var(--primary) 64%, var(--artwork-shadow)),
+    var(--primary) 62%,
+    color-mix(in oklch, var(--primary) 82%, var(--artwork-foreground))
+  );
+  clip-path: polygon(50% 0, 64% 36%, 100% 50%, 64% 64%, 50% 100%, 36% 64%, 0 50%, 36% 36%);
+}
+
+@media (forced-colors: active) {
+  .select-field-trigger {
+    border-color: ButtonText;
+  }
+
+  .select-field-chevron {
+    forced-color-adjust: none;
+    background: ButtonText;
+  }
+
+  .select-field-option[data-highlighted],
+  .select-field-option[data-selected] {
+    outline: 1px solid Highlight;
+    outline-offset: -2px;
+  }
+}
