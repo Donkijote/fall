@@ -1,5 +1,8 @@
-import { Equal, Layers, Minus, Plus, Trophy } from "lucide-react";
+import { Equal, Minus, Plus } from "lucide-react";
 
+import cardDraw from "@/assets/icons/card-draw.svg";
+import trophy from "@/assets/icons/trophy.svg";
+import { Icon } from "@/components/icons/Icon";
 import { ParchmentFigure } from "@/components/surfaces/ParchmentFigure";
 
 import { scoringExample } from "../../../application/rulebookExamples";
@@ -28,7 +31,7 @@ export function scoringIllustrations() {
             title="Count the extras"
             caption={`In a duel, ${captured} captured cards are ${captured - quota} over the ${quota}-card quota. That earns ${earned} points.`}
           >
-            <Layers aria-hidden="true" className="mx-auto mb-4 size-7" />
+            <Icon icon={cardDraw} className="mx-auto mb-4 block size-7" />
             <div className={equation} aria-hidden="true">
               <Quantity value={captured} label="Cards captured" />
               <Minus className="size-4" />
@@ -45,7 +48,7 @@ export function scoringIllustrations() {
         title="Reach the winning score"
         caption={`If you had ${startingScore} points before counting, the ${earned} points from the example bring you to ${goal}. You win the match.`}
       >
-        <Trophy aria-hidden="true" className="mx-auto mb-4 size-7" />
+        <Icon icon={trophy} className="mx-auto mb-4 block size-7" />
         <div className={equation} aria-hidden="true">
           <Quantity value={startingScore} label="Starting score" />
           <Plus className="size-4" />

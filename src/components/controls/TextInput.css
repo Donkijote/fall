@@ -66,11 +66,8 @@
   height: 1.5rem;
   margin-inline-start: 0.25rem;
   cursor: pointer;
-  background:
-    linear-gradient(45deg, transparent 44%, currentColor 44% 56%, transparent 56%) center / 0.625rem
-      0.625rem no-repeat,
-    linear-gradient(-45deg, transparent 44%, currentColor 44% 56%, transparent 56%) center /
-      0.625rem 0.625rem no-repeat;
+  background: currentColor;
+  mask: url("../../assets/icons/cross-mark.svg") center / 0.75rem no-repeat;
   color: var(--gold);
 }
 

@@ -1,7 +1,10 @@
-import { ArrowDown, ArrowRight, ArrowUp, Hand, LayoutGrid } from "lucide-react";
+import { ArrowDown, ArrowRight, ArrowUp } from "lucide-react";
 import { useState, type ReactNode } from "react";
 
+import openPalm from "@/assets/icons/open-palm.svg";
+import cardPick from "@/assets/lobby/card-hall/icons/card-pick.svg";
 import board from "@/assets/lobby/tavern-match/dealer-board.webp";
+import { Icon } from "@/components/icons/Icon";
 import type { DealOrder, TablePattern } from "@/domain/entities/GameState";
 
 import { TavernOverlayAction } from "./TavernOverlayAction";
@@ -48,13 +51,13 @@ function DealChoices<Value extends string>({
 }
 
 function DealOrderIcon({ tableFirst = false }: { tableFirst?: boolean }) {
-  const First = tableFirst ? LayoutGrid : Hand;
-  const Second = tableFirst ? Hand : LayoutGrid;
+  const First = tableFirst ? cardPick : openPalm;
+  const Second = tableFirst ? openPalm : cardPick;
   return (
     <span className="flex items-center gap-1.5">
-      <First className="size-4" />
+      <Icon icon={First} className="size-4" />
       <ArrowRight className="size-3 opacity-70" />
-      <Second className="size-4" />
+      <Icon icon={Second} className="size-4" />
     </span>
   );
 }

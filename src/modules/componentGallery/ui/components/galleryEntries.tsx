@@ -17,17 +17,18 @@ import {
   ActivityPreview,
   ChoicePreview,
   FramePreview,
-  IconPreview,
   ModalPreview,
   PopoverPreview,
   SelectPreview,
 } from "./ComponentPreviews";
+import { gameIcons, GameIconPreview } from "./GameIconPreview";
 
 type Entry = {
   name: string;
   variants: string;
   usage: string;
   source?: string;
+  searchTerms?: readonly string[];
   Preview: ComponentType;
 };
 
@@ -153,9 +154,10 @@ export const gallerySections: { title: string; folder: string; entries: Entry[] 
     entries: [
       {
         name: "Icon",
-        variants: "Lucide icon",
-        usage: "NavigationButton, PlayerIdentity, ResourceReadout",
-        Preview: IconPreview,
+        variants: "Game-icons SVGs and Lucide utility glyphs",
+        searchTerms: gameIcons.map(({ name }) => name),
+        usage: "Card Hall, Login, Tavern match, Rulebook",
+        Preview: GameIconPreview,
       },
     ],
   },

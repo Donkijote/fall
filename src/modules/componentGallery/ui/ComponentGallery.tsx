@@ -22,7 +22,9 @@ export function ComponentGallery() {
     .filter(({ title }) => category === allCategories || category === title)
     .map((section) => ({
       ...section,
-      entries: section.entries.filter(({ name }) => name.toLowerCase().includes(search)),
+      entries: section.entries.filter(({ name, searchTerms = [] }) =>
+        [name, ...searchTerms].some((term) => term.toLowerCase().includes(search)),
+      ),
     }))
     .filter(({ entries }) => entries.length > 0);
 

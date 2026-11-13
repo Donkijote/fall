@@ -1,10 +1,11 @@
 import gsap from "gsap";
-import { DoorOpen } from "lucide-react";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
+import woodenDoor from "@/assets/icons/wooden-door.svg";
 import landscape from "@/assets/lobby/tavern-match/table-landscape.webp";
 import portrait from "@/assets/lobby/tavern-match/table-portrait.webp";
 import { ActionButton } from "@/components/actions/ActionButton";
+import { Icon } from "@/components/icons/Icon";
 import type { GameMode } from "@/domain/entities/GameState";
 
 import { useGSAP } from "@gsap/react";
@@ -139,7 +140,7 @@ export function TavernMatch({
                 className="pointer-events-auto col-start-3 row-start-1 text-artwork-foreground drop-shadow-[0_2px_3px_var(--artwork-shadow)] hover:bg-transparent hover:text-gold dark:hover:bg-transparent"
                 onClick={() => setLeaveOpen(true)}
               >
-                <DoorOpen aria-hidden="true" />
+                <Icon icon={woodenDoor} className="size-6" />
               </ActionButton>
             }
           />

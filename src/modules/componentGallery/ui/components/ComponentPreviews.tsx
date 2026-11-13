@@ -1,4 +1,4 @@
-import { Coins, Settings, Swords } from "lucide-react";
+import { Settings } from "lucide-react";
 
 import tavern from "@/assets/lobby/card-hall/tavern.webp";
 import {
@@ -10,7 +10,6 @@ import {
   PopoverPanel,
   SelectField,
 } from "@/components";
-import { Icon } from "@/components/icons/Icon";
 import { CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Popover, PopoverTitle, PopoverTrigger } from "@/components/ui/popover";
@@ -102,14 +101,5 @@ export function PopoverPreview() {
         scoring reference here.
       </PopoverPanel>
     </Popover>
-  );
-}
-
-export function IconPreview() {
-  return (
-    <div className="flex gap-3">
-      <Icon icon={Coins} className="size-6 text-gold" />
-      <Icon icon={Swords} className="size-6" />
-    </div>
   );
 }

@@ -1,9 +1,9 @@
 import { cn } from "cn";
 import gsap from "gsap";
-import { XIcon } from "lucide-react";
 import { useImperativeHandle, useState } from "react";
 import type { ComponentProps } from "react";
 
+import crossMark from "@/assets/icons/cross-mark.svg";
 import { DialogClose, DialogOverlay, DialogPortal } from "@/components/ui/dialog";
 import type { DialogContent } from "@/components/ui/dialog";
 import { useReducedMotion } from "@/infrastructure/ui/hooks/useGamePreferences";
@@ -12,6 +12,7 @@ import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
 import { useGSAP } from "@gsap/react";
 
 import { ActionButton } from "../actions/ActionButton";
+import { Icon } from "../icons/Icon";
 import { modalSurfaceClassName } from "./surfaceStyles";
 import "./ModalContent.css";
 
@@ -52,7 +53,7 @@ export function ModalContent({
         {children}
         {showCloseButton && (
           <DialogClose render={<ActionButton iconOnly className="absolute top-4 right-4" />}>
-            <XIcon />
+            <Icon icon={crossMark} className="size-4 text-gold" />
             <span className="sr-only">Close</span>
           </DialogClose>
         )}
