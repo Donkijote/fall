@@ -3,7 +3,7 @@ import { useTheme } from "next-themes";
 import { useId, useState } from "react";
 import { Link } from "react-router";
 
-import { ActionButton, ChoiceButton, ModalContent, SelectPanel, SelectTrigger } from "@/components";
+import { ActionButton, ChoiceButton, ModalContent, SelectField } from "@/components";
 import {
   Dialog,
   DialogClose,
@@ -12,7 +12,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Select, SelectItem, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
@@ -160,26 +159,22 @@ function SettingsContent({ onOpenChange }: Pick<HomeSettingsProps, "onOpenChange
                     Follow your device or reduce motion in Fall.
                   </p>
                 </div>
-                <Select
+                <SelectField
                   value={motion}
                   onValueChange={(value) => {
                     if (value === "system" || value === "reduced")
                       updateGamePreferences({ motion: value });
                   }}
-                  items={{ system: "System", reduced: "Reduced" }}
-                >
-                  <SelectTrigger
-                    aria-labelledby={`${id}-motion`}
-                    aria-describedby={`${id}-motion-description`}
-                    className="min-h-11 min-w-32 transition-none"
-                  >
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectPanel>
-                    <SelectItem value="system">System</SelectItem>
-                    <SelectItem value="reduced">Reduced</SelectItem>
-                  </SelectPanel>
-                </Select>
+                  options={[
+                    { value: "system", label: "System" },
+                    { value: "reduced", label: "Reduced" },
+                  ]}
+                  triggerProps={{
+                    "aria-labelledby": `${id}-motion`,
+                    "aria-describedby": `${id}-motion-description`,
+                    className: "min-h-11 min-w-32",
+                  }}
+                />
               </div>
             </section>
             <Separator className="my-3" />

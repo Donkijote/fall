@@ -3,15 +3,7 @@ import { useTheme } from "next-themes";
 import { useState } from "react";
 import { Link } from "react-router";
 
-import {
-  ActionButton,
-  ChoiceButton,
-  FramedCard,
-  SelectPanel,
-  SelectTrigger,
-  TextInput,
-} from "@/components";
-import { Select, SelectItem, SelectValue } from "@/components/ui/select";
+import { ActionButton, ChoiceButton, FramedCard, SelectField, TextInput } from "@/components";
 import { ToggleGroup } from "@/components/ui/toggle-group";
 import { HOME_PATH } from "@/routes/Routes";
 
@@ -73,22 +65,12 @@ export function ComponentGallery() {
               placeholder="Search by name"
             />
           </label>
-          <Select
-            items={categories.map((title) => ({ label: title, value: title }))}
+          <SelectField
+            options={categories.map((title) => ({ label: title, value: title }))}
             value={category}
             onValueChange={(value) => setCategory(value ?? allCategories)}
-          >
-            <SelectTrigger aria-label="Category">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectPanel>
-              {categories.map((title) => (
-                <SelectItem key={title} value={title} className="transition-none">
-                  {title}
-                </SelectItem>
-              ))}
-            </SelectPanel>
-          </Select>
+            triggerProps={{ "aria-label": "Category" }}
+          />
         </div>
         {sections.length === 0 && (
           <p role="status" className="text-muted-foreground">

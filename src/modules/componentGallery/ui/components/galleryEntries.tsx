@@ -66,15 +66,9 @@ export const gallerySections: { title: string; folder: string; entries: Entry[] 
         ),
       },
       {
-        name: "SelectTrigger",
-        variants: "Closed, expanded, selected value",
-        usage: "Hall Settings, Sings reference, Animation playground",
-        Preview: SelectPreview,
-      },
-      {
-        name: "SelectPanel",
-        variants: "Open, highlighted option, selected option",
-        usage: "Hall Settings, Sings reference",
+        name: "SelectField",
+        variants: "Closed, open, highlighted option, selected value",
+        usage: "Hall Settings, Sings reference, Animation playground, Component gallery",
         Preview: SelectPreview,
       },
     ],

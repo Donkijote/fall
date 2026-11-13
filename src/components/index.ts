@@ -17,5 +17,4 @@ export { PopoverPanel } from "./surfaces/PopoverPanel";
 
 export { ChoiceButton } from "./controls/ChoiceButton";
 export { TextInput } from "./controls/TextInput";
-export { SelectTrigger } from "./controls/SelectTrigger";
-export { SelectPanel } from "./controls/SelectPanel";
+export { SelectField } from "./controls/SelectField";

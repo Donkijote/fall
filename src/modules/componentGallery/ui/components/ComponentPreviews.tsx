@@ -8,14 +8,12 @@ import {
   FramedCard,
   ModalContent,
   PopoverPanel,
-  SelectPanel,
-  SelectTrigger,
+  SelectField,
 } from "@/components";
 import { Icon } from "@/components/icons/Icon";
 import { CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Popover, PopoverTitle, PopoverTrigger } from "@/components/ui/popover";
-import { Select, SelectItem, SelectValue } from "@/components/ui/select";
 import { ToggleGroup } from "@/components/ui/toggle-group";
 
 export function ActionPreview() {
@@ -48,19 +46,14 @@ export function ChoicePreview() {
 
 export function SelectPreview() {
   return (
-    <Select items={{ solo: "Solo", teams: "Teams" }} defaultValue="solo">
-      <SelectTrigger aria-label="Game format">
-        <SelectValue />
-      </SelectTrigger>
-      <SelectPanel>
-        <SelectItem value="solo" className="transition-none">
-          Solo
-        </SelectItem>
-        <SelectItem value="teams" className="transition-none">
-          Teams
-        </SelectItem>
-      </SelectPanel>
-    </Select>
+    <SelectField
+      options={[
+        { value: "solo", label: "Solo" },
+        { value: "teams", label: "Teams" },
+      ]}
+      defaultValue="solo"
+      triggerProps={{ "aria-label": "Game format" }}
+    />
   );
 }
 
