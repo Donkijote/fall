@@ -20,7 +20,9 @@
 }
 
 .game-button[data-frame][data-tone="quiet"]::before {
-  opacity: 0;
+  opacity: var(--action-reveal, 0);
+  clip-path: inset(0 calc((1 - var(--action-reveal, 0)) * 30%));
+  transform: scaleY(calc(0.86 + var(--action-reveal, 0) * 0.14));
 }
 
 .game-button[data-frame]:is(:hover, [aria-expanded="true"]):not(
@@ -34,11 +36,50 @@
   filter: brightness(0.92);
 }
 
-.game-button[data-frame][data-tone="quiet"]:is(:hover, [aria-expanded="true"]):not(
+.game-button:is([data-frame][data-tone="quiet"], [data-icon-ornament]):is(
+    :hover,
+    :focus-visible,
+    [aria-expanded="true"]
+  ):not(:disabled, [aria-disabled="true"]) {
+  --action-reveal: 1;
+}
+
+.game-button[data-icon-ornament]::before {
+  position: absolute;
+  inset-inline: 20%;
+  bottom: 3px;
+  height: 5px;
+  pointer-events: none;
+  content: "";
+  opacity: var(--action-reveal, 0);
+  transform: scaleX(calc(0.2 + var(--action-reveal, 0) * 0.8));
+  clip-path: polygon(
+    0 50%,
+    37% 34%,
+    45% 34%,
+    50% 0,
+    55% 34%,
+    63% 34%,
+    100% 50%,
+    63% 66%,
+    55% 66%,
+    50% 100%,
+    45% 66%,
+    37% 66%
+  );
+  background: linear-gradient(
+    to bottom,
+    var(--artwork-foreground),
+    var(--gold) 48%,
+    color-mix(in oklch, var(--gold) 65%, var(--artwork-shadow))
+  );
+}
+
+.game-button:is([data-frame][data-tone="quiet"], [data-icon-ornament]):is(
     :disabled,
     [aria-disabled="true"]
   )::before {
-  opacity: 1;
+  opacity: 0;
 }
 
 .game-button[data-frame][aria-disabled="true"] {
