@@ -1,6 +1,5 @@
 import { useRef, useState, type ReactNode } from "react";
 
-import table from "@/assets/lobby/tavern-match/table-landscape.webp";
 import { ActionButton } from "@/components";
 import type { Card } from "@/domain/entities/Card";
 import type { GameMode } from "@/domain/entities/GameState";
@@ -31,43 +30,15 @@ function sampleMatch(mode: GameMode) {
   return { ...state, scores: { ...state.scores, values: { "1": 24, "2": 18, "3": 12 } } };
 }
 
-function TablePreview({ children, tall = false }: { children: ReactNode; tall?: boolean }) {
+function PositionedPreview({ children, tall = false }: { children: ReactNode; tall?: boolean }) {
   return (
-    <div
-      className={`[container-type:size] relative isolate overflow-hidden rounded-md ${tall ? "h-[32rem]" : "h-72"}`}
-    >
-      <img
-        src={table}
-        alt=""
-        className="pointer-events-none absolute inset-0 -z-10 size-full object-cover"
-      />
+    <div className={`[container-type:size] relative isolate ${tall ? "h-[32rem]" : "h-72"}`}>
       {children}
     </div>
   );
 }
 
-function WaitingPreview() {
-  const [waiting, setWaiting] = useState(true);
-  return (
-    <TablePreview>
-      <div className="grid h-full place-items-center">
-        {waiting ? (
-          <WaitingSign
-            title="Tavern"
-            filled={2}
-            total={4}
-            returning={false}
-            cancel={() => setWaiting(false)}
-          />
-        ) : (
-          <ActionButton tone="primary" onClick={() => setWaiting(true)}>
-            Show waiting sign
-          </ActionButton>
-        )}
-      </div>
-    </TablePreview>
-  );
-}
+const noop = () => {};
 
 function LeavePreview() {
   const [open, setOpen] = useState(false);
@@ -121,8 +92,8 @@ function ResultPreview() {
           Defeat
         </ActionButton>
       </div>
-      <TablePreview tall={open}>
-        {open && (
+      {open && (
+        <PositionedPreview tall>
           <MatchResult
             state={{ ...sampleMatch("1vs1"), phase: "gameOver", winner }}
             sideName={sideName}
@@ -130,38 +101,24 @@ function ResultPreview() {
             returning={false}
             close={close}
           />
-        )}
-      </TablePreview>
+        </PositionedPreview>
+      )}
     </div>
   );
 }
 
 function OpeningDealPreview() {
-  const [selection, setSelection] = useState("");
   return (
-    <div className="grid gap-2">
-      <TablePreview tall>
-        <OpeningDeal
-          deal={(order, pattern) =>
-            setSelection(
-              `${order === "playersThenTable" ? "Hands first" : "Table first"} · ${pattern === "inc" ? "1–2–3–4" : "4–3–2–1"}`,
-            )
-          }
-        />
-      </TablePreview>
-      {selection && (
-        <p role="status" className="text-sm">
-          {selection}
-        </p>
-      )}
-    </div>
+    <PositionedPreview tall>
+      <OpeningDeal deal={noop} />
+    </PositionedPreview>
   );
 }
 
 function SeatsPreview() {
   const reducedMotion = useReducedMotion();
   return (
-    <TablePreview>
+    <PositionedPreview>
       <ul aria-label="Example table seats">
         <MatchSeatMarker
           position="top"
@@ -178,36 +135,28 @@ function SeatsPreview() {
           reducedMotion={reducedMotion}
         />
       </ul>
-    </TablePreview>
+    </PositionedPreview>
   );
 }
 
 function HandPreview({ canPlay }: { canPlay: boolean }) {
   const reducedMotion = useReducedMotion();
-  const [played, setPlayed] = useState<Card>();
   return (
-    <div className="grid gap-2">
-      <TablePreview>
-        <div className="absolute top-1/2 left-2/3">
-          <MatchSeatCards
-            hand={cards.filter((card) => card !== played)}
-            collected={1}
-            deck={12}
-            player={canPlay ? localPlayerId : "bot-1"}
-            local={canPlay}
-            align="right"
-            canPlay={canPlay}
-            reducedMotion={reducedMotion}
-            play={setPlayed}
-          />
-        </div>
-      </TablePreview>
-      {played && (
-        <ActionButton onClick={() => setPlayed(undefined)} className="justify-self-start">
-          Reset hand
-        </ActionButton>
-      )}
-    </div>
+    <PositionedPreview>
+      <div className="absolute top-1/2 left-2/3">
+        <MatchSeatCards
+          hand={cards}
+          collected={1}
+          deck={12}
+          player={canPlay ? localPlayerId : "bot-1"}
+          local={canPlay}
+          align="right"
+          canPlay={canPlay}
+          reducedMotion={reducedMotion}
+          play={noop}
+        />
+      </div>
+    </PositionedPreview>
   );
 }
 
@@ -220,7 +169,9 @@ export const matchGallery = {
       source: "src/modules/match/ui/components/overlays/WaitingSign.tsx",
       variants: "Filled and open seats",
       usage: "Tavern match · waiting for players",
-      Preview: WaitingPreview,
+      Preview: () => (
+        <WaitingSign title="Tavern" filled={2} total={4} returning={false} cancel={noop} />
+      ),
     },
     {
       name: "OpeningDeal",
@@ -235,9 +186,9 @@ export const matchGallery = {
       variants: "Three sides at the start of the capture count",
       usage: "Tavern match · between rounds",
       Preview: () => (
-        <TablePreview>
+        <PositionedPreview>
           <CaptureCount groups={getCountingGroups(sampleMatch("1vs2"))} sideName={sideName} />
-        </TablePreview>
+        </PositionedPreview>
       ),
     },
     {
@@ -292,9 +243,9 @@ export const matchGallery = {
       variants: "Face-up table layout",
       usage: "Tavern match · active board",
       Preview: () => (
-        <TablePreview>
+        <PositionedPreview>
           <MatchTableCards cards={cards} />
-        </TablePreview>
+        </PositionedPreview>
       ),
     },
     {
@@ -307,7 +258,7 @@ export const matchGallery = {
     {
       name: "MatchHandCard",
       source: "src/modules/match/ui/components/board/MatchHandCard.tsx",
-      variants: "Playable hand cards with pointer and keyboard interaction",
+      variants: "Playable hand cards with pointer and keyboard focus states",
       usage: "Tavern match · local player’s hand",
       Preview: () => <HandPreview canPlay />,
     },

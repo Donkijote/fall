@@ -1,6 +1,9 @@
-import { Coins, Swords } from "lucide-react";
+import { Swords } from "lucide-react";
 import type { ComponentType } from "react";
 
+import levelCrest from "@/assets/lobby/card-hall/icons/rank-1.svg";
+import coins from "@/assets/lobby/card-hall/icons/two-coins.svg";
+import traveller from "@/assets/lobby/card-hall/traveller.webp";
 import { ContextStrip, PlayerIdentity, ResourceReadout, TextInput } from "@/components";
 import { homeGallery } from "@/modules/home";
 import { loginGallery } from "@/modules/login";
@@ -16,7 +19,6 @@ import {
   FramePreview,
   IconPreview,
   ModalPreview,
-  NavigationPreview,
   PopoverPreview,
   SelectPreview,
 } from "./ComponentPreviews";
@@ -90,24 +92,6 @@ export const gallerySections: { title: string; folder: string; entries: Entry[] 
     ],
   },
   {
-    title: "Navigation",
-    folder: "navigation",
-    entries: [
-      {
-        name: "NavigationButton",
-        variants: "Icon, joined, disabled",
-        usage: "Card Hall docks",
-        Preview: NavigationPreview,
-      },
-      {
-        name: "NavigationGroup",
-        variants: "Joined controls with rounded outer corners",
-        usage: "Card Hall docks",
-        Preview: NavigationPreview,
-      },
-    ],
-  },
-  {
     title: "Surfaces",
     folder: "surfaces",
     entries: [
@@ -143,10 +127,16 @@ export const gallerySections: { title: string; folder: string; entries: Entry[] 
       },
       {
         name: "PlayerIdentity",
-        variants: "Fallback avatar, level, experience",
+        variants: "Traveller avatar, level crest, experience",
         usage: "Card Hall player HUD",
         Preview: () => (
-          <PlayerIdentity name="Traveller" level={4} experience={{ value: 60, maximum: 100 }} />
+          <PlayerIdentity
+            name="Traveller"
+            fallbackAvatarUrl={traveller}
+            levelCrestUrl={levelCrest}
+            level={4}
+            experience={{ value: 60, maximum: 100 }}
+          />
         ),
       },
       {
@@ -155,9 +145,9 @@ export const gallerySections: { title: string; folder: string; entries: Entry[] 
         usage: "Card Hall resource HUD",
         Preview: () => (
           <div className="flex gap-3">
-            <ResourceReadout label="Coins" icon={Coins} value={120} />
-            <ResourceReadout label="Capped coins" icon={Coins} value={8} maximum={10} />
-            <ResourceReadout label="Unavailable coins" icon={Coins} />
+            <ResourceReadout label="Coins" icon={coins} value={120} />
+            <ResourceReadout label="Capped coins" icon={coins} value={8} maximum={10} />
+            <ResourceReadout label="Unavailable coins" icon={coins} />
           </div>
         ),
       },

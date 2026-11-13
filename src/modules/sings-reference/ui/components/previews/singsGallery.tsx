@@ -4,7 +4,7 @@ import { CombinationEntry } from "../catalog/CombinationEntry";
 function CombinationPreview() {
   const combinations = filterSings(defaultSingsFilters);
   return (
-    <ul aria-label="Sample combinations" className="grid gap-2 rounded-md bg-artwork-shadow">
+    <ul aria-label="Sample combinations" className="grid gap-2">
       {[true, false].map((mandatory) => {
         const sing = combinations.find((combination) => combination.mandatory === mandatory);
         return sing && <CombinationEntry key={sing.id} sing={sing} query="" />;

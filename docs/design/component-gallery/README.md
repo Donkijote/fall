@@ -14,5 +14,5 @@ See the [module README](../../../src/modules/componentGallery/README.md) for
 the settings entry, route, and shared styling workflow.
 
 Feature sections preview styled UI in its owning module. The Tavern match
-previews use the existing [table and overlay artwork](../tavern-match/README.md)
-so the signs, plaques, and result crests can be inspected in context.
+previews show the [overlay artwork](../tavern-match/README.md) supplied by each
+component. Positioning containers give absolute overlays their layout bounds.

@@ -1,4 +1,4 @@
-import { CircleHelp, Coins, Settings, Swords } from "lucide-react";
+import { Coins, Settings, Swords } from "lucide-react";
 
 import tavern from "@/assets/lobby/card-hall/tavern.webp";
 import {
@@ -7,8 +7,6 @@ import {
   ChoiceButton,
   FramedCard,
   ModalContent,
-  NavigationButton,
-  NavigationGroup,
   PopoverPanel,
   SelectPanel,
   SelectTrigger,
@@ -72,24 +70,6 @@ export function ActivityPreview() {
     <div className="grid max-w-xs grid-cols-2 gap-3">
       <ActivityCard {...artwork} title="Tavern" selected />
       <ActivityCard {...artwork} title="Tavern" caption="Unavailable" unavailable disabled />
-    </div>
-  );
-}
-
-export function NavigationPreview() {
-  return (
-    <div className="flex">
-      <NavigationGroup label="Hall utilities">
-        <li>
-          <NavigationButton icon={CircleHelp} aria-label="Help" />
-        </li>
-        <li>
-          <NavigationButton icon={Settings} aria-label="Settings" />
-        </li>
-        <li>
-          <NavigationButton icon={Coins} aria-label="Shop" disabled />
-        </li>
-      </NavigationGroup>
     </div>
   );
 }

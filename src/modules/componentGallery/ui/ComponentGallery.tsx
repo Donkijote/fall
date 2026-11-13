@@ -40,6 +40,7 @@ export function ComponentGallery() {
         <header className="grid gap-3">
           <ActionButton
             nativeButton={false}
+            role="link"
             render={<Link to={HOME_PATH} />}
             className="justify-self-start"
           >
@@ -99,13 +100,17 @@ export function ComponentGallery() {
             <h2 id={`gallery-${folder}`} className="text-2xl">
               {title}
             </h2>
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,20rem),1fr))] gap-4">
+            <div
+              className={
+                folder === "match"
+                  ? "grid grid-cols-1 gap-4 lg:grid-cols-2"
+                  : "grid grid-cols-[repeat(auto-fit,minmax(min(100%,20rem),1fr))] gap-4"
+              }
+            >
               {entries.map(({ name, variants, usage, source, Preview }) => (
                 <FramedCard key={name} className="min-w-0 gap-4 p-4">
                   <h3 className="text-lg">{name}</h3>
-                  <div className="rounded-md border border-border bg-background p-3 text-foreground">
-                    <Preview />
-                  </div>
+                  <Preview />
                   <dl className="grid gap-2 text-sm">
                     <div>
                       <dt className="text-muted-foreground">Variants and states</dt>

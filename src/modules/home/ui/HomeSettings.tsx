@@ -198,6 +198,7 @@ function SettingsContent({ onOpenChange }: Pick<HomeSettingsProps, "onOpenChange
                   <ActionButton
                     tone="quiet"
                     nativeButton={false}
+                    role="link"
                     render={
                       <Link to={ANIMATION_PLAYGROUND_PATH} onClick={() => onOpenChange(false)} />
                     }
@@ -208,6 +209,7 @@ function SettingsContent({ onOpenChange }: Pick<HomeSettingsProps, "onOpenChange
                   <ActionButton
                     tone="quiet"
                     nativeButton={false}
+                    role="link"
                     render={
                       <Link to={COMPONENT_GALLERY_PATH} onClick={() => onOpenChange(false)} />
                     }

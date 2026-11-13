@@ -40,7 +40,7 @@ export const tavernGallery = {
       variants: "Illustrated backdrop and ambient motion",
       usage: "Tavern format picker",
       Preview: () => (
-        <div className="relative isolate h-52 overflow-hidden rounded-md">
+        <div className="relative isolate h-52">
           <TavernRoom />
         </div>
       ),

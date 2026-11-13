@@ -10,7 +10,9 @@ and curated usage locations. Feature modules own their preview fixtures under
 `ui/components/previews` and export the registrations through their module
 entry points. The gallery imports those registrations and displays them under
 their owning module. The fixtures render the same components and artwork as
-the feature, with sample data and local interactions where needed. Theme swatches read the existing CSS
+the feature, with sample data and local interactions where needed. Preview wrappers provide
+layout bounds for positioned components. Artwork, backgrounds, and frames
+come from the component itself. Theme swatches read the existing CSS
 variables. Theme selection updates the app preference so portaled controls use
 the same theme as their triggers.
 
