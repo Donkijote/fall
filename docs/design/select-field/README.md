@@ -2,7 +2,8 @@
 
 The trigger borrows the [TextInput frame](../text-input/README.md) and adds a
 brass chevron that turns when the menu opens. The menu uses the popover
-palette, a brass edge, and the [ChoiceButton wax artwork](../choice-button/README.md)
+palette with a nine-sliced brass artwork frame and diagonal corners, and the
+[ChoiceButton wax artwork](../choice-button/README.md)
 for the selected row. An unselected target previews a muted wax surface on
 hover or keyboard highlight. The selected surface lifts slightly and carries
 a small recessed wax impression.

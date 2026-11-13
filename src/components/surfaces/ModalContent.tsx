@@ -12,7 +12,8 @@ import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
 import { useGSAP } from "@gsap/react";
 
 import { ActionButton } from "../actions/ActionButton";
-import { panelClassName } from "./surfaceStyles";
+import { modalSurfaceClassName } from "./surfaceStyles";
+import "./ModalContent.css";
 
 export function ModalContent({
   className,
@@ -43,7 +44,7 @@ export function ModalContent({
         data-slot="dialog-content"
         className={cn(
           "game-dialog fixed top-1/2 left-1/2 z-50 grid max-h-[calc(100dvh-2rem)] w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-6 overflow-y-auto rounded-md bg-popover p-6 text-sm text-popover-foreground shadow-xl ring-1 ring-foreground/5 outline-none sm:max-w-md dark:ring-foreground/10",
-          panelClassName,
+          modalSurfaceClassName,
           className,
         )}
         {...props}

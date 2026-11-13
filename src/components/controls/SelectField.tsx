@@ -13,6 +13,7 @@ import { useReducedMotion } from "@/infrastructure/ui/hooks/useGamePreferences";
 
 import { useGSAP } from "@gsap/react";
 
+import { selectSurfaceClassName } from "../surfaces/surfaceStyles";
 import "./SelectField.css";
 
 type SelectFieldProps<Value extends string> = Omit<
@@ -109,7 +110,8 @@ export function SelectField<Value extends string>({
         {...panelProps}
         ref={setPanel}
         className={cn(
-          "select-field-panel rounded-md border border-gold/60 bg-popover p-1.5 text-popover-foreground shadow-lg ring-1 shadow-artwork-shadow/40 ring-artwork-shadow/25 data-open:animate-none data-closed:animate-none",
+          selectSurfaceClassName,
+          "p-1.5 text-popover-foreground transition-none data-open:animate-none data-closed:animate-none",
           panelProps?.className,
         )}
       >

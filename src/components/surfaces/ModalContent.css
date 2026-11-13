@@ -1,0 +1,6 @@
+.modal-brass-frame {
+  --brass-frame-image: url("../../assets/ui/surfaces/riveted-frame.webp");
+  --brass-frame-slice: 44;
+  --brass-frame-width: 1.625rem;
+  --brass-fill-radius: 0.75rem;
+}

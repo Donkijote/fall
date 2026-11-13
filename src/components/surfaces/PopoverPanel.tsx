@@ -8,7 +8,8 @@ import { useReducedMotion } from "@/infrastructure/ui/hooks/useGamePreferences";
 
 import { useGSAP } from "@gsap/react";
 
-import { panelClassName } from "./surfaceStyles";
+import { popoverSurfaceClassName } from "./surfaceStyles";
+import "./PopoverPanel.css";
 
 export function PopoverPanel({ className, ref, ...props }: ComponentProps<typeof PopoverContent>) {
   const [popup, setPopup] = useState<HTMLDivElement | null>(null);
@@ -27,7 +28,11 @@ export function PopoverPanel({ className, ref, ...props }: ComponentProps<typeof
     <PopoverContent
       {...props}
       ref={setPopup}
-      className={cn(panelClassName, "data-open:animate-none data-closed:animate-none", className)}
+      className={cn(
+        popoverSurfaceClassName,
+        "transition-none data-open:animate-none data-closed:animate-none",
+        className,
+      )}
     />
   );
 }

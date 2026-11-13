@@ -6,7 +6,21 @@
       "method": "recorded",
       "references": [],
       "prompt": "One standalone square empty frame asset for a premium medieval card game's adaptable UI panel. Isolated on true transparency BOTH outside and completely inside its open center. Front-on precise symmetrical near-square rounded rectangle, full frame entirely visible, margins. Sculpted antique brass, handsome double bevel with narrow bright satin edge and dark bronze inner fillet, subtle aged patina, small engraved leaf curls contained in each corner, straight narrow consistent rails with no motifs on the straight sections, intentionally even lighting without localized hot spots for animated reflections. Rail thickness roughly 2.5% of overall width, corner details reach no more than 10% inward. Art direction of a dark oxblood-and-brass medieval campaign button. No text, backdrop, parchment, wood, drop shadow, perspective or objects. Designed for nine-slice scaling.",
-      "notes": "Trim the standalone image to its alpha bounds and export as 512 × 512 WebP."
+      "notes": "Trim the standalone image to its alpha bounds and export as 512 \u00d7 512 WebP."
+    },
+    {
+      "file": "../../../src/assets/ui/surfaces/riveted-frame.webp",
+      "method": "recorded",
+      "references": [],
+      "prompt": "Standalone square medieval game UI border frame, for nine-slice. Popover: single slim bronze rail, plain rounded corners, small sculpted corner rivets. Frame entirely visible, perfectly frontal, wide transparent center (truly empty alpha), transparent exterior. Evenly lit restrained antique warm brass, medium bronze golden brown, finely sculpted bevel, restrained aged patina, no bright yellow, no cast shadow, no text, no backdrop. Straight rails, all accents confined to corners within 12% of each end. Frame rail roughly 2 percent of width. Same muted metallic palette as Fall's aged brass leaf frame.",
+      "notes": "Trim to alpha bounds and export as 512 \u00d7 512 WebP."
+    },
+    {
+      "file": "../../../src/assets/ui/surfaces/beveled-frame.webp",
+      "method": "recorded",
+      "references": [],
+      "prompt": "Standalone square medieval game UI border frame, for nine-slice. Dropdown: plain slim bronze side rails and slightly more defined horizontal rails, understated clipped corners, no ornaments. Frame entirely visible, perfectly frontal, wide transparent center (truly empty alpha), transparent exterior. Evenly lit restrained antique warm brass, medium bronze golden brown, finely sculpted bevel, restrained aged patina, no bright yellow, no cast shadow, no text, no backdrop. Straight rails, all accents confined to corners within 12% of each end. Frame rail roughly 2 percent of width. Same muted metallic palette as Fall's aged brass leaf frame.",
+      "notes": "Trim to alpha bounds and export as 512 \u00d7 512 WebP."
     }
   ]
 }

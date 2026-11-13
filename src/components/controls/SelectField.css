@@ -89,3 +89,10 @@
     outline-offset: -2px;
   }
 }
+
+.select-brass-frame {
+  --brass-frame-image: url("../../assets/ui/surfaces/beveled-frame.webp");
+  --brass-frame-slice: 36;
+  --brass-frame-width: 0.75rem;
+  --brass-fill-radius: 0.375rem;
+}
