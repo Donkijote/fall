@@ -88,3 +88,38 @@ active dealer, real card artwork and the positions of the hand, table cards,
 and collector. Reduced motion uses immediate board updates and keeps sound
 available through the same game preferences.
 The same composition supports desktop and phone portrait and landscape.
+
+## Match overlay review
+
+[Issue #120](https://github.com/Donkijote/fall/issues/120) extends the playable
+table. The first overlay studies are in the working chat for review.
+
+- Gwent and Faeria keep the board visible behind the result and make the
+  outcome the first thing players read. Use a warm brass crown for Victory
+  and a muted steel crossed-swords emblem for Defeat. Name the winning side,
+  show every side's final score in descending order with the winner marked,
+  and offer Back to Tavern. Armello shows why the other finishers matter in
+  Free-for-All. Clash Royale's stacked summary and Legends of Runeterra's
+  large outcome title inform the portrait hierarchy.
+- Gwent and Faeria put the surrender decision in a short dialog over the
+  current board. Use “Leave match?” and “Your match will end and your progress
+  will be lost.” Keep playing is the primary action. The leave control and
+  Escape during play open the confirmation. Dismissing it returns focus to
+  the control that opened it, or the board when opened from the keyboard
+  without a focused control. Cancel matchmaking returns directly to the Tavern.
+- Gwent keeps its scores at the edge of play. Reserve a row above the Fall
+  table for the target, individual or team scores, and the leave control.
+  Stack each label over its value on narrow phones. Keep individual entries
+  in stable seat order during play. Team Match shows two totals shared by
+  the respective pairs.
+- While waiting, use the selected format as the heading, show filled and total
+  seats in text and with one marker per seat, and keep Cancel matchmaking
+  visible. The board's seat markers show where each player will sit.
+
+The first studies reuse the current landscape and portrait table artwork.
+The Chrome layout pass covers Duel, Free-for-All, and Team Match in all
+five mockup states at 320×700, 740×340, 768×1024, 1024×768, and 1366×768.
+It checks score-strip fit, panel overflow, waiting panel clearance from
+seat markers, and sample card clipping. The live card grid, full hands,
+safe areas, focus behavior and both app themes still need implementation
+verification.
