@@ -4,8 +4,8 @@ import { useRef } from "react";
 import type { ReactNode } from "react";
 
 import woodenChair from "@/assets/lobby/tavern-match/wooden-chair.svg";
+import { PlayerPortrait } from "@/components/hud/PlayerPortrait";
 import { Icon } from "@/components/icons/Icon";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { useGSAP } from "@gsap/react";
 
@@ -87,23 +87,23 @@ export function MatchSeatMarker({
         )}
         <div ref={portrait} aria-hidden="true">
           {player ? (
-            <Avatar
+            <PlayerPortrait
+              avatarUrl={player.avatarUrl}
               className={cn(
-                "border-2 border-gold/75 bg-artwork-shadow p-0.5 ring-1 ring-artwork-shadow",
                 medallionSize,
-                active && "border-gold ring-2 ring-gold/65 shadow-[0_0_0.8rem_var(--gold)]",
+                active && "ring-2 ring-gold/65 drop-shadow-[0_0_0.4rem_var(--gold)]",
               )}
-            >
-              <AvatarImage src={player.avatarUrl} alt="" />
-              <AvatarFallback
-                className={cn(
-                  "bg-linear-to-b title-type text-base text-artwork-foreground sm:text-lg",
-                  side ? side.plate : "from-slate-700 to-artwork-shadow",
-                )}
-              >
-                {Array.from(player.name)[0]?.toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
+              fallback={
+                <span
+                  className={cn(
+                    "grid size-full place-items-center bg-linear-to-b title-type text-base text-artwork-foreground sm:text-lg",
+                    side ? side.plate : "from-slate-700 to-artwork-shadow",
+                  )}
+                >
+                  {Array.from(player.name)[0]?.toUpperCase()}
+                </span>
+              }
+            />
           ) : (
             <span
               className={cn(

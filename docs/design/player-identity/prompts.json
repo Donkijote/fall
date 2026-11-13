@@ -1,0 +1,12 @@
+{
+  "art_direction": "../art-direction.md#shared-generation-prompt",
+  "outputs": [
+    {
+      "file": "../../../src/assets/ui/player-identity/brass-ring.webp",
+      "method": "reconstructed",
+      "references": ["../home-lobby/mockup-detailed.png"],
+      "prompt": "Create a standalone front-on circular antique brass avatar ring with a slim convex, softly rounded tubular cross-section. Use a square canvas with a transparent hole and exterior. Keep the lighting even around the circumference so the shading across the metal describes its curvature. No glow, directional hotspot, separate concentric bands, or sharp bevels. Keep the metal face smooth and uninterrupted.",
+      "notes": "Use the portrait rim as a shape reference. Trim to the ring bounds, clear low-alpha matte, and export at 192 \u00d7 192 WebP."
+    }
+  ]
+}
