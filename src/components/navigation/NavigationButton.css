@@ -1,0 +1,66 @@
+.game-navigation-item.game-button {
+  background-color: transparent;
+}
+
+.game-navigation-item.game-button:not(.game-navigation-group *) {
+  background: transparent url("/src/assets/ui/navigation/dock-tile.webp") center / 100% 100%
+    no-repeat border-box;
+}
+
+.game-navigation-item.game-button::after {
+  position: absolute;
+  inset: -1px;
+  pointer-events: none;
+  content: "";
+  border: 11px solid transparent;
+  border-image: url("/src/assets/ui/navigation/dock-tile.webp") 30;
+  filter: brightness(2.05) drop-shadow(0 0 1px var(--gold));
+  opacity: var(--action-reveal, 0);
+  --leaf-fade: black 52%, transparent 100%;
+  --leaf-top-left: radial-gradient(circle 7px at 5px 5px, var(--leaf-fade));
+  --leaf-top-right: radial-gradient(circle 7px at calc(100% - 5px) 5px, var(--leaf-fade));
+  --leaf-bottom-left: radial-gradient(circle 7px at 5px calc(100% - 5px), var(--leaf-fade));
+  --leaf-bottom-right: radial-gradient(
+    circle 7px at calc(100% - 5px) calc(100% - 5px),
+    var(--leaf-fade)
+  );
+  mask-image:
+    var(--leaf-top-left), var(--leaf-top-right), var(--leaf-bottom-left), var(--leaf-bottom-right);
+}
+
+.game-navigation-group > li:first-child:not(:only-child) .game-navigation-item::after {
+  mask-image: var(--leaf-top-left), var(--leaf-bottom-left);
+}
+
+.game-navigation-group > li:last-child:not(:only-child) .game-navigation-item::after {
+  mask-image: var(--leaf-top-right), var(--leaf-bottom-right);
+}
+
+.game-navigation-group > li:not(:first-child, :last-child) .game-navigation-item::after {
+  mask-image:
+    linear-gradient(transparent 2%, black 7%, transparent 14%),
+    linear-gradient(to top, transparent 2%, black 7%, transparent 14%);
+  mask-composite: add;
+  clip-path: inset(0 11px);
+}
+
+@media (forced-colors: active) {
+  .game-navigation-item.game-button {
+    border-color: ButtonText;
+  }
+}
+
+.game-navigation-icon-corners {
+  --corner-light: color-mix(in oklch, var(--gold) 58%, transparent);
+  position: absolute;
+  inset: 10px;
+  pointer-events: none;
+  opacity: var(--action-reveal, 0);
+  background:
+    radial-gradient(ellipse at top left, var(--corner-light), transparent 72%) top left,
+    radial-gradient(ellipse at top right, var(--corner-light), transparent 72%) top right,
+    radial-gradient(ellipse at bottom left, var(--corner-light), transparent 72%) bottom left,
+    radial-gradient(ellipse at bottom right, var(--corner-light), transparent 72%) bottom right;
+  background-repeat: no-repeat;
+  background-size: 5px 5px;
+}

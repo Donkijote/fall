@@ -29,7 +29,7 @@ export const homeGallery = {
       name: "Card Hall navigation",
       source: "src/components/navigation/Navigation.tsx",
       variants:
-        "NavigationButton and NavigationGroup · joined icon buttons, disabled destinations, help popover and settings",
+        "NavigationButton and NavigationGroup · standalone and joined artwork-backed icon buttons, disabled destinations, help popover and settings",
       usage: "Card Hall · utility and player systems docks",
       Preview: NavigationPreview,
     },
