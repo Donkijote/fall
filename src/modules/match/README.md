@@ -29,7 +29,8 @@ Back to Tavern, and Escape return to the format picker.
   The match supplies actual card faces and measured board positions. A
   single capture, cascade, or Fall is one sequence from hand to pile. If a
   Fall also takes a cascade, the shared Fall impact plays before the extra
-  pickups. Artwork is loaded during the lobby and retained for the match.
+  pickups. A Fall on rank 10 shatters ice, rank 11 transfers heat, and rank
+  12 triggers the flaming impact. Artwork is loaded during the lobby and retained for the match.
 
 `localMatch.test.ts` plays each format through to a winner, checking full
 deck accounting during motion and rules resolution. Home navigation tests

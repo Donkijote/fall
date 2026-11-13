@@ -15,7 +15,7 @@ export type SeatPlayer = { name: string; avatarUrl?: string };
 
 const positions: Record<MatchSeat, string> = {
   bottom: "left-1/2 top-[87%] -translate-x-1/2",
-  top: "left-1/2 top-[21%] -translate-x-1/2 compact-landscape:top-[29%]",
+  top: "left-1/2 top-[21%] -translate-x-1/2",
   left: "left-[4%] top-1/2 portrait:top-[37%] compact-landscape:left-2",
   right: "right-[4%] top-1/2 portrait:top-[37%] flex-row-reverse compact-landscape:right-2",
   "upper-left": "left-[8%] top-[35%] portrait:left-[4%]",

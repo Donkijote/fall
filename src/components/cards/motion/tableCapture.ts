@@ -6,7 +6,7 @@ import type { CardImpactSample } from "./cardImpactMotion";
 
 export const impactAt = 0.55;
 export const collectAt = 0.79;
-const riseAt = 0.27;
+export const fallRiseAt = 0.27;
 
 const elementalLift = {
   ice: { apex: 0.36, activation: 0.052, height: 0.88 },
@@ -32,7 +32,7 @@ export function captureFlight(progress: number, effect: CardDropEffect, drop: Ca
     effect === "plain"
       ? { apex: release, height: (profile.height - 0.8) * 0.59 }
       : elementalLift[effect];
-  const raised = MathUtils.smoothstep(progress, riseAt, lift.apex);
+  const raised = MathUtils.smoothstep(progress, fallRiseAt, lift.apex);
   return {
     travel: raised,
     flip: MathUtils.smoothstep(raised, 0.06, 0.91),
@@ -46,6 +46,7 @@ import { cardLandingPose } from "./cardImpactMotion";
 
 export type FallPose = CardPose & {
   handTravel?: number;
+  pileTravel?: number;
   shadow?: { lift: number; opacity: number };
 };
 
@@ -59,6 +60,7 @@ export function sampleFallCapture(
   impactScale: number,
   effect: CardDropEffect,
   impact: CardImpactSample,
+  targetAlreadyOnTable = false,
 ): FallPose {
   const pose = cardLandingPose(effect, impact);
   const hitX = match.x + (pose.x + 0.18) * impactScale;
@@ -70,7 +72,7 @@ export function sampleFallCapture(
 
   if (progress < collectAt) {
     if (topCard) {
-      if (progress <= 0.27)
+      if (progress <= fallRiseAt)
         return {
           handTravel: 0,
           position: [origin.x, origin.y, origin.z],
@@ -100,12 +102,13 @@ export function sampleFallCapture(
       };
     }
 
-    const earlier = smooth(progress, 0, 0.23);
+    const earlier = targetAlreadyOnTable ? impact.slide : smooth(progress, 0, 0.23);
     return {
       position: [
         lerp(origin.x, lowerX, earlier),
         lerp(origin.y, lowerY, earlier),
-        lerp(origin.z, match.z, earlier) + 0.38 * Math.sin(Math.PI * earlier),
+        lerp(origin.z, match.z, earlier) +
+          (targetAlreadyOnTable ? 0 : 0.38 * Math.sin(Math.PI * earlier)),
       ],
       rotation: [
         0,
@@ -122,6 +125,7 @@ export function sampleFallCapture(
   const offsetY = topCard ? (hitY - lowerY) * (1 - collect) : 0;
   const landingYaw = topCard ? -pose.yaw : -(pose.lowerYaw - 0.09);
   return {
+    pileTravel: collect,
     position: [
       lerp(lowerX, pile.x, collect) + Math.cos(flip) * offsetX + Math.sin(flip) * offsetZ,
       lerp(lowerY, pile.y, collect) + offsetY,

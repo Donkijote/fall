@@ -51,6 +51,7 @@ export function sampleCardCapture(
   const offsetZ = topCard ? pitch : 0;
   const offsetX = topCard ? landing.x * (1 - collect) : 0;
   return {
+    pileTravel: collect,
     position: [
       lerp(table.x, pile.x, collect) + bend.x + Math.cos(flip) * offsetX + Math.sin(flip) * offsetZ,
       lerp(table.y, pile.y, collect) + bend.y + (topCard ? landing.y * (1 - collect) : 0),

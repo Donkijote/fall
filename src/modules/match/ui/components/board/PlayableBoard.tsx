@@ -75,7 +75,8 @@ export function PlayableBoard({
 
   return (
     <div ref={scope} className="absolute inset-0" inert={returning}>
-      <MatchScoreboard title={title} frame={frame} sideName={sideName} playerName={playerName} />
+      <h1 className="sr-only">{title}</h1>
+      <MatchScoreboard state={state} sideName={sideName} />
       <MatchTableCards cards={state.table} landing={landing} />
       <ul
         aria-label="Table seats"

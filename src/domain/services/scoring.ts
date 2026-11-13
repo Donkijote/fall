@@ -66,10 +66,8 @@ export function applyCountingRule(state: GameState): GameState {
     next = awardPoints(next, group.playerId, group.cards - group.quota);
   }
   next = checkGameOver(next, state.config.targetPoints);
-  return next.phase === "gameOver"
-    ? next
-    : {
-        ...next,
-        players: next.players.map((player) => ({ ...player, collected: [] })),
-      };
+  return {
+    ...next,
+    players: next.players.map((player) => ({ ...player, collected: [] })),
+  };
 }

@@ -68,3 +68,52 @@ test("a Fall cascade plays both Fall cues before continuing the remaining pickup
     timeline.kill();
   }
 });
+
+test("flaming Falls keep the impact cue aligned with their longer flight", () => {
+  const playCard = vi.fn();
+  const audio = { playDealCard: vi.fn(), playCard };
+  const motion = { progress: 0, cooldown: 0 };
+  const timeline = appendCapture(
+    gsap.timeline({ paused: true }),
+    motion,
+    "fall",
+    1,
+    audio,
+    "flame",
+  );
+  try {
+    const secondCue = captureDuration("flame") * 0.27;
+    timeline.time(secondCue - 0.01, false);
+    expect(playCard).toHaveBeenCalledTimes(1);
+    timeline.time(secondCue + 0.01, false);
+    expect(playCard).toHaveBeenCalledTimes(2);
+  } finally {
+    timeline.kill();
+  }
+});
+
+test("a live Fall starts immediately and sounds only when the cards meet", () => {
+  const playCard = vi.fn();
+  const motion = { progress: 0, cooldown: 0 };
+  const timeline = appendCapture(
+    gsap.timeline({ paused: true }),
+    motion,
+    "fall",
+    1,
+    { playDealCard: vi.fn(), playCard },
+    "plain",
+    true,
+  );
+  try {
+    timeline.time(0.01, false);
+    expect(motion.progress).toBeGreaterThan(0.27);
+    expect(playCard).not.toHaveBeenCalled();
+    timeline.time(0.42, false);
+    expect(motion.progress).toBeCloseTo(0.55);
+    expect(playCard).toHaveBeenCalledOnce();
+    timeline.progress(1, false);
+    expect(playCard).toHaveBeenCalledOnce();
+  } finally {
+    timeline.kill();
+  }
+});

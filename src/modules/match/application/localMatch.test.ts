@@ -78,7 +78,11 @@ test.each([
 
     for (const frame of frames) {
       if (frame.motion) events.add(frame.motion.kind);
-      if (frame.state.phase !== "dealerChoice") assertFullDeck(frame.state);
+      if (!frame.motion && state.phase === "roundEnd") {
+        expect(frame.state.players.every(({ collected }) => collected.length === 0)).toBe(true);
+      } else if (frame.state.phase !== "dealerChoice") {
+        assertFullDeck(frame.state);
+      }
     }
     state = frames.at(-1)!.state;
   }

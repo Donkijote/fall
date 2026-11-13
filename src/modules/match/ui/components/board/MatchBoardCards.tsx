@@ -1,5 +1,5 @@
 import { cn } from "cn";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import cardBack from "@/assets/cards/back.svg";
 import { SuitGlyph } from "@/components/cards/SuitGlyph";
@@ -8,6 +8,7 @@ import { toCardKey } from "@/domain/helpers/card";
 
 import { MatchHandCard } from "./MatchHandCard";
 import { placeTableCards, type TableSlots } from "./tableSlots";
+import { useHandReflow } from "./useHandReflow";
 
 const cardStyle =
   "block aspect-[63/88] w-(--match-card-width) shrink-0 rounded-[10%] shadow-sm shadow-artwork-shadow/80";
@@ -44,15 +45,17 @@ function CardStack({
       className="grid min-w-[2.1rem] shrink-0 justify-items-center gap-0.5"
     >
       <div aria-hidden="true" className="relative w-(--match-card-width)">
-        {count > 0 ? (
-          <>
-            <div className="absolute inset-0 translate-x-0.5 translate-y-0.5 rounded-[10%] bg-slate-700" />
+        <div className="aspect-[63/88] w-full rounded-[10%] border border-dashed border-gold/55 bg-artwork-shadow/55" />
+        {count > 0 && (
+          <div data-pile-back="" className="absolute inset-0">
+            <div
+              data-pile-layer=""
+              className="absolute inset-0 translate-x-0.5 translate-y-0.5 rounded-[10%] bg-slate-700"
+            />
             <div className="relative">
               <CardImage />
             </div>
-          </>
-        ) : (
-          <div className="aspect-[63/88] w-full rounded-[10%] border border-dashed border-gold/55 bg-artwork-shadow/55" />
+          </div>
         )}
       </div>
       <span
@@ -74,7 +77,7 @@ export function MatchTableCards({ cards, landing }: { cards: readonly Card[]; la
   return (
     <ul
       aria-label="Cards on the table"
-      className="pointer-events-none absolute top-[55%] left-1/2 grid -translate-1/2 grid-cols-[repeat(4,var(--match-card-width))] grid-rows-[repeat(3,calc(var(--match-card-width)*88/63))] gap-[clamp(0.25rem,1.2cqmin,0.7rem)] [--match-card-width:clamp(1.35rem,8.2cqmin,3.85rem)] portrait:top-[56%] portrait:[--match-card-width:clamp(1.55rem,10cqmin,3.85rem)]"
+      className="pointer-events-none absolute top-[55%] left-1/2 grid -translate-1/2 grid-cols-[repeat(var(--table-columns),var(--match-card-width))] grid-rows-[repeat(var(--table-rows),calc(var(--match-card-width)*88/63))] gap-[clamp(0.25rem,1.2cqmin,0.7rem)] [--match-card-width:clamp(1.55rem,9.6cqmin,5.75rem)] [--table-columns:4] [--table-rows:3] portrait:top-[56%] portrait:[--match-card-width:clamp(1.55rem,min(12cqw,9.5cqh),5.25rem)] compact-landscape:[--match-card-width:clamp(1.4rem,min(12cqh,9cqw),4.65rem)] compact-landscape:[--table-columns:6] compact-landscape:[--table-rows:2]"
     >
       {displayed.map((card) => {
         const key = toCardKey(card);
@@ -86,8 +89,18 @@ export function MatchTableCards({ cards, landing }: { cards: readonly Card[]; la
             data-table-card={key}
             data-table-slot={slot}
             aria-hidden={pending || undefined}
-            className={pending ? "invisible" : undefined}
-            style={{ gridColumn: (slot % 4) + 1, gridRow: Math.floor(slot / 4) + 1 }}
+            className={cn(
+              "[grid-area:var(--table-row)/var(--table-column)] compact-landscape:[grid-area:var(--wide-row)/var(--wide-column)]",
+              pending && "invisible",
+            )}
+            style={
+              {
+                "--table-column": (slot % 4) + 1,
+                "--table-row": Math.floor(slot / 4) + 1,
+                "--wide-column": (slot % 6) + 1,
+                "--wide-row": Math.floor(slot / 6) + 1,
+              } as React.CSSProperties
+            }
           >
             <CardImage card={card} />
           </li>
@@ -119,6 +132,20 @@ export function MatchSeatCards({
   play: (card: Card) => void;
 }) {
   const centered = align === "center";
+  const handList = useRef<HTMLUListElement>(null);
+  const [localSlots, setLocalSlots] = useState(() => hand.map(toCardKey));
+  const cardsByKey = new Map(hand.map((card) => [toCardKey(card), card]));
+  let slotKeys = local ? localSlots : hand.map(toCardKey);
+  if (
+    local &&
+    (hand.length === 0
+      ? localSlots.length > 0
+      : hand.some((card) => !localSlots.includes(toCardKey(card))))
+  ) {
+    slotKeys = hand.map(toCardKey);
+    setLocalSlots(slotKeys);
+  }
+  useHandReflow(handList, local ? "" : slotKeys.join(","), local || reducedMotion);
   return (
     <>
       <div
@@ -133,6 +160,7 @@ export function MatchSeatCards({
         {deck !== undefined && <CardStack count={deck} player={player} draw />}
       </div>
       <ul
+        ref={handList}
         data-match-hand={player}
         aria-label={local ? "Your hand" : `Face-down hand: ${hand.length} cards`}
         className={cn(
@@ -141,40 +169,54 @@ export function MatchSeatCards({
           align === "right" && "top-full right-1 mt-1",
           centered && "top-1/2 left-full ml-2 -translate-y-1/2",
           local
-            ? "gap-0.5 [--match-card-width:clamp(1.55rem,7.2cqmin,3.2rem)]"
+            ? "gap-0.5 [--match-card-width:clamp(1.55rem,min(9.6cqh,10cqw),5rem)] portrait:[--match-card-width:clamp(1.35rem,calc(12cqw-0.9rem),4.65rem)] compact-landscape:[--match-card-width:clamp(1.55rem,min(12cqh,9cqw),4.65rem)]"
             : "-space-x-[calc(var(--match-card-width)*0.26)] [--match-card-width:clamp(1rem,5.6cqmin,2.85rem)]",
         )}
       >
-        {hand.map((card, index) => (
-          <li
-            key={toCardKey(card)}
-            data-hand-card={toCardKey(card)}
-            className={cn(
-              "relative",
-              local && "has-[:focus-visible]:z-10 has-[:hover]:z-10",
-              local &&
-                hand.length === 3 &&
-                ["translate-y-[6%] -rotate-9", "-translate-y-[6%]", "translate-y-[6%] rotate-9"][
-                  index
-                ],
-              local && hand.length === 2 && (index === 0 ? "-rotate-6" : "rotate-6"),
-              !local && index === 0 && "-rotate-12",
-              !local && index === 2 && "rotate-12",
-            )}
-          >
-            {local ? (
-              <MatchHandCard
-                canPlay={canPlay}
-                reducedMotion={reducedMotion}
-                play={() => play(card)}
+        {slotKeys.map((key, index) => {
+          const card = cardsByKey.get(key);
+          if (!card) {
+            return (
+              <li
+                key={key}
+                aria-hidden="true"
+                className="invisible grid min-h-11 min-w-8 place-items-center p-0.5"
               >
-                <CardImage card={card} />
-              </MatchHandCard>
-            ) : (
-              <CardImage />
-            )}
-          </li>
-        ))}
+                <span className="aspect-[63/88] w-(--match-card-width)" />
+              </li>
+            );
+          }
+          return (
+            <li
+              key={key}
+              data-hand-card={key}
+              className={cn(
+                "relative",
+                local && "has-[:focus-visible]:z-10 has-[:hover]:z-10",
+                local &&
+                  slotKeys.length === 3 &&
+                  ["translate-y-[6%] -rotate-9", "-translate-y-[6%]", "translate-y-[6%] rotate-9"][
+                    index
+                  ],
+                local && slotKeys.length === 2 && (index === 0 ? "-rotate-6" : "rotate-6"),
+                !local && index === 0 && "-rotate-12",
+                !local && index === 2 && "rotate-12",
+              )}
+            >
+              {local ? (
+                <MatchHandCard
+                  canPlay={canPlay}
+                  reducedMotion={reducedMotion}
+                  play={() => play(card)}
+                >
+                  <CardImage card={card} />
+                </MatchHandCard>
+              ) : (
+                <CardImage />
+              )}
+            </li>
+          );
+        })}
       </ul>
     </>
   );

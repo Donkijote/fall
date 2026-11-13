@@ -12,16 +12,16 @@ import {
 } from "@/components/cards/motion/cardImpactMotion";
 import type { HeatUniforms } from "@/components/cards/three/cardHeat";
 import { CardMesh } from "@/components/cards/three/CardMesh";
+import { FlameEnvelope } from "@/components/cards/three/FlameEnvelope";
+import { FlameImpact } from "@/components/cards/three/FlameImpact";
+import { HeatImpactWave } from "@/components/cards/three/HeatImpactWave";
+import { IceShards } from "@/components/cards/three/IceShards";
 
 import { useGSAP } from "@gsap/react";
 import { PerspectiveCamera, RoundedBox, useTexture } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 
 import type { CardDropEffect } from "../../application/lab";
-import { FlameEnvelope } from "./FlameEnvelope";
-import { FlameImpact } from "./FlameImpact";
-import { HeatImpactWave } from "./HeatImpactWave";
-import { IceShards } from "./IceShards";
 import { useMotionSettings } from "./MotionSettings";
 
 const baseHeight = 0.066;

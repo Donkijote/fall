@@ -10,7 +10,12 @@ export type SceneCard = {
 };
 
 export type CardScene =
-  | { kind: "deal"; deck: CardPoint; cards: (SceneCard & { center: boolean; fan?: CardAnchor })[] }
+  | {
+      kind: "deal";
+      deck: CardPoint;
+      deckSize: number;
+      cards: (SceneCard & { center: boolean; fan?: CardAnchor })[];
+    }
   | { kind: "play"; card: SceneCard; target: CardAnchor; targetSize: number }
   | {
       kind: "collect";
@@ -18,10 +23,16 @@ export type CardScene =
       played?: SceneCard;
       targets: SceneCard[];
       pile: CardPoint;
+      pileSize: number;
     }
   | {
       kind: "count";
-      groups: { side: number; quota: number; cards: SceneCard[]; target: CardPoint }[];
+      groups: {
+        side: number;
+        quota: number;
+        cards: (SceneCard & { player: string })[];
+        target: CardPoint;
+      }[];
     };
 
 export const viewHeight = 6.1;
@@ -34,6 +45,7 @@ export type PlaybackProps = {
   handoff: (seconds: number) => void;
   sequence: number;
   count: (side: number, snapshot: CountingSnapshot) => void;
+  pileRemaining: (player: string, remaining: number) => void;
 };
 
 export function createPlaybackChannel() {

@@ -1,4 +1,5 @@
 import { cardCaptureDuration } from "./cardCapture";
+import type { CardDropEffect } from "./cardFlights";
 import { cardFlights } from "./cardFlights";
 import { flameCooldownDuration } from "./cardImpactMotion";
 import {
@@ -6,7 +7,7 @@ import {
   cascadeReturnTime,
   getCascadeDuration,
 } from "./cascadeCapture";
-import { captureDuration, collectAt } from "./tableCapture";
+import { captureDuration, collectAt, fallRiseAt, impactAt } from "./tableCapture";
 
 export type CardMotionAudio = { playDealCard: () => void; playCard: () => void };
 export type CaptureKind = "fall" | "card" | "cascade" | "sweep";
@@ -55,6 +56,8 @@ export function appendCapture(
   kind: CaptureKind,
   targets: number,
   audio: CardMotionAudio,
+  effect: CardDropEffect = "plain",
+  targetAlreadyOnTable = false,
 ) {
   const duration =
     kind === "cascade"
@@ -63,16 +66,30 @@ export function appendCapture(
         ? cardCaptureDuration
         : kind === "sweep"
           ? cascadeReturnTime
-          : captureDuration("plain");
-  const fallCascade = kind === "fall" && targets > 1;
-  timeline.to(motion, {
-    progress: fallCascade ? collectAt : 1,
-    duration: fallCascade ? duration * collectAt : duration,
-    ease: "none",
-    onStart: audio.playCard,
-  });
-  if (kind === "fall") {
-    timeline.call(audio.playCard, [], duration * 0.27);
+          : captureDuration(effect);
+  const fall = kind === "fall";
+  const fallCascade = fall && targets > 1;
+  if (fall && targetAlreadyOnTable) {
+    // The previous turn already landed the target and played its sound.
+    timeline
+      .set(motion, { progress: fallRiseAt })
+      .to(motion, { progress: impactAt, duration: 0.42, ease: "none" })
+      .call(audio.playCard)
+      .to(motion, {
+        progress: collectAt,
+        duration: duration * (collectAt - impactAt),
+        ease: "none",
+      });
+  } else {
+    timeline.to(motion, {
+      progress: fall ? collectAt : 1,
+      duration: fall ? duration * collectAt : duration,
+      ease: "none",
+      onStart: audio.playCard,
+    });
+    if (fall) timeline.call(audio.playCard, [], duration * fallRiseAt);
+  }
+  if (fall) {
     if (fallCascade) {
       timeline.to(motion, {
         followThrough: 1,
@@ -81,10 +98,16 @@ export function appendCapture(
       });
     } else {
       timeline.to(motion, {
-        cooldown: flameCooldownDuration,
-        duration: flameCooldownDuration,
+        progress: 1,
+        duration: cardFlights.collect.duration,
         ease: "none",
       });
+      if (!targetAlreadyOnTable || effect === "flame")
+        timeline.to(motion, {
+          cooldown: flameCooldownDuration,
+          duration: flameCooldownDuration,
+          ease: "none",
+        });
     }
   }
   return timeline;

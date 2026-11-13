@@ -36,6 +36,8 @@ it("lands the played card on the table card before lifting either one", () => {
 });
 
 it("places both cards face down on the player's right stack with thickness separation", () => {
+  expect(sample(0.75, true).pileTravel).toBeGreaterThan(0);
+  expect(sample(0.75, true).pileTravel).toBeLessThan(1);
   const lower = sample(1, false);
   const upper = sample(1, true);
   expect(lower.position[0]).toBeCloseTo(pile.x);
@@ -44,6 +46,7 @@ it("places both cards face down on the player's right stack with thickness separ
   expect(upper.position[1]).toBeCloseTo(pile.y);
   expect(lower.position[2] - upper.position[2]).toBeCloseTo(pitch);
   [lower, upper].forEach((card) => {
+    expect(card.pileTravel).toBe(1);
     expect(card.rotation[0]).toBeCloseTo(0);
     expect(card.rotation[1]).toBeCloseTo(2 * Math.PI);
     expect(card.rotation[2]).toBeCloseTo(0);

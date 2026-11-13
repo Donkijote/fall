@@ -22,6 +22,10 @@ import {
   updateFallShadow,
   type FallShadowMesh,
 } from "@/components/cards/three/FallShadow";
+import { FlameEnvelope } from "@/components/cards/three/FlameEnvelope";
+import { FlameImpact } from "@/components/cards/three/FlameImpact";
+import { HeatImpactWave } from "@/components/cards/three/HeatImpactWave";
+import { IceShards } from "@/components/cards/three/IceShards";
 
 import { useGSAP } from "@gsap/react";
 import { OrthographicCamera, RoundedBox } from "@react-three/drei";
@@ -29,10 +33,6 @@ import { useFrame, useThree } from "@react-three/fiber";
 
 import { deckCardCount } from "../../application/lab";
 import type { CardDropEffect, Lab } from "../../application/lab";
-import { FlameEnvelope } from "./FlameEnvelope";
-import { FlameImpact } from "./FlameImpact";
-import { HeatImpactWave } from "./HeatImpactWave";
-import { IceShards } from "./IceShards";
 import { useMotionSettings } from "./MotionSettings";
 
 const viewHeight = 6.1;
@@ -141,7 +141,7 @@ export function TableStudy({
     const effect = lab.getState().activeCaptureIntensity;
     const ember = effect === "flame";
     const duration = captureDuration(effect);
-    const afterCollection = (captureMotion.cooldown * duration) / captureDuration("plain");
+    const afterCollection = captureMotion.cooldown;
     const impact = sampleCardImpact(
       effect,
       (capture - impactAt) * duration + afterCollection,
@@ -310,6 +310,7 @@ export function TableStudy({
         cascadeCapture ? "cascade" : simpleCapture ? "card" : "fall",
         cascadeCapture ? cascadeOrder.length : 1,
         lab,
+        lab.getState().captureIntensity,
       );
 
       function startCapture(replay = false) {
@@ -318,14 +319,7 @@ export function TableStudy({
           handDeal.progress() === 1 &&
           (replay || capture.progress() === 0)
         ) {
-          capture
-            .timeScale(
-              ordinaryCapture
-                ? motionSettings.speed
-                : (motionSettings.speed * captureDuration("plain")) /
-                    captureDuration(lab.getState().activeCaptureIntensity),
-            )
-            .restart();
+          capture.restart();
         }
       }
 

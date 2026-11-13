@@ -186,6 +186,38 @@ describe("Moves", () => {
     });
   });
 
+  it("keeps the last card on the table without carrying Fall eligibility into the next deal", () => {
+    const lastCard = { suit: "clubs", rank: 7 } as const;
+    const matchingCard = { suit: "coins", rank: 7 } as const;
+    const [local, dealer] = mockedStateWithPlayers.players;
+    const state: GameState = {
+      ...mockedStateWithPlayers,
+      phase: "play",
+      currentPlayer: dealer.id,
+      dealer: dealer.id,
+      players: [
+        { ...local, hand: [], collected: [] },
+        { ...dealer, hand: [lastCard], collected: [] },
+      ],
+      table: [deck[0]],
+      deck: [matchingCard, ...deck.slice(1, 6)],
+      scores: { type: "individual", values: {} },
+    };
+
+    const dealt = runPlay(state, dealer.id, lastCard);
+    expect(dealt.table).toContainEqual(lastCard);
+    expect(dealt.players[0].hand).toContainEqual(matchingCard);
+    const next = { ...dealt, phase: "play" as const };
+    expect(analyzePlay(next, local.id, matchingCard)).toMatchObject({
+      ok: true,
+      isFall: false,
+      capturePlan: { kind: "match" },
+    });
+    const captured = runPlay(next, local.id, matchingCard);
+    expect(captured.players[0].collected).toEqual([lastCard, matchingCard]);
+    expect(captured.scores.values).toEqual({});
+  });
+
   it("should NOT award clean table points when deck is empty (last round)", () => {
     const state: GameState = {
       ...mockedStateWithPlayers,

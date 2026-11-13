@@ -84,7 +84,7 @@ export const RULES: RulesContent = {
         {
           id: "fall",
           title: "Fall",
-          body: "When a player leaves a card on the table and the very next player captures it by matching its rank, that capture is a Fall.",
+          body: "When a player leaves a card on the table and the very next player captures it by matching its rank, that capture is a Fall. A new deal ends that opportunity, even if the previous card stays on the table.",
           callouts: [
             {
               type: "info",

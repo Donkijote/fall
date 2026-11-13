@@ -93,6 +93,7 @@ export function sampleCascadeCapture(
   const layer = (targets.length - ordinal) / targets.length;
   const offsetX = landing.x * layer * (1 - collect);
   return {
+    pileTravel: collect,
     position: [
       lerp(last.x, pile.x, collect) + bend.x + Math.cos(flip) * offsetX + Math.sin(flip) * offset,
       lerp(last.y, pile.y, collect) + bend.y + landing.y * layer * (1 - collect),

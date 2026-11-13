@@ -103,7 +103,6 @@ export function MatchControls({
                 ? "Opponents win!"
                 : `${sideName(state.winner ?? "")} wins!`}
           </h2>
-          <p className="text-sm text-muted-foreground">Final scores are shown above the table.</p>
           <ActionButton tone="primary" className="self-center" onClick={close}>
             Back to Tavern
           </ActionButton>

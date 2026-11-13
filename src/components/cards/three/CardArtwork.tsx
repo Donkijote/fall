@@ -38,10 +38,33 @@ export function createCardFaceTexture(
   return texture;
 }
 
+// Rasterize the SVG pattern into an explicit sRGB texture before WebGL uploads it.
+export function createCardBackTexture(image: CanvasImageSource) {
+  const canvas = document.createElement("canvas");
+  canvas.width = 256;
+  canvas.height = 360;
+  const context = canvas.getContext("2d");
+  if (!context) throw new Error("Card artwork requires a 2D canvas context.");
+  context.drawImage(image, 0, 0, canvas.width, canvas.height);
+  const texture = new CanvasTexture(canvas);
+  texture.colorSpace = SRGBColorSpace;
+  return texture;
+}
+
 export function CardArtworkProvider({ children }: { children: ReactNode }) {
-  const [art, back] = useTexture([cardArtwork.face, cardArtwork.back]);
+  const [art, backArtTexture] = useTexture([cardArtwork.face, cardArtwork.back]);
   const face = useMemo(() => createCardFaceTexture(art.image as HTMLImageElement), [art]);
-  useEffect(() => () => face.dispose(), [face]);
+  const back = useMemo(
+    () => createCardBackTexture(backArtTexture.image as HTMLImageElement),
+    [backArtTexture],
+  );
+  useEffect(
+    () => () => {
+      face.dispose();
+      back.dispose();
+    },
+    [face, back],
+  );
   return <CardArtworkContext value={[face, back]}>{children}</CardArtworkContext>;
 }
 

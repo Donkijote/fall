@@ -18,11 +18,11 @@ import {
 import type { EmissionState, Particle } from "three.quarks";
 
 import emberTexture from "@/assets/effects/ember.svg";
+import { FlameEnvelope } from "@/components/cards/three/FlameEnvelope";
 
 import { useTexture } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 
-import { FlameEnvelope } from "./FlameEnvelope";
 import { createSmokeSprites, smokeSpriteCount } from "./flameSprites";
 
 class RisingEmitter extends RectangleEmitter {

@@ -1,11 +1,5 @@
 import { useMemo, type RefObject } from "react";
-import {
-  ExtrudeGeometry,
-  Shape,
-  SRGBColorSpace,
-  type MeshBasicMaterial,
-  type Texture,
-} from "three";
+import { ExtrudeGeometry, Shape, type MeshBasicMaterial, type Texture } from "three";
 
 import { useCardArtwork } from "./CardArtwork";
 import { addCardFrost, type FrostUniform } from "./cardFrost";
@@ -87,18 +81,8 @@ export function CardMesh({
   return (
     <mesh geometry={cardGeometry}>
       <meshStandardMaterial attach="material-0" color="#e4e4e7" roughness={0.75} />
-      <meshBasicMaterial
-        attach="material-1"
-        map={faceTexture ?? face}
-        map-colorSpace={SRGBColorSpace}
-        {...surfaceShaders.front}
-      />
-      <meshBasicMaterial
-        attach="material-2"
-        map={back}
-        map-colorSpace={SRGBColorSpace}
-        {...surfaceShaders.back}
-      />
+      <meshBasicMaterial attach="material-1" map={faceTexture ?? face} {...surfaceShaders.front} />
+      <meshBasicMaterial attach="material-2" map={back} {...surfaceShaders.back} />
     </mesh>
   );
 }

@@ -57,6 +57,7 @@ export function dealRound(
     ...state,
     players,
     table: tableCards,
+    lastPlayedCard: undefined,
     deck,
     phase: "announceSings",
     currentPlayer: currentPlayerToDealersRightAfterDeal,

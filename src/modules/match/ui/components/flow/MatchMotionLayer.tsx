@@ -85,11 +85,27 @@ export function MatchMotionLayer({
       const text = `${snapshot.counted}/${label.dataset.total} cards · +${snapshot.points}`;
       if (label.textContent !== text) label.textContent = text;
     };
+    const collectors = new Map(
+      [...root.querySelectorAll<HTMLElement>("[data-collector]")].map((element) => [
+        element.dataset.collector!,
+        {
+          back: element.querySelector<HTMLElement>("[data-pile-back]"),
+          layer: element.querySelector<HTMLElement>("[data-pile-layer]"),
+        },
+      ]),
+    );
+    const pileRemaining = (player: string, remaining: number) => {
+      if (!active) return;
+      const pile = collectors.get(player);
+      if (pile?.back) pile.back.hidden = remaining === 0;
+      if (pile?.layer) pile.layer.hidden = remaining <= 1;
+    };
     channel.publish({
       scene: measured.scene,
       handoff,
       complete: finish,
       count,
+      pileRemaining,
       audio,
       sequence: id,
     });
@@ -103,6 +119,10 @@ export function MatchMotionLayer({
     return () => {
       active = false;
       deadline.dispose();
+      for (const { back, layer } of collectors.values()) {
+        if (back) back.hidden = false;
+        if (layer) layer.hidden = false;
+      }
       if (channel.getSnapshot()?.sequence === id) channel.publish();
       for (const [element, visibility] of original) element.style.visibility = visibility;
       window.removeEventListener("resize", remeasure);

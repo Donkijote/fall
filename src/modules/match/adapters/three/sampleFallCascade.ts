@@ -34,6 +34,7 @@ export function sampleFallCascade(
   const start = sampleCascadeCapture(join, cardIndex, hand, targets, pile, pitch);
   const offset = 1 - MathUtils.smoothstep(remaining * progress, 0, 0.24);
   return {
+    ...pose,
     position: pose.position.map(
       (value, index) => value + (fallLanding.position[index] - start.position[index]) * offset,
     ),

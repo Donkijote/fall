@@ -19,26 +19,27 @@ import {
   samplePlay,
   type CardPose,
 } from "@/components/cards/motion/cardFlights";
-import { sampleCardImpact } from "@/components/cards/motion/cardImpactMotion";
 import { appendCapture, appendDeal, appendPlay } from "@/components/cards/motion/cardTimelines";
 import {
   getCascadeDuration,
+  cascadeFirstPickupDuration,
   cascadeReturnTime,
   sampleCascadeCapture,
 } from "@/components/cards/motion/cascadeCapture";
-import {
-  captureDuration,
-  collectAt,
-  impactAt,
-  sampleFallCapture,
-} from "@/components/cards/motion/tableCapture";
+import { collectAt, sampleFallCapture } from "@/components/cards/motion/tableCapture";
 import { getCardFaceUrl } from "@/components/cards/SuitGlyph";
 import {
   CardArtworkProvider,
   cardArtwork,
   useCardFaceTextures,
+  useCardArtwork,
 } from "@/components/cards/three/CardArtwork";
 import { CardMesh } from "@/components/cards/three/CardMesh";
+import {
+  FallFlameTrail,
+  FallImpactEffects,
+  useFallImpactEffects,
+} from "@/components/cards/three/FallImpactEffects";
 import {
   FallShadow,
   updateFallShadow,
@@ -51,6 +52,7 @@ import { OrthographicCamera, useTexture } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 
 import { cardPitch, viewHeight, type PlaybackChannel, type PlaybackProps } from "./matchCardScene";
+import { matchFallEffect } from "./matchFallEffect";
 import { sampleFallCascade } from "./sampleFallCascade";
 
 const faceUrls = createDeck().flatMap(({ suit, rank }) => getCardFaceUrl(suit, rank) ?? []);
@@ -75,6 +77,7 @@ function CardSequence({
   complete,
   handoff,
   count,
+  pileRemaining,
   sequence,
   textures,
   shadow,
@@ -91,6 +94,9 @@ function CardSequence({
         : scene.kind === "collect"
           ? [...(scene.played ? [scene.played] : []), ...scene.targets]
           : scene.groups.flatMap((group) => group.cards);
+  const fallTarget =
+    scene.kind === "collect" && scene.capture === "fall" ? scene.targets[0] : undefined;
+  const effects = useFallImpactEffects(matchFallEffect(fallTarget?.art?.rank));
   const meshes = useRef<Group[]>([]);
   const timelineRef = useRef<gsap.core.Timeline>(null);
   const playback = useMemo(
@@ -125,11 +131,19 @@ function CardSequence({
         invalidate();
         return;
       }
-      const timeline = gsap.timeline({ paused: true, onComplete: complete });
+      const timeline = gsap.timeline({ paused: true });
       timelineRef.current = timeline;
       if (scene.kind === "play") appendPlay(timeline, playback.play, audio);
       if (scene.kind === "collect")
-        appendCapture(timeline, playback.capture, scene.capture, scene.targets.length, audio);
+        appendCapture(
+          timeline,
+          playback.capture,
+          scene.capture,
+          scene.targets.length,
+          audio,
+          effects.effect,
+          true,
+        );
       if (scene.kind === "deal") {
         for (const first of [scene.cards[0]?.center, !scene.cards[0]?.center]) {
           const indices = scene.cards.flatMap((card, index) =>
@@ -163,11 +177,15 @@ function CardSequence({
     { dependencies: [playback], revertOnUpdate: true },
   );
 
-  useFrame((_, delta) => {
+  useFrame(({ clock }, delta) => {
     const timeline = timelineRef.current;
     if (!playback.started && scene.kind !== "count" && !timeline) return;
 
-    if (playback.started && timeline && timeline.progress() < 1) {
+    if (playback.started && timeline?.progress() === 1) {
+      complete();
+      return;
+    }
+    if (playback.started && timeline) {
       timeline.time(Math.min(timeline.duration(), timeline.time() + Math.min(delta, 0.05)), false);
     }
 
@@ -183,7 +201,9 @@ function CardSequence({
               angle: MathUtils.lerp(card.origin.angle, card.fan.angle, flight.fan),
             }
           : card.origin;
-        applyPose(nodes[index], sampleDeal(flight.progress, deck, target, card.center), card.size);
+        const growth = MathUtils.smoothstep(flight.progress, 0.2, 1);
+        const size = MathUtils.lerp(scene.deckSize, card.size, growth);
+        applyPose(nodes[index], sampleDeal(flight.progress, deck, target, card.center), size);
       });
     } else if (scene.kind === "play") {
       applyPose(
@@ -193,6 +213,7 @@ function CardSequence({
       );
     } else if (scene.kind === "collect") {
       const progress = playback.capture.progress;
+      const settleSize = (size: number, travel = 0) => MathUtils.lerp(size, scene.pileSize, travel);
       if (scene.capture === "sweep") {
         // Reuse the return leg for the cards left on the table at round end.
         scene.targets.forEach((card, index) => {
@@ -205,17 +226,17 @@ function CardSequence({
             scene.pile,
             cardPitch,
           );
-          applyPose(nodes[index], pose, card.size);
+          applyPose(nodes[index], pose, settleSize(card.size, pose.pileTravel));
         });
       } else if (scene.played) {
         const target = scene.targets[0];
         const from = scene.played.origin;
         if (scene.capture === "fall") {
-          const duration = captureDuration("plain");
-          const impact = sampleCardImpact(
-            "plain",
-            (progress - impactAt) * duration + playback.capture.cooldown,
-          );
+          const aftermath =
+            playback.capture.cooldown +
+            playback.capture.followThrough *
+              (getCascadeDuration(scene.targets.length) - cascadeFirstPickupDuration);
+          const impact = effects.sample(progress, aftermath, clock.elapsedTime);
           const landing = (top: boolean, position: number) =>
             sampleFallCapture(
               position,
@@ -225,8 +246,9 @@ function CardSequence({
               scene.pile,
               cardPitch,
               target.size / 0.83,
-              "plain",
+              effects.effect,
               impact,
+              true,
             );
           const pose = landing(true, progress);
           if (scene.targets.length > 1 && progress >= collectAt) {
@@ -242,16 +264,21 @@ function CardSequence({
                 cardPitch,
                 pair,
               );
-              applyPose(nodes[index], continued, index === 0 ? target.size : card.size);
+              applyPose(
+                nodes[index],
+                continued,
+                settleSize(index === 0 ? target.size : card.size, continued.pileTravel),
+              );
             });
             updateFallShadow(shadow.current, pose, -0.003, target.size / 0.34);
           } else {
             const size = MathUtils.lerp(scene.played.size, target.size, pose.handTravel ?? 1);
             // Keep the Fall's lift, then settle to the target card's exact size on impact.
             const liftScale = MathUtils.lerp(pose.scale ?? 1, 1, impact.fallTime);
-            applyPose(nodes[0], { ...pose, scale: liftScale }, size);
+            applyPose(nodes[0], { ...pose, scale: liftScale }, settleSize(size, pose.pileTravel));
             updateFallShadow(shadow.current, pose, -0.003, target.size / 0.34);
-            applyPose(nodes[1], landing(false, progress), target.size);
+            const lower = landing(false, progress);
+            applyPose(nodes[1], lower, settleSize(target.size, lower.pileTravel));
             scene.targets.slice(1).forEach((card, index) => {
               applyPose(
                 nodes[index + 2],
@@ -281,7 +308,7 @@ function CardSequence({
               index === 0
                 ? MathUtils.lerp(card.size, target.size, pose.handTravel ?? 1)
                 : card.size;
-            applyPose(nodes[index], pose, size);
+            applyPose(nodes[index], pose, settleSize(size, pose.pileTravel));
           });
         }
       }
@@ -291,6 +318,7 @@ function CardSequence({
         const counter = playback.count[groupIndex];
         const progress = groupIndex === playback.side ? counter.advance(delta) : undefined;
         if (progress) count(group.side, progress);
+        const remaining = new Map<string, number>();
         group.cards.forEach((card, index) => {
           const node = nodes[offset++];
           if (!node) return;
@@ -301,6 +329,7 @@ function CardSequence({
           const pose = counter.pose(index);
           // Translate the study's source and destination into the current viewport.
           const travel = pose.travel;
+          remaining.set(card.player, (remaining.get(card.player) ?? 0) + Number(travel === 0));
           const bonus = index >= group.quota;
           const end = {
             x: bonus ? group.target.x : group.target.x - 0.9,
@@ -317,8 +346,9 @@ function CardSequence({
             travel,
           );
           applyPose(node, pose, card.size);
-          node.visible = pose.visible;
+          node.visible = travel > 0 && pose.visible;
         });
+        for (const [player, total] of remaining) pileRemaining(player, total);
         if (progress?.complete) playback.rest += delta;
       });
       if (playback.rest >= 0.65) {
@@ -344,11 +374,18 @@ function CardSequence({
           : timeline!.duration();
       handoff(seconds);
     }
-    if (!playback.finished && (!timeline || timeline.progress() < 1)) invalidate();
+    if (!playback.finished) invalidate();
   });
 
   return (
     <>
+      {fallTarget && (
+        <FallImpactEffects
+          effects={effects}
+          at={fallTarget.origin}
+          scale={fallTarget.size / 0.34}
+        />
+      )}
       {cards.map(({ art }, index) => (
         <group
           key={index}
@@ -359,6 +396,16 @@ function CardSequence({
         >
           <group rotation={[0, scene.kind === "count" ? 0 : Math.PI, 0]} scale={[1, 1, 0.24]}>
             <CardMesh
+              frost={
+                fallTarget && index === 0 && effects.effect === "ice" ? effects.frost : undefined
+              }
+              heat={
+                fallTarget && (effects.effect === "heat" || effects.effect === "flame") && index < 2
+                  ? index === 0
+                    ? effects.playedHeat
+                    : effects.targetHeat
+                  : undefined
+              }
               faceTexture={
                 art
                   ? textures.get(getCardFaceUrl(art.suit, art.rank) ?? cardArtwork.face)
@@ -366,6 +413,9 @@ function CardSequence({
               }
             />
           </group>
+          {fallTarget && index === 0 && effects.effect === "flame" && (
+            <FallFlameTrail effects={effects} />
+          )}
         </group>
       ))}
     </>
@@ -374,6 +424,7 @@ function CardSequence({
 
 function MatchSequences({ playback }: { playback?: PlaybackProps }) {
   const { gl, camera, scene } = useThree();
+  const [, back] = useCardArtwork();
   const warmup = useRef<Group>(null);
   const shadow = useRef<FallShadowMesh>(null);
   const paper = getComputedStyle(document.documentElement)
@@ -381,9 +432,10 @@ function MatchSequences({ playback }: { playback?: PlaybackProps }) {
     .trim();
   const textures = useCardFaceTextures(faceUrls, paper || undefined, 256);
   useLayoutEffect(() => {
+    gl.initTexture(back);
     for (const texture of textures.values()) gl.initTexture(texture);
     if (warmup.current) void gl.compileAsync(warmup.current, camera, scene).catch(() => {});
-  }, [gl, textures, camera, scene]);
+  }, [gl, back, textures, camera, scene]);
   return (
     <>
       <group ref={warmup}>

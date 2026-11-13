@@ -60,14 +60,16 @@ export function measureCardScene(root: Element, frame: MatchFrame) {
   if (motion.kind === "deal") {
     const deck = stackAt("draw-pile", motion.dealer);
     if (!deck) return;
+    const deckRect = deck.getBoundingClientRect();
     const localHand = find("match-hand", localPlayerId);
     const handLine = localHand ? anchor(localHand.getBoundingClientRect()).y : undefined;
     scene = {
       kind: "deal",
       deck: {
-        ...anchor(deck.getBoundingClientRect()),
+        ...anchor(deckRect),
         z: (state.deck.length + motion.cards.length - 1) * cardPitch,
       },
+      deckSize: (deckRect.height * unit) / 2.88,
       cards: motion.cards.flatMap((key) => {
         const table = find("table-card", key);
         const hand = find("hand-card", key);
@@ -102,6 +104,7 @@ export function measureCardScene(root: Element, frame: MatchFrame) {
     } else {
       const pile = stackAt("collector", motion.player);
       if (!pile) return;
+      const pileRect = pile.getBoundingClientRect();
       scene = {
         kind: "collect",
         capture: motion.capture,
@@ -110,7 +113,8 @@ export function measureCardScene(root: Element, frame: MatchFrame) {
           const element = find("table-card", target);
           return element ? [cardAt(element, target, true)] : [];
         }),
-        pile: anchor(pile.getBoundingClientRect()),
+        pile: anchor(pileRect),
+        pileSize: (pileRect.height * unit) / 2.88,
       };
       if (!scene.targets.length || (scene.capture !== "sweep" && !scene.played)) return;
     }
@@ -131,6 +135,7 @@ export function measureCardScene(root: Element, frame: MatchFrame) {
               if (!pile || !cards.length) return [];
               const rect = pile.getBoundingClientRect();
               return cards.map((art) => ({
+                player,
                 art,
                 origin: anchor(rect),
                 size: (rect.height * unit) / 2.88,

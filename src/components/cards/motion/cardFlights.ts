@@ -3,7 +3,12 @@ import { MathUtils } from "three";
 export type CardDropEffect = "plain" | "ice" | "heat" | "flame";
 export type CardPoint = { x: number; y: number; z: number };
 export type CardAnchor = CardPoint & { angle: number; faceUp?: boolean };
-export type CardPose = { position: number[]; rotation: number[]; scale?: number };
+export type CardPose = {
+  position: number[];
+  rotation: number[];
+  scale?: number;
+  pileTravel?: number;
+};
 
 // Timing shared by the Playground's 3D studies and the live table.
 export const cardFlights = {
