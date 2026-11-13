@@ -3,6 +3,7 @@ import cardDraw from "@/assets/icons/card-draw.svg";
 import crossMark from "@/assets/icons/cross-mark.svg";
 import openPalm from "@/assets/icons/open-palm.svg";
 import sparkles from "@/assets/icons/sparkles.svg";
+import stairs from "@/assets/icons/stairs.svg";
 import trophy from "@/assets/icons/trophy.svg";
 import woodenDoor from "@/assets/icons/wooden-door.svg";
 import cardPick from "@/assets/lobby/card-hall/icons/card-pick.svg";
@@ -96,7 +97,7 @@ export const gameIcons = [
     name: "Plain Arrow",
     icon: plainArrow,
     source: "src/assets/login/icons/plain-arrow.svg",
-    usage: "Login primary action",
+    usage: "Login primary action and Tavern opening deal",
   },
   {
     name: "Rank 1",
@@ -121,6 +122,12 @@ export const gameIcons = [
     icon: sparkles,
     source: "src/assets/icons/sparkles.svg",
     usage: "Tavern capture bonus",
+  },
+  {
+    name: "Stairs",
+    icon: stairs,
+    source: "src/assets/icons/stairs.svg",
+    usage: "Tavern opening deal table patterns",
   },
   {
     name: "Three Friends",

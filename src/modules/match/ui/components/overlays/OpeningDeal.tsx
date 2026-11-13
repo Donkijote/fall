@@ -1,9 +1,10 @@
-import { ArrowDown, ArrowRight, ArrowUp } from "lucide-react";
 import { useState, type ReactNode } from "react";
 
 import openPalm from "@/assets/icons/open-palm.svg";
+import stairs from "@/assets/icons/stairs.svg";
 import cardPick from "@/assets/lobby/card-hall/icons/card-pick.svg";
 import board from "@/assets/lobby/tavern-match/dealer-board.webp";
+import plainArrow from "@/assets/login/icons/plain-arrow.svg";
 import { Icon } from "@/components/icons/Icon";
 import type { DealOrder, TablePattern } from "@/domain/entities/GameState";
 
@@ -56,25 +57,17 @@ function DealOrderIcon({ tableFirst = false }: { tableFirst?: boolean }) {
   return (
     <span className="flex items-center gap-1.5">
       <Icon icon={First} className="size-4" />
-      <ArrowRight className="size-3 opacity-70" />
+      <Icon icon={plainArrow} className="size-3 -rotate-90 opacity-70" />
       <Icon icon={Second} className="size-4" />
     </span>
   );
 }
 
 function PatternIcon({ descending = false }: { descending?: boolean }) {
-  const Arrow = descending ? ArrowDown : ArrowUp;
   return (
     <span className="flex items-center gap-1">
-      <Arrow className="size-4" />
-      <span
-        className="flex h-4 items-end gap-0.5"
-        style={{ flexDirection: descending ? "row-reverse" : "row" }}
-      >
-        {[5, 8, 11, 14].map((height) => (
-          <span key={height} className="w-1 rounded-[1px] bg-current" style={{ height }} />
-        ))}
-      </span>
+      <Icon icon={plainArrow} className={descending ? "size-3.5" : "size-3.5 rotate-180"} />
+      <Icon icon={stairs} className={descending ? "size-5 -scale-x-100" : "size-5"} />
     </span>
   );
 }
