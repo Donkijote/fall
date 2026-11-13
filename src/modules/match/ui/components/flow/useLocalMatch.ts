@@ -9,6 +9,7 @@ export function useLocalMatch(
   ready: boolean,
   returning: boolean,
   reducedMotion: boolean,
+  paused: boolean,
 ) {
   const [frames, setFrames] = useState<MatchFrame[]>([]);
   const frame = frames[0];
@@ -18,7 +19,7 @@ export function useLocalMatch(
   }, [mode, ready, returning]);
 
   useEffect(() => {
-    if (!frame || frame.motion || returning) return;
+    if (!frame || frame.motion || returning || paused) return;
     const timer = window.setTimeout(
       () => {
         const next = simulateTurn(frame.state);
@@ -27,10 +28,10 @@ export function useLocalMatch(
       reducedMotion ? 220 : 550,
     );
     return () => window.clearTimeout(timer);
-  }, [frame, returning, reducedMotion]);
+  }, [frame, returning, reducedMotion, paused]);
 
   function act(transition: (state: GameState) => MatchFrame[]) {
-    if (!frame || frame.motion || returning) return;
+    if (!frame || frame.motion || returning || paused) return;
     setFrames((current) => {
       if (current[0] !== frame) return current;
       const next = transition(frame.state);

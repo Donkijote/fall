@@ -13,7 +13,7 @@
       "references": ["mockup-simplified.png", "../tavern/mockup-detailed.png"],
       "prompt": "Show the crowded 2v2 table with four compact edge portraits. Give each seat a small collector pile separate from its hand, and put the draw deck beside the dealer. Keep the local hand visible and highlight the active portrait with a brass ring and caret. Keep shared cards legible and the oak free of props.",
       "refinements": [
-        "Label the top seat Ally · Dealer and the right seat Opponent. Preserve the draw deck and all four collector piles in place."
+        "Label the top seat Ally \u00b7 Dealer and the right seat Opponent. Preserve the draw deck and all four collector piles in place."
       ]
     },
     {
@@ -21,14 +21,108 @@
       "method": "reconstructed",
       "references": ["mockup-simplified.png"],
       "prompt": "Wide landscape standalone painting based on the top waiting panel. Match the steep view from the local seat. Keep the far edge narrower than the near edge, with the near lip in the foreground and the oak surface occupying almost the entire frame. Leave a narrow strip of the inn above it, with a blue window and shelf candle on the left and a hearth on the right. Keep the tabletop clear and omit UI, text and furniture around the table.",
-      "notes": "Export the full 1672 × 941 image at WebP quality 85."
+      "notes": "Export the full 1672 \u00d7 941 image at WebP quality 85."
     },
     {
       "file": "../../../src/assets/lobby/tavern-match/table-portrait.webp",
       "method": "reconstructed",
       "references": ["mockup-simplified.png"],
       "prompt": "Tall phone portrait standalone painting based on the top waiting panel. Match the steep view from the local seat. Keep the far edge narrower than the near edge, with the near lip in the foreground and the oak surface occupying almost the entire frame. Leave a narrow strip of the inn above it, with a blue window and shelf candle on the left and a hearth on the right. Keep the tabletop clear and omit UI, text and furniture around the table.",
-      "notes": "Export the full 899 × 1750 image at WebP quality 85."
+      "notes": "Export the full 899 \u00d7 1750 image at WebP quality 85."
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern-match/victory-crest.webp",
+      "method": "reconstructed",
+      "references": ["background.png"],
+      "prompt": "Create an isolated text-free crest for Fall on transparent alpha. Center an original playing-card cup on a hammered gold coin with a dotted rim. Add laurel, brass rod and a blank oxblood pennant with a pointed lower edge. Use no national symbols or heraldry.",
+      "notes": "Generated as an isolated prop on an alpha sprite sheet. Export the individual silhouette to WebP quality 87 with its transparency."
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern-match/defeat-crest.webp",
+      "method": "reconstructed",
+      "references": ["background.png"],
+      "prompt": "Create an isolated text-free defeat crest for Fall on transparent alpha. Use a fractured steel version of the original dotted-rim cup coin, a horizontal sword, and blank torn slate fabric. Use no national symbols or heraldry.",
+      "notes": "Generated as an isolated prop on an alpha sprite sheet. Export the individual silhouette to WebP quality 87 with its transparency."
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern-match/waiting-sign.webp",
+      "method": "reconstructed",
+      "references": ["background.png"],
+      "prompt": "Create an isolated front-facing dark oak Tavern sign with brass suspension loops, a brass rim and restrained engraving at the edges. Keep the entire center blank for live text and controls. Use transparent alpha.",
+      "notes": "Generated as an isolated prop on an alpha sprite sheet. Export the individual silhouette to WebP quality 87 with its transparency."
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern-match/leave-parchment.webp",
+      "method": "reconstructed",
+      "references": ["background.png"],
+      "prompt": "Create an isolated front-facing blank parchment in a stitched brown leather mount with brass rivets. Center an oxblood wax seal stamped with a playing-card cup on the top edge. Keep the entire writing area blank. Use transparent alpha.",
+      "notes": "Generated as an isolated prop on an alpha sprite sheet. Export the individual silhouette to WebP quality 87 with its transparency."
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern-match/score-tally.webp",
+      "method": "recorded",
+      "references": [
+        "../../../src/assets/lobby/tavern-match/waiting-sign.webp",
+        "../../../src/assets/lobby/tavern-match/leave-parchment.webp"
+      ],
+      "prompt": "Paint a front-facing shallow 5:1 ebonized oak tally plaque. Use aged brass, small rivets, clipped corners, and a centered original Cups medallion above the writing surface. Keep the interior dark and blank for two or three live scores and progress tracks. Use transparent alpha and omit lettering and heraldry.",
+      "notes": "Standalone ImageGen prop. Trim the transparent margin and export at 960 px wide as WebP quality 87."
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern-match/dealer-board.webp",
+      "method": "recorded",
+      "references": [
+        "../../../src/assets/lobby/tavern-match/waiting-sign.webp",
+        "../../../src/assets/lobby/tavern-match/leave-parchment.webp"
+      ],
+      "prompt": "Paint a front-facing dark oak dealer board in stitched leather with brass studs, a pair of fanned card backs at the top, and a broad blank dark interior for live text and choices. Use transparent alpha and omit lettering and heraldry.",
+      "notes": "Standalone ImageGen prop. Trim the transparent margin and export at 960 px wide as WebP quality 87."
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern-match/score-counter.webp",
+      "method": "recorded",
+      "references": ["../../../src/assets/lobby/tavern-match/score-tally.webp"],
+      "prompt": "Paint one front-facing aged brass score counter with a sculpted crest, tiny rivets and clipped corners. Leave an alpha cutout for the enamel underlay and live ivory number. Use transparent alpha outside the frame. Omit text and heraldry.",
+      "notes": "Standalone ImageGen prop. Trim transparent margins and export to WebP."
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern-match/capture-tray.webp",
+      "method": "recorded",
+      "references": ["../../../src/assets/lobby/tavern-match/dealer-board.webp"],
+      "prompt": "Paint an isolated wide walnut and leather counting tray with a worn brass lip, abacus beads at each edge, and a small coin and card-back medallion at top center. Leave a dark, open interior for live capture and bonus counters. Use transparent alpha and omit lettering and heraldry.",
+      "notes": "Standalone ImageGen prop. Trim the transparent margin and export to WebP at 960 px wide."
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern-match/result-standings.webp",
+      "method": "recorded",
+      "references": ["../../../src/assets/lobby/tavern-match/victory-crest.webp"],
+      "prompt": "Paint a wide, low-profile dark walnut standings plaque with an aged brass rim, clipped corners and restrained engraving at the edges. Keep the center blank and dark for live standings. Use transparent alpha and omit lettering and heraldry.",
+      "notes": "Generated as an isolated prop on an alpha sprite sheet and exported to WebP."
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern-match/result-return.webp",
+      "method": "recorded",
+      "references": ["../../../src/assets/lobby/tavern-match/victory-crest.webp"],
+      "prompt": "Paint a blank oxblood enamel action plate with sculpted aged brass trim, chamfered corners and a tiny rivet on either side. Leave a broad empty center for the action label. Use transparent alpha and omit lettering and heraldry.",
+      "notes": "Generated as an isolated prop on an alpha sprite sheet and exported to WebP."
+    },
+    {
+      "file": "overlay-mockups.png",
+      "method": "recorded",
+      "references": [
+        "background.png",
+        "../../../src/assets/lobby/tavern-match/victory-crest.webp",
+        "../../../src/assets/lobby/tavern-match/defeat-crest.webp",
+        "../../../src/assets/lobby/tavern-match/waiting-sign.webp",
+        "../../../src/assets/lobby/tavern-match/leave-parchment.webp",
+        "../../../src/assets/lobby/tavern-match/score-tally.webp",
+        "../../../src/assets/lobby/tavern-match/dealer-board.webp",
+        "../../../src/assets/lobby/tavern-match/score-counter.webp",
+        "../../../src/assets/lobby/tavern-match/result-standings.webp",
+        "../../../src/assets/lobby/tavern-match/result-return.webp"
+      ],
+      "prompt": "Assemble live captures of the approved Tavern overlays: Team Match waiting, Free-for-All score plaques, phone landscape Victory, portrait Defeat and leave confirmation, and tablet Team Match Defeat. Preserve the live type and cup-stamped coin art. Include the illustrated opening-deal controls.",
+      "notes": "Composed from screenshots of the local match using the approved assets."
     }
   ]
 }

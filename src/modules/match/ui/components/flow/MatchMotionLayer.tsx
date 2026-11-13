@@ -1,11 +1,12 @@
+import gsap from "gsap";
 import { lazy, Suspense, useLayoutEffect, useMemo, useRef, useState, type RefObject } from "react";
 
-import type { CountingSnapshot } from "@/components/cards/motion/cardCounting";
 import { SceneBoundary } from "@/components/surfaces/SceneBoundary";
 import { useCardAudio } from "@/infrastructure/ui/hooks/useCardAudio";
 
 import { createPlaybackChannel } from "../../../adapters/three/matchCardScene";
 import type { MatchFrame } from "../../../application/localMatch";
+import { createCaptureCounterPlayback } from "./captureCounterPlayback";
 import { measureCardScene } from "./measureCardScene";
 import { createMotionDeadline } from "./motionDeadline";
 
@@ -41,11 +42,45 @@ export function MatchMotionLayer({
   useLayoutEffect(() => {
     const root = board.current;
     if (!root || !motion || returning) return;
+    const counters =
+      motion.kind === "count" ? createCaptureCounterPlayback(root, motion.groups) : undefined;
+    const overlay = motion.kind === "count" && root.querySelector("[data-count-overlay]");
+    const exit = overlay && !reducedMotion ? gsap.context(() => {}, root) : undefined;
+    const settle = () => {
+      if (!overlay || !exit) {
+        complete();
+        return;
+      }
+      exit.add(() => {
+        gsap.to(overlay, {
+          opacity: 0,
+          y: -6,
+          duration: 0.26,
+          ease: "sine.in",
+          onComplete: complete,
+        });
+      });
+    };
+    const showFinalCount = () => {
+      if (motion.kind !== "count") return;
+      for (const { side, cards, quota } of motion.groups) {
+        counters?.update(side, { counted: cards, points: Math.max(0, cards - quota) }, false);
+      }
+    };
     const measured = animate && measureCardScene(root, frame);
     if (!measured) {
       // Motion preferences do not mute the game; use a single cue for an instant event.
       if (motion.kind === "deal" || motion.kind === "count") audio.playDealCard();
       else audio.playCard();
+      if (motion.kind === "count") {
+        showFinalCount();
+        const timer = window.setTimeout(settle, 1100);
+        return () => {
+          window.clearTimeout(timer);
+          exit?.revert();
+          counters?.dispose();
+        };
+      }
       complete();
       return;
     }
@@ -60,7 +95,8 @@ export function MatchMotionLayer({
       if (!active) return;
       active = false;
       deadline.dispose();
-      complete();
+      showFinalCount();
+      settle();
     };
     const deadline = createMotionDeadline(() => {
       if (!started) {
@@ -79,12 +115,6 @@ export function MatchMotionLayer({
     // the old position until the canvas paints the exact starting pose.
     if (motion.kind === "deal") hideCards();
     const id = ++sequence.current;
-    const count = (side: number, snapshot: CountingSnapshot) => {
-      const label = root.querySelector<HTMLElement>(`[data-count-side="${side}"]`);
-      if (!label) return;
-      const text = `${snapshot.counted}/${label.dataset.total} cards · +${snapshot.points}`;
-      if (label.textContent !== text) label.textContent = text;
-    };
     const collectors = new Map(
       [...root.querySelectorAll<HTMLElement>("[data-collector]")].map((element) => [
         element.dataset.collector!,
@@ -104,7 +134,7 @@ export function MatchMotionLayer({
       scene: measured.scene,
       handoff,
       complete: finish,
-      count,
+      count: (side, snapshot) => counters?.update(side, snapshot),
       pileRemaining,
       audio,
       sequence: id,
@@ -119,6 +149,8 @@ export function MatchMotionLayer({
     return () => {
       active = false;
       deadline.dispose();
+      counters?.dispose();
+      exit?.revert();
       for (const { back, layer } of collectors.values()) {
         if (back) back.hidden = false;
         if (layer) layer.hidden = false;
