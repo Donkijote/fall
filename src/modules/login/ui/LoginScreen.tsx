@@ -29,7 +29,7 @@ import "./LoginScreen.css";
 const suitIcons = [coinSuit, cupSuit, swordSuit, clubSuit];
 
 const credentialInputClass =
-  "h-11 pl-11 sm:h-12 md:text-base lg:text-sm max-xl:landscape:h-[clamp(2.75rem,12dvh,3.25rem)] max-xl:landscape:text-base transition-none";
+  "h-11 sm:h-12 md:text-base lg:text-sm max-xl:landscape:h-[clamp(2.75rem,12dvh,3.25rem)] max-xl:landscape:text-base";
 
 const staticButtonClass = "transition-none active:not-aria-[haspopup]:translate-y-0";
 const cardLinkClass = cn(staticButtonClass, "h-6 px-0 text-foreground");
@@ -148,19 +148,14 @@ export function LoginScreen() {
               >
                 <div className="min-w-0 space-y-2">
                   <Label htmlFor={`${formId}-email`}>Email address</Label>
-                  <div className="relative">
-                    <Icon
-                      icon={mailIcon}
-                      className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-muted-foreground"
-                    />
-                    <TextInput
-                      id={`${formId}-email`}
-                      type="email"
-                      autoComplete="email"
-                      placeholder="you@example.com"
-                      className={credentialInputClass}
-                    />
-                  </div>
+                  <TextInput
+                    id={`${formId}-email`}
+                    type="email"
+                    autoComplete="email"
+                    placeholder="you@example.com"
+                    leadingIcon={<Icon icon={mailIcon} className="size-4" />}
+                    className={credentialInputClass}
+                  />
                 </div>
 
                 <div className="min-w-0 space-y-2">
@@ -170,19 +165,14 @@ export function LoginScreen() {
                       Forgot password?
                     </Button>
                   </div>
-                  <div className="relative">
-                    <Icon
-                      icon={passwordIcon}
-                      className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-muted-foreground"
-                    />
-                    <TextInput
-                      id={`${formId}-password`}
-                      type="password"
-                      autoComplete="current-password"
-                      placeholder="Enter your password"
-                      className={credentialInputClass}
-                    />
-                  </div>
+                  <TextInput
+                    id={`${formId}-password`}
+                    type="password"
+                    autoComplete="current-password"
+                    placeholder="Enter your password"
+                    leadingIcon={<Icon icon={passwordIcon} className="size-4" />}
+                    className={credentialInputClass}
+                  />
                 </div>
 
                 <ActionButton

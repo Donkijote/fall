@@ -1,4 +1,4 @@
-import { Swords } from "lucide-react";
+import { Search, Swords } from "lucide-react";
 import type { ComponentType } from "react";
 
 import levelCrest from "@/assets/lobby/card-hall/icons/rank-1.svg";
@@ -56,11 +56,17 @@ export const gallerySections: { title: string; folder: string; entries: Entry[] 
       },
       {
         name: "TextInput",
-        variants: "Empty, filled, disabled",
+        variants: "Empty, filled, search, disabled",
         usage: "Login, How to Play, Sings reference",
         Preview: () => (
           <div className="grid gap-2">
-            <TextInput aria-label="Empty input example" placeholder="Search rules" />
+            <TextInput
+              aria-label="Search example"
+              type="search"
+              leadingIcon={<Search />}
+              placeholder="Search rules"
+            />
+            <TextInput aria-label="Filled input example" defaultValue="Traveller" />
             <TextInput aria-label="Disabled input example" defaultValue="Tavern" disabled />
           </div>
         ),

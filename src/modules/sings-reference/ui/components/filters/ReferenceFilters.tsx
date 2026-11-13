@@ -32,21 +32,15 @@ export function ReferenceFilters({
         <Label className="sr-only" htmlFor="search-sings">
           Search combinations
         </Label>
-        <div className="relative">
-          <Search
-            aria-hidden="true"
-            className="pointer-events-none absolute top-3.5 left-3 size-4 text-muted-foreground"
-          />
-          <TextInput
-            ref={searchRef}
-            id="search-sings"
-            type="search"
-            placeholder="Search Sings"
-            value={filters.query}
-            onChange={(event) => onChange({ ...filters, query: event.target.value })}
-            className="min-h-11 border-gold/65 bg-background pl-10"
-          />
-        </div>
+        <TextInput
+          ref={searchRef}
+          id="search-sings"
+          type="search"
+          placeholder="Search Sings"
+          value={filters.query}
+          onChange={(event) => onChange({ ...filters, query: event.target.value })}
+          leadingIcon={<Search />}
+        />
       </div>
       <div className="grid justify-items-start gap-2">
         <Label className="sr-only" htmlFor="filter-min-points">

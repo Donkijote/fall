@@ -16,6 +16,7 @@ running app to check current controls and behavior.
 | Component gallery | [Component gallery](component-gallery/README.md)       |
 | Action button     | [Action button skins](action-button/README.md)         |
 | Choice button     | [Choice button artwork](choice-button/README.md)       |
+| Text input        | [Text input artwork](text-input/README.md)             |
 
 ## Feature folder standard
 
