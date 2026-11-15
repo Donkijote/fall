@@ -4,6 +4,8 @@ import { useId, useState } from "react";
 import { Link } from "react-router";
 
 import { ActionButton, BronzeArrow, ChoiceButton, ModalContent, SelectField } from "@/components";
+import { BronzeSlider } from "@/components/controls/BronzeSlider";
+import { WaxSwitch } from "@/components/controls/WaxSwitch";
 import {
   Dialog,
   DialogClose,
@@ -12,8 +14,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
-import { Switch } from "@/components/ui/switch";
 import { ToggleGroup } from "@/components/ui/toggle-group";
 import {
   resetGamePreferences,
@@ -115,7 +115,7 @@ function SettingsContent({ onOpenChange }: Pick<HomeSettingsProps, "onOpenChange
                   Card effects volume
                 </Label>
                 <div className="flex w-52 max-w-full items-center gap-3">
-                  <Slider
+                  <BronzeSlider
                     aria-labelledby={`${id}-volume`}
                     value={[Math.round(volume * 100)]}
                     onValueChange={(values) =>
@@ -126,7 +126,6 @@ function SettingsContent({ onOpenChange }: Pick<HomeSettingsProps, "onOpenChange
                     min={0}
                     max={100}
                     step={1}
-                    className="flex min-h-11 items-center [&_[data-slot=slider-thumb]]:transition-none"
                   />
                   <output className="w-10 shrink-0 text-right text-xs tabular-nums">
                     {Math.round(volume * 100)}%
@@ -141,11 +140,10 @@ function SettingsContent({ onOpenChange }: Pick<HomeSettingsProps, "onOpenChange
                   Mute card effects
                 </Label>
                 <div className="flex min-h-11 items-center pr-3">
-                  <Switch
+                  <WaxSwitch
                     id={`${id}-mute`}
                     checked={muted}
                     onCheckedChange={(checked) => updateGamePreferences({ muted: checked })}
-                    className="transition-none [&_[data-slot=switch-thumb]]:transition-none"
                   />
                 </div>
               </div>

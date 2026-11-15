@@ -1,0 +1,38 @@
+.bronze-slider [data-slot="slider-track"][data-orientation="horizontal"] {
+  container-type: inline-size;
+  --slider-cap-width: 0.625rem;
+  isolation: isolate;
+  height: 0.875rem;
+  background: transparent;
+}
+
+.bronze-slider [data-slot="slider-track"][data-orientation="horizontal"]::before {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  border-inline: var(--slider-cap-width) solid transparent;
+  border-image: var(--slider-rail-art) 0 24 fill stretch;
+}
+
+.bronze-slider [data-slot="slider-range"][data-orientation="horizontal"] {
+  overflow: hidden;
+  background: transparent;
+}
+
+.bronze-slider [data-slot="slider-range"][data-orientation="horizontal"]::before {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  /* The mask uses the same cap widths as the painted rail. */
+  inline-size: 100cqw;
+  background: color-mix(in oklch, var(--primary) 68%, transparent);
+  mask:
+    url("/src/assets/ui/controls/volume-channel-start.png") left / var(--slider-cap-width) 100%
+      no-repeat,
+    url("/src/assets/ui/controls/volume-channel-center.png") center /
+      calc(100% - 2 * var(--slider-cap-width) + 1px) 100% no-repeat,
+    url("/src/assets/ui/controls/volume-channel-end.png") right / var(--slider-cap-width) 100%
+      no-repeat;
+  content: "";
+}

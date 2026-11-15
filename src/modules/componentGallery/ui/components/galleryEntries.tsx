@@ -11,6 +11,8 @@ import {
   ResourceReadout,
   TextInput,
 } from "@/components";
+import { BronzeSlider } from "@/components/controls/BronzeSlider";
+import { WaxSwitch } from "@/components/controls/WaxSwitch";
 import { homeGallery } from "@/modules/home";
 import { loginGallery } from "@/modules/login";
 import { matchGallery } from "@/modules/match";
@@ -55,6 +57,29 @@ export const gallerySections: { title: string; folder: string; entries: Entry[] 
     title: "Controls",
     folder: "controls",
     entries: [
+      {
+        name: "BronzeSlider",
+        variants: "Adjustable, disabled",
+        usage: "Hall Settings · card effects volume",
+        Preview: () => (
+          <div className="grid w-52 max-w-full">
+            <BronzeSlider aria-label="Volume preview" defaultValue={[61]} />
+            <BronzeSlider aria-label="Disabled volume preview" defaultValue={[35]} disabled />
+          </div>
+        ),
+      },
+      {
+        name: "WaxSwitch",
+        variants: "Off, on, disabled",
+        usage: "Hall Settings · mute card effects",
+        Preview: () => (
+          <div className="flex flex-wrap items-center gap-6">
+            <WaxSwitch aria-label="Mute preview" />
+            <WaxSwitch aria-label="Muted preview" defaultChecked />
+            <WaxSwitch aria-label="Disabled mute preview" disabled />
+          </div>
+        ),
+      },
       {
         name: "ChoiceButton",
         variants: "Unselected, selected, disabled",

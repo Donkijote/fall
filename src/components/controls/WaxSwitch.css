@@ -1,0 +1,41 @@
+.wax-switch[data-slot="switch"] {
+  --wax-switch-state: 0;
+  --wax-switch-position: var(--wax-switch-progress, var(--wax-switch-state));
+  --wax-switch-fill-remainder: calc(62% * (1 - var(--wax-switch-position)));
+  border-color: transparent;
+  background: transparent var(--switch-track-art) center / 100% 100% no-repeat border-box;
+}
+
+.wax-switch[data-slot="switch"][data-checked] {
+  --wax-switch-state: 1;
+}
+
+.wax-switch[data-slot="switch"]::before {
+  position: absolute;
+  z-index: -1;
+  inset: -2px;
+  opacity: var(--wax-switch-position);
+  clip-path: inset(0 var(--wax-switch-fill-remainder) 0 0);
+  mask: url("/src/assets/ui/controls/mute-channel.png") center / 100% 100% no-repeat;
+  background: color-mix(in oklch, var(--primary) 62%, transparent);
+  pointer-events: none;
+  content: "";
+}
+
+.wax-switch[data-slot="switch"]:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.wax-switch [data-slot="switch-thumb"] {
+  translate: calc(2rem * var(--wax-switch-position));
+  filter: saturate(calc(0.5 + 0.5 * var(--wax-switch-position)));
+}
+
+.wax-switch:dir(rtl) [data-slot="switch-thumb"] {
+  translate: calc(-2rem * var(--wax-switch-position));
+}
+
+.wax-switch:dir(rtl)::before {
+  clip-path: inset(0 0 0 var(--wax-switch-fill-remainder));
+}
