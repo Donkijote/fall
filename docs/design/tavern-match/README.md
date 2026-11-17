@@ -156,3 +156,8 @@ Seat nameplates and the Deck and Collected labels use a shared blackened iron
 plaque with rounded inward corners. Dealer appears beside the player name. A
 bronze arrowhead points toward the active portrait, and the ring artwork
 brightens with a continuous GSAP glint around the ring. Reduced motion keeps the ring steadily lit.
+
+The approved [Tavern Pennant scoreboard](scoreboard-mockup.png) pairs a charcoal
+cloth banner and embroidered oak sprigs with ivory tiles and wax seals. The blue
+sword, red cup, and green wooden club identify the score sides. The board uses
+live numbers and sizes the pennant around two or three equal tiles.

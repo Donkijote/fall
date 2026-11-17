@@ -13,7 +13,7 @@
       "references": ["mockup-simplified.png", "../tavern/mockup-detailed.png"],
       "prompt": "Show the crowded 2v2 table with four compact edge portraits. Give each seat a small collector pile separate from its hand, and put the draw deck beside the dealer. Keep the local hand visible and highlight the active portrait with a brass ring and caret. Keep shared cards legible and the oak free of props.",
       "refinements": [
-        "Label the top seat Ally \u00b7 Dealer and the right seat Opponent. Preserve the draw deck and all four collector piles in place."
+        "Label the top seat Ally · Dealer and the right seat Opponent. Preserve the draw deck and all four collector piles in place."
       ]
     },
     {
@@ -21,14 +21,14 @@
       "method": "reconstructed",
       "references": ["mockup-simplified.png"],
       "prompt": "Wide landscape standalone painting based on the top waiting panel. Match the steep view from the local seat. Keep the far edge narrower than the near edge, with the near lip in the foreground and the oak surface occupying almost the entire frame. Leave a narrow strip of the inn above it, with a blue window and shelf candle on the left and a hearth on the right. Keep the tabletop clear and omit UI, text and furniture around the table.",
-      "notes": "Export the full 1672 \u00d7 941 image at WebP quality 85."
+      "notes": "Export the full 1672 × 941 image at WebP quality 85."
     },
     {
       "file": "../../../src/assets/lobby/tavern-match/table-portrait.webp",
       "method": "reconstructed",
       "references": ["mockup-simplified.png"],
       "prompt": "Tall phone portrait standalone painting based on the top waiting panel. Match the steep view from the local seat. Keep the far edge narrower than the near edge, with the near lip in the foreground and the oak surface occupying almost the entire frame. Leave a narrow strip of the inn above it, with a blue window and shelf candle on the left and a hearth on the right. Keep the tabletop clear and omit UI, text and furniture around the table.",
-      "notes": "Export the full 899 \u00d7 1750 image at WebP quality 85."
+      "notes": "Export the full 899 × 1750 image at WebP quality 85."
     },
     {
       "file": "../../../src/assets/lobby/tavern-match/victory-crest.webp",
@@ -59,16 +59,6 @@
       "notes": "Generated as an isolated prop on an alpha sprite sheet. Export the individual silhouette to WebP quality 87 with its transparency."
     },
     {
-      "file": "../../../src/assets/lobby/tavern-match/score-tally.webp",
-      "method": "recorded",
-      "references": [
-        "../../../src/assets/lobby/tavern-match/waiting-sign.webp",
-        "../../../src/assets/lobby/tavern-match/leave-parchment.webp"
-      ],
-      "prompt": "Paint a front-facing shallow 5:1 ebonized oak tally plaque. Use aged brass, small rivets, clipped corners, and a centered original Cups medallion above the writing surface. Keep the interior dark and blank for two or three live scores and progress tracks. Use transparent alpha and omit lettering and heraldry.",
-      "notes": "Standalone ImageGen prop. Trim the transparent margin and export at 960 px wide as WebP quality 87."
-    },
-    {
       "file": "../../../src/assets/lobby/tavern-match/dealer-board.webp",
       "method": "recorded",
       "references": [
@@ -77,13 +67,6 @@
       ],
       "prompt": "Paint a front-facing dark oak dealer board in stitched leather with brass studs, a pair of fanned card backs at the top, and a broad blank dark interior for live text and choices. Use transparent alpha and omit lettering and heraldry.",
       "notes": "Standalone ImageGen prop. Trim the transparent margin and export at 960 px wide as WebP quality 87."
-    },
-    {
-      "file": "../../../src/assets/lobby/tavern-match/score-counter.webp",
-      "method": "recorded",
-      "references": ["../../../src/assets/lobby/tavern-match/score-tally.webp"],
-      "prompt": "Paint one front-facing aged brass score counter with a sculpted crest, tiny rivets and clipped corners. Leave an alpha cutout for the enamel underlay and live ivory number. Use transparent alpha outside the frame. Omit text and heraldry.",
-      "notes": "Standalone ImageGen prop. Trim transparent margins and export to WebP."
     },
     {
       "file": "../../../src/assets/lobby/tavern-match/capture-tray.webp",
@@ -115,14 +98,12 @@
         "../../../src/assets/lobby/tavern-match/defeat-crest.webp",
         "../../../src/assets/lobby/tavern-match/waiting-sign.webp",
         "../../../src/assets/lobby/tavern-match/leave-parchment.webp",
-        "../../../src/assets/lobby/tavern-match/score-tally.webp",
         "../../../src/assets/lobby/tavern-match/dealer-board.webp",
-        "../../../src/assets/lobby/tavern-match/score-counter.webp",
         "../../../src/assets/lobby/tavern-match/result-standings.webp",
         "../../../src/assets/lobby/tavern-match/result-return.webp"
       ],
       "prompt": "Assemble live captures of the approved Tavern overlays: Team Match waiting, Free-for-All score plaques, phone landscape Victory, portrait Defeat and leave confirmation, and tablet Team Match Defeat. Preserve the live type and cup-stamped coin art. Include the illustrated opening-deal controls.",
-      "notes": "Composed from screenshots of the local match using the approved assets."
+      "notes": "Composed from screenshots of the local match using the approved assets. The scoreboard shown in this historical capture was superseded by scoreboard-mockup.png."
     },
     {
       "file": "../../../src/assets/lobby/tavern-match/seat-plaque.webp",
@@ -137,6 +118,42 @@
       "references": ["mockup-detailed.png"],
       "prompt": "Standalone small right-pointing amber and bronze arrowhead for an active seat. Use a solid face and softly beveled edges with neutral light and a transparent exterior.",
       "notes": "Trim and export at 48 × 56 WebP."
+    },
+    {
+      "file": "scoreboard-mockup.png",
+      "method": "reconstructed",
+      "references": ["mockup-detailed.png"],
+      "prompt": "Preserve the Tavern match scene. Replace the scoreboard backplate with charcoal woven cloth on a bronze crossbar, scalloped ends and embroidered oak sprigs. Keep three ivory number tiles and the blue sword, red cup, and green wooden club wax seals."
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern-match/score-pennant.webp",
+      "method": "reconstructed",
+      "references": ["scoreboard-mockup.png"],
+      "prompt": "Generate a standalone wide charcoal cloth pennant with a bronze crossbar and finials, inward-scalloped ends, and embroidered oak sprigs at both ends. Keep the center clear for live scores. Front-on with neutral lighting and a transparent exterior."
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern-match/score-ivory-tile.webp",
+      "method": "reconstructed",
+      "references": ["scoreboard-mockup.png"],
+      "prompt": "Generate a standalone blank landscape ivory tile with softened corners and a thin worn gold bevel. Front-on with neutral lighting and a transparent exterior."
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern-match/score-seal-sword.webp",
+      "method": "reconstructed",
+      "references": ["scoreboard-mockup.png"],
+      "prompt": "Blue wax seal with an embossed sword. Front-on with neutral lighting and a transparent exterior."
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern-match/score-seal-cup.webp",
+      "method": "reconstructed",
+      "references": ["scoreboard-mockup.png"],
+      "prompt": "Oxblood wax seal with an embossed goblet. Front-on with neutral lighting and a transparent exterior."
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern-match/score-seal-club.webp",
+      "method": "reconstructed",
+      "references": ["scoreboard-mockup.png"],
+      "prompt": "Forest-green wax seal with an embossed wooden club. Front-on with neutral lighting and a transparent exterior."
     }
   ]
 }
