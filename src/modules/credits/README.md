@@ -93,11 +93,6 @@ recorded in each affected entry; provenance and license review are separate.
   confirmed generated provenance. Preserve existing prompt manifests; link the
   generated master/export records where available. Do not infer a third-party
   license grant or a guarantee of non-infringement from generated provenance.
-- **Earlier format paintings:** `src/assets/lobby/1vs1.webp`, `1vs2.webp`, and
-  `2vs2.webp` are the three orange cartoon Tavern scenes, not the current format
-  picker paintings. No imports outside the credits inventory were found. They
-  remain in the repo and are covered by the user's statement that other artwork
-  was generated; do not delete them as part of this provenance update.
 
 Existing asset-side READMEs are retained as evidence, not another screen data
 source. The [design review notes](../../../docs/design/credits-licenses/README.md#licensing-research)

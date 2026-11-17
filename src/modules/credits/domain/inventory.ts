@@ -13,7 +13,6 @@ const evidencePages: Record<string, string> = {
   sings: "docs/design/sings-reference/prompts.json",
   controls: "src/components/README.md",
   login: "docs/design/login/prompts.json",
-  "legacy-formats": "src/assets/lobby",
   cards: "src/assets/cards",
   sounds: "src/assets/cards",
   geometry: "src/assets/lobby/card-hall/icons/README.md",
@@ -154,19 +153,6 @@ const artworkRecords: ArtworkRecord[] = [
     provenance: "generated",
     creator: "Generated through Google Stitch for Fall",
     source: "https://stitch.google.com/",
-    licenseStatus: "provider-terms-pending",
-  },
-  {
-    id: "legacy-formats",
-    name: "Earlier game-format illustrations",
-    files: [
-      "src/assets/lobby/1vs1.webp",
-      "src/assets/lobby/1vs2.webp",
-      "src/assets/lobby/2vs2.webp",
-    ],
-    evidence:
-      "User confirmed remaining artwork was generated on 2026-11-17. No production imports found for these three earlier illustrations; generation provider/records are not retained.",
-    provenance: "generated",
     licenseStatus: "provider-terms-pending",
   },
   {

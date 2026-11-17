@@ -57,8 +57,7 @@ test("records supplied provenance without treating a stock-art redraw or a platf
     provenance: "generated",
     source: "https://stitch.google.com/",
   });
-  for (const id of ["legacy-formats", "effects", "public-icons"])
-    expect(byId(id)?.provenance).toBe("generated");
+  for (const id of ["effects", "public-icons"]) expect(byId(id)?.provenance).toBe("generated");
 });
 
 test("software notices match the dependency lockfile and preserve special license terms", () => {
