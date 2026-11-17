@@ -61,3 +61,7 @@ the existing deal callback. OpeningDealPreview renders the destination diagram
 and bonus tiles, with GSAP position changes and a reduced-motion preference.
 OpeningDeal.test.tsx checks keyboard selection, retained selections, and the
 submitted options.
+
+WaitingSign shares the occupied-seat token between the live lobby and gallery.
+It animates newly occupied seats using GSAP while retaining the live seat count
+and honoring reduced motion.

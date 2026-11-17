@@ -178,6 +178,18 @@ function CaptureCountPreview() {
   );
 }
 
+function WaitingSignPreview() {
+  const [filled, setFilled] = useState(2);
+  return (
+    <div className="grid justify-items-center gap-3">
+      <WaitingSign title="Tavern" filled={filled} total={4} returning={false} cancel={noop} />
+      <ActionButton tone="quiet" onClick={() => setFilled((count) => (count < 4 ? count + 1 : 1))}>
+        {filled < 4 ? "Preview player joining" : "Reset seats"}
+      </ActionButton>
+    </div>
+  );
+}
+
 export const matchGallery = {
   title: "Tavern match",
   folder: "match",
@@ -185,11 +197,9 @@ export const matchGallery = {
     {
       name: "WaitingSign",
       source: "src/modules/match/ui/components/overlays/WaitingSign.tsx",
-      variants: "Filled and open seats",
+      variants: "Bronze occupied tokens, empty chairs, animated arrivals",
       usage: "Tavern match · waiting for players",
-      Preview: () => (
-        <WaitingSign title="Tavern" filled={2} total={4} returning={false} cancel={noop} />
-      ),
+      Preview: WaitingSignPreview,
     },
     {
       name: "OpeningDeal",

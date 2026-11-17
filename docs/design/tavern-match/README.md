@@ -184,3 +184,9 @@ with a solid directional arrow. Faded rules flank the preview headings, and
 the main heading has a centered oak sprig divider. Rank tiles use lining serif
 numerals and a small shadow to lift them from the parchment. The wax selectors
 sit inside the shared input frame with clearance around their painted edges.
+
+The approved [waiting seat tokens](waiting-seats-mockup.jpg) replace the occupied
+seat check with an illustrated bronze coin stamped with a seated traveller.
+Open seats retain their wooden chair glyphs. New arrivals settle into place
+with a short GSAP motion, and reduced motion updates immediately. The gallery
+includes a join preview to inspect the transition.

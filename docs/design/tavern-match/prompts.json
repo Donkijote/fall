@@ -209,6 +209,19 @@
       "references": ["opening-deal-mockup.jpg"],
       "prompt": "Standalone blank warm ivory parchment preview panel, landscape 1.5:1, aged folded inward corners and subtle paper grain. Leave all writing space empty. Front-on, neutral lighting, transparent exterior.",
       "notes": "Trim the transparent margin and export to WebP. Preview diagrams and numbered tiles render independently."
+    },
+    {
+      "file": "waiting-seats-mockup.jpg",
+      "method": "supplied",
+      "references": [],
+      "notes": "Approved bronze occupied-seat token concept. Preserve the empty wooden chair glyph for open seats."
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern-match/occupied-seat-token.webp",
+      "method": "reconstructed",
+      "references": ["waiting-seats-mockup.jpg"],
+      "prompt": "Create a standalone perfectly round aged bronze seat token with a raised softly rounded rim. Stamp a bold dark silhouette of a medieval traveller seated on a stool at a tavern table with a tankard. Use neutral lighting and a transparent exterior, with no lettering. Ensure the silhouette reads at 32–36 pixels.",
+      "notes": "Trim transparent margins and export at 144 × 144 WebP."
     }
   ]
 }
