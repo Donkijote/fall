@@ -11,13 +11,19 @@ link. Direct entry is public and requires no player session.
   of React, browser APIs and routing. `attribution.ts` defines the asset record.
 - `domain/notices` retains the official font copyright/license text. The project
   notice is imported from the root LICENSE without maintaining a duplicate.
-- `domain/software-notices.json` is generated from the installed production
-  dependency graph and bound to the lockfile by SHA-256. It conservatively
-  includes transitive packages. Shadcn is a development CLI, but its own notice
-  is explicitly retained because `src/index.css` imports its distributed CSS;
-  the CLI's tooling-only dependencies are excluded.
-  Leva and the animation playground's `r3f-perf` monitor are development
-  dependencies, so their tooling-only trees (including Radix) are excluded too.
+- `domain/software-notices.json` is generated from the actual production build,
+  including lazy JavaScript chunks, and bound to the lockfile by SHA-256.
+  `vite.config.ts` enables Vite's bundled-code license report. Its exact package
+  names and versions determine JavaScript membership; installed package metadata
+  supplies the retained license/NOTICE files, not the inclusion criterion.
+  The inventory also records each entry's `includedBy` evidence.
+- `scripts/credits-notices.mjs` runs the real production build in memory when
+  generating or independently checking notices. It never starts a dev server
+  or overwrites `dist` during this audit. CSS is processed outside the JS report:
+  the reviewed imports from Tailwind, shadcn and tw-animate-css are explicitly
+  retained with their source path, import specifier and installed version.
+  Fonts, artwork, sounds, copied public files and any future remotely loaded
+  assets still need the asset inventory; JS bundle metadata does not cover them.
 - `ui/CreditsScreen.tsx` composes the inventory, sections and routing integration.
   Supporting content and scenery live under `ui/components`. There is no
   application service or port because this static inventory needs neither.
@@ -42,16 +48,24 @@ the fixed-viewport correction and links the canonical background.
 2. Preserve any required full license/copyright text under `domain/notices`
    and import it into the entry. Keep the source URL and retrieval evidence.
    The screen renders entries directly; never add another independent UI list.
-3. For a dependency update, install from the lockfile and run
-   `pnpm credits:notices`. Review the generated diff, the package's full terms,
+3. After changing dependencies, imports, routes or production build conditions,
+   install from the lockfile if needed and run `pnpm credits:notices`. Review the generated diff, the package's full terms,
    and any `upstream-review-pending` entries. The generator retains distinct
    packaged LICENSE/LICENCE/COPYING/NOTICE texts across installed versions.
    Metadata license labels and SPDX links alone do not close a notice review.
-   If another development package contributes distributed CSS or other assets,
-   include its own package in the generator's explicit asset list rather than
-   including its entire tooling graph.
+   If another package contributes distributed CSS, add a reviewed entry to
+   `distributedCss` with the actual import and source. The generator verifies
+   that the recorded import remains present. For other asset types, add their
+   attribution to the asset inventory; do not pull in a tool's whole dependency
+   tree merely because it generated a file.
 4. Run `pnpm credits:notices:check`, the inventory tests, and the affected UI
    tests. Inventory coverage fails when a new runtime asset has no owner.
+   `pnpm build` checks the committed notices against the report from that exact
+   build and fails on drift; it never silently rewrites the inventory. Standalone
+   `pnpm credits:notices:check` makes a fresh in-memory build, so it also detects
+   shipped membership changes with an unchanged lockfile. The internal
+   `--from-build` flag is for the build chain immediately after `vp build`;
+   do not use an old `dist` report to certify new source changes.
 
 ## Audit follow-ups
 
@@ -65,19 +79,26 @@ references; review their inputs before asserting ownership or redistribution
 terms. Existing asset-side READMEs are retained as evidence, not another screen
 data source.
 
-Eight production graph entries have no packaged root license/notice file:
-`@gsap/react`, `@mediapipe/tasks-vision`, `@react-three/fiber`,
-`@react-three/rapier`, `draco3d`, `gsap`,
-`maath`, and `stats-gl`. Their source/available license links are shown and
-verification remains pending. GSAP's custom terms are preserved; it is not
-relabeled MIT. Review missing notices and package-specific attribution duties
-before treating issue #105's legal audit as complete.
+Three shipped entries have no packaged root license/notice file:
+`@gsap/react`, `@react-three/fiber`, and `gsap`. Their source/available license
+links are shown and verification remains pending. GSAP's custom terms are
+preserved; it is not relabeled MIT. Review missing notices and package-specific
+attribution duties before treating issue #105's legal audit as complete.
+
+The current build yields 30 JavaScript packages plus 3 reviewed CSS imports.
+The previously listed optional `camera-controls`, `buffer`, `base64-js`, and
+`bidi-js` packages do not contribute to this production build and are excluded.
+`class-variance-authority`, `clsx`, and `@babel/runtime` remain because the build
+includes them. Membership is recalculated, not maintained as a package blacklist.
 
 ## Verification
 
-Tests cover inventory asset ownership, retained author/notices, lockfile
-freshness, ordered accessible sections, content scroll ownership, public routing,
-and Settings navigation/focus restoration. Full repository tests, `pnpm check`,
+Tests cover inventory asset ownership, retained authors/notices, build/asset
+membership evidence, shipped-version filtering, missing metadata failures, stale
+notice rejection with an unchanged lockfile, accessible sections, content scroll
+ownership, public routing, and Settings navigation/focus restoration. Build-tool
+unit tests live beside `scripts/credits-notices.mjs` and use the Node environment;
+feature tests remain colocated inside the module. Full repository tests, `pnpm check`,
 `pnpm credits:notices:check` and `pnpm build` are the completion checks.
 
 Manual desktop/mobile, light/dark, safe-area and short-viewport visual checks
@@ -85,6 +106,6 @@ remain pending: computer use reported a locked Mac and no browser, and the user
 confirmed they are away. No second server was started; use the existing app on
 port 3000 for that review.
 
-Automated verification on 2026-11-17: all 310 repository tests passed; formatting,
+Automated verification on 2026-11-17: all 314 repository tests passed; formatting,
 lint, notice freshness and production build passed. The build retains its bundle
 size advisory; complete license text is lazy-loaded with the Credits route.

@@ -102,3 +102,5 @@ must use GSAP and respect reduced motion.
 - Final behavior correction: content scrolling only, fixed Hall and return action.
 - Initial implementation includes structured attribution, complete retained font/project notices, and generated production dependency notices. Asset sources and missing upstream package notices remain explicit audit follow-ups.
 - The user will check the undocumented deck and sound origins later. Browser visual review is pending because the Mac is locked and the user is away.
+
+- Software notices now follow the actual production JavaScript build, including lazy chunks, plus reviewed CSS imports. Installed-only dependencies are excluded. Fonts, artwork and sound provenance remain separate inventory responsibilities.

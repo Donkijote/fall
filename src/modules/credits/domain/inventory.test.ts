@@ -68,3 +68,25 @@ test("software notices match the dependency lockfile and preserve special licens
     creditsInventory.software.entries.find((entry) => entry.name === "shadcn")?.notices.length,
   ).toBeGreaterThan(0);
 });
+
+test("every software notice is justified by bundled code or a distributed CSS import", () => {
+  const software = creditsInventory.software;
+  const shipped = [...software.bundledCode, ...software.distributedAssets].map(
+    ({ name, version }) => `${name}@${version}`,
+  );
+  const listed = software.entries.flatMap(({ name, versions }) =>
+    versions.map((version) => `${name}@${version}`),
+  );
+  expect([...new Set(listed)].sort()).toEqual([...new Set(shipped)].sort());
+  for (const entry of software.entries) expect(entry.includedBy.length).toBeGreaterThan(0);
+  expect(
+    software.entries.filter(({ name }) =>
+      ["camera-controls", "buffer", "base64-js", "bidi-js"].includes(name),
+    ),
+  ).toEqual([]);
+  expect(software.distributedAssets.map(({ name }) => name).sort()).toEqual([
+    "shadcn",
+    "tailwindcss",
+    "tw-animate-css",
+  ]);
+});

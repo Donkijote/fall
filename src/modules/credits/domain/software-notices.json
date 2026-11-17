@@ -1,11 +1,154 @@
 {
-  "scope": "Installed production dependency graph plus shadcn's distributed CSS. Tooling-only dependencies of the development CLI are excluded. This is a conservative superset of the browser bundle.",
+  "scope": "Packages included in the production JavaScript chunks, plus reviewed distributed CSS imports. Fonts and artwork are inventoried separately.",
   "lockfileSha256": "da58f56a9456a4b1ebb727b8e5e6494232e59e0a7d712c833c112004b63dcf46",
+  "bundledCode": [
+    {
+      "name": "@babel/runtime",
+      "version": "7.29.13"
+    },
+    {
+      "name": "@base-ui/react",
+      "version": "1.9.0"
+    },
+    {
+      "name": "@base-ui/utils",
+      "version": "0.5.0"
+    },
+    {
+      "name": "@floating-ui/core",
+      "version": "1.8.0"
+    },
+    {
+      "name": "@floating-ui/dom",
+      "version": "1.8.0"
+    },
+    {
+      "name": "@floating-ui/react-dom",
+      "version": "2.1.9"
+    },
+    {
+      "name": "@floating-ui/utils",
+      "version": "0.2.12"
+    },
+    {
+      "name": "@gsap/react",
+      "version": "2.1.2"
+    },
+    {
+      "name": "@react-three/drei",
+      "version": "10.7.9"
+    },
+    {
+      "name": "@react-three/fiber",
+      "version": "9.8.2"
+    },
+    {
+      "name": "class-variance-authority",
+      "version": "0.7.1"
+    },
+    {
+      "name": "clsx",
+      "version": "2.1.1"
+    },
+    {
+      "name": "cn",
+      "version": "0.5.2"
+    },
+    {
+      "name": "gsap",
+      "version": "3.15.1"
+    },
+    {
+      "name": "howler",
+      "version": "2.2.4"
+    },
+    {
+      "name": "its-fine",
+      "version": "2.1.1"
+    },
+    {
+      "name": "lucide-react",
+      "version": "1.69.0"
+    },
+    {
+      "name": "next-themes",
+      "version": "0.4.6"
+    },
+    {
+      "name": "quarks.core",
+      "version": "0.17.1"
+    },
+    {
+      "name": "react",
+      "version": "19.3.1"
+    },
+    {
+      "name": "react-dom",
+      "version": "19.3.1"
+    },
+    {
+      "name": "react-router",
+      "version": "8.5.1"
+    },
+    {
+      "name": "react-use-measure",
+      "version": "2.1.7"
+    },
+    {
+      "name": "scheduler",
+      "version": "0.28.0"
+    },
+    {
+      "name": "suspend-react",
+      "version": "0.1.3"
+    },
+    {
+      "name": "three",
+      "version": "0.187.0"
+    },
+    {
+      "name": "three.quarks",
+      "version": "0.17.1"
+    },
+    {
+      "name": "use-sync-external-store",
+      "version": "1.7.0"
+    },
+    {
+      "name": "uuid",
+      "version": "14.0.3"
+    },
+    {
+      "name": "zustand",
+      "version": "5.0.16"
+    }
+  ],
+  "distributedAssets": [
+    {
+      "name": "tailwindcss",
+      "specifier": "tailwindcss",
+      "source": "src/index.css",
+      "version": "4.3.4"
+    },
+    {
+      "name": "shadcn",
+      "specifier": "shadcn/tailwind.css",
+      "source": "src/index.css",
+      "version": "4.23.0"
+    },
+    {
+      "name": "tw-animate-css",
+      "specifier": "tw-animate-css",
+      "source": "src/index.css",
+      "version": "1.4.0"
+    }
+  ],
   "entries": [
     {
       "id": "@babel/runtime@7.29.13",
       "name": "@babel/runtime",
       "versions": ["7.29.13"],
+      "includedBy": ["production JavaScript chunks"],
       "creator": "The Babel Team",
       "source": "https://babel.dev/docs/en/next/babel-runtime",
       "license": "MIT",
@@ -23,6 +166,7 @@
       "id": "@base-ui/react@1.9.0",
       "name": "@base-ui/react",
       "versions": ["1.9.0"],
+      "includedBy": ["production JavaScript chunks"],
       "creator": "MUI Team",
       "source": "https://base-ui.com",
       "license": "MIT",
@@ -40,6 +184,7 @@
       "id": "@base-ui/utils@0.5.0",
       "name": "@base-ui/utils",
       "versions": ["0.5.0"],
+      "includedBy": ["production JavaScript chunks"],
       "creator": "MUI Team",
       "source": "https://github.com/mui/base-ui#readme",
       "license": "MIT",
@@ -54,26 +199,10 @@
       ]
     },
     {
-      "id": "@dimforge/rapier3d-compat@0.12.0,0.19.2",
-      "name": "@dimforge/rapier3d-compat",
-      "versions": ["0.12.0", "0.19.2"],
-      "creator": "See the retained copyright notices.",
-      "source": "https://rapier.rs",
-      "license": "Apache-2.0",
-      "licenseUrl": "https://spdx.org/licenses/Apache-2.0.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "0.12.0/LICENSE",
-          "text": "Apache License\n                           Version 2.0, January 2004\n                        http://www.apache.org/licenses/\n\n   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION\n\n   1. Definitions.\n\n      \"License\" shall mean the terms and conditions for use, reproduction,\n      and distribution as defined by Sections 1 through 9 of this document.\n\n      \"Licensor\" shall mean the copyright owner or entity authorized by\n      the copyright owner that is granting the License.\n\n      \"Legal Entity\" shall mean the union of the acting entity and all\n      other entities that control, are controlled by, or are under common\n      control with that entity. For the purposes of this definition,\n      \"control\" means (i) the power, direct or indirect, to cause the\n      direction or management of such entity, whether by contract or\n      otherwise, or (ii) ownership of fifty percent (50%) or more of the\n      outstanding shares, or (iii) beneficial ownership of such entity.\n\n      \"You\" (or \"Your\") shall mean an individual or Legal Entity\n      exercising permissions granted by this License.\n\n      \"Source\" form shall mean the preferred form for making modifications,\n      including but not limited to software source code, documentation\n      source, and configuration files.\n\n      \"Object\" form shall mean any form resulting from mechanical\n      transformation or translation of a Source form, including but\n      not limited to compiled object code, generated documentation,\n      and conversions to other media types.\n\n      \"Work\" shall mean the work of authorship, whether in Source or\n      Object form, made available under the License, as indicated by a\n      copyright notice that is included in or attached to the work\n      (an example is provided in the Appendix below).\n\n      \"Derivative Works\" shall mean any work, whether in Source or Object\n      form, that is based on (or derived from) the Work and for which the\n      editorial revisions, annotations, elaborations, or other modifications\n      represent, as a whole, an original work of authorship. For the purposes\n      of this License, Derivative Works shall not include works that remain\n      separable from, or merely link (or bind by name) to the interfaces of,\n      the Work and Derivative Works thereof.\n\n      \"Contribution\" shall mean any work of authorship, including\n      the original version of the Work and any modifications or additions\n      to that Work or Derivative Works thereof, that is intentionally\n      submitted to Licensor for inclusion in the Work by the copyright owner\n      or by an individual or Legal Entity authorized to submit on behalf of\n      the copyright owner. For the purposes of this definition, \"submitted\"\n      means any form of electronic, verbal, or written communication sent\n      to the Licensor or its representatives, including but not limited to\n      communication on electronic mailing lists, source code control systems,\n      and issue tracking systems that are managed by, or on behalf of, the\n      Licensor for the purpose of discussing and improving the Work, but\n      excluding communication that is conspicuously marked or otherwise\n      designated in writing by the copyright owner as \"Not a Contribution.\"\n\n      \"Contributor\" shall mean Licensor and any individual or Legal Entity\n      on behalf of whom a Contribution has been received by Licensor and\n      subsequently incorporated within the Work.\n\n   2. Grant of Copyright License. Subject to the terms and conditions of\n      this License, each Contributor hereby grants to You a perpetual,\n      worldwide, non-exclusive, no-charge, royalty-free, irrevocable\n      copyright license to reproduce, prepare Derivative Works of,\n      publicly display, publicly perform, sublicense, and distribute the\n      Work and such Derivative Works in Source or Object form.\n\n   3. Grant of Patent License. Subject to the terms and conditions of\n      this License, each Contributor hereby grants to You a perpetual,\n      worldwide, non-exclusive, no-charge, royalty-free, irrevocable\n      (except as stated in this section) patent license to make, have made,\n      use, offer to sell, sell, import, and otherwise transfer the Work,\n      where such license applies only to those patent claims licensable\n      by such Contributor that are necessarily infringed by their\n      Contribution(s) alone or by combination of their Contribution(s)\n      with the Work to which such Contribution(s) was submitted. If You\n      institute patent litigation against any entity (including a\n      cross-claim or counterclaim in a lawsuit) alleging that the Work\n      or a Contribution incorporated within the Work constitutes direct\n      or contributory patent infringement, then any patent licenses\n      granted to You under this License for that Work shall terminate\n      as of the date such litigation is filed.\n\n   4. Redistribution. You may reproduce and distribute copies of the\n      Work or Derivative Works thereof in any medium, with or without\n      modifications, and in Source or Object form, provided that You\n      meet the following conditions:\n\n      (a) You must give any other recipients of the Work or\n          Derivative Works a copy of this License; and\n\n      (b) You must cause any modified files to carry prominent notices\n          stating that You changed the files; and\n\n      (c) You must retain, in the Source form of any Derivative Works\n          that You distribute, all copyright, patent, trademark, and\n          attribution notices from the Source form of the Work,\n          excluding those notices that do not pertain to any part of\n          the Derivative Works; and\n\n      (d) If the Work includes a \"NOTICE\" text file as part of its\n          distribution, then any Derivative Works that You distribute must\n          include a readable copy of the attribution notices contained\n          within such NOTICE file, excluding those notices that do not\n          pertain to any part of the Derivative Works, in at least one\n          of the following places: within a NOTICE text file distributed\n          as part of the Derivative Works; within the Source form or\n          documentation, if provided along with the Derivative Works; or,\n          within a display generated by the Derivative Works, if and\n          wherever such third-party notices normally appear. The contents\n          of the NOTICE file are for informational purposes only and\n          do not modify the License. You may add Your own attribution\n          notices within Derivative Works that You distribute, alongside\n          or as an addendum to the NOTICE text from the Work, provided\n          that such additional attribution notices cannot be construed\n          as modifying the License.\n\n      You may add Your own copyright statement to Your modifications and\n      may provide additional or different license terms and conditions\n      for use, reproduction, or distribution of Your modifications, or\n      for any such Derivative Works as a whole, provided Your use,\n      reproduction, and distribution of the Work otherwise complies with\n      the conditions stated in this License.\n\n   5. Submission of Contributions. Unless You explicitly state otherwise,\n      any Contribution intentionally submitted for inclusion in the Work\n      by You to the Licensor shall be under the terms and conditions of\n      this License, without any additional terms or conditions.\n      Notwithstanding the above, nothing herein shall supersede or modify\n      the terms of any separate license agreement you may have executed\n      with Licensor regarding such Contributions.\n\n   6. Trademarks. This License does not grant permission to use the trade\n      names, trademarks, service marks, or product names of the Licensor,\n      except as required for reasonable and customary use in describing the\n      origin of the Work and reproducing the content of the NOTICE file.\n\n   7. Disclaimer of Warranty. Unless required by applicable law or\n      agreed to in writing, Licensor provides the Work (and each\n      Contributor provides its Contributions) on an \"AS IS\" BASIS,\n      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or\n      implied, including, without limitation, any warranties or conditions\n      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A\n      PARTICULAR PURPOSE. You are solely responsible for determining the\n      appropriateness of using or redistributing the Work and assume any\n      risks associated with Your exercise of permissions under this License.\n\n   8. Limitation of Liability. In no event and under no legal theory,\n      whether in tort (including negligence), contract, or otherwise,\n      unless required by applicable law (such as deliberate and grossly\n      negligent acts) or agreed to in writing, shall any Contributor be\n      liable to You for damages, including any direct, indirect, special,\n      incidental, or consequential damages of any character arising as a\n      result of this License or out of the use or inability to use the\n      Work (including but not limited to damages for loss of goodwill,\n      work stoppage, computer failure or malfunction, or any and all\n      other commercial damages or losses), even if such Contributor\n      has been advised of the possibility of such damages.\n\n   9. Accepting Warranty or Additional Liability. While redistributing\n      the Work or Derivative Works thereof, You may choose to offer,\n      and charge a fee for, acceptance of support, warranty, indemnity,\n      or other liability obligations and/or rights consistent with this\n      License. However, in accepting such obligations, You may act only\n      on Your own behalf and on Your sole responsibility, not on behalf\n      of any other Contributor, and only if You agree to indemnify,\n      defend, and hold each Contributor harmless for any liability\n      incurred by, or claims asserted against, such Contributor by reason\n      of your accepting any such warranty or additional liability.\n\n   END OF TERMS AND CONDITIONS\n\n   APPENDIX: How to apply the Apache License to your work.\n\n      To apply the Apache License to your work, attach the following\n      boilerplate notice, with the fields enclosed by brackets \"[]\"\n      replaced with your own identifying information. (Don't include\n      the brackets!)  The text should be enclosed in the appropriate\n      comment syntax for the file format. We also recommend that a\n      file or class name and description of purpose be included on the\n      same \"printed page\" as the copyright notice for easier\n      identification within third-party archives.\n\n   Copyright 2020 Dimforge EURL\n\n   Licensed under the Apache License, Version 2.0 (the \"License\");\n   you may not use this file except in compliance with the License.\n   You may obtain a copy of the License at\n\n       http://www.apache.org/licenses/LICENSE-2.0\n\n   Unless required by applicable law or agreed to in writing, software\n   distributed under the License is distributed on an \"AS IS\" BASIS,\n   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n   See the License for the specific language governing permissions and\n   limitations under the License."
-        }
-      ]
-    },
-    {
       "id": "@floating-ui/core@1.8.0",
       "name": "@floating-ui/core",
       "versions": ["1.8.0"],
+      "includedBy": ["production JavaScript chunks"],
       "creator": "atomiks",
       "source": "https://floating-ui.com",
       "license": "MIT",
@@ -91,6 +220,7 @@
       "id": "@floating-ui/dom@1.8.0",
       "name": "@floating-ui/dom",
       "versions": ["1.8.0"],
+      "includedBy": ["production JavaScript chunks"],
       "creator": "atomiks",
       "source": "https://floating-ui.com",
       "license": "MIT",
@@ -108,6 +238,7 @@
       "id": "@floating-ui/react-dom@2.1.9",
       "name": "@floating-ui/react-dom",
       "versions": ["2.1.9"],
+      "includedBy": ["production JavaScript chunks"],
       "creator": "atomiks",
       "source": "https://floating-ui.com/docs/react-dom",
       "license": "MIT",
@@ -125,6 +256,7 @@
       "id": "@floating-ui/utils@0.2.12",
       "name": "@floating-ui/utils",
       "versions": ["0.2.12"],
+      "includedBy": ["production JavaScript chunks"],
       "creator": "atomiks",
       "source": "https://floating-ui.com",
       "license": "MIT",
@@ -142,6 +274,7 @@
       "id": "@gsap/react@2.1.2",
       "name": "@gsap/react",
       "versions": ["2.1.2"],
+      "includedBy": ["production JavaScript chunks"],
       "creator": "Jack Doyle",
       "source": "https://github.com/greensock/react#readme",
       "license": "SEE LICENSE AT https://gsap.com/standard-license",
@@ -151,38 +284,10 @@
       "notices": []
     },
     {
-      "id": "@mediapipe/tasks-vision@0.10.17",
-      "name": "@mediapipe/tasks-vision",
-      "versions": ["0.10.17"],
-      "creator": "mediapipe@google.com",
-      "source": "http://mediapipe.dev",
-      "license": "Apache-2.0",
-      "licenseUrl": "https://spdx.org/licenses/Apache-2.0.html",
-      "noticeStatus": "upstream-review-pending",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": []
-    },
-    {
-      "id": "@monogrid/gainmap-js@3.7.3",
-      "name": "@monogrid/gainmap-js",
-      "versions": ["3.7.3"],
-      "creator": "MONOGRID",
-      "source": "https://github.com/MONOGRID/gainmap-js#readme",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "3.7.3/LICENSE",
-          "text": "MIT License\n\nCopyright (c) 2023 MONOGRID\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE."
-        }
-      ]
-    },
-    {
       "id": "@react-three/drei@10.7.9",
       "name": "@react-three/drei",
       "versions": ["10.7.9"],
+      "includedBy": ["production JavaScript chunks"],
       "creator": "See the retained copyright notices.",
       "source": "https://github.com/pmndrs/drei",
       "license": "MIT",
@@ -200,6 +305,7 @@
       "id": "@react-three/fiber@9.8.2",
       "name": "@react-three/fiber",
       "versions": ["9.8.2"],
+      "includedBy": ["production JavaScript chunks"],
       "creator": "Paul Henschel",
       "source": "https://github.com/pmndrs/react-three-fiber#readme",
       "license": "MIT",
@@ -209,276 +315,10 @@
       "notices": []
     },
     {
-      "id": "@react-three/rapier@2.2.0",
-      "name": "@react-three/rapier",
-      "versions": ["2.2.0"],
-      "creator": "See the retained copyright notices.",
-      "source": "https://github.com/pmndrs/react-three-rapier/tree/master#readme",
-      "license": "Unknown",
-      "licenseUrl": "",
-      "noticeStatus": "upstream-review-pending",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": []
-    },
-    {
-      "id": "@remix-run/route-pattern@0.22.1",
-      "name": "@remix-run/route-pattern",
-      "versions": ["0.22.1"],
-      "creator": "See the retained copyright notices.",
-      "source": "https://github.com/remix-run/remix/tree/main/packages/route-pattern#readme",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "0.22.1/LICENSE",
-          "text": "MIT License\n\nCopyright (c) 2025 Shopify Inc.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE."
-        }
-      ]
-    },
-    {
-      "id": "@tweenjs/tween.js@23.1.3",
-      "name": "@tweenjs/tween.js",
-      "versions": ["23.1.3"],
-      "creator": "tween.js contributors",
-      "source": "https://github.com/tweenjs/tween.js",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "23.1.3/LICENSE",
-          "text": "The MIT License\n\nCopyright (c) 2010-2012 Tween.js authors.\n\nEasing equations Copyright (c) 2001 Robert Penner http://robertpenner.com/easing/\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in\nall copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\nTHE SOFTWARE."
-        }
-      ]
-    },
-    {
-      "id": "@types/draco3d@1.4.10",
-      "name": "@types/draco3d",
-      "versions": ["1.4.10"],
-      "creator": "See the retained copyright notices.",
-      "source": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/draco3d",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "1.4.10/LICENSE",
-          "text": "MIT License\n\n    Copyright (c) Microsoft Corporation.\n\n    Permission is hereby granted, free of charge, to any person obtaining a copy\n    of this software and associated documentation files (the \"Software\"), to deal\n    in the Software without restriction, including without limitation the rights\n    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n    copies of the Software, and to permit persons to whom the Software is\n    furnished to do so, subject to the following conditions:\n\n    The above copyright notice and this permission notice shall be included in all\n    copies or substantial portions of the Software.\n\n    THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n    SOFTWARE"
-        }
-      ]
-    },
-    {
-      "id": "@types/offscreencanvas@2019.7.3",
-      "name": "@types/offscreencanvas",
-      "versions": ["2019.7.3"],
-      "creator": "See the retained copyright notices.",
-      "source": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/offscreencanvas",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "2019.7.3/LICENSE",
-          "text": "MIT License\n\n    Copyright (c) Microsoft Corporation.\n\n    Permission is hereby granted, free of charge, to any person obtaining a copy\n    of this software and associated documentation files (the \"Software\"), to deal\n    in the Software without restriction, including without limitation the rights\n    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n    copies of the Software, and to permit persons to whom the Software is\n    furnished to do so, subject to the following conditions:\n\n    The above copyright notice and this permission notice shall be included in all\n    copies or substantial portions of the Software.\n\n    THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n    SOFTWARE"
-        }
-      ]
-    },
-    {
-      "id": "@types/react@19.3.0",
-      "name": "@types/react",
-      "versions": ["19.3.0"],
-      "creator": "See the retained copyright notices.",
-      "source": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/react",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "19.3.0/LICENSE",
-          "text": "MIT License\n\n    Copyright (c) Microsoft Corporation.\n\n    Permission is hereby granted, free of charge, to any person obtaining a copy\n    of this software and associated documentation files (the \"Software\"), to deal\n    in the Software without restriction, including without limitation the rights\n    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n    copies of the Software, and to permit persons to whom the Software is\n    furnished to do so, subject to the following conditions:\n\n    The above copyright notice and this permission notice shall be included in all\n    copies or substantial portions of the Software.\n\n    THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n    SOFTWARE"
-        }
-      ]
-    },
-    {
-      "id": "@types/react-reconciler@0.28.9",
-      "name": "@types/react-reconciler",
-      "versions": ["0.28.9"],
-      "creator": "See the retained copyright notices.",
-      "source": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/react-reconciler",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "0.28.9/LICENSE",
-          "text": "MIT License\n\n    Copyright (c) Microsoft Corporation.\n\n    Permission is hereby granted, free of charge, to any person obtaining a copy\n    of this software and associated documentation files (the \"Software\"), to deal\n    in the Software without restriction, including without limitation the rights\n    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n    copies of the Software, and to permit persons to whom the Software is\n    furnished to do so, subject to the following conditions:\n\n    The above copyright notice and this permission notice shall be included in all\n    copies or substantial portions of the Software.\n\n    THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n    SOFTWARE"
-        }
-      ]
-    },
-    {
-      "id": "@types/stats.js@0.17.4",
-      "name": "@types/stats.js",
-      "versions": ["0.17.4"],
-      "creator": "See the retained copyright notices.",
-      "source": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/stats.js",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "0.17.4/LICENSE",
-          "text": "MIT License\n\n    Copyright (c) Microsoft Corporation.\n\n    Permission is hereby granted, free of charge, to any person obtaining a copy\n    of this software and associated documentation files (the \"Software\"), to deal\n    in the Software without restriction, including without limitation the rights\n    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n    copies of the Software, and to permit persons to whom the Software is\n    furnished to do so, subject to the following conditions:\n\n    The above copyright notice and this permission notice shall be included in all\n    copies or substantial portions of the Software.\n\n    THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n    SOFTWARE"
-        }
-      ]
-    },
-    {
-      "id": "@types/three@0.187.0",
-      "name": "@types/three",
-      "versions": ["0.187.0"],
-      "creator": "See the retained copyright notices.",
-      "source": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/three",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "0.187.0/LICENSE",
-          "text": "MIT License\n\n    Copyright (c) Microsoft Corporation.\n\n    Permission is hereby granted, free of charge, to any person obtaining a copy\n    of this software and associated documentation files (the \"Software\"), to deal\n    in the Software without restriction, including without limitation the rights\n    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n    copies of the Software, and to permit persons to whom the Software is\n    furnished to do so, subject to the following conditions:\n\n    The above copyright notice and this permission notice shall be included in all\n    copies or substantial portions of the Software.\n\n    THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n    SOFTWARE"
-        }
-      ]
-    },
-    {
-      "id": "@types/webxr@0.5.24",
-      "name": "@types/webxr",
-      "versions": ["0.5.24"],
-      "creator": "See the retained copyright notices.",
-      "source": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/webxr",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "0.5.24/LICENSE",
-          "text": "MIT License\n\n    Copyright (c) Microsoft Corporation.\n\n    Permission is hereby granted, free of charge, to any person obtaining a copy\n    of this software and associated documentation files (the \"Software\"), to deal\n    in the Software without restriction, including without limitation the rights\n    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n    copies of the Software, and to permit persons to whom the Software is\n    furnished to do so, subject to the following conditions:\n\n    The above copyright notice and this permission notice shall be included in all\n    copies or substantial portions of the Software.\n\n    THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n    SOFTWARE"
-        }
-      ]
-    },
-    {
-      "id": "@use-gesture/core@10.3.1",
-      "name": "@use-gesture/core",
-      "versions": ["10.3.1"],
-      "creator": "Paul Henschel",
-      "source": "https://use-gesture.netlify.app",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "10.3.1/LICENSE",
-          "text": "Copyright (c) 2018-present Paul Henschel <drcmda@gmail.com>\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE."
-        }
-      ]
-    },
-    {
-      "id": "@use-gesture/react@10.3.1",
-      "name": "@use-gesture/react",
-      "versions": ["10.3.1"],
-      "creator": "Paul Henschel",
-      "source": "https://use-gesture.netlify.app",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "10.3.1/LICENSE",
-          "text": "Copyright (c) 2018-present Paul Henschel <drcmda@gmail.com>\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE."
-        }
-      ]
-    },
-    {
-      "id": "base64-js@1.5.1",
-      "name": "base64-js",
-      "versions": ["1.5.1"],
-      "creator": "T. Jameson Little",
-      "source": "https://github.com/beatgammit/base64-js",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "1.5.1/LICENSE",
-          "text": "The MIT License (MIT)\n\nCopyright (c) 2014 Jameson Little\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in\nall copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\nTHE SOFTWARE."
-        }
-      ]
-    },
-    {
-      "id": "bidi-js@1.1.0",
-      "name": "bidi-js",
-      "versions": ["1.1.0"],
-      "creator": "Jason Johnston",
-      "source": "https://github.com/lojjic/bidi-js#readme",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "1.1.0/LICENSE.txt",
-          "text": "Copyright (c) 2021 Jason Johnston\n\nMIT License\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
-        }
-      ]
-    },
-    {
-      "id": "buffer@6.0.3",
-      "name": "buffer",
-      "versions": ["6.0.3"],
-      "creator": "Feross Aboukhadijeh",
-      "source": "https://github.com/feross/buffer",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "6.0.3/LICENSE",
-          "text": "The MIT License (MIT)\n\nCopyright (c) Feross Aboukhadijeh, and other contributors.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in\nall copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\nTHE SOFTWARE."
-        }
-      ]
-    },
-    {
-      "id": "camera-controls@3.1.2",
-      "name": "camera-controls",
-      "versions": ["3.1.2"],
-      "creator": "Yomotsu",
-      "source": "https://github.com/yomotsu/camera-controls#readme",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "3.1.2/LICENSE",
-          "text": "MIT License\n\nCopyright (c) 2017 @yomotsu\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE."
-        }
-      ]
-    },
-    {
       "id": "class-variance-authority@0.7.1",
       "name": "class-variance-authority",
       "versions": ["0.7.1"],
+      "includedBy": ["production JavaScript chunks"],
       "creator": "Joe Bell",
       "source": "https://github.com/joe-bell/cva#readme",
       "license": "Apache-2.0",
@@ -496,6 +336,7 @@
       "id": "clsx@2.1.1",
       "name": "clsx",
       "versions": ["2.1.1"],
+      "includedBy": ["production JavaScript chunks"],
       "creator": "Luke Edwards",
       "source": "https://github.com/lukeed/clsx#readme",
       "license": "MIT",
@@ -513,6 +354,7 @@
       "id": "cn@0.5.2",
       "name": "cn",
       "versions": ["0.5.2"],
+      "includedBy": ["production JavaScript chunks"],
       "creator": "See the retained copyright notices.",
       "source": "https://github.com/shadcn-ui/cn#readme",
       "license": "MIT",
@@ -527,144 +369,10 @@
       ]
     },
     {
-      "id": "cookie-es@3.1.1",
-      "name": "cookie-es",
-      "versions": ["3.1.1"],
-      "creator": "See the retained copyright notices.",
-      "source": "https://github.com/unjs/cookie-es#readme",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "3.1.1/LICENSE",
-          "text": "MIT License\n\nCookie-es copyright (c) Pooya Parsa <pooya@pi0.io>\n\nCookie parsing based on https://github.com/jshttp/cookie\nCopyright (c) 2012-2014 Roman Shtylman <shtylman@gmail.com>\nCopyright (c) 2015 Douglas Christopher Wilson <doug@somethingdoug.com>\n\nSet-Cookie parsing based on https://github.com/nfriedly/set-cookie-parser\nCopyright (c) 2015 Nathan Friedly <nathan@nfriedly.com> (http://nfriedly.com/)\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE."
-        }
-      ]
-    },
-    {
-      "id": "cross-env@7.0.3",
-      "name": "cross-env",
-      "versions": ["7.0.3"],
-      "creator": "Kent C. Dodds",
-      "source": "https://github.com/kentcdodds/cross-env#readme",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "7.0.3/LICENSE",
-          "text": "The MIT License (MIT)\nCopyright (c) 2017 Kent C. Dodds\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE."
-        }
-      ]
-    },
-    {
-      "id": "cross-spawn@7.0.6",
-      "name": "cross-spawn",
-      "versions": ["7.0.6"],
-      "creator": "André Cruz",
-      "source": "https://github.com/moxystudio/node-cross-spawn",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "7.0.6/LICENSE",
-          "text": "The MIT License (MIT)\n\nCopyright (c) 2018 Made With MOXY Lda <hello@moxy.studio>\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in\nall copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\nTHE SOFTWARE."
-        }
-      ]
-    },
-    {
-      "id": "csstype@3.2.3",
-      "name": "csstype",
-      "versions": ["3.2.3"],
-      "creator": "Fredrik Nicol",
-      "source": "https://github.com/frenic/csstype#readme",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "3.2.3/LICENSE",
-          "text": "Copyright (c) 2017-2018 Fredrik Nicol\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE."
-        }
-      ]
-    },
-    {
-      "id": "detect-gpu@5.0.70",
-      "name": "detect-gpu",
-      "versions": ["5.0.70"],
-      "creator": "Tim van Scherpenzeel",
-      "source": "https://github.com/pmndrs/detect-gpu#readme",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "5.0.70/LICENSE",
-          "text": "MIT License\n\nCopyright (c) 2020 Tim van Scherpenzeel\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE."
-        }
-      ]
-    },
-    {
-      "id": "draco3d@1.5.9",
-      "name": "draco3d",
-      "versions": ["1.5.9"],
-      "creator": "Google Draco Team",
-      "source": "https://github.com/google/draco#readme",
-      "license": "Apache-2.0",
-      "licenseUrl": "https://spdx.org/licenses/Apache-2.0.html",
-      "noticeStatus": "upstream-review-pending",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": []
-    },
-    {
-      "id": "fflate@0.6.11,0.8.3",
-      "name": "fflate",
-      "versions": ["0.6.11", "0.8.3"],
-      "creator": "Arjun Barrett",
-      "source": "https://101arrowz.github.io/fflate",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "0.6.11/LICENSE",
-          "text": "MIT License\n\nCopyright (c) 2020 Arjun Barrett\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE."
-        },
-        {
-          "file": "0.8.3/LICENSE",
-          "text": "MIT License\n\nCopyright (c) 2026 Arjun Barrett\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE."
-        }
-      ]
-    },
-    {
-      "id": "glsl-noise@0.0.0",
-      "name": "glsl-noise",
-      "versions": ["0.0.0"],
-      "creator": "Ian McEwan, Ashima Arts, Stefan Gustavson",
-      "source": "https://github.com/hughsk/glsl-noise#readme",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "0.0.0/LICENSE",
-          "text": "Copyright (C) 2011 by Ashima Arts (Simplex noise)\nCopyright (C) 2011 by Stefan Gustavson (Classic noise)\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in\nall copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\nTHE SOFTWARE."
-        }
-      ]
-    },
-    {
       "id": "gsap@3.15.1",
       "name": "gsap",
       "versions": ["3.15.1"],
+      "includedBy": ["production JavaScript chunks"],
       "creator": "See the retained copyright notices.",
       "source": "https://gsap.com",
       "license": "Standard 'no charge' license: https://gsap.com/standard-license.",
@@ -674,26 +382,10 @@
       "notices": []
     },
     {
-      "id": "hls.js@1.7.4",
-      "name": "hls.js",
-      "versions": ["1.7.4"],
-      "creator": "See the retained copyright notices.",
-      "source": "https://github.com/video-dev/hls.js",
-      "license": "Apache-2.0",
-      "licenseUrl": "https://spdx.org/licenses/Apache-2.0.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "1.7.4/LICENSE",
-          "text": "Copyright (c) 2017 Dailymotion (http://www.dailymotion.com)\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n\nsrc/remux/mp4-generator.js and src/demux/exp-golomb.ts implementation in this project\nare derived from the HLS library for video.js (https://github.com/videojs/videojs-contrib-hls)\n\nThat work is also covered by the Apache 2 License, following copyright:\nCopyright (c) 2013-2015 Brightcove\n\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\nTHE SOFTWARE."
-        }
-      ]
-    },
-    {
       "id": "howler@2.2.4",
       "name": "howler",
       "versions": ["2.2.4"],
+      "includedBy": ["production JavaScript chunks"],
       "creator": "James Simpson",
       "source": "https://howlerjs.com",
       "license": "MIT",
@@ -708,77 +400,10 @@
       ]
     },
     {
-      "id": "ieee754@1.2.1",
-      "name": "ieee754",
-      "versions": ["1.2.1"],
-      "creator": "Feross Aboukhadijeh",
-      "source": "https://github.com/feross/ieee754#readme",
-      "license": "BSD-3-Clause",
-      "licenseUrl": "https://spdx.org/licenses/BSD-3-Clause.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "1.2.1/LICENSE",
-          "text": "Copyright 2008 Fair Oaks Labs, Inc.\n\nRedistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:\n\n1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.\n\n2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.\n\n3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.\n\nTHIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
-        }
-      ]
-    },
-    {
-      "id": "immediate@3.0.6",
-      "name": "immediate",
-      "versions": ["3.0.6"],
-      "creator": "See the retained copyright notices.",
-      "source": "https://github.com/calvinmetcalf/immediate#readme",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "3.0.6/LICENSE.txt",
-          "text": "Copyright (c) 2012 Barnesandnoble.com, llc, Donavon West, Domenic Denicola, Brian Cavalier\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
-        }
-      ]
-    },
-    {
-      "id": "is-promise@2.2.2",
-      "name": "is-promise",
-      "versions": ["2.2.2"],
-      "creator": "ForbesLindesay",
-      "source": "https://github.com/then/is-promise#readme",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "2.2.2/LICENSE",
-          "text": "Copyright (c) 2014 Forbes Lindesay\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in\nall copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\nTHE SOFTWARE."
-        }
-      ]
-    },
-    {
-      "id": "isexe@2.0.0",
-      "name": "isexe",
-      "versions": ["2.0.0"],
-      "creator": "Isaac Z. Schlueter",
-      "source": "https://github.com/isaacs/isexe#readme",
-      "license": "ISC",
-      "licenseUrl": "https://spdx.org/licenses/ISC.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "2.0.0/LICENSE",
-          "text": "The ISC License\n\nCopyright (c) Isaac Z. Schlueter and Contributors\n\nPermission to use, copy, modify, and/or distribute this software for any\npurpose with or without fee is hereby granted, provided that the above\ncopyright notice and this permission notice appear in all copies.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\" AND THE AUTHOR DISCLAIMS ALL WARRANTIES\nWITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF\nMERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR\nANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES\nWHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN\nACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR\nIN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE."
-        }
-      ]
-    },
-    {
       "id": "its-fine@2.1.1",
       "name": "its-fine",
       "versions": ["2.1.1"],
+      "includedBy": ["production JavaScript chunks"],
       "creator": "Cody Bennett",
       "source": "https://github.com/pmndrs/its-fine",
       "license": "MIT",
@@ -793,26 +418,10 @@
       ]
     },
     {
-      "id": "lie@3.3.0",
-      "name": "lie",
-      "versions": ["3.3.0"],
-      "creator": "See the retained copyright notices.",
-      "source": "https://github.com/calvinmetcalf/lie#readme",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "3.3.0/license.md",
-          "text": "#Copyright (c) 2014-2018 Calvin Metcalf, Jordan Harband\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\n**THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.**"
-        }
-      ]
-    },
-    {
       "id": "lucide-react@1.69.0",
       "name": "lucide-react",
       "versions": ["1.69.0"],
+      "includedBy": ["production JavaScript chunks"],
       "creator": "Eric Fennis",
       "source": "https://lucide.dev",
       "license": "ISC",
@@ -827,55 +436,10 @@
       ]
     },
     {
-      "id": "maath@0.10.8",
-      "name": "maath",
-      "versions": ["0.10.8"],
-      "creator": "See the retained copyright notices.",
-      "source": "https://www.npmjs.com/package/maath",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "upstream-review-pending",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": []
-    },
-    {
-      "id": "meshline@3.3.1",
-      "name": "meshline",
-      "versions": ["3.3.1"],
-      "creator": "Jaume Sanchez",
-      "source": "https://github.com/pmndrs/meshline#readme",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "3.3.1/LICENSE",
-          "text": "MIT License\r\n\r\nCopyright (c) 2016 Jaume Sanchez\r\n\r\nPermission is hereby granted, free of charge, to any person obtaining a copy\r\nof this software and associated documentation files (the \"Software\"), to deal\r\nin the Software without restriction, including without limitation the rights\r\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\r\ncopies of the Software, and to permit persons to whom the Software is\r\nfurnished to do so, subject to the following conditions:\r\n\r\nThe above copyright notice and this permission notice shall be included in all\r\ncopies or substantial portions of the Software.\r\n\r\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\r\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\r\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\r\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\r\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\r\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\r\nSOFTWARE."
-        }
-      ]
-    },
-    {
-      "id": "meshoptimizer@1.1.1",
-      "name": "meshoptimizer",
-      "versions": ["1.1.1"],
-      "creator": "Arseny Kapoulkine",
-      "source": "https://github.com/zeux/meshoptimizer",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "1.1.1/LICENSE.md",
-          "text": "MIT License\n\nCopyright (c) 2016-2026 Arseny Kapoulkine\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE."
-        }
-      ]
-    },
-    {
       "id": "next-themes@0.4.6",
       "name": "next-themes",
       "versions": ["0.4.6"],
+      "includedBy": ["production JavaScript chunks"],
       "creator": "See the retained copyright notices.",
       "source": "https://github.com/pacocoursey/next-themes#readme",
       "license": "MIT",
@@ -890,60 +454,10 @@
       ]
     },
     {
-      "id": "path-key@3.1.1",
-      "name": "path-key",
-      "versions": ["3.1.1"],
-      "creator": "Sindre Sorhus",
-      "source": "https://github.com/sindresorhus/path-key#readme",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "3.1.1/license",
-          "text": "MIT License\n\nCopyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
-        }
-      ]
-    },
-    {
-      "id": "potpack@1.0.2",
-      "name": "potpack",
-      "versions": ["1.0.2"],
-      "creator": "Vladimir Agafonkin",
-      "source": "https://mapbox.github.io/potpack/",
-      "license": "ISC",
-      "licenseUrl": "https://spdx.org/licenses/ISC.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "1.0.2/LICENSE",
-          "text": "ISC License\n\nCopyright (c) 2018, Mapbox\n\nPermission to use, copy, modify, and/or distribute this software for any purpose\nwith or without fee is hereby granted, provided that the above copyright notice\nand this permission notice appear in all copies.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH\nREGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND\nFITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,\nINDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS\nOF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER\nTORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF\nTHIS SOFTWARE."
-        }
-      ]
-    },
-    {
-      "id": "promise-worker-transferable@1.0.4",
-      "name": "promise-worker-transferable",
-      "versions": ["1.0.4"],
-      "creator": "Roman Viskin",
-      "source": "https://github.com/terikon/promise-worker-transferable#readme",
-      "license": "Apache-2.0",
-      "licenseUrl": "https://spdx.org/licenses/Apache-2.0.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "1.0.4/LICENSE",
-          "text": "Apache License\r\n                          Version 2.0, January 2004\r\n                       http://www.apache.org/licenses/\r\n\r\n  TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION\r\n\r\n  1. Definitions.\r\n\r\n     \"License\" shall mean the terms and conditions for use, reproduction,\r\n     and distribution as defined by Sections 1 through 9 of this document.\r\n\r\n     \"Licensor\" shall mean the copyright owner or entity authorized by\r\n     the copyright owner that is granting the License.\r\n\r\n     \"Legal Entity\" shall mean the union of the acting entity and all\r\n     other entities that control, are controlled by, or are under common\r\n     control with that entity. For the purposes of this definition,\r\n     \"control\" means (i) the power, direct or indirect, to cause the\r\n     direction or management of such entity, whether by contract or\r\n     otherwise, or (ii) ownership of fifty percent (50%) or more of the\r\n     outstanding shares, or (iii) beneficial ownership of such entity.\r\n\r\n     \"You\" (or \"Your\") shall mean an individual or Legal Entity\r\n     exercising permissions granted by this License.\r\n\r\n     \"Source\" form shall mean the preferred form for making modifications,\r\n     including but not limited to software source code, documentation\r\n     source, and configuration files.\r\n\r\n     \"Object\" form shall mean any form resulting from mechanical\r\n     transformation or translation of a Source form, including but\r\n     not limited to compiled object code, generated documentation,\r\n     and conversions to other media types.\r\n\r\n     \"Work\" shall mean the work of authorship, whether in Source or\r\n     Object form, made available under the License, as indicated by a\r\n     copyright notice that is included in or attached to the work\r\n     (an example is provided in the Appendix below).\r\n\r\n     \"Derivative Works\" shall mean any work, whether in Source or Object\r\n     form, that is based on (or derived from) the Work and for which the\r\n     editorial revisions, annotations, elaborations, or other modifications\r\n     represent, as a whole, an original work of authorship. For the purposes\r\n     of this License, Derivative Works shall not include works that remain\r\n     separable from, or merely link (or bind by name) to the interfaces of,\r\n     the Work and Derivative Works thereof.\r\n\r\n     \"Contribution\" shall mean any work of authorship, including\r\n     the original version of the Work and any modifications or additions\r\n     to that Work or Derivative Works thereof, that is intentionally\r\n     submitted to Licensor for inclusion in the Work by the copyright owner\r\n     or by an individual or Legal Entity authorized to submit on behalf of\r\n     the copyright owner. For the purposes of this definition, \"submitted\"\r\n     means any form of electronic, verbal, or written communication sent\r\n     to the Licensor or its representatives, including but not limited to\r\n     communication on electronic mailing lists, source code control systems,\r\n     and issue tracking systems that are managed by, or on behalf of, the\r\n     Licensor for the purpose of discussing and improving the Work, but\r\n     excluding communication that is conspicuously marked or otherwise\r\n     designated in writing by the copyright owner as \"Not a Contribution.\"\r\n\r\n     \"Contributor\" shall mean Licensor and any individual or Legal Entity\r\n     on behalf of whom a Contribution has been received by Licensor and\r\n     subsequently incorporated within the Work.\r\n\r\n  2. Grant of Copyright License. Subject to the terms and conditions of\r\n     this License, each Contributor hereby grants to You a perpetual,\r\n     worldwide, non-exclusive, no-charge, royalty-free, irrevocable\r\n     copyright license to reproduce, prepare Derivative Works of,\r\n     publicly display, publicly perform, sublicense, and distribute the\r\n     Work and such Derivative Works in Source or Object form.\r\n\r\n  3. Grant of Patent License. Subject to the terms and conditions of\r\n     this License, each Contributor hereby grants to You a perpetual,\r\n     worldwide, non-exclusive, no-charge, royalty-free, irrevocable\r\n     (except as stated in this section) patent license to make, have made,\r\n     use, offer to sell, sell, import, and otherwise transfer the Work,\r\n     where such license applies only to those patent claims licensable\r\n     by such Contributor that are necessarily infringed by their\r\n     Contribution(s) alone or by combination of their Contribution(s)\r\n     with the Work to which such Contribution(s) was submitted. If You\r\n     institute patent litigation against any entity (including a\r\n     cross-claim or counterclaim in a lawsuit) alleging that the Work\r\n     or a Contribution incorporated within the Work constitutes direct\r\n     or contributory patent infringement, then any patent licenses\r\n     granted to You under this License for that Work shall terminate\r\n     as of the date such litigation is filed.\r\n\r\n  4. Redistribution. You may reproduce and distribute copies of the\r\n     Work or Derivative Works thereof in any medium, with or without\r\n     modifications, and in Source or Object form, provided that You\r\n     meet the following conditions:\r\n\r\n     (a) You must give any other recipients of the Work or\r\n         Derivative Works a copy of this License; and\r\n\r\n     (b) You must cause any modified files to carry prominent notices\r\n         stating that You changed the files; and\r\n\r\n     (c) You must retain, in the Source form of any Derivative Works\r\n         that You distribute, all copyright, patent, trademark, and\r\n         attribution notices from the Source form of the Work,\r\n         excluding those notices that do not pertain to any part of\r\n         the Derivative Works; and\r\n\r\n     (d) If the Work includes a \"NOTICE\" text file as part of its\r\n         distribution, then any Derivative Works that You distribute must\r\n         include a readable copy of the attribution notices contained\r\n         within such NOTICE file, excluding those notices that do not\r\n         pertain to any part of the Derivative Works, in at least one\r\n         of the following places: within a NOTICE text file distributed\r\n         as part of the Derivative Works; within the Source form or\r\n         documentation, if provided along with the Derivative Works; or,\r\n         within a display generated by the Derivative Works, if and\r\n         wherever such third-party notices normally appear. The contents\r\n         of the NOTICE file are for informational purposes only and\r\n         do not modify the License. You may add Your own attribution\r\n         notices within Derivative Works that You distribute, alongside\r\n         or as an addendum to the NOTICE text from the Work, provided\r\n         that such additional attribution notices cannot be construed\r\n         as modifying the License.\r\n\r\n     You may add Your own copyright statement to Your modifications and\r\n     may provide additional or different license terms and conditions\r\n     for use, reproduction, or distribution of Your modifications, or\r\n     for any such Derivative Works as a whole, provided Your use,\r\n     reproduction, and distribution of the Work otherwise complies with\r\n     the conditions stated in this License.\r\n\r\n  5. Submission of Contributions. Unless You explicitly state otherwise,\r\n     any Contribution intentionally submitted for inclusion in the Work\r\n     by You to the Licensor shall be under the terms and conditions of\r\n     this License, without any additional terms or conditions.\r\n     Notwithstanding the above, nothing herein shall supersede or modify\r\n     the terms of any separate license agreement you may have executed\r\n     with Licensor regarding such Contributions.\r\n\r\n  6. Trademarks. This License does not grant permission to use the trade\r\n     names, trademarks, service marks, or product names of the Licensor,\r\n     except as required for reasonable and customary use in describing the\r\n     origin of the Work and reproducing the content of the NOTICE file.\r\n\r\n  7. Disclaimer of Warranty. Unless required by applicable law or\r\n     agreed to in writing, Licensor provides the Work (and each\r\n     Contributor provides its Contributions) on an \"AS IS\" BASIS,\r\n     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or\r\n     implied, including, without limitation, any warranties or conditions\r\n     of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A\r\n     PARTICULAR PURPOSE. You are solely responsible for determining the\r\n     appropriateness of using or redistributing the Work and assume any\r\n     risks associated with Your exercise of permissions under this License.\r\n\r\n  8. Limitation of Liability. In no event and under no legal theory,\r\n     whether in tort (including negligence), contract, or otherwise,\r\n     unless required by applicable law (such as deliberate and grossly\r\n     negligent acts) or agreed to in writing, shall any Contributor be\r\n     liable to You for damages, including any direct, indirect, special,\r\n     incidental, or consequential damages of any character arising as a\r\n     result of this License or out of the use or inability to use the\r\n     Work (including but not limited to damages for loss of goodwill,\r\n     work stoppage, computer failure or malfunction, or any and all\r\n     other commercial damages or losses), even if such Contributor\r\n     has been advised of the possibility of such damages.\r\n\r\n  9. Accepting Warranty or Additional Liability. While redistributing\r\n     the Work or Derivative Works thereof, You may choose to offer,\r\n     and charge a fee for, acceptance of support, warranty, indemnity,\r\n     or other liability obligations and/or rights consistent with this\r\n     License. However, in accepting such obligations, You may act only\r\n     on Your own behalf and on Your sole responsibility, not on behalf\r\n     of any other Contributor, and only if You agree to indemnify,\r\n     defend, and hold each Contributor harmless for any liability\r\n     incurred by, or claims asserted against, such Contributor by reason\r\n     of your accepting any such warranty or additional liability.\r\n\r\n  END OF TERMS AND CONDITIONS\r\n\r\n  APPENDIX: How to apply the Apache License to your work.\r\n\r\n     To apply the Apache License to your work, attach the following\r\n     boilerplate notice, with the fields enclosed by brackets \"[]\"\r\n     replaced with your own identifying information. (Don't include\r\n     the brackets!)  The text should be enclosed in the appropriate\r\n     comment syntax for the file format. We also recommend that a\r\n     file or class name and description of purpose be included on the\r\n     same \"printed page\" as the copyright notice for easier\r\n     identification within third-party archives.\r\n\r\n  Copyright [yyyy] [name of copyright owner]\r\n\r\n  Licensed under the Apache License, Version 2.0 (the \"License\");\r\n  you may not use this file except in compliance with the License.\r\n  You may obtain a copy of the License at\r\n\r\n      http://www.apache.org/licenses/LICENSE-2.0\r\n\r\n  Unless required by applicable law or agreed to in writing, software\r\n  distributed under the License is distributed on an \"AS IS\" BASIS,\r\n  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\r\n  See the License for the specific language governing permissions and\r\n  limitations under the License."
-        }
-      ]
-    },
-    {
       "id": "quarks.core@0.17.1",
       "name": "quarks.core",
       "versions": ["0.17.1"],
+      "includedBy": ["production JavaScript chunks"],
       "creator": "Alchemist0823",
       "source": "https://quarks.art",
       "license": "MIT",
@@ -961,6 +475,7 @@
       "id": "react@19.3.1",
       "name": "react",
       "versions": ["19.3.1"],
+      "includedBy": ["production JavaScript chunks"],
       "creator": "See the retained copyright notices.",
       "source": "https://react.dev/",
       "license": "MIT",
@@ -978,6 +493,7 @@
       "id": "react-dom@19.3.1",
       "name": "react-dom",
       "versions": ["19.3.1"],
+      "includedBy": ["production JavaScript chunks"],
       "creator": "See the retained copyright notices.",
       "source": "https://react.dev/",
       "license": "MIT",
@@ -995,6 +511,7 @@
       "id": "react-router@8.5.1",
       "name": "react-router",
       "versions": ["8.5.1"],
+      "includedBy": ["production JavaScript chunks"],
       "creator": "Remix Software",
       "source": "https://github.com/remix-run/react-router#readme",
       "license": "MIT",
@@ -1012,6 +529,7 @@
       "id": "react-use-measure@2.1.7",
       "name": "react-use-measure",
       "versions": ["2.1.7"],
+      "includedBy": ["production JavaScript chunks"],
       "creator": "Paul Henschel",
       "source": "https://github.com/pmndrs/react-use-measure",
       "license": "MIT",
@@ -1026,43 +544,10 @@
       ]
     },
     {
-      "id": "require-from-string@2.0.2",
-      "name": "require-from-string",
-      "versions": ["2.0.2"],
-      "creator": "Vsevolod Strukchinsky",
-      "source": "https://github.com/floatdrop/require-from-string#readme",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "2.0.2/license",
-          "text": "The MIT License (MIT)\n\nCopyright (c) Vsevolod Strukchinsky <floatdrop@gmail.com> (github.com/floatdrop)\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in\nall copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\nTHE SOFTWARE."
-        }
-      ]
-    },
-    {
-      "id": "reselect@5.3.0",
-      "name": "reselect",
-      "versions": ["5.3.0"],
-      "creator": "See the retained copyright notices.",
-      "source": "https://github.com/reduxjs/reselect#readme",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "5.3.0/LICENSE",
-          "text": "The MIT License (MIT)\n\nCopyright (c) 2015-2018 Reselect Contributors\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE."
-        }
-      ]
-    },
-    {
       "id": "scheduler@0.28.0",
       "name": "scheduler",
       "versions": ["0.28.0"],
+      "includedBy": ["production JavaScript chunks"],
       "creator": "See the retained copyright notices.",
       "source": "https://react.dev/",
       "license": "MIT",
@@ -1080,6 +565,7 @@
       "id": "shadcn@4.23.0",
       "name": "shadcn",
       "versions": ["4.23.0"],
+      "includedBy": ["src/index.css: shadcn/tailwind.css"],
       "creator": "shadcn",
       "source": "https://ui.shadcn.com",
       "license": "MIT",
@@ -1094,72 +580,10 @@
       ]
     },
     {
-      "id": "shebang-command@2.0.0",
-      "name": "shebang-command",
-      "versions": ["2.0.0"],
-      "creator": "Kevin Mårtensson",
-      "source": "https://github.com/kevva/shebang-command#readme",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "2.0.0/license",
-          "text": "MIT License\n\nCopyright (c) Kevin Mårtensson <kevinmartensson@gmail.com> (github.com/kevva)\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
-        }
-      ]
-    },
-    {
-      "id": "shebang-regex@3.0.0",
-      "name": "shebang-regex",
-      "versions": ["3.0.0"],
-      "creator": "Sindre Sorhus",
-      "source": "https://github.com/sindresorhus/shebang-regex#readme",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "3.0.0/license",
-          "text": "MIT License\n\nCopyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
-        }
-      ]
-    },
-    {
-      "id": "stats-gl@2.4.2",
-      "name": "stats-gl",
-      "versions": ["2.4.2"],
-      "creator": "Renaud ROHLINGER",
-      "source": "https://github.com/RenaudRohlinger/stats-gl",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "upstream-review-pending",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": []
-    },
-    {
-      "id": "stats.js@0.17.0",
-      "name": "stats.js",
-      "versions": ["0.17.0"],
-      "creator": "mrdoob",
-      "source": "https://github.com/mrdoob/stats.js",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "0.17.0/LICENSE",
-          "text": "The MIT License\n\nCopyright (c) 2009-2016 stats.js authors\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in\nall copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\nTHE SOFTWARE."
-        }
-      ]
-    },
-    {
       "id": "suspend-react@0.1.3",
       "name": "suspend-react",
       "versions": ["0.1.3"],
+      "includedBy": ["production JavaScript chunks"],
       "creator": "Paul Henschel",
       "source": "https://github.com/pmndrs/suspend-react#readme",
       "license": "MIT",
@@ -1174,9 +598,28 @@
       ]
     },
     {
+      "id": "tailwindcss@4.3.4",
+      "name": "tailwindcss",
+      "versions": ["4.3.4"],
+      "includedBy": ["src/index.css: tailwindcss"],
+      "creator": "See the retained copyright notices.",
+      "source": "https://tailwindcss.com",
+      "license": "MIT",
+      "licenseUrl": "https://spdx.org/licenses/MIT.html",
+      "noticeStatus": "packaged-notices-retained",
+      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
+      "notices": [
+        {
+          "file": "4.3.4/LICENSE",
+          "text": "MIT License\n\nCopyright (c) Tailwind Labs, Inc.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE."
+        }
+      ]
+    },
+    {
       "id": "three@0.187.0",
       "name": "three",
       "versions": ["0.187.0"],
+      "includedBy": ["production JavaScript chunks"],
       "creator": "mrdoob",
       "source": "https://threejs.org/",
       "license": "MIT",
@@ -1191,43 +634,10 @@
       ]
     },
     {
-      "id": "three-mesh-bvh@0.8.3",
-      "name": "three-mesh-bvh",
-      "versions": ["0.8.3"],
-      "creator": "Garrett Johnson",
-      "source": "https://github.com/gkjohnson/three-mesh-bvh#readme",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "0.8.3/LICENSE",
-          "text": "MIT License\n\nCopyright (c) 2018 Garrett Johnson\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE."
-        }
-      ]
-    },
-    {
-      "id": "three-stdlib@2.36.1",
-      "name": "three-stdlib",
-      "versions": ["2.36.1"],
-      "creator": "Paul Henschel",
-      "source": "https://github.com/pmndrs/three-stdlib",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "2.36.1/LICENSE",
-          "text": "MIT License\n\nCopyright (c) 2021-2023 Poimandres\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE."
-        }
-      ]
-    },
-    {
       "id": "three.quarks@0.17.1",
       "name": "three.quarks",
       "versions": ["0.17.1"],
+      "includedBy": ["production JavaScript chunks"],
       "creator": "Alchemist0823",
       "source": "https://quarks.art",
       "license": "MIT",
@@ -1242,77 +652,10 @@
       ]
     },
     {
-      "id": "troika-three-text@0.52.5",
-      "name": "troika-three-text",
-      "versions": ["0.52.5"],
-      "creator": "Jason Johnston",
-      "source": "https://github.com/protectwise/troika#readme",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "0.52.5/LICENSE",
-          "text": "MIT License\n\nCopyright (c) 2019 ProtectWise\nCopyright (c) 2021 Jason Johnston\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE."
-        }
-      ]
-    },
-    {
-      "id": "troika-three-utils@0.52.5",
-      "name": "troika-three-utils",
-      "versions": ["0.52.5"],
-      "creator": "Jason Johnston",
-      "source": "https://github.com/protectwise/troika#readme",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "0.52.5/LICENSE",
-          "text": "MIT License\n\nCopyright (c) 2019 ProtectWise\nCopyright (c) 2021 Jason Johnston\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE."
-        }
-      ]
-    },
-    {
-      "id": "troika-worker-utils@0.52.0",
-      "name": "troika-worker-utils",
-      "versions": ["0.52.0"],
-      "creator": "Jason Johnston",
-      "source": "https://github.com/protectwise/troika#readme",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "0.52.0/LICENSE",
-          "text": "MIT License\n\nCopyright (c) 2019 ProtectWise\nCopyright (c) 2021 Jason Johnston\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE."
-        }
-      ]
-    },
-    {
-      "id": "tunnel-rat@0.1.2",
-      "name": "tunnel-rat",
-      "versions": ["0.1.2"],
-      "creator": "Paul Henschel",
-      "source": "https://github.com/pmndrs/tunnel-rat#readme",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "0.1.2/LICENSE",
-          "text": "MIT License\n\nCopyright (c) 2022 Poimandres\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE."
-        }
-      ]
-    },
-    {
       "id": "tw-animate-css@1.4.0",
       "name": "tw-animate-css",
       "versions": ["1.4.0"],
+      "includedBy": ["src/index.css: tw-animate-css"],
       "creator": "Luca Bosin",
       "source": "https://github.com/Wombosvideo/tw-animate-css#readme",
       "license": "MIT",
@@ -1330,6 +673,7 @@
       "id": "use-sync-external-store@1.7.0",
       "name": "use-sync-external-store",
       "versions": ["1.7.0"],
+      "includedBy": ["production JavaScript chunks"],
       "creator": "See the retained copyright notices.",
       "source": "https://github.com/react/react#readme",
       "license": "MIT",
@@ -1344,26 +688,10 @@
       ]
     },
     {
-      "id": "utility-types@3.11.0",
-      "name": "utility-types",
-      "versions": ["3.11.0"],
-      "creator": "Piotr Witek",
-      "source": "https://github.com/piotrwitek/utility-types",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "3.11.0/LICENSE",
-          "text": "MIT License\n\nCopyright (c) 2016 Piotr Witek <piotrek.witek@gmail.com> (http://piotrwitek.github.io)\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE."
-        }
-      ]
-    },
-    {
       "id": "uuid@14.0.3",
       "name": "uuid",
       "versions": ["14.0.3"],
+      "includedBy": ["production JavaScript chunks"],
       "creator": "See the retained copyright notices.",
       "source": "https://github.com/uuidjs/uuid#readme",
       "license": "MIT",
@@ -1378,60 +706,10 @@
       ]
     },
     {
-      "id": "webgl-constants@1.1.1",
-      "name": "webgl-constants",
-      "versions": ["1.1.1"],
-      "creator": "Tim van Scherpenzeel",
-      "source": "https://www.npmjs.com/package/webgl-constants",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "1.1.1/LICENSE",
-          "text": "MIT License\n\nCopyright (c) 2019 Tim van Scherpenzeel\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE."
-        }
-      ]
-    },
-    {
-      "id": "webgl-sdf-generator@1.1.1",
-      "name": "webgl-sdf-generator",
-      "versions": ["1.1.1"],
-      "creator": "Jason Johnston",
-      "source": "https://github.com/lojjic/webgl-sdf-generator#readme",
-      "license": "MIT",
-      "licenseUrl": "https://spdx.org/licenses/MIT.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "1.1.1/LICENSE.txt",
-          "text": "Copyright (c) 2021 Jason Johnston\n\nMIT License\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
-        }
-      ]
-    },
-    {
-      "id": "which@2.0.2",
-      "name": "which",
-      "versions": ["2.0.2"],
-      "creator": "Isaac Z. Schlueter",
-      "source": "https://github.com/isaacs/node-which#readme",
-      "license": "ISC",
-      "licenseUrl": "https://spdx.org/licenses/ISC.html",
-      "noticeStatus": "packaged-notices-retained",
-      "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
-      "notices": [
-        {
-          "file": "2.0.2/LICENSE",
-          "text": "The ISC License\n\nCopyright (c) Isaac Z. Schlueter and Contributors\n\nPermission to use, copy, modify, and/or distribute this software for any\npurpose with or without fee is hereby granted, provided that the above\ncopyright notice and this permission notice appear in all copies.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\" AND THE AUTHOR DISCLAIMS ALL WARRANTIES\nWITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF\nMERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR\nANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES\nWHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN\nACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR\nIN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE."
-        }
-      ]
-    },
-    {
-      "id": "zustand@4.5.7,5.0.16",
+      "id": "zustand@5.0.16",
       "name": "zustand",
-      "versions": ["4.5.7", "5.0.16"],
+      "versions": ["5.0.16"],
+      "includedBy": ["production JavaScript chunks"],
       "creator": "Paul Henschel",
       "source": "https://github.com/pmndrs/zustand",
       "license": "MIT",
@@ -1440,7 +718,7 @@
       "modifications": "Used as an installed dependency; Fall does not edit the upstream package sources.",
       "notices": [
         {
-          "file": "4.5.7/LICENSE",
+          "file": "5.0.16/LICENSE",
           "text": "MIT License\n\nCopyright (c) 2019 Paul Henschel\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE."
         }
       ]

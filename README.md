@@ -14,6 +14,14 @@ The project uses Vite Plus (`vite-plus`), with its compatible Vite, Vitest, Oxli
 
 Run `pnpm check` for formatting and lint checks, `pnpm build` for TypeScript project checking and the production build, and `pnpm test:coverage` for the test suite and coverage report. CI runs these same commands.
 
+Software notices follow the packages in the production bundle, including lazy
+chunks, plus reviewed distributed CSS. Run `pnpm credits:notices` after changing
+shipped imports or dependencies. `pnpm credits:notices:check` audits a fresh
+in-memory build; `pnpm build` validates notices against its own emitted package
+report and fails if they are stale. See the [Credits module](src/modules/credits/README.md)
+for asset attribution and notice maintenance. Build-tool tests are colocated
+under `scripts` and run alongside the feature tests.
+
 Use `pnpm lint` to check code with Oxlint and `pnpm lint:fix` to apply safe fixes. Use `pnpm format` to format the project with Oxfmt, or `pnpm format:check` to check formatting without writing files.
 
 Linting and formatting use Vite Plus defaults. The `lint` block in `vite.config.ts` adds browser globals; TypeScript checking runs as part of `pnpm build`. The `fmt` block preserves the custom Tailwind class sorting (using `src/index.css`) and import groups with blank-line separation: unscoped packages and Node built-ins, `@react/*`, `@/*` project aliases, other scoped packages, then relative imports. All other formatting options use the toolchain defaults, including the 100-column print width. Side-effect imports retain their default ordering behavior.
