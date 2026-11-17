@@ -15,11 +15,13 @@ export function PlayerPortrait({
   fallbackAvatarUrl,
   fallback = <UserRound aria-hidden="true" />,
   className,
+  highlighted = false,
 }: {
   avatarUrl?: string;
   fallbackAvatarUrl?: string;
   fallback?: ReactNode;
   className: string;
+  highlighted?: boolean;
 }) {
   const portrait = useRef<HTMLSpanElement>(null);
   const reducedMotion = useReducedMotion();
@@ -27,6 +29,15 @@ export function PlayerPortrait({
     () => {
       const element = portrait.current;
       if (!element || reducedMotion) return;
+
+      if (highlighted) {
+        gsap.fromTo(
+          element,
+          { "--portrait-glint-angle": "0deg" },
+          { "--portrait-glint-angle": "360deg", duration: 1.9, ease: "none", repeat: -1 },
+        );
+        return;
+      }
 
       const angle = gsap.utils.random(0, 360);
       gsap
@@ -53,7 +64,7 @@ export function PlayerPortrait({
         )
         .to(element, { "--portrait-glint": 0, duration: 1.15, ease: "sine.in" }, 0.65);
     },
-    { dependencies: [reducedMotion], revertOnUpdate: true },
+    { dependencies: [highlighted, reducedMotion], revertOnUpdate: true },
   );
 
   const [failedAvatar, setFailedAvatar] = useState<string>();
@@ -67,6 +78,7 @@ export function PlayerPortrait({
   return (
     <span
       ref={portrait}
+      data-highlighted={highlighted || undefined}
       className={cn(
         "game-player-avatar relative isolate grid aspect-square shrink-0 place-items-center rounded-full bg-artwork-shadow text-muted-foreground [&_svg]:size-1/2",
         className,

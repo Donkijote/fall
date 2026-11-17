@@ -123,6 +123,20 @@
       ],
       "prompt": "Assemble live captures of the approved Tavern overlays: Team Match waiting, Free-for-All score plaques, phone landscape Victory, portrait Defeat and leave confirmation, and tablet Team Match Defeat. Preserve the live type and cup-stamped coin art. Include the illustrated opening-deal controls.",
       "notes": "Composed from screenshots of the local match using the approved assets."
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern-match/seat-plaque.webp",
+      "method": "reconstructed",
+      "references": ["mockup-detailed.png", "../../../src/assets/ui/actions/outline.webp"],
+      "prompt": "Standalone dark blackened iron nameplate with a single slim bronze rim and softly rounded inward corner cutouts. Front-on with neutral lighting and a transparent exterior. Leave the face clear for live text.",
+      "notes": "Trim and export at 240 × 60 WebP. Keep the corner cuts within the end slices."
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern-match/turn-pointer.webp",
+      "method": "reconstructed",
+      "references": ["mockup-detailed.png"],
+      "prompt": "Standalone small right-pointing amber and bronze arrowhead for an active seat. Use a solid face and softly beveled edges with neutral light and a transparent exterior.",
+      "notes": "Trim and export at 48 × 56 WebP."
     }
   ]
 }

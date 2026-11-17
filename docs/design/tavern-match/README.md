@@ -151,3 +151,8 @@ formats at desktop, phone portrait and landscape, and tablet portrait and
 landscape sizes. Complete local matches exercised both result crests,
 standings, and the return to Tavern. Additional desktop and phone
 landscape checks ran with standard motion in light and dark themes.
+
+Seat nameplates and the Deck and Collected labels use a shared blackened iron
+plaque with rounded inward corners. Dealer appears beside the player name. A
+bronze arrowhead points toward the active portrait, and the ring artwork
+brightens with a continuous GSAP glint around the ring. Reduced motion keeps the ring steadily lit.

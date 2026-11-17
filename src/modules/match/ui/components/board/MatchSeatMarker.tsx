@@ -3,6 +3,7 @@ import gsap from "gsap";
 import { useRef } from "react";
 import type { ReactNode } from "react";
 
+import turnPointer from "@/assets/lobby/tavern-match/turn-pointer.webp";
 import woodenChair from "@/assets/lobby/tavern-match/wooden-chair.svg";
 import { PlayerPortrait } from "@/components/hud/PlayerPortrait";
 import { Icon } from "@/components/icons/Icon";
@@ -10,6 +11,7 @@ import { Icon } from "@/components/icons/Icon";
 import { useGSAP } from "@gsap/react";
 
 import type { MatchSeat } from "../../../application/matchSeats";
+import { MatchPlaque } from "./MatchPlaque";
 import { scoreSideStyle } from "./scoreSideStyle";
 
 export type SeatPlayer = { name: string; avatarUrl?: string };
@@ -23,8 +25,6 @@ const positions: Record<MatchSeat, string> = {
   "upper-right": "right-[8%] top-[35%] flex-row-reverse portrait:right-[4%]",
 };
 
-const plaqueEdge =
-  "[clip-path:polygon(0_0,calc(100%_-_0.5rem)_0,100%_0.5rem,100%_calc(100%_-_0.5rem),calc(100%_-_0.5rem)_100%,0_100%)] group-data-[side=right]:[clip-path:polygon(0_0.5rem,0.5rem_0,100%_0,100%_100%,0.5rem_100%,0_calc(100%_-_0.5rem))]";
 const openSeatEdge =
   "[clip-path:polygon(23%_0,77%_0,100%_23%,100%_77%,77%_100%,23%_100%,0_77%,0_23%)]";
 const medallionSize = "size-(--seat-size)";
@@ -77,22 +77,19 @@ export function MatchSeatMarker({
         {active && (
           <>
             <span className="sr-only">Active seat</span>
-            <span
-              aria-hidden="true"
-              className="pointer-events-none absolute bottom-full left-1/2 mb-1.5 grid h-2.5 w-4 -translate-x-1/2 rotate-180 place-items-center bg-gold [clip-path:polygon(50%_0,100%_100%,0_100%)]"
-            >
-              <span className="mt-0.5 h-1.5 w-2.5 bg-linear-to-b from-amber-100 to-gold [clip-path:polygon(50%_0,100%_100%,0_100%)]" />
-            </span>
+            <img
+              src={turnPointer}
+              alt=""
+              className="pointer-events-none absolute top-1/2 right-full mr-1 w-[clamp(0.5rem,calc(var(--seat-size)*0.25),1rem)] -translate-y-1/2 group-data-[side=right]:right-auto group-data-[side=right]:left-full group-data-[side=right]:mr-0 group-data-[side=right]:ml-1 group-data-[side=right]:rotate-180"
+            />
           </>
         )}
         <div ref={portrait} aria-hidden="true">
           {player ? (
             <PlayerPortrait
               avatarUrl={player.avatarUrl}
-              className={cn(
-                medallionSize,
-                active && "ring-2 ring-gold/65 drop-shadow-[0_0_0.4rem_var(--gold)]",
-              )}
+              highlighted={active}
+              className={medallionSize}
               fallback={
                 <span
                   className={cn(
@@ -124,27 +121,33 @@ export function MatchSeatMarker({
           )}
         </div>
       </div>
-      <span className="relative -ml-2 min-w-16 group-data-[side=right]:-mr-2 group-data-[side=right]:ml-0">
-        <span className={cn("block bg-linear-to-b from-gold/85 to-gold/45 p-px", plaqueEdge)}>
+      <MatchPlaque className="-ml-(--seat-plaque-overlap) min-h-[clamp(1.35rem,calc(var(--seat-size)*0.55),2.5rem)] min-w-(--seat-plaque-width) justify-start gap-1 px-2.5 py-0.5 pl-[calc(0.5rem+var(--seat-plaque-overlap))] text-[clamp(0.625rem,calc(var(--seat-size)*0.23),0.9375rem)] [--seat-plaque-overlap:calc(var(--seat-size)*0.18)] [--seat-plaque-width:clamp(3.75rem,calc(var(--seat-size)*1.25),5.75rem)] group-data-[side=right]:-mr-(--seat-plaque-overlap) group-data-[side=right]:ml-0 group-data-[side=right]:justify-end group-data-[side=right]:pr-[calc(0.5rem+var(--seat-plaque-overlap))] group-data-[side=right]:pl-2.5 compact-landscape:[--seat-plaque-overlap:max(0.875rem,calc(var(--seat-size)*0.26))]">
+        {side && (
           <span
-            className={cn(
-              "title-type block max-w-[29cqw] portrait:max-w-[23cqw] portrait:pr-2 portrait:pl-3 portrait:group-data-[side=right]:pr-3 portrait:group-data-[side=right]:pl-2 truncate pr-3 pl-4 text-center whitespace-nowrap h-[calc(var(--seat-size)*0.58)] content-center leading-none text-[clamp(0.625rem,calc(var(--seat-size)*0.28),1rem)] group-data-[side=right]:pr-4 group-data-[side=right]:pl-3",
-              player
-                ? ["bg-linear-to-b", side ? side.plate : "from-slate-700 to-artwork-shadow"]
-                : "bg-artwork-shadow",
-              plaqueEdge,
-            )}
-          >
-            {position === "bottom" ? "You" : (player?.name ?? "Open seat")}
-          </span>
+            aria-hidden="true"
+            className={cn("match-plaque-team-face bg-linear-to-b", side.plate)}
+          />
+        )}
+        <span
+          className="max-w-[clamp(5rem,19cqw,9rem)] min-w-0 truncate portrait:max-w-[clamp(4rem,15cqw,7rem)]"
+          title={player?.name}
+        >
+          {position === "bottom" ? "You" : (player?.name ?? "Open seat")}
         </span>
-        {side && <span className="sr-only">{side.name} side</span>}
         {dealer && (
-          <span className="absolute -right-1.5 bottom-0 z-10 translate-y-[65%] rounded-sm border border-gold bg-gold px-0.75 py-px title-type text-[0.5rem] leading-none whitespace-nowrap text-artwork-shadow shadow-sm shadow-artwork-shadow/70">
+          <span className="shrink-0 text-gold group-data-[side=right]:order-first">
+            <span aria-hidden="true" className="group-data-[side=right]:hidden">
+              ·{" "}
+            </span>
             Dealer
+            <span aria-hidden="true" className="hidden group-data-[side=right]:inline">
+              {" "}
+              ·
+            </span>
           </span>
         )}
-      </span>
+        {side && <span className="sr-only">{side.name} side</span>}
+      </MatchPlaque>
       {children}
     </li>
   );
