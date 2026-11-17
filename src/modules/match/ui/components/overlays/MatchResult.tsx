@@ -3,16 +3,18 @@ import gsap from "gsap";
 import { useRef } from "react";
 
 import defeat from "@/assets/lobby/tavern-match/defeat-crest.webp";
-import standingsArt from "@/assets/lobby/tavern-match/result-standings.webp";
 import victory from "@/assets/lobby/tavern-match/victory-crest.webp";
 import { ActionButton } from "@/components/actions/ActionButton";
+import { PointsBadge } from "@/components/cards/PointsBadge";
 import type { GameState } from "@/domain/entities/GameState";
 
 import { useGSAP } from "@gsap/react";
 
 import { localPlayerId } from "../../../application/localMatch";
+import { MatchPlaque } from "../board/MatchPlaque";
 import { getMatchScores } from "../board/MatchScoreboard";
 import { scoreSideStyle } from "../board/scoreSideStyle";
+import "./MatchResult.css";
 
 export function MatchResult({
   state,
@@ -73,38 +75,38 @@ export function MatchResult({
             {outcome}
           </h2>
         </div>
-        <div className="relative isolate w-[min(100%,17rem)] compact-landscape:w-[min(100%,15rem)]">
-          <img
-            src={standingsArt}
-            alt=""
-            className="pointer-events-none absolute inset-0 -z-10 size-full"
-          />
-          <ol
-            aria-label="Final standings"
-            className="grid gap-1 px-6 py-4 text-left compact-landscape:gap-0.5 compact-landscape:py-3"
-          >
-            {standings.map(({ side, label, score }, index) => (
-              <li key={side} className="flex min-w-0 items-center gap-2 text-sm">
-                <span
-                  aria-hidden="true"
-                  className={cn(
-                    "grid size-5 shrink-0 place-items-center rounded-full border border-gold/45 bg-linear-to-b title-type text-[0.625rem] leading-none",
-                    scoreSideStyle(side)?.plate ?? "from-slate-700 to-artwork-shadow",
+        <ol
+          aria-label="Final standings"
+          className="match-result-standings relative isolate grid w-[min(100%,22rem)] gap-2 px-7 py-5 compact-landscape:w-[min(100%,19rem)] compact-landscape:gap-1 compact-landscape:px-6 compact-landscape:py-3.5"
+        >
+          {standings.map(({ side, label, score }) => {
+            const team = scoreSideStyle(side);
+            return (
+              <li
+                key={side}
+                className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-3"
+              >
+                <MatchPlaque className="min-h-8 w-[clamp(7rem,34vw,11rem)] max-w-full justify-self-start px-4 text-sm compact-landscape:min-h-7 compact-landscape:w-[clamp(7rem,20vw,9.5rem)]">
+                  {team && (
+                    <span
+                      aria-hidden="true"
+                      className={cn("match-plaque-team-face bg-linear-to-b", team.plate)}
+                    />
                   )}
-                >
-                  {index + 1}
-                </span>
-                <span className={cn("min-w-0 flex-1", side === winner && "text-gold")}>
-                  {label}
+                  <span className="min-w-0 truncate" title={label}>
+                    {label}
+                  </span>
                   {side === winner && <span className="sr-only">, winner</span>}
-                </span>
-                <strong className="title-type text-lg leading-none text-artwork-foreground tabular-nums">
-                  {score}
-                </strong>
+                </MatchPlaque>
+                <PointsBadge
+                  points={score}
+                  label={`${score} ${score === 1 ? "point" : "points"}`}
+                  className="size-13 compact-landscape:size-11"
+                />
               </li>
-            ))}
-          </ol>
-        </div>
+            );
+          })}
+        </ol>
         <ActionButton
           tone="primary"
           className="min-w-48 text-sm"
