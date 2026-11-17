@@ -16,6 +16,8 @@ link. Direct entry is public and requires no player session.
   includes transitive packages. Shadcn is a development CLI, but its own notice
   is explicitly retained because `src/index.css` imports its distributed CSS;
   the CLI's tooling-only dependencies are excluded.
+  Leva and the animation playground's `r3f-perf` monitor are development
+  dependencies, so their tooling-only trees (including Radix) are excluded too.
 - `ui/CreditsScreen.tsx` composes the inventory, sections and routing integration.
   Supporting content and scenery live under `ui/components`. There is no
   application service or port because this static inventory needs neither.
@@ -63,9 +65,9 @@ references; review their inputs before asserting ownership or redistribution
 terms. Existing asset-side READMEs are retained as evidence, not another screen
 data source.
 
-Ten production graph entries have no packaged root license/notice file:
+Eight production graph entries have no packaged root license/notice file:
 `@gsap/react`, `@mediapipe/tasks-vision`, `@react-three/fiber`,
-`@react-three/rapier`, `@stitches/react`, `@utsubo/events`, `draco3d`, `gsap`,
+`@react-three/rapier`, `draco3d`, `gsap`,
 `maath`, and `stats-gl`. Their source/available license links are shown and
 verification remains pending. GSAP's custom terms are preserved; it is not
 relabeled MIT. Review missing notices and package-specific attribution duties

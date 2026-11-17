@@ -59,6 +59,12 @@ test("software notices match the dependency lockfile and preserve special licens
     true,
   );
   expect(
+    creditsInventory.software.entries.some((entry) => entry.name.startsWith("@radix-ui/")),
+  ).toBe(false);
+  expect(
+    creditsInventory.software.entries.some((entry) => ["leva", "r3f-perf"].includes(entry.name)),
+  ).toBe(false);
+  expect(
     creditsInventory.software.entries.find((entry) => entry.name === "shadcn")?.notices.length,
   ).toBeGreaterThan(0);
 });
