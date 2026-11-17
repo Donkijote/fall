@@ -1,7 +1,10 @@
 import { cn } from "cn";
 import type { LucideIcon } from "lucide-react";
+import { useRef } from "react";
 
 import { Icon } from "../icons/Icon";
+import { useBorderGlint } from "../surfaces/useBorderGlint";
+import "./ResourceReadout.css";
 
 const fullFormat = new Intl.NumberFormat();
 
@@ -20,6 +23,9 @@ export function ResourceReadout({
   value,
   maximum,
 }: ResourceReadoutProps) {
+  const surface = useRef<HTMLDivElement>(null);
+  useBorderGlint(surface);
+
   const available =
     value !== undefined &&
     Number.isFinite(value) &&
@@ -31,18 +37,22 @@ export function ResourceReadout({
 
   return (
     <div
+      ref={surface}
       role="group"
       aria-label={label}
       title={`${label}: ${description}`}
-      className="grid min-w-8 justify-items-center gap-0.5 px-0.5 py-1 sm:min-w-12 sm:px-1 compact-landscape:py-0.5"
+      className="resource-readout relative isolate flex min-h-12 min-w-11 flex-col items-center justify-center gap-0.5 px-2 py-2 text-artwork-foreground lg:min-h-12 lg:min-w-22 lg:flex-row lg:gap-2 lg:px-4 compact-landscape:min-h-9 compact-landscape:min-w-16 compact-landscape:flex-row compact-landscape:gap-1 compact-landscape:px-3 compact-landscape:py-1"
     >
       <Icon
         icon={icon}
-        className={cn("size-5 text-gold sm:size-7 compact-landscape:size-5", iconClassName)}
+        className={cn(
+          "size-5 shrink-0 text-gold sm:size-6 compact-landscape:size-4",
+          iconClassName,
+        )}
       />
       <span
         aria-hidden="true"
-        className="text-xs leading-tight font-semibold tabular-nums sm:text-sm"
+        className="text-xs leading-tight font-semibold lining-nums tabular-nums sm:text-sm"
       >
         {available ? fullFormat.format(value) : "—"}
         {available && maximum !== undefined && `/${fullFormat.format(maximum)}`}

@@ -1,0 +1,28 @@
+.resource-readout::before,
+.resource-readout::after {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  content: "";
+  border: solid transparent;
+  border-width: 0 13px;
+  border-image: url("../../assets/ui/actions/outline.webp") 0 52 fill stretch;
+}
+.resource-readout::after {
+  opacity: var(--border-glint, 0);
+  filter: brightness(2.35) saturate(0.8);
+  mask-image: radial-gradient(
+    1.8rem 5px at var(--border-glint-x, 50%) var(--border-glint-y, 0%),
+    black 12%,
+    transparent
+  );
+}
+@media (forced-colors: active) {
+  .resource-readout::after {
+    display: none;
+  }
+  .resource-readout {
+    border: 1px solid CanvasText;
+  }
+}

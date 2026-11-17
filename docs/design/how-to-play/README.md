@@ -28,3 +28,12 @@ alongside larger card examples on the same parchment as the Sings reference.
 Rule callouts use a shared blackened leather panel with bronze trim and
 separate glyphs for notes, tips, and warnings. The component gallery shows all
 three states, including a wrapping example.
+
+## Shared artwork finishing pass
+
+Quick-start numbers use brass medallions from the
+[capture-count artwork](../tavern-match/README.md). Illustration arrows reuse
+BronzeArrow. Fall-rank panels and the quota table reuse the
+[Sings parchment](../sings-reference/README.md), with faded artwork rules in the
+semantic table. Rule-search rows now share the chapter bookmark treatment through
+GuideLink. Live text, table semantics, source rules, and search behavior are retained.

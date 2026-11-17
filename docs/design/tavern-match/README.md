@@ -190,3 +190,10 @@ seat check with an illustrated bronze coin stamped with a seated traveller.
 Open seats retain their wooden chair glyphs. New arrivals settle into place
 with a short GSAP motion, and reduced motion updates immediately. The gallery
 includes a join preview to inspect the transition.
+
+## Empty pile artwork
+
+Empty collected and deck piles use shared EmptyCardSlot, a recessed treatment
+composed from the approved [input artwork](../text-input/README.md). Card faces,
+stack movement, pile labels, and game behavior remain unchanged. The gallery
+exposes this decorative recess separately for future reuse.

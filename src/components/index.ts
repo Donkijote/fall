@@ -21,3 +21,7 @@ export { SelectField } from "./controls/SelectField";
 
 export { ArrowDivider } from "./dividers/ArrowDivider";
 export { BronzeArrow } from "./dividers/BronzeArrow";
+
+export { BrassCheckbox } from "./controls/BrassCheckbox";
+export { GuideLink } from "./navigation/GuideLink";
+export { NumberMedallion } from "./hud/NumberMedallion";

@@ -2,6 +2,7 @@ import { cn } from "cn";
 import { useRef, useState } from "react";
 
 import cardBack from "@/assets/cards/back.svg";
+import { EmptyCardSlot } from "@/components/cards/EmptyCardSlot";
 import { SuitGlyph } from "@/components/cards/SuitGlyph";
 import type { Card } from "@/domain/entities/Card";
 import { toCardKey } from "@/domain/helpers/card";
@@ -46,7 +47,7 @@ function CardStack({
       className="grid min-w-[2.1rem] shrink-0 justify-items-center gap-0.5"
     >
       <div aria-hidden="true" className="relative w-(--match-card-width)">
-        <div className="aspect-[63/88] w-full rounded-[10%] border border-dashed border-gold/55 bg-artwork-shadow/55" />
+        <EmptyCardSlot />
         {count > 0 && (
           <div data-pile-back="" className="absolute inset-0">
             <div

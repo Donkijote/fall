@@ -60,3 +60,11 @@ as a navigation placeholder for future logout behavior.
 The module entry point also exports `homeGallery` for the development-only
 Component gallery. Preview fixtures live under `ui/components/previews` and
 render this module’s styled components with sample props.
+
+## HUD and Help artwork
+
+Resources reuse `ResourceReadout`'s outline artwork in both Hall and gallery.
+Compact portrait counters stack their contents; desktop and short-landscape
+counters use horizontal content. Help rows use the shared `GuideLink` bookmark
+and a BronzeArrow, keeping native link activation and the existing popover focus
+and dismissal behavior.

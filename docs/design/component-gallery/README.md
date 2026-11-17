@@ -49,3 +49,11 @@ wide sizes before commissioning any new texture.
 The shared action preview now uses the standalone
 [ActionButton skins](../action-button/README.md). The Card Hall dock and
 illustrated match result retain their own frames.
+
+## Artwork audit inventory
+
+Shared badges, the portrait ring, parchment figures, step medallions, empty card
+recesses, the checkbox, and guide links have individual gallery cards. Previews
+import their production components directly, with no additional preview frames.
+The audit finishing pass reuses approved source artwork; asset provenance remains
+with the owning features linked above.

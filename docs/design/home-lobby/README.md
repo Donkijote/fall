@@ -35,3 +35,11 @@ Oak-leaf engravings mark the outer corners. The bronze has even lighting at rest
 The shared GSAP reveal lights all four leaves on standalone controls, the nearest
 leaf pair on grouped edge controls, and the rails on middle controls. It responds
 to hover, keyboard focus, and an open popover.
+
+## Resource and Help finishing pass
+
+Resource counters reuse the approved [outline action skin](../action-button/README.md)
+with live icons and values. Portrait layouts stack icon/value within compact mounts;
+desktop and short landscape use rows. Help menu links reuse the How to Play leather
+bookmark through `GuideLink`, with an artwork arrow. These compositions reuse
+canonical runtime assets; no new generation or alternate skins are introduced.

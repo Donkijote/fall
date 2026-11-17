@@ -1,0 +1,39 @@
+.brass-checkbox {
+  --checkbox-pressed: 0;
+}
+.brass-checkbox[aria-checked="true"],
+.brass-checkbox[aria-checked="mixed"] {
+  --checkbox-pressed: 1;
+}
+.brass-checkbox::before,
+.brass-checkbox::after {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  content: "";
+  border: 6px solid transparent;
+  border-image: url("../../assets/ui/controls/text-input.webp") 22 fill stretch;
+}
+.brass-checkbox::after {
+  inset: 3px;
+  border-width: 5px;
+  border-image: url("../../assets/ui/controls/choice-wax.webp") 25 32 fill stretch;
+  opacity: var(--checkbox-pressed);
+  transform: scale(calc(0.65 + 0.35 * var(--checkbox-pressed)));
+}
+.brass-checkbox-mark {
+  opacity: var(--checkbox-pressed);
+  transform: scale(calc(0.65 + 0.35 * var(--checkbox-pressed)));
+}
+.brass-checkbox[data-indeterminate] .brass-checkbox-mark svg {
+  clip-path: inset(40% 0);
+}
+@media (forced-colors: active) {
+  .brass-checkbox {
+    border: 1px solid ButtonText;
+  }
+  .brass-checkbox-mark {
+    color: ButtonText;
+  }
+}

@@ -1,5 +1,7 @@
 import { Fragment, useId } from "react";
-import { Link } from "react-router";
+
+import { BronzeArrow } from "@/components/dividers/BronzeArrow";
+import { GuideLink } from "@/components/navigation/GuideLink";
 
 import { chapterUrl } from "../../../adapters/rulebookRoutes";
 import { findRules, ruleMatchRanges, ruleSearchTerms } from "../../../application/rulebookContent";
@@ -40,29 +42,29 @@ export function RuleSearchResults({
           ? `${results.length} results for “${query.trim()}”`
           : `No rules found for “${query.trim()}”. Try a rank, combination, or rule name.`}
       </p>
-      <ul className="mt-5 divide-y divide-border">
+      <ul className="mt-5 space-y-2">
         {results.map((result, index) => (
           <li key={`${result.chapter}-${result.id ?? index}`}>
-            <Link
+            <GuideLink
               to={chapterUrl(result.chapter, result.id)}
               onClick={chooseChapter}
               aria-label={`${result.chapterTitle} ${result.title}`}
               aria-describedby={`${resultId}-${index}`}
-              className="block rounded-md py-4 focus-visible:outline-2 focus-visible:outline-ring"
+              className="py-4"
             >
-              <span className="text-xs text-muted-foreground">
+              <span className="text-xs opacity-75">
                 <HighlightedRuleText text={result.chapterTitle} terms={terms} />
               </span>
-              <h3 className="mt-1 text-base text-foreground">
+              <h3 className="mt-1 text-base">
                 <HighlightedRuleText text={result.title} terms={terms} />
               </h3>
-              <p
-                id={`${resultId}-${index}`}
-                className="mt-1 text-sm leading-relaxed text-muted-foreground"
-              >
+              <p id={`${resultId}-${index}`} className="mt-1 text-sm leading-relaxed opacity-80">
                 <HighlightedRuleText text={result.text} terms={terms} />
               </p>
-            </Link>
+            </GuideLink>
+            {index < results.length - 1 && (
+              <BronzeArrow tone="faded" className="mt-2 h-0.5 w-full" />
+            )}
           </li>
         ))}
       </ul>

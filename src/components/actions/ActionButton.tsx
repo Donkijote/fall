@@ -8,6 +8,7 @@ import { useReducedMotion } from "@/infrastructure/ui/hooks/useGamePreferences";
 
 import { useGSAP } from "@gsap/react";
 
+import { useBorderGlint } from "../surfaces/useBorderGlint";
 import "./ActionButton.css";
 
 export type ActionButtonProps = Omit<ComponentProps<typeof Button>, "variant" | "size"> & {
@@ -62,36 +63,7 @@ export function ActionButton({
   );
 
   const glint = !iconOnly;
-  const glintPosition = useRef<{ x: string; y: string }>(null);
-  useGSAP(
-    () => {
-      const element = button.current;
-      if (!element || !glint) return;
-
-      const random = gsap.utils.random;
-      const position = (glintPosition.current ??= {
-        x: `${random(20, 80)}%`,
-        y: random(0, 1, 1) ? "4%" : "96%",
-      });
-
-      gsap.set(element, {
-        "--action-glint-x": position.x,
-        "--action-glint-y": position.y,
-        "--action-glint": 0.72,
-      });
-
-      if (!reducedMotion) {
-        gsap.to(element, {
-          "--action-glint": 0.94,
-          duration: random(1.8, 2.8),
-          ease: "sine.inOut",
-          repeat: -1,
-          yoyo: true,
-        });
-      }
-    },
-    { dependencies: [glint, reducedMotion], revertOnUpdate: true },
-  );
+  useBorderGlint(button, glint);
 
   return (
     <Button

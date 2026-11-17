@@ -1,6 +1,8 @@
 import { Search } from "lucide-react";
 import type { ComponentType } from "react";
 
+import diamonds from "@/assets/lobby/card-hall/icons/cut-diamond.svg";
+import energy from "@/assets/lobby/card-hall/icons/electric.svg";
 import levelCrest from "@/assets/lobby/card-hall/icons/rank-1.svg";
 import coins from "@/assets/lobby/card-hall/icons/two-coins.svg";
 import traveller from "@/assets/lobby/card-hall/traveller.webp";
@@ -12,8 +14,16 @@ import {
   ResourceReadout,
   TextInput,
 } from "@/components";
+import { DeclarationBadge } from "@/components/cards/DeclarationBadge";
+import { EmptyCardSlot } from "@/components/cards/EmptyCardSlot";
+import { PointsBadge } from "@/components/cards/PointsBadge";
+import { BrassCheckbox } from "@/components/controls/BrassCheckbox";
 import { BronzeSlider } from "@/components/controls/BronzeSlider";
 import { WaxSwitch } from "@/components/controls/WaxSwitch";
+import { NumberMedallion } from "@/components/hud/NumberMedallion";
+import { PlayerPortrait } from "@/components/hud/PlayerPortrait";
+import { GuideLink } from "@/components/navigation/GuideLink";
+import { ParchmentFigure } from "@/components/surfaces/ParchmentFigure";
 import { homeGallery } from "@/modules/home";
 import { loginGallery } from "@/modules/login";
 import { matchGallery } from "@/modules/match";
@@ -58,6 +68,19 @@ export const gallerySections: { title: string; folder: string; entries: Entry[] 
     title: "Controls",
     folder: "controls",
     entries: [
+      {
+        name: "BrassCheckbox",
+        variants: "Unchecked, checked, disabled · brass recess and wax mark",
+        usage: "Sings reference · Mandatory only filter",
+        Preview: () => (
+          <div className="flex flex-wrap gap-4">
+            <BrassCheckbox aria-label="Unchecked example" />
+            <BrassCheckbox aria-label="Checked example" defaultChecked />
+            <BrassCheckbox aria-label="Disabled example" disabled />
+            <BrassCheckbox aria-label="Disabled checked example" defaultChecked disabled />
+          </div>
+        ),
+      },
       {
         name: "BronzeSlider",
         variants: "Adjustable, disabled",
@@ -117,6 +140,35 @@ export const gallerySections: { title: string; folder: string; entries: Entry[] 
     folder: "cards",
     entries: [
       {
+        name: "DeclarationBadge",
+        variants: "Optional wax and mandatory brass plate",
+        usage: "Sings reference, How to Play",
+        Preview: () => (
+          <div className="flex flex-wrap gap-4">
+            <DeclarationBadge mandatory={false} />
+            <DeclarationBadge mandatory />
+          </div>
+        ),
+      },
+      {
+        name: "PointsBadge",
+        variants: "Single, double, and bonus values",
+        usage: "Sings reference, How to Play, match results",
+        Preview: () => (
+          <div className="flex flex-wrap gap-3">
+            <PointsBadge points={1} />
+            <PointsBadge points={12} />
+            <PointsBadge points="+2" />
+          </div>
+        ),
+      },
+      {
+        name: "EmptyCardSlot",
+        variants: "Empty illustrated card recess",
+        usage: "Tavern match · collected and draw piles",
+        Preview: () => <EmptyCardSlot className="w-16" />,
+      },
+      {
         name: "ActivityCard",
         variants: "Idle, active, and unavailable across three modes",
         usage: "Card Hall activity picker",
@@ -162,6 +214,19 @@ export const gallerySections: { title: string; folder: string; entries: Entry[] 
     folder: "surfaces",
     entries: [
       {
+        name: "ParchmentFigure",
+        variants: "Paper artwork, illustrated heading, and caption",
+        usage: "How to Play · examples and diagrams",
+        Preview: () => (
+          <ParchmentFigure
+            title="Match the rank"
+            caption="Shared parchment artwork and live content."
+          >
+            <span className="font-serif text-3xl">4 + 4</span>
+          </ParchmentFigure>
+        ),
+      },
+      {
         name: "Callout",
         variants: "Note, tip, warning",
         usage: "How to Play · highlighted rules",
@@ -200,6 +265,33 @@ export const gallerySections: { title: string; folder: string; entries: Entry[] 
     folder: "hud",
     entries: [
       {
+        name: "PlayerPortrait",
+        variants: "Portrait, initials, and highlighted turn ring",
+        usage: "Card Hall, Tavern seats, match seats",
+        Preview: () => (
+          <div className="flex flex-wrap items-center gap-5">
+            <PlayerPortrait avatarUrl={traveller} className="size-18" />
+            <PlayerPortrait
+              fallback={<span className="title-type text-2xl">M</span>}
+              className="size-18"
+            />
+            <PlayerPortrait avatarUrl={traveller} highlighted className="size-18" />
+          </div>
+        ),
+      },
+      {
+        name: "NumberMedallion",
+        variants: "Brass number token without a points unit",
+        usage: "How to Play · quick-start steps",
+        Preview: () => (
+          <div className="flex gap-3">
+            {[1, 2, 3].map((value) => (
+              <NumberMedallion key={value}>{value}</NumberMedallion>
+            ))}
+          </div>
+        ),
+      },
+      {
         name: "PlayerIdentity",
         variants: "Traveller avatar, level crest, experience",
         usage: "Card Hall player HUD",
@@ -218,10 +310,29 @@ export const gallerySections: { title: string; folder: string; entries: Entry[] 
         variants: "Count, capped count, unavailable",
         usage: "Card Hall resource HUD",
         Preview: () => (
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-3">
             <ResourceReadout label="Coins" icon={coins} value={120} />
-            <ResourceReadout label="Capped coins" icon={coins} value={8} maximum={10} />
-            <ResourceReadout label="Unavailable coins" icon={coins} />
+            <ResourceReadout label="Energy" icon={energy} value={8} maximum={10} />
+            <ResourceReadout label="Diamonds" icon={diamonds} />
+          </div>
+        ),
+      },
+    ],
+  },
+  {
+    title: "Navigation",
+    folder: "navigation",
+    entries: [
+      {
+        name: "GuideLink",
+        variants: "Idle, hover, keyboard focus, current page",
+        usage: "Card Hall Help, How to Play chapters and rule search",
+        Preview: () => (
+          <div className="grid gap-2">
+            <GuideLink to="/rules">How to Play</GuideLink>
+            <GuideLink to="/sings" aria-current="page">
+              Sings reference
+            </GuideLink>
           </div>
         ),
       },

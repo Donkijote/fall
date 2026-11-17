@@ -25,3 +25,8 @@ Verify the settings entry, search, category filter, and both themes on the
 development server. Open the sample select, dialog, and popover and dismiss
 them with Escape. Build production and check that the route and entry are
 excluded.
+
+The shared inventory now exposes BrassCheckbox, GuideLink, NumberMedallion,
+EmptyCardSlot, DeclarationBadge, PointsBadge, PlayerPortrait, and ParchmentFigure
+as individual previews. ResourceReadout shows coin, capped energy, and unavailable
+diamond balances using the real HUD component.

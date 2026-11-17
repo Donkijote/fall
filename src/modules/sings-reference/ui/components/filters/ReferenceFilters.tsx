@@ -2,7 +2,7 @@ import { Search } from "lucide-react";
 import type { Ref } from "react";
 
 import { SelectField, TextInput } from "@/components";
-import { Checkbox } from "@/components/ui/checkbox";
+import { BrassCheckbox } from "@/components/controls/BrassCheckbox";
 import { Label } from "@/components/ui/label";
 
 import { minimumPointChoices, type SingsFilters } from "../../../application/singsCatalog";
@@ -63,11 +63,10 @@ export function ReferenceFilters({
         className="min-h-11 cursor-pointer px-2.5 text-artwork-foreground"
         htmlFor="only-mandatory"
       >
-        <Checkbox
+        <BrassCheckbox
           id="only-mandatory"
           checked={filters.onlyMandatory}
           onCheckedChange={(onlyMandatory) => onChange({ ...filters, onlyMandatory })}
-          className="border-artwork-foreground/75 bg-transparent transition-none focus-visible:border-artwork-foreground focus-visible:ring-artwork-foreground/50"
         />
         Mandatory only
       </Label>
