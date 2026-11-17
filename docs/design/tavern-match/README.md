@@ -167,3 +167,14 @@ illustrated tray. Team nameplates sit above the leather pockets and ivory
 capture totals. The bonus coin sits in the center of each pocket, with the
 scoreboard's wax seal at the lower right. The parchment ribbon appears when
 the capture playback awards an extra card.
+
+The approved [Dealer’s Ledger opening deal](opening-deal-mockup.jpg) places
+two wax selection groups beside a parchment preview. Hands first and Table
+first swap the destination illustrations. The four ivory tiles show the chosen
+bonus target. GSAP slides illustrations and tiles into position, while reduced
+motion updates immediately. Portrait phones stack the preview below the
+choices. The existing frame uses protected corner and crest slices.
+
+The final standings pair the shared team nameplates with points medallions.
+Both victory and defeat use the same responsive rows inside the illustrated
+standings panel.

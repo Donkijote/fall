@@ -196,6 +196,19 @@
       "method": "reconstructed",
       "references": ["capture-count-mockup.png"],
       "prompt": "Blank ivory tally tile with small engraved gold oak leaf flourishes in its top corners. Front-on with neutral lighting and a transparent exterior."
+    },
+    {
+      "file": "opening-deal-mockup.jpg",
+      "method": "supplied",
+      "references": [],
+      "notes": "Approved Dealer’s Ledger layout supplied by the user. Live selectors explain deal order and bonus pattern beside a parchment preview."
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern-match/opening-preview.webp",
+      "method": "reconstructed",
+      "references": ["opening-deal-mockup.jpg"],
+      "prompt": "Standalone blank warm ivory parchment preview panel, landscape 1.5:1, aged folded inward corners and subtle paper grain. Leave all writing space empty. Front-on, neutral lighting, transparent exterior.",
+      "notes": "Trim the transparent margin and export to WebP. Preview diagrams and numbered tiles render independently."
     }
   ]
 }

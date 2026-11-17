@@ -55,3 +55,9 @@ begins. Reduced motion keeps these handoffs immediate.
 The module entry point also exports `matchGallery` for the development-only
 Component gallery. Preview fixtures live under `ui/components/previews` and
 render this module’s styled components with sample props.
+
+OpeningDeal owns the selected deal order and bonus pattern and passes them to
+the existing deal callback. OpeningDealPreview renders the destination diagram
+and bonus tiles, with GSAP position changes and a reduced-motion preference.
+OpeningDeal.test.tsx checks keyboard selection, retained selections, and the
+submitted options.

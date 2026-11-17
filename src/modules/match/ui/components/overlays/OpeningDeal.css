@@ -1,0 +1,56 @@
+.opening-deal::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border: solid transparent;
+  border-width: 13.1cqw 8.34cqw 7.3cqw;
+  border-image: url("/src/assets/lobby/tavern-match/dealer-board.webp") 125 80 70 fill stretch;
+  pointer-events: none;
+  content: "";
+}
+
+.opening-deal-options {
+  position: relative;
+  isolation: isolate;
+  padding: 3px;
+}
+
+.opening-deal-options::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-inline: 0.625rem solid transparent;
+  border-image: url("/src/assets/lobby/tavern-match/seat-plaque.webp") 0 16 fill stretch;
+  pointer-events: none;
+  content: "";
+}
+
+@media (min-width: 640px), (orientation: landscape) {
+  .opening-deal-content {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  }
+}
+
+@media (orientation: landscape) and (max-height: 350px) {
+  .opening-deal {
+    gap: 0.25rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .opening-deal > h2 {
+    margin-top: calc(13.1cqw + 0.25rem);
+  }
+
+  .opening-deal-content > div:first-child {
+    gap: 0.5rem;
+  }
+
+  .opening-deal-content p {
+    font-size: 0.6875rem;
+    line-height: 1.25;
+  }
+
+  .opening-deal-options {
+    margin-top: 0.25rem;
+  }
+}

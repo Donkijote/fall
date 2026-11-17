@@ -14,3 +14,4 @@ Fall applies its own colors when rendering the silhouettes.
 | [Open Palm](https://game-icons.net/1x1/skoll/open-palm.html)      | Skoll      |
 | [Stairs](https://game-icons.net/1x1/delapouite/stairs.html)       | Delapouite |
 | [Hunting Horn](https://game-icons.net/1x1/lorc/hunting-horn.html) | Lorc       |
+| [Table](https://game-icons.net/1x1/delapouite/table.html)         | Delapouite |

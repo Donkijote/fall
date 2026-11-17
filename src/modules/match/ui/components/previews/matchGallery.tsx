@@ -109,9 +109,9 @@ function ResultPreview() {
 
 function OpeningDealPreview() {
   return (
-    <PositionedPreview tall>
+    <div className="[container-type:size] relative isolate h-[44rem] sm:h-[32rem] compact-landscape:h-[22rem]">
       <OpeningDeal deal={noop} />
-    </PositionedPreview>
+    </div>
   );
 }
 
