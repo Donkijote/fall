@@ -17,7 +17,7 @@
       "file": "../../../src/assets/login/mountain-castle.png",
       "method": "supplied",
       "references": [],
-      "notes": "Original supplied at 512 × 512. See src/modules/login/README.md for its source and foreground mask."
+      "notes": "Original supplied at 512 × 512. The user confirmed on 2026-11-17 that it was generated through Google Stitch and taken from its mockup. The exact generation/export record and applicable provider terms remain to be recorded. See src/modules/login/README.md for its source URL and generated foreground mask."
     }
   ]
 }

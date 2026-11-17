@@ -104,7 +104,10 @@ export const fontAttributions: Attribution[] = [
   },
 ];
 
-export const artworkAttributions: Attribution[] = [
+type ArtworkRecord = Pick<Attribution, "id" | "name" | "files" | "evidence" | "provenance"> &
+  Partial<Attribution>;
+
+const artworkRecords: ArtworkRecord[] = [
   {
     id: "hall",
     name: "Card Hall paintings and Traveller portrait",
@@ -147,8 +150,11 @@ export const artworkAttributions: Attribution[] = [
     name: "Login mountain castle",
     files: ["src/assets/login/mountain-castle.png"],
     evidence:
-      "docs/design/login/prompts.json records supplied artwork; upstream ownership not established",
-    provenance: "unresolved",
+      "User confirmed on 2026-11-17: generated through Google Stitch and taken from its mockup; docs/design/login/prompts.json records the supplied image.",
+    provenance: "generated",
+    creator: "Generated through Google Stitch for Fall",
+    source: "https://stitch.google.com/",
+    licenseStatus: "provider-terms-pending",
   },
   {
     id: "legacy-formats",
@@ -158,15 +164,26 @@ export const artworkAttributions: Attribution[] = [
       "src/assets/lobby/1vs2.webp",
       "src/assets/lobby/2vs2.webp",
     ],
-    evidence: "Existing runtime asset directory; no adjacent provenance record",
-    provenance: "unresolved",
+    evidence:
+      "User confirmed remaining artwork was generated on 2026-11-17. No production imports found for these three earlier illustrations; generation provider/records are not retained.",
+    provenance: "generated",
+    licenseStatus: "provider-terms-pending",
   },
   {
     id: "cards",
     name: "Spanish deck faces and card back",
     files: ["src/assets/cards/**/*.svg"],
-    evidence: "Imported SVGs and git history; upstream source and license need confirmation",
-    provenance: "unresolved",
+    evidence:
+      "User confirmed on 2026-11-17: manually redrawn in Adobe Illustrator from a Shutterstock artwork reference; permission records and the exact listing/artist have not been established. Replacement with independently generated faces and back is planned.",
+    provenance: "third-party",
+    creator: "SVG adaptation by Donkijote; reference artist not yet identified",
+    source: "https://www.shutterstock.com/",
+    license: "Permission not established; replacement planned",
+    licenseUrl: "https://www.shutterstock.com/terms",
+    licenseStatus: "permission-pending",
+    notice:
+      "This deck adapts third-party reference artwork. An independently created replacement deck is planned; credit does not establish permission to use the current reference artwork.",
+    modifications: "Redrawn as SVG in Adobe Illustrator from a Shutterstock reference.",
   },
   {
     id: "sounds",
@@ -176,8 +193,17 @@ export const artworkAttributions: Attribution[] = [
       "src/assets/cards/deal-card.mp3",
       "src/assets/audio/ember.wav",
     ],
-    evidence: "Existing audio adapters and animation effects; source and license need confirmation",
-    provenance: "unresolved",
+    evidence:
+      "User confirmed all sounds came from Pixabay on 2026-11-17 and supplied its sound-effects search URL. Individual track URLs/IDs, creators and download-date/license records remain pending. ember.wav is imported only by the development animation playground.",
+    provenance: "third-party",
+    creator: "Pixabay contributors; individual creators not yet identified",
+    source: "https://pixabay.com/es/sound-effects/search/",
+    license: "Pixabay Content License; individual downloads awaiting verification",
+    licenseUrl: "https://pixabay.com/service/license-summary/",
+    licenseStatus: "source-details-pending",
+    notice:
+      "Sounds sourced from Pixabay. Individual asset pages and download records are being verified.",
+    modifications: "Used as sound effects. Any edits to the original downloads remain unverified.",
   },
   {
     id: "geometry",
@@ -193,18 +219,23 @@ export const artworkAttributions: Attribution[] = [
     id: "effects",
     name: "Foreground mask and ember effect",
     files: ["src/assets/login/foreground-mask.svg", "src/assets/effects/ember.svg"],
-    evidence: "Project effects; original source and permissions awaiting confirmation",
-    provenance: "unresolved",
+    evidence:
+      "User confirmed the foreground mask and ember SVG were generated on 2026-11-17; generation provider and original records are not yet recorded.",
+    provenance: "generated",
+    licenseStatus: "provider-terms-pending",
   },
   {
     id: "public-icons",
     name: "App icons and favicon exports",
     files: ["public/*.{png,svg,ico}"],
-    evidence: "Public app icon variants; mapping each export to its source remains to be confirmed",
-    provenance: "unresolved",
+    evidence:
+      "User confirmed the current app icons/favicons were generated on 2026-11-17. Generation provider and mapping of individual exports to the original master remain to be recorded.",
+    provenance: "generated",
+    licenseStatus: "provider-terms-pending",
   },
-].map((entry) => ({
-  ...entry,
+];
+
+export const artworkAttributions: Attribution[] = artworkRecords.map((entry) => ({
   creator:
     entry.provenance === "generated"
       ? "Generated artwork prepared for Fall"
@@ -222,7 +253,9 @@ export const artworkAttributions: Attribution[] = [
       : "Original and generated artwork provenance is recorded separately from third-party licenses.",
   modifications:
     "Runtime assets may be resized, converted to WebP, masked or tinted. See the source record for individual export details.",
-})) as Attribution[];
+  ...(entry.provenance === "generated" ? { licenseStatus: "provider-terms-pending" as const } : {}),
+  ...entry,
+}));
 
 export const creditsInventory = {
   project: {

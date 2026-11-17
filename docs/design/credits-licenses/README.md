@@ -104,3 +104,43 @@ must use GSAP and respect reduced motion.
 - The user will check the undocumented deck and sound origins later. Browser visual review is pending because the Mac is locked and the user is away.
 
 - Software notices now follow the actual production JavaScript build, including lazy chunks, plus reviewed CSS imports. Installed-only dependencies are excluded. Fonts, artwork and sound provenance remain separate inventory responsibilities.
+
+## Licensing research
+
+Reviewed official sources on 2026-11-17 after the user clarified the asset origins.
+This records provenance and outstanding permission checks, not legal clearance.
+
+- [Pixabay Content License summary](https://pixabay.com/service/license-summary/)
+  and [full terms](https://pixabay.com/service/terms/) allow commercial and
+  non-commercial use subject to restrictions; attribution is not generally
+  required under the current summary. The terms distinguish incorporation in a
+  new creative work from prohibited standalone redistribution. All three sounds
+  were obtained there according to the user. Exact item pages and download-time
+  records are pending; do not call the files CC0 or assume the latest terms
+  identify the license applicable to those specific downloads.
+- [Shutterstock's terms](https://www.shutterstock.com/terms), particularly its
+  intellectual-property and content-use provisions, require licensing for use
+  of its content, including derivative works. The user reported redrawing the
+  current deck in Illustrator from a Shutterstock reference; reference
+  permission is not established. This is recorded as permission pending. No listing was identified, no
+  copyright owner was independently identified, and no substantial-similarity
+  determination was made. Giving credit or manually making SVG paths does not
+  itself supply a license.
+- [WIPO explains that copyright protects expression rather than ideas](https://www.wipo.int/en/web/copyright/protection).
+  Distinguish the Spanish-deck suit/rank convention from a particular printed
+  illustration. There is no blanket permission established here for a specific
+  "official" deck. If the user means Fournier, its own [card-face notice](https://www.nhfournier.es/blog/sabias-que-las-caras-de-fournier-son-marca-registrada/)
+  states its card faces are registered marks and require permission. Its
+  [legal notice](https://www.nhfournier.es/aviso-legal/) also restricts reproduction.
+  These are the publisher's statements; no trademark-register search or license
+  grant for a particular deck was obtained.
+- The user identified the castle as generated in [Google Stitch](https://stitch.google.com/)
+  and confirmed that other artwork, app icons, the foreground mask and ember SVG
+  were generated. This resolves their reported origin, not all provider-term or
+  third-party-input questions. Existing generation manifests remain authoritative
+  where recorded; do not invent missing providers, prompts or rights assignments.
+- Future card replacement should preserve the Spanish suits and existing game
+  ranks while using distinct face illustrations, symbols, borders and card-back
+  ornament. Do not use unlicensed stock images as edit inputs or request a copy
+  of a named commercial deck. Generate standalone production assets and follow
+  the artwork review/export standard. The replacement remains future work.

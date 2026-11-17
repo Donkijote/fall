@@ -70,14 +70,38 @@ the fixed-viewport correction and links the canonical background.
 ## Audit follow-ups
 
 Every file under `src/assets` and public image exports has an inventory owner.
-Coverage is not proof of permission. Entries explicitly marked `unresolved`
-still need source/creator/license confirmation: the Spanish deck, card and
-ember sounds, supplied login painting, earlier format paintings, foreground
-mask/ember geometry, and public app-icon provenance. The user will check the
-deck and sound sources later. Existing generated-art manifests include supplied
-references; review their inputs before asserting ownership or redistribution
-terms. Existing asset-side READMEs are retained as evidence, not another screen
-data source.
+Coverage is not proof of permission. The user's 2026-11-17 clarifications are
+recorded in each affected entry; provenance and license review are separate.
+
+- **Spanish deck:** the user redrew SVGs in Adobe Illustrator from a Shutterstock
+  reference. Permission records have not been established. Record the reference
+  as third-party input and permission as pending. Do not label this deck original,
+  public domain, generated, or MIT. The exact listing/artist is still unknown.
+  An independently generated set of faces and back is planned, not implemented.
+  An attribution line or a future replacement does not establish authorization
+  for the existing adapted artwork.
+- **Sounds:** all three files are from Pixabay, confirmed by the user. Individual
+  track URLs/IDs, creators, download dates and applicable license records remain
+  pending. `play-card.mp3` and `deal-card.mp3` are used in the game; `ember.wav`
+  has only a development-playground import. The current Pixabay license is
+  linked for reference; the platform search URL alone does not verify the
+  particular downloads. The user is looking for their specific pages.
+- **Login castle:** generated in Google Stitch and taken from its mockup,
+  confirmed by the user. The former "supplied" record now has a known generated
+  origin. Record provider terms and any generation/export evidence when available.
+- **Other artwork, favicon/app icons, foreground mask and ember SVG:** the user
+  confirmed generated provenance. Preserve existing prompt manifests; link the
+  generated master/export records where available. Do not infer a third-party
+  license grant or a guarantee of non-infringement from generated provenance.
+- **Earlier format paintings:** `src/assets/lobby/1vs1.webp`, `1vs2.webp`, and
+  `2vs2.webp` are the three orange cartoon Tavern scenes, not the current format
+  picker paintings. No imports outside the credits inventory were found. They
+  remain in the repo and are covered by the user's statement that other artwork
+  was generated; do not delete them as part of this provenance update.
+
+Existing asset-side READMEs are retained as evidence, not another screen data
+source. The [design review notes](../../../docs/design/credits-licenses/README.md#licensing-research)
+record the official licensing references and limitations of the research.
 
 Three shipped entries have no packaged root license/notice file:
 `@gsap/react`, `@react-three/fiber`, and `gsap`. Their source/available license
@@ -106,6 +130,6 @@ remain pending: computer use reported a locked Mac and no browser, and the user
 confirmed they are away. No second server was started; use the existing app on
 port 3000 for that review.
 
-Automated verification on 2026-11-17: all 314 repository tests passed; formatting,
+Automated verification on 2026-11-17: all 315 repository tests passed; formatting,
 lint, notice freshness and production build passed. The build retains its bundle
 size advisory; complete license text is lazy-loaded with the Credits route.

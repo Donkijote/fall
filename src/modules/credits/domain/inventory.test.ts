@@ -40,6 +40,27 @@ test("retains the existing icon credits, full font notices and project MIT notic
   expect(creditsInventory.project.notice).toBe(readFileSync(resolve("LICENSE"), "utf8"));
 });
 
+test("records supplied provenance without treating a stock-art redraw or a platform URL as cleared rights", () => {
+  const byId = (id: string) => creditsInventory.artwork.find((entry) => entry.id === id);
+  expect(byId("cards")).toMatchObject({
+    provenance: "third-party",
+    licenseStatus: "permission-pending",
+    source: "https://www.shutterstock.com/",
+  });
+  expect(byId("cards")?.modifications).toContain("Adobe Illustrator");
+  expect(byId("sounds")).toMatchObject({
+    provenance: "third-party",
+    licenseStatus: "source-details-pending",
+    licenseUrl: "https://pixabay.com/service/license-summary/",
+  });
+  expect(byId("login")).toMatchObject({
+    provenance: "generated",
+    source: "https://stitch.google.com/",
+  });
+  for (const id of ["legacy-formats", "effects", "public-icons"])
+    expect(byId(id)?.provenance).toBe("generated");
+});
+
 test("software notices match the dependency lockfile and preserve special license terms", () => {
   expect(creditsInventory.software.lockfileSha256).toBe(
     createHash("sha256")

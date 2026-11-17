@@ -7,7 +7,8 @@ screens the introduction stacks with the card. The mockup copy is illustrative;
 the current screen is a preview, and **Take your seat** opens the Hall.
 
 The backdrop is the supplied [mountain and castle original](../../../src/assets/login/mountain-castle.png),
-which the app uses directly. It is separate from the scenes painted into the
+which the app uses directly. The user confirmed it was generated through Google
+Stitch and taken from its mockup (2026-11-17). It is separate from the scenes painted into the
 mockups. The [prompt manifest](prompts.json) preserves the two mockup prompts.
 The [login implementation notes](../../../src/modules/login/README.md) document the source
 image, foreground mask, fog and ember effects.
