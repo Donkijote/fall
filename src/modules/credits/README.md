@@ -13,7 +13,9 @@ link. Direct entry is public and requires no player session.
   notice is imported from the root LICENSE without maintaining a duplicate.
 - `domain/software-notices.json` is generated from the installed production
   dependency graph and bound to the lockfile by SHA-256. It conservatively
-  includes transitive packages and tools declared as production dependencies.
+  includes transitive packages. Shadcn is a development CLI, but its own notice
+  is explicitly retained because `src/index.css` imports its distributed CSS;
+  the CLI's tooling-only dependencies are excluded.
 - `ui/CreditsScreen.tsx` composes the inventory, sections and routing integration.
   Supporting content and scenery live under `ui/components`. There is no
   application service or port because this static inventory needs neither.
@@ -43,6 +45,9 @@ the fixed-viewport correction and links the canonical background.
    and any `upstream-review-pending` entries. The generator retains distinct
    packaged LICENSE/LICENCE/COPYING/NOTICE texts across installed versions.
    Metadata license labels and SPDX links alone do not close a notice review.
+   If another development package contributes distributed CSS or other assets,
+   include its own package in the generator's explicit asset list rather than
+   including its entire tooling graph.
 4. Run `pnpm credits:notices:check`, the inventory tests, and the affected UI
    tests. Inventory coverage fails when a new runtime asset has no owner.
 

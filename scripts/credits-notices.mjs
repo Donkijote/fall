@@ -12,6 +12,21 @@ const packages = Object.values(
   ),
 ).flat();
 
+// Its stylesheet is distributed through src/index.css; its CLI dependencies are not.
+for (const name of ["shadcn"]) {
+  if (packages.some((item) => item.name === name)) continue;
+  const directory = join(root, "node_modules", name);
+  const metadata = JSON.parse(readFileSync(join(directory, "package.json"), "utf8"));
+  packages.push({
+    name,
+    paths: [directory],
+    versions: [metadata.version],
+    license: metadata.license,
+    author: typeof metadata.author === "string" ? metadata.author : metadata.author?.name,
+    homepage: metadata.homepage,
+  });
+}
+
 function noticesAt(directory) {
   return readdirSync(directory, { withFileTypes: true })
     .filter((file) => file.isFile() && /^(licen[cs]e|copying|notice)([.-]|$)/i.test(file.name))
@@ -70,7 +85,7 @@ const output =
   JSON.stringify(
     {
       scope:
-        "Installed production dependency graph, including transitive dependencies and tools declared as production dependencies. This is a conservative superset of the browser bundle.",
+        "Installed production dependency graph plus shadcn's distributed CSS. Tooling-only dependencies of the development CLI are excluded. This is a conservative superset of the browser bundle.",
       lockfileSha256: createHash("sha256")
         .update(readFileSync(join(root, "pnpm-lock.yaml")))
         .digest("hex"),

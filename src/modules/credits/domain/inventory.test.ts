@@ -52,4 +52,13 @@ test("software notices match the dependency lockfile and preserve special licens
   expect(
     creditsInventory.software.entries.find((entry) => entry.name === "gsap")?.license,
   ).toContain("gsap.com/standard-license");
+  expect(creditsInventory.software.entries.some((entry) => entry.name === "@babel/core")).toBe(
+    false,
+  );
+  expect(creditsInventory.software.entries.some((entry) => entry.name === "@babel/runtime")).toBe(
+    true,
+  );
+  expect(
+    creditsInventory.software.entries.find((entry) => entry.name === "shadcn")?.notices.length,
+  ).toBeGreaterThan(0);
 });
