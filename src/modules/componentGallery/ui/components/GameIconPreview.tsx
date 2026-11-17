@@ -1,6 +1,7 @@
 import wingfoot from "@/assets/branding/wingfoot.svg";
 import cardDraw from "@/assets/icons/card-draw.svg";
 import crossMark from "@/assets/icons/cross-mark.svg";
+import huntingHorn from "@/assets/icons/hunting-horn.svg";
 import openPalm from "@/assets/icons/open-palm.svg";
 import sparkles from "@/assets/icons/sparkles.svg";
 import stairs from "@/assets/icons/stairs.svg";
@@ -76,6 +77,12 @@ export const gameIcons = [
     usage: "Card Hall messages and Login email field",
   },
   {
+    name: "Hunting Horn",
+    icon: huntingHorn,
+    source: "src/assets/icons/hunting-horn.svg",
+    usage: "Shared callout warnings",
+  },
+  {
     name: "Jeweled Chalice",
     icon: jeweledChalice,
     source: "src/assets/login/icons/jeweled-chalice.svg",
@@ -109,7 +116,7 @@ export const gameIcons = [
     name: "Scroll Unfurled",
     icon: scrollUnfurled,
     source: "src/assets/lobby/card-hall/icons/scroll-unfurled.svg",
-    usage: "Card Hall journal",
+    usage: "Card Hall journal and shared callouts",
   },
   {
     name: "Scales",
@@ -121,7 +128,7 @@ export const gameIcons = [
     name: "Sparkles",
     icon: sparkles,
     source: "src/assets/icons/sparkles.svg",
-    usage: "Tavern capture bonus",
+    usage: "Shared callout tips",
   },
   {
     name: "Stairs",

@@ -1,6 +1,8 @@
 import { RULES } from "@/domain/constants/rules";
 import type { RuleItem } from "@/domain/entities/Rules";
 
+import { illustratedSings } from "./rulebookExamples";
+
 export type Chapter = {
   id: string;
   title: string;
@@ -108,12 +110,12 @@ searchEntries.push(
     title: entry.term,
     text: entry.def,
   })),
-  ...RULES.singsRanking.map((entry, index) => ({
+  ...illustratedSings.map((entry, index) => ({
     chapter: "sings",
     chapterTitle: "Sings",
     id: `sing-${index}`,
     title: entry.name,
-    text: `${entry.pattern}. ${singPointsLabel(entry.points)}. ${entry.optional ? "Optional" : "Mandatory"}. ${entry.notes ?? ""}`,
+    text: `${entry.description} ${entry.pattern}. ${singPointsLabel(entry.points)}. ${entry.optional ? "Optional" : "Mandatory"}. ${entry.notes ?? ""}`,
   })),
   {
     chapter: "scoring",

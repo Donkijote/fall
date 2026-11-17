@@ -1,3 +1,4 @@
+import { PointsBadge } from "@/components/cards/PointsBadge";
 import { RULES } from "@/domain/constants/rules";
 
 import { fallRankValues } from "../../../application/rulebookContent";
@@ -12,8 +13,12 @@ export function ScoringReference() {
         {fallRankValues.map(([rank, points]) => (
           <div key={rank} className="rounded-md bg-muted p-3">
             <dt className="text-sm text-muted-foreground">Rank {rank}</dt>
-            <dd className="mt-1 w-fit rounded-full bg-primary px-3 py-1 font-semibold text-primary-foreground">
-              +{points}
+            <dd className="mt-1">
+              <PointsBadge
+                points={`+${points}`}
+                label={`${points} points`}
+                className="size-13 @2xl:size-13"
+              />
             </dd>
           </div>
         ))}

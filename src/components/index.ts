@@ -9,6 +9,7 @@ export { PlayerIdentity } from "./hud/PlayerIdentity";
 export type { PlayerIdentityProps } from "./hud/PlayerIdentity";
 export { ResourceReadout } from "./hud/ResourceReadout";
 
+export { Callout } from "./surfaces/Callout";
 export { FramedCard } from "./surfaces/FramedCard";
 export { NavigationButton } from "./navigation/NavigationButton";
 export { NavigationGroup } from "./navigation/NavigationGroup";

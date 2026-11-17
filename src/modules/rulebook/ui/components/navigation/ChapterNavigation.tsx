@@ -1,9 +1,89 @@
+import gsap from "gsap";
 import { ChevronDown } from "lucide-react";
 import { useRef, type ReactNode } from "react";
 import { Link } from "react-router";
 
+import { useReducedMotion } from "@/infrastructure/ui/hooks/useGamePreferences";
+
+import { useGSAP } from "@gsap/react";
+
 import { chapterUrl } from "../../../adapters/rulebookRoutes";
 import { chapters, type Chapter } from "../../../application/rulebookContent";
+import "./ChapterNavigation.css";
+
+function ChapterLink({
+  entry,
+  index,
+  current,
+  onChoose,
+}: {
+  entry: Chapter;
+  index: number;
+  current: boolean;
+  onChoose: () => void;
+}) {
+  const link = useRef<HTMLAnchorElement>(null);
+  const reducedMotion = useReducedMotion();
+
+  useGSAP(
+    (_, contextSafe) => {
+      const element = link.current;
+      if (!element || reducedMotion) return;
+
+      const hover = window.matchMedia("(any-hover: hover)");
+      const revealAmount = () => {
+        if (element.getAttribute("aria-current") === "page") return 1;
+        if (element.matches(":focus-visible") || (hover.matches && element.matches(":hover"))) {
+          return 0.72;
+        }
+        return 0;
+      };
+
+      let target = revealAmount();
+      gsap.set(element, { "--chapter-reveal": target });
+
+      const sync = contextSafe?.(() => {
+        const next = revealAmount();
+        if (next === target) return;
+
+        const selecting = next === 1;
+        const leavingSelection = target === 1;
+        target = next;
+        gsap.to(element, {
+          "--chapter-reveal": next,
+          duration: selecting ? 0.43 : leavingSelection ? 0.33 : 0.28,
+          ease: selecting ? "back.out(1.25)" : "power2.out",
+          overwrite: "auto",
+        });
+      });
+      if (!sync) return;
+
+      const events = ["pointerenter", "pointerleave", "focus", "blur"];
+      events.forEach((event) => element.addEventListener(event, sync));
+      const selection = new MutationObserver(sync);
+      selection.observe(element, { attributeFilter: ["aria-current"] });
+
+      return () => {
+        selection.disconnect();
+        events.forEach((event) => element.removeEventListener(event, sync));
+      };
+    },
+    { dependencies: [reducedMotion], revertOnUpdate: true },
+  );
+
+  return (
+    <Link
+      ref={link}
+      to={chapterUrl(entry.id)}
+      onClick={onChoose}
+      aria-current={current ? "page" : undefined}
+      className="rulebook-chapter-link relative isolate flex min-h-11 items-center gap-3 rounded-md py-2 ps-7 pe-9 text-base text-artwork-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+    >
+      <span className="text-sm text-gold tabular-nums">{String(index + 1).padStart(2, "0")}</span>
+      {entry.title}
+    </Link>
+  );
+}
 
 export function ChapterNavigation({
   chapter,
@@ -26,18 +106,13 @@ export function ChapterNavigation({
   const links = (
     <nav aria-label="Rulebook chapters" className="space-y-1.5">
       {chapters.map((entry, index) => (
-        <Link
+        <ChapterLink
           key={entry.id}
-          to={chapterUrl(entry.id)}
-          onClick={choose}
-          aria-current={chapter.id === entry.id && !searching ? "page" : undefined}
-          className="flex min-h-11 items-center gap-3 rounded-md border-l-4 border-transparent px-3 py-2 text-base text-artwork-foreground hover:border-gold/45 hover:bg-artwork-foreground/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring aria-[current=page]:border-gold aria-[current=page]:bg-gold/25 aria-[current=page]:font-semibold aria-[current=page]:hover:border-gold aria-[current=page]:hover:bg-gold/25"
-        >
-          <span className="text-sm tabular-nums opacity-80">
-            {String(index + 1).padStart(2, "0")}
-          </span>
-          {entry.title}
-        </Link>
+          entry={entry}
+          index={index}
+          current={chapter.id === entry.id && !searching}
+          onChoose={choose}
+        />
       ))}
     </nav>
   );

@@ -7,6 +7,7 @@ import traveller from "@/assets/lobby/card-hall/traveller.webp";
 import {
   ArrowDivider,
   BronzeArrow,
+  Callout,
   PlayerIdentity,
   ResourceReadout,
   TextInput,
@@ -160,6 +161,20 @@ export const gallerySections: { title: string; folder: string; entries: Entry[] 
     title: "Surfaces",
     folder: "surfaces",
     entries: [
+      {
+        name: "Callout",
+        variants: "Note, tip, warning",
+        usage: "How to Play · highlighted rules",
+        Preview: () => (
+          <div className="grid gap-2">
+            <Callout>The rank you match determines how many points the Fall earns.</Callout>
+            <Callout tone="tip">Look for consecutive ranks to extend a capture.</Callout>
+            <Callout tone="warning">
+              Clearing the table earns a bonus only while there are cards left in the deck.
+            </Callout>
+          </div>
+        ),
+      },
       {
         name: "FramedCard",
         variants: "Brass frame with header, content, and actions",

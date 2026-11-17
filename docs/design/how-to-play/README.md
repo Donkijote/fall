@@ -19,3 +19,12 @@ and verification. Its [content audit](../../../src/modules/rulebook/content-plan
 maps the guide back to the rules and tracks engine discrepancies separately.
 See the [runtime artwork inventory](../../../src/assets/rulebook/README.md)
 for the landscape, tablet and phone exports.
+
+The contents menu uses an illustrated leather bookmark tab with a bronze rail
+and an oak engraving. Hover and keyboard focus reveal the tab, and the active
+chapter keeps it visible. Sings use the shared declaration and points badges
+alongside larger card examples on the same parchment as the Sings reference.
+
+Rule callouts use a shared blackened leather panel with bronze trim and
+separate glyphs for notes, tips, and warnings. The component gallery shows all
+three states, including a wrapping example.

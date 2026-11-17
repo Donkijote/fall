@@ -1,0 +1,34 @@
+.rulebook-chapter-link::before {
+  --chapter-progress: var(--chapter-reveal, var(--chapter-rest, 0));
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-inline: 2rem solid transparent;
+  border-image: url("/src/assets/rulebook/chapter-tab.webp") 0 100 fill stretch;
+  opacity: var(--chapter-progress);
+  transform: translateX(calc(-10px * (1 - var(--chapter-progress))))
+    scaleX(calc(0.965 + 0.035 * var(--chapter-progress)));
+  transform-origin: left center;
+  pointer-events: none;
+  content: "";
+}
+
+.rulebook-chapter-link:focus-visible {
+  --chapter-rest: 0.72;
+}
+
+@media (any-hover: hover) {
+  .rulebook-chapter-link:hover {
+    --chapter-rest: 0.72;
+  }
+}
+
+.rulebook-chapter-link[aria-current="page"] {
+  --chapter-rest: 1;
+}
+
+@media (forced-colors: active) {
+  .rulebook-chapter-link[aria-current="page"] {
+    border: 1px solid LinkText;
+  }
+}

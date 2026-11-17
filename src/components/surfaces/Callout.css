@@ -1,0 +1,17 @@
+.artwork-callout::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border: solid transparent;
+  border-width: 8px 18px;
+  border-image: url("/src/assets/ui/surfaces/callout.webp") 20 52 fill stretch;
+  pointer-events: none;
+  content: "";
+}
+
+@media (forced-colors: active) {
+  .artwork-callout::before {
+    border: 1px solid CanvasText;
+    border-radius: var(--radius-md);
+  }
+}

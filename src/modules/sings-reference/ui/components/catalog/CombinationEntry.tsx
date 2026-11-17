@@ -1,12 +1,10 @@
-import { cn } from "cn";
 import { Fragment } from "react";
 
-import cardHolder from "@/assets/sings-reference/combination-card-holder.webp";
-import mandatoryBadge from "@/assets/sings-reference/combination-mandatory.webp";
-import optionalBadge from "@/assets/sings-reference/combination-optional.webp";
-import pointsBadge from "@/assets/sings-reference/combination-points.webp";
 import { BronzeArrow } from "@/components";
 import { CardFaces } from "@/components/cards/CardFaces";
+import { DeclarationBadge } from "@/components/cards/DeclarationBadge";
+import { PointsBadge } from "@/components/cards/PointsBadge";
+import { ParchmentArtwork } from "@/components/surfaces/ParchmentArtwork";
 
 import type { SingResult } from "../../../application/singsCatalog";
 
@@ -44,52 +42,22 @@ export function CombinationEntry({ sing, query }: { sing: SingResult; query: str
           <h2 className="text-lg leading-tight wrap-break-word @2xl:text-xl @5xl:text-2xl">
             <MatchText text={sing.name} query={term} />
           </h2>
-          <p
-            className={cn(
-              "relative isolate grid min-h-6 w-[clamp(4.5rem,17cqw,6rem)] place-items-center px-2 font-serif text-xs leading-none font-semibold",
-              sing.mandatory
-                ? "text-artwork-shadow portrait:min-w-24"
-                : "text-artwork-foreground italic",
-            )}
-          >
-            <img
-              src={sing.mandatory ? mandatoryBadge : optionalBadge}
-              alt=""
-              className={cn(
-                "pointer-events-none absolute inset-x-0 top-1/2 -z-10 w-full -translate-y-1/2",
-                sing.mandatory ? "h-5" : "h-6",
-              )}
-            />
+          <DeclarationBadge mandatory={sing.mandatory}>
             <BronzeArrow
               tone="faded"
               className="absolute end-full me-1.5 hidden h-0.5 w-7 @min-[48rem]:block"
             />
-            <span className="-translate-y-px">{sing.mandatory ? "Mandatory" : "Optional"}</span>
             <BronzeArrow
               tone="faded"
               direction="left"
               className="absolute start-full ms-1.5 hidden h-0.5 w-7 @min-[48rem]:block"
             />
-          </p>
+          </DeclarationBadge>
         </div>
-        <p className="absolute end-0 top-0 isolate grid size-(--points-size) content-center justify-items-center font-[family-name:Times_New_Roman,Times,serif] leading-none text-gold lining-nums tabular-nums">
-          <img
-            src={pointsBadge}
-            alt=""
-            className="pointer-events-none absolute inset-0 -z-10 size-full"
-          />
-          <span className="text-[1.7rem] leading-[0.82] @2xl:text-[1.95rem]">{sing.points}</span>
-          <span className="text-xs leading-none @2xl:text-sm">
-            {sing.points === 1 ? "pt" : "pts"}
-          </span>
-        </p>
+        <PointsBadge points={sing.points} className="absolute end-0 top-0 size-(--points-size)" />
       </header>
       <div className="relative isolate mt-auto p-3 @2xl:p-4">
-        <img
-          src={cardHolder}
-          alt=""
-          className="pointer-events-none absolute inset-0 -z-10 size-full"
-        />
+        <ParchmentArtwork />
         <CardFaces
           label={`${sing.name} example hand`}
           cards={sing.example}
