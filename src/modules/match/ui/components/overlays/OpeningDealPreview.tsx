@@ -1,16 +1,27 @@
 import gsap from "gsap";
 import { useRef } from "react";
 
-import table from "@/assets/icons/table.svg";
-import hands from "@/assets/lobby/card-hall/icons/three-friends.svg";
+import table from "@/assets/icons/round-table.svg";
+import hands from "@/assets/lobby/card-hall/icons/card-pick.svg";
 import parchment from "@/assets/lobby/tavern-match/opening-preview.webp";
 import tile from "@/assets/lobby/tavern-match/score-ivory-tile.webp";
+import arrow from "@/assets/login/icons/plain-arrow.svg";
 import { BronzeArrow } from "@/components/dividers/BronzeArrow";
 import { Icon } from "@/components/icons/Icon";
 import type { DealOrder, TablePattern } from "@/domain/entities/GameState";
 import { useReducedMotion } from "@/infrastructure/ui/hooks/useGamePreferences";
 
 import { useGSAP } from "@gsap/react";
+
+function PreviewHeading({ children }: { children: string }) {
+  return (
+    <p className="flex min-w-0 items-center justify-center gap-2 title-type text-sm compact-landscape:text-xs">
+      <BronzeArrow tone="faded" className="h-0.5 min-w-0 flex-1 opacity-60" />
+      <span className="shrink-0">{children}</span>
+      <BronzeArrow tone="faded" direction="left" className="h-0.5 min-w-0 flex-1 opacity-60" />
+    </p>
+  );
+}
 
 export function OpeningDealPreview({
   order,
@@ -57,7 +68,7 @@ export function OpeningDealPreview({
         alt=""
         className="pointer-events-none absolute inset-0 -z-10 size-full"
       />
-      <p className="text-center title-type text-sm compact-landscape:text-xs">Deal order</p>
+      <PreviewHeading>Deal order</PreviewHeading>
       <div className="relative grid grid-cols-[1fr_auto_1fr] items-center gap-2">
         {destinations.map((destination, index) => (
           <div
@@ -75,17 +86,24 @@ export function OpeningDealPreview({
             </span>
           </div>
         ))}
-        <BronzeArrow className="col-start-2 row-start-1 w-6 self-center" />
+        <Icon
+          icon={arrow}
+          className="col-start-2 row-start-1 h-5 w-6 -rotate-90 self-center bg-artwork-shadow"
+        />
       </div>
-      <p className="text-center title-type text-sm compact-landscape:text-xs">Bonus target</p>
+      <PreviewHeading>Bonus target</PreviewHeading>
       <div className="relative grid grid-cols-4 gap-1.5">
         {ranks.map((rank) => (
           <span
             key={rank}
             data-deal-preview-piece={String(rank)}
-            className="relative isolate grid aspect-[7/6] place-items-center font-heading text-xl leading-none compact-landscape:text-lg"
+            className="relative isolate grid aspect-[7/6] place-items-center font-[family-name:Times_New_Roman,Times,serif] text-[1.75rem] leading-none lining-nums tabular-nums compact-landscape:text-2xl"
           >
-            <img src={tile} alt="" className="absolute inset-0 -z-10 size-full" />
+            <img
+              src={tile}
+              alt=""
+              className="absolute inset-0 -z-10 size-full drop-shadow-[0_2px_1px_color-mix(in_oklch,var(--artwork-shadow)_35%,transparent)]"
+            />
             {rank}
           </span>
         ))}

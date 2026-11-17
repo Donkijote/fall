@@ -1,6 +1,8 @@
 import { useId, useState } from "react";
 
+import sprig from "@/assets/ui/dividers/oak-sprig.webp";
 import { ChoiceButton } from "@/components/controls/ChoiceButton";
+import { BronzeArrow } from "@/components/dividers/BronzeArrow";
 import { ToggleGroup } from "@/components/ui/toggle-group";
 import type { DealOrder, TablePattern } from "@/domain/entities/GameState";
 
@@ -22,12 +24,19 @@ export function OpeningDeal({ deal }: { deal: (order: DealOrder, pattern: TableP
         deal(order, pattern);
       }}
     >
-      <h2
-        id={`${id}-title`}
-        className="mt-[calc(13.1cqw+0.75rem)] text-center artwork-title text-[clamp(1rem,4vmin,1.5rem)] leading-tight"
-      >
-        Choose the opening deal
-      </h2>
+      <header className="opening-deal-heading mt-[calc(13.1cqw+0.75rem)] grid w-full justify-items-center gap-2">
+        <h2
+          id={`${id}-title`}
+          className="text-center artwork-title text-[clamp(1.125rem,3.8cqw,2rem)] leading-tight"
+        >
+          Choose the opening deal
+        </h2>
+        <div aria-hidden="true" className="flex w-[78%] items-center gap-2">
+          <BronzeArrow tone="faded" className="h-0.5 min-w-0 flex-1" />
+          <img src={sprig} alt="" className="h-3.5 w-auto" />
+          <BronzeArrow tone="faded" direction="left" className="h-0.5 min-w-0 flex-1" />
+        </div>
+      </header>
       <div className="opening-deal-content grid w-full min-w-0 items-center gap-4">
         <div className="grid min-w-0 gap-4 compact-landscape:gap-3">
           <div className="min-w-0">
@@ -48,13 +57,13 @@ export function OpeningDeal({ deal }: { deal: (order: DealOrder, pattern: TableP
             >
               <ChoiceButton
                 value="playersThenTable"
-                className="min-w-0 px-2 text-xs text-artwork-foreground"
+                className="min-w-0 px-2 title-type text-xs text-artwork-foreground"
               >
                 Hands first
               </ChoiceButton>
               <ChoiceButton
                 value="tableThenPlayers"
-                className="min-w-0 px-2 text-xs text-artwork-foreground"
+                className="min-w-0 px-2 title-type text-xs text-artwork-foreground"
               >
                 Table first
               </ChoiceButton>
@@ -79,14 +88,14 @@ export function OpeningDeal({ deal }: { deal: (order: DealOrder, pattern: TableP
               <ChoiceButton
                 value="inc"
                 aria-label="Ascending, 1–2–3–4"
-                className="min-w-0 px-2 text-sm text-artwork-foreground tabular-nums"
+                className="min-w-0 px-2 font-[family-name:Times_New_Roman,Times,serif] text-lg text-artwork-foreground lining-nums tabular-nums"
               >
                 1 2 3 4
               </ChoiceButton>
               <ChoiceButton
                 value="dec"
                 aria-label="Descending, 4–3–2–1"
-                className="min-w-0 px-2 text-sm text-artwork-foreground tabular-nums"
+                className="min-w-0 px-2 font-[family-name:Times_New_Roman,Times,serif] text-lg text-artwork-foreground lining-nums tabular-nums"
               >
                 4 3 2 1
               </ChoiceButton>

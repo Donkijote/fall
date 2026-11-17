@@ -3,9 +3,9 @@ import cardDraw from "@/assets/icons/card-draw.svg";
 import crossMark from "@/assets/icons/cross-mark.svg";
 import huntingHorn from "@/assets/icons/hunting-horn.svg";
 import openPalm from "@/assets/icons/open-palm.svg";
+import roundTable from "@/assets/icons/round-table.svg";
 import sparkles from "@/assets/icons/sparkles.svg";
 import stairs from "@/assets/icons/stairs.svg";
-import table from "@/assets/icons/table.svg";
 import trophy from "@/assets/icons/trophy.svg";
 import woodenDoor from "@/assets/icons/wooden-door.svg";
 import cardPick from "@/assets/lobby/card-hall/icons/card-pick.svg";
@@ -138,16 +138,16 @@ export const gameIcons = [
     usage: "Tavern opening deal table patterns",
   },
   {
-    name: "Table",
-    icon: table,
-    source: "src/assets/icons/table.svg",
+    name: "Round Table",
+    icon: roundTable,
+    source: "src/assets/icons/round-table.svg",
     usage: "Tavern opening deal preview",
   },
   {
     name: "Three Friends",
     icon: threeFriends,
     source: "src/assets/lobby/card-hall/icons/three-friends.svg",
-    usage: "Card Hall guild and Tavern opening deal preview",
+    usage: "Card Hall guild",
   },
   {
     name: "Trophy",

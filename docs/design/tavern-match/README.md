@@ -178,3 +178,9 @@ choices. The existing frame uses protected corner and crest slices.
 The final standings pair the shared team nameplates with points medallions.
 Both victory and defeat use the same responsive rows inside the illustrated
 standings panel.
+
+Opening Deal uses a card-hand glyph and a round wooden table in its preview,
+with a solid directional arrow. Faded rules flank the preview headings, and
+the main heading has a centered oak sprig divider. Rank tiles use lining serif
+numerals and a small shadow to lift them from the parchment. The wax selectors
+sit inside the shared input frame with clearance around their painted edges.
