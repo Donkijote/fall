@@ -1,17 +1,9 @@
 import tile from "@/assets/lobby/tavern-match/score-ivory-tile.webp";
-import clubSeal from "@/assets/lobby/tavern-match/score-seal-club.webp";
-import cupSeal from "@/assets/lobby/tavern-match/score-seal-cup.webp";
-import swordSeal from "@/assets/lobby/tavern-match/score-seal-sword.webp";
 import type { GameState } from "@/domain/entities/GameState";
 
+import { matchSideSeals } from "./matchSideSeals";
 import { scoreSideStyle } from "./scoreSideStyle";
 import "./MatchScoreboard.css";
-
-const seals = new Map([
-  ["1", swordSeal],
-  ["2", cupSeal],
-  ["3", clubSeal],
-]);
 
 export function getMatchScores(state: GameState, sideName: (side: string) => string) {
   return [...new Set(state.players.map(({ team }) => String(team)))].map((side) => ({
@@ -37,7 +29,7 @@ export function MatchScoreboard({
       className="match-scoreboard relative isolate flex max-w-full items-start justify-center gap-2 px-9 pt-1 pb-3 data-[two-scores]:gap-3.5 data-[two-scores]:px-10 sm:gap-3 sm:px-11 sm:pb-4 sm:data-[two-scores]:gap-5 sm:data-[two-scores]:px-13 compact-landscape:gap-1.5 compact-landscape:px-7 compact-landscape:pb-2.5 compact-landscape:data-[two-scores]:gap-3.5 compact-landscape:data-[two-scores]:px-9"
     >
       {scores.map(({ side, label, score }) => {
-        const seal = seals.get(side);
+        const seal = matchSideSeals.get(side);
         return (
           <li
             key={side}

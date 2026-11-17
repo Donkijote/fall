@@ -161,3 +161,9 @@ The approved [Tavern Pennant scoreboard](scoreboard-mockup.png) pairs a charcoal
 cloth banner and embroidered oak sprigs with ivory tiles and wax seals. The blue
 sword, red cup, and green wooden club identify the score sides. The board uses
 live numbers and sizes the pennant around two or three equal tiles.
+
+The approved [Counting Captures mockup](capture-count-mockup.png) retains the
+illustrated tray. Team nameplates sit above the leather pockets and ivory
+capture totals. The bonus coin sits in the center of each pocket, with the
+scoreboard's wax seal at the lower right. The parchment ribbon appears when
+the capture playback awards an extra card.

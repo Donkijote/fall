@@ -27,3 +27,7 @@
     url("/src/assets/lobby/tavern-match/seat-plaque-face-right.png") right / var(--plaque-cap-width)
       100% no-repeat;
 }
+
+.match-plaque:has(.match-plaque-team-face)::before {
+  filter: brightness(1.35) saturate(1.14);
+}

@@ -70,10 +70,10 @@
     },
     {
       "file": "../../../src/assets/lobby/tavern-match/capture-tray.webp",
-      "method": "recorded",
-      "references": ["../../../src/assets/lobby/tavern-match/dealer-board.webp"],
-      "prompt": "Paint an isolated wide walnut and leather counting tray with a worn brass lip, abacus beads at each edge, and a small coin and card-back medallion at top center. Leave a dark, open interior for live capture and bonus counters. Use transparent alpha and omit lettering and heraldry.",
-      "notes": "Standalone ImageGen prop. Trim the transparent margin and export to WebP at 960 px wide."
+      "method": "reconstructed",
+      "references": ["capture-count-mockup.png"],
+      "prompt": "Isolated front-on blank medieval capture tray with a stitched brown leather frame, one warm brass rail, a round card-and-coin crest, and abacus beads at the sides. Keep the interior empty for live controls and use a transparent exterior with neutral lighting.",
+      "notes": "Trim the transparent margin and export the continuous frame at 960 × 410 WebP."
     },
     {
       "file": "../../../src/assets/lobby/tavern-match/result-standings.webp",
@@ -154,6 +154,48 @@
       "method": "reconstructed",
       "references": ["scoreboard-mockup.png"],
       "prompt": "Forest-green wax seal with an embossed wooden club. Front-on with neutral lighting and a transparent exterior."
+    },
+    {
+      "file": "capture-count-mockup.png",
+      "method": "reconstructed",
+      "references": ["overlay-mockups.png", "scoreboard-mockup.png"],
+      "prompt": "Keep the illustrated capture tray and title. Align team nameplates at the top, tuck an ivory card counter into each stitched leather pocket, center a brass bonus coin, and place a team wax seal at the bottom right. Show a curled parchment Extra card! ribbon in the awarded slot."
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern-match/capture-bonus-coin.webp",
+      "method": "reconstructed",
+      "references": ["capture-count-mockup.png"],
+      "prompt": "Single blank antique brass coin with a rounded rim, fine inner beading, and a recessed matte face with a restrained laurel accent. Front-on with neutral lighting and a transparent exterior."
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern-match/capture-ribbon.webp",
+      "method": "reconstructed",
+      "references": ["capture-count-mockup.png"],
+      "prompt": "Single blank low parchment ribbon with curled ends, about 4:1. Front-on, neutral lighting and a transparent exterior."
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern-match/capture-pocket-blue.webp",
+      "method": "reconstructed",
+      "references": ["capture-count-mockup.png"],
+      "prompt": "Walnut leather pocket with a scooped upper lip and blue piping and stitches. Front-on with neutral lighting and a transparent exterior."
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern-match/capture-pocket-red.webp",
+      "method": "reconstructed",
+      "references": ["capture-count-mockup.png"],
+      "prompt": "Walnut leather pocket with a scooped upper lip and red piping and stitches. Front-on with neutral lighting and a transparent exterior."
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern-match/capture-pocket-green.webp",
+      "method": "reconstructed",
+      "references": ["capture-count-mockup.png"],
+      "prompt": "Walnut leather pocket with a scooped upper lip and green piping and stitches. Front-on with neutral lighting and a transparent exterior."
+    },
+    {
+      "file": "../../../src/assets/lobby/tavern-match/capture-ivory-tile.webp",
+      "method": "reconstructed",
+      "references": ["capture-count-mockup.png"],
+      "prompt": "Blank ivory tally tile with small engraved gold oak leaf flourishes in its top corners. Front-on with neutral lighting and a transparent exterior."
     }
   ]
 }

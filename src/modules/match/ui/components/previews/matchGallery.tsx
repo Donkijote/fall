@@ -160,6 +160,24 @@ function HandPreview({ canPlay }: { canPlay: boolean }) {
   );
 }
 
+const sampleCaptureGroups = getCountingGroups(sampleMatch("1vs2"));
+
+function CaptureCountPreview() {
+  return (
+    <div className="[container-type:size] relative isolate h-80">
+      <CaptureCount
+        groups={sampleCaptureGroups}
+        sideName={sideName}
+        snapshot={{
+          1: { counted: 12, points: 2, extraCard: true },
+          2: { counted: 8, points: 0 },
+          3: { counted: 7, points: 1 },
+        }}
+      />
+    </div>
+  );
+}
+
 export const matchGallery = {
   title: "Tavern match",
   folder: "match",
@@ -183,13 +201,9 @@ export const matchGallery = {
     {
       name: "CaptureCount",
       source: "src/modules/match/ui/components/overlays/CaptureCount.tsx",
-      variants: "Three sides at the start of the capture count",
+      variants: "Three teams, populated tallies and extra-card ribbon",
       usage: "Tavern match · between rounds",
-      Preview: () => (
-        <PositionedPreview>
-          <CaptureCount groups={getCountingGroups(sampleMatch("1vs2"))} sideName={sideName} />
-        </PositionedPreview>
-      ),
+      Preview: CaptureCountPreview,
     },
     {
       name: "MatchResult",

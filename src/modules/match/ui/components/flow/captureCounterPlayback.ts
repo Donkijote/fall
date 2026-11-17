@@ -49,7 +49,7 @@ export function createCaptureCounterPlayback(
           .fromTo(
             burst,
             { autoAlpha: 0, y: 8, scale: 0.72 },
-            { autoAlpha: 1, y: -6, scale: 1, duration: 0.2, ease: "back.out(2)" },
+            { autoAlpha: 1, y: -2, scale: 1, duration: 0.2, ease: "back.out(2)" },
             0,
           )
           .to(burst, { autoAlpha: 0, y: -19, duration: 0.24, ease: "power1.in" }, 0.27);

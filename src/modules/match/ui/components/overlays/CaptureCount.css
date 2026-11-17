@@ -1,0 +1,23 @@
+.capture-pocket-front {
+  /* Only the front lip and leather face sit above the ivory counter. */
+  clip-path: polygon(
+    0 4%,
+    5% 10%,
+    12% 15%,
+    22% 20%,
+    34% 23%,
+    50% 24%,
+    66% 23%,
+    78% 20%,
+    88% 15%,
+    95% 10%,
+    100% 4%,
+    100% 100%,
+    0 100%
+  );
+}
+
+.capture-count-numeral {
+  font-family: "Times New Roman", Times, serif;
+  font-variant-numeric: lining-nums tabular-nums;
+}
