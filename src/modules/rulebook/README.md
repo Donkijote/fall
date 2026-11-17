@@ -77,3 +77,16 @@ tests cover the route boundary and reference filters. Run `pnpm check`,
 
 Use the existing port 3000 app for visual checks across light/dark, narrow phone,
 tablet, short landscape, desktop and ultrawide. Do not start another server.
+
+The module entry point also exports `rulebookGallery` for the development-only
+Component gallery. Preview fixtures live under `ui/components/previews` and
+render this module’s styled components with sample props.
+
+## Shared artwork finishing pass
+
+Chapter navigation and rule-search results use `GuideLink`; the shared component
+owns the leather reveal, keyboard focus, reduced-motion cues, and GSAP cleanup.
+Quick-start steps use `NumberMedallion`; card-play diagrams use `BronzeArrow`.
+Scoring rank panels and the semantic quota table reuse `ParchmentArtwork`, with
+artwork rules between quota rows. Content, quotas, search, and game rules remain
+owned by the existing application/domain model.

@@ -43,3 +43,12 @@ Reduced motion skips the animation.
 Keep design decisions in this README and temporary review material outside
 the repository. The [Tavern module](../../../src/modules/tavern/README.md)
 documents implementation and verification. [Issue #101](https://github.com/Donkijote/fall/issues/101)
+
+The format cards layer standalone brass frames over the format illustrations.
+Duel uses crossed blades and shields, Free-for-All uses triads of rivets and
+stars, and Team Match uses paired shields and pennants. The stitched leather
+ribbon sits behind the live player count and description. The picker and
+Component Gallery use the same format data.
+
+Idle breathing and the slower hover lift move the illustrated card above the
+ribbon. The ribbon and its text stay anchored while the brass brightens.

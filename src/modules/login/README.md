@@ -49,3 +49,6 @@ navigation, preference changes, fallback behavior, and renderer cleanup.
 After changing the scene or layout, use the existing app to check both themes,
 short portrait and landscape viewports, reduced motion, and mask alignment.
 The unit tests exercise scene behavior without rendering WebGL pixels.
+
+The module entry point exports `loginGallery` for the development-only
+Component gallery. Its preview fixtures live under `ui/components/previews`.

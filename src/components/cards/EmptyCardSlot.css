@@ -1,0 +1,9 @@
+.empty-card-slot::before {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  border: 6px solid transparent;
+  border-image: url("../../assets/ui/controls/text-input.webp") 22 fill stretch;
+  filter: brightness(1.3);
+}

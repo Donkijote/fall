@@ -1,0 +1,26 @@
+{
+  "art_direction": "../art-direction.md#shared-generation-prompt",
+  "outputs": [
+    {
+      "file": "../../../src/assets/ui/dividers/bronze-arrow.webp",
+      "method": "recorded",
+      "references": [],
+      "prompt": "Standalone 2D game UI ornament on true transparent canvas: a SINGLE very long extremely slender antique bronze forged arrow pointing RIGHT. Horizontal, perfectly straight, front-on. A hairline continuous shaft with a subtle satin metallic highlight and an elegant small pointed blacksmith spear tip at right, tiny restrained fletching detail at left. Width to height of artwork around 20:1. Muted warm aged gold in the style of a handcrafted medieval card game. This is a fine divider line, not an illustration of a weapon. No background, shadow, leaf, text, other objects. Fully in frame. The middle 80% must be an uninterrupted straight shaft for slice scaling.",
+      "notes": "Trim to alpha bounds and export to 768px width with aspect ratio preserved."
+    },
+    {
+      "file": "../../../src/assets/ui/dividers/oak-sprig.webp",
+      "method": "recorded",
+      "references": [],
+      "prompt": "Standalone tiny UI ornament: a single diagonally rising antique satin bronze oak sprig with three to four lobed oak leaves, as a refined blacksmith-forged game UI divider centerpiece. Warm aged muted gold, readable silhouette, subtle sculpted highlights and dark engraved veins. No arrows, border, objects, lettering, background, or exterior shadow. True transparency, centered, fully in frame. About 2:1 width to height.",
+      "notes": "Trim to alpha bounds and export to 160px width with aspect ratio preserved."
+    },
+    {
+      "file": "../../../src/assets/ui/dividers/faded-rule.webp",
+      "method": "recorded",
+      "references": [],
+      "prompt": "One standalone horizontal decorative UI hairline divider for a medieval book of card game rules, transparent background. An extraordinarily slender straight aged bronze filigree line, warm muted bronze at center, progressively fading to fully transparent at both ends, symmetrically. No arrowhead, no fletching, no emblem, no object or ornament at the center, no text, no shadow or glow. A clean faint etched rule. The fade must be in the artwork opacity, no black matte. Render one centered straight thin line, at least 80:1 length to visible thickness, fully within canvas.",
+      "notes": "Crop around the visible rule using alpha 16 to ignore stray transparent pixels. Keep a small margin for the fade, export at 1024 × 7, match the arrow shaft median RGB by adding (65, 65, 59) with channel clipping and original alpha, and rotate clockwise for faded-rule-vertical.webp."
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import { Callout } from "@/components/surfaces/Callout";
 import type { RuleItem } from "@/domain/entities/Rules";
 export function RuleSections({
   items,
@@ -17,13 +18,9 @@ export function RuleSections({
           </h3>
           <p className="mt-2 max-w-[75ch] leading-relaxed whitespace-pre-line">{item.body}</p>
           {item.callouts?.map((callout) => (
-            <p
-              key={callout.text}
-              role="note"
-              className="mt-3 rounded-md border-l-2 border-gold bg-muted p-3 text-sm leading-relaxed text-muted-foreground"
-            >
+            <Callout key={callout.text} tone={callout.type} className="mt-3">
               {callout.text}
-            </p>
+            </Callout>
           ))}
           {item.examples?.length ? (
             <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-relaxed">

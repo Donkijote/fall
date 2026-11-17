@@ -1,10 +1,9 @@
-import { cn } from "cn";
-
-import counter from "@/assets/lobby/tavern-match/score-counter.webp";
-import tally from "@/assets/lobby/tavern-match/score-tally.webp";
+import tile from "@/assets/lobby/tavern-match/score-ivory-tile.webp";
 import type { GameState } from "@/domain/entities/GameState";
 
+import { matchSideSeals } from "./matchSideSeals";
 import { scoreSideStyle } from "./scoreSideStyle";
+import "./MatchScoreboard.css";
 
 export function getMatchScores(state: GameState, sideName: (side: string) => string) {
   return [...new Set(state.players.map(({ team }) => String(team)))].map((side) => ({
@@ -24,44 +23,39 @@ export function MatchScoreboard({
   const scores = getMatchScores(state, sideName);
 
   return (
-    <div className="relative isolate max-w-full px-5 pt-4 pb-2 text-artwork-foreground sm:px-6 compact-landscape:pt-3 compact-landscape:pb-1.5">
-      <img src={tally} alt="" className="pointer-events-none absolute inset-0 -z-10 size-full" />
-      <ul
-        aria-label="Scores"
-        className="flex items-center justify-center gap-2 sm:gap-4 compact-landscape:gap-2"
-      >
-        {scores.map(({ side, label, score }) => {
-          const style = scoreSideStyle(side);
-          const team = state.scores.type === "team";
-          return (
-            <li key={side} className="grid min-w-0 justify-items-center gap-0.5">
-              <span className="sr-only">{team ? (style?.name ?? label) : label}</span>
-              <strong
-                className={cn(
-                  "relative isolate block h-8 w-12 title-type text-artwork-foreground tabular-nums sm:h-9 sm:w-14 compact-landscape:h-7 compact-landscape:w-11",
-                  state.players.length === 2 && "w-14 sm:w-17 compact-landscape:w-12",
-                )}
-              >
-                <span
-                  aria-hidden="true"
-                  className={cn(
-                    "absolute inset-[30%_8%_18%] -z-20 rounded-md bg-linear-to-b",
-                    style?.plate ?? "from-slate-700 to-artwork-shadow",
-                  )}
-                />
-                <img
-                  src={counter}
-                  alt=""
-                  className="pointer-events-none absolute inset-0 -z-10 size-full"
-                />
-                <span className="absolute inset-[33%_12%_21%] grid place-items-center text-[0.8125rem] leading-none sm:text-[0.9375rem] compact-landscape:text-xs">
-                  {score}
-                </span>
-              </strong>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+    <ul
+      aria-label="Scores"
+      data-two-scores={scores.length === 2 || undefined}
+      className="match-scoreboard relative isolate flex max-w-full items-start justify-center gap-2 px-9 pt-1 pb-3 data-[two-scores]:gap-3.5 data-[two-scores]:px-10 sm:gap-3 sm:px-11 sm:pb-4 sm:data-[two-scores]:gap-5 sm:data-[two-scores]:px-13 compact-landscape:gap-1.5 compact-landscape:px-7 compact-landscape:pb-2.5 compact-landscape:data-[two-scores]:gap-3.5 compact-landscape:data-[two-scores]:px-9"
+    >
+      {scores.map(({ side, label, score }) => {
+        const seal = matchSideSeals.get(side);
+        return (
+          <li
+            key={side}
+            className="relative isolate grid aspect-[7/5] w-11 min-w-0 place-items-center sm:w-14 compact-landscape:w-10"
+          >
+            <span className="sr-only">
+              {state.scores.type === "team" ? (scoreSideStyle(side)?.name ?? label) : label}
+            </span>
+            <img
+              src={tile}
+              alt=""
+              className="pointer-events-none absolute inset-0 -z-10 size-full"
+            />
+            <strong className="pb-[12%] title-type text-base leading-none font-normal text-artwork-shadow tabular-nums sm:text-xl compact-landscape:text-sm">
+              {score}
+            </strong>
+            {seal && (
+              <img
+                src={seal}
+                alt=""
+                className="pointer-events-none absolute bottom-0 left-1/2 z-10 h-[64%] w-auto max-w-none -translate-x-1/2 translate-y-[56%] object-contain drop-shadow-sm"
+              />
+            )}
+          </li>
+        );
+      })}
+    </ul>
   );
 }

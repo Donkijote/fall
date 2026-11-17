@@ -17,3 +17,29 @@ preview share the selection cues, and reduced motion keeps the static cues.
 Settings opens over this same Hall. See the [Home module](../../../src/modules/home/README.md)
 for behavior and verification and the [runtime artwork inventory](../../../src/assets/lobby/card-hall/README.md)
 for viewport exports and exact crop coordinates.
+
+Card Hall and the Component Gallery use the same ActivityCard frames. Each
+activity has standalone portrait artwork with larger diagonal corner plates
+and symbols engraved into the metal. Tavern uses the Spanish suits, including
+a wooden club. Campaign uses exploration symbols and Arena uses arms and
+tournament symbols. Idle uses the worn frame, active brightens it, and
+unavailable cards use a matte finish.
+
+Both Card Hall docks use blackened iron frames with softly rounded corners with aged bronze trim and
+brass icon silhouettes. Joined controls share one frame with painted corners
+and fine dividers between buttons. The dark metal and fine trim come from the supplied
+navigation reference. Compact icon groupings follow the supplied main-menu
+reference. Both docks use the shared NavigationButton and NavigationGroup.
+
+Oak-leaf engravings mark the outer corners. The bronze has even lighting at rest.
+The shared GSAP reveal lights all four leaves on standalone controls, the nearest
+leaf pair on grouped edge controls, and the rails on middle controls. It responds
+to hover, keyboard focus, and an open popover.
+
+## Resource and Help finishing pass
+
+Resource counters reuse the approved [outline action skin](../action-button/README.md)
+with live icons and values. Portrait layouts stack icon/value within compact mounts;
+desktop and short landscape use rows. Help menu links reuse the How to Play leather
+bookmark through `GuideLink`, with an artwork arrow. These compositions reuse
+canonical runtime assets; no new generation or alternate skins are introduced.

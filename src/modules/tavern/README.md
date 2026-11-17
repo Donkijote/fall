@@ -15,3 +15,7 @@ skips the animation.
 The [match module](../match/README.md) owns the table and waiting state.
 See the [picker design notes](../../../docs/design/tavern/README.md).
 The Home and legacy navigation tests cover entry and dismissal.
+
+The module entry point also exports `tavernGallery` for the development-only
+Component gallery. Preview fixtures live under `ui/components/previews` and
+render this module’s styled components with sample props.

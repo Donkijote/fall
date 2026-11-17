@@ -25,17 +25,13 @@ export function RulebookHeader({
           <label htmlFor="find-rule" className="sr-only">
             Find a rule
           </label>
-          <Search
-            aria-hidden="true"
-            className="pointer-events-none absolute top-3.5 left-3 size-4 text-muted-foreground"
-          />
           <TextInput
             id="find-rule"
             type="search"
             placeholder="Find a rule"
             value={query}
             onChange={(event) => onQueryChange(event.target.value)}
-            className="min-h-11 border-gold/70 bg-background pl-10 text-foreground"
+            leadingIcon={<Search />}
           />
         </form>
       </div>

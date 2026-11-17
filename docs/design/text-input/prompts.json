@@ -1,0 +1,15 @@
+{
+  "art_direction": "../art-direction.md#shared-generation-prompt",
+  "outputs": [
+    {
+      "file": "../../../src/assets/ui/controls/text-input.webp",
+      "method": "recorded",
+      "references": ["../login/mockup-detailed.png"],
+      "prompt": "Standalone text-free medieval RPG text input skin inspired by a fine antique brass frame inset into charcoal. One extremely wide shallow rectangle, about 9:1 aspect ratio, straight horizontal and vertical edges with tiny clipped chamfer corners (not concave, not ornamental). Brass is a single hairline thin strip, delicately aged mottled dark warm brass with subtle metallic highlights and a narrow dark recessed inside bevel. Uniform near-black charcoal center with extremely restrained fine grain, meant for live editable ivory text. No text, icon, fittings, emblems, decoration, extra frame, cast shadow, wood, scenery. Straight-on. Isolated on true transparent background. Fill horizontal canvas with modest margins.",
+      "notes": "Trim the standalone output to its alpha bounds and export as 1024 \u00d7 84 WebP.",
+      "refinements": [
+        "Replace the four straight chamfers with small concave quarter-circle cutouts. The thin antique brass follows each inward curve. Keep the transparent silhouette, charcoal face, and restrained lighting."
+      ]
+    }
+  ]
+}

@@ -17,10 +17,10 @@ export function useTavernCardMotion(button: RefObject<HTMLButtonElement | null>,
       const control = button.current;
       if (!control || reducedMotion) return;
 
-      const frame = control.querySelector("[data-tavern-card-attention]");
+      const artwork = control.querySelector("[data-tavern-card-attention]");
       const reflection = control.querySelector("[data-tavern-card-light]");
       const idleFrame = control.querySelector("[data-tavern-card-idle]");
-      const border = control.querySelector("[data-card-border-glint]");
+      const border = control.querySelector("[data-tavern-card-frame]");
       const idle = gsap.timeline({ repeat: -1, repeatDelay: 5 });
       idle
         .fromTo(
@@ -34,11 +34,11 @@ export function useTavernCardMotion(button: RefObject<HTMLButtonElement | null>,
       const index = Array.from(control.parentElement?.children ?? []).indexOf(control);
       idle.delay(1.7 + Math.max(0, index) * 1.15);
 
-      gsap.to(border, { "--glint-angle": "360deg", duration: 6, ease: "none", repeat: -1 });
+      gsap.set(border, { "--tavern-frame-light": 0 });
       const highlight = gsap.timeline({ paused: true });
       highlight
-        .to(frame, { y: -5, scale: 1.025, duration: 0.26, ease: "power2.out" }, 0)
-        .to(border, { opacity: 1, duration: 0.24 }, 0);
+        .to(artwork, { y: -4, scale: 1.018, duration: 0.56, ease: "sine.inOut" }, 0)
+        .to(border, { "--tavern-frame-light": 1, duration: 0.62, ease: "sine.inOut" }, 0);
       attention.current = highlight;
 
       return () => {

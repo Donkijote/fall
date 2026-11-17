@@ -37,6 +37,20 @@
       "method": "recorded",
       "references": ["background.png"],
       "prompt": "Use case: stylized-concept\nAsset type: responsive tablet artwork master for the approved Fall How to Play archive page.\nInput image: the approved clean landscape archive, art and room identity reference.\nRecompose this exact archive room for tablet portrait approximately 4:5, around 1120x1400. Pull back slightly to show shelves at left and cool daylight at right, desk and books low in the bottom fifth. Keep a large quiet central stone area and upper title zone. Preserve the room identity, stone arches, oak, leather books, low warm lantern and cool light; extend the vault upward rather than stretching. Do not squeeze or letterbox the original.\nNo UI, labels, lettering, cards, people, borders, watermark, logos or baked controls. The background is decorative. Do not add new scene landmarks or change the palette."
+    },
+    {
+      "file": "../../../src/assets/rulebook/chapter-tab.webp",
+      "method": "reconstructed",
+      "references": ["mockup-detailed.png"],
+      "prompt": "Create a standalone shallow oxblood leather chapter tab with fine aged bronze trim, softly concave ends, and a small gold oak leaf at the right. Leave the middle empty, with neutral lighting and a transparent exterior.",
+      "notes": "The width scales through the center to preserve the end details."
+    },
+    {
+      "file": "../../../src/assets/ui/surfaces/callout.webp",
+      "method": "reconstructed",
+      "references": ["mockup-detailed.png"],
+      "prompt": "Draw a blank isolated rulebook note panel in blackened walnut leather with a fine aged bronze edge and understated corner details. Keep the face dark and clear for text. Front-on with neutral lighting and transparent outside the panel.",
+      "notes": "Export at 600 × 120 WebP. The artwork stretches through its middle as callout text wraps."
     }
   ]
 }

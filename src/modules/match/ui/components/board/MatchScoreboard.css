@@ -1,0 +1,20 @@
+.match-scoreboard::before {
+  position: absolute;
+  inset: 0 0 0.25rem;
+  z-index: -1;
+  border-inline: clamp(1.5rem, 5vw, 2.5rem) solid transparent;
+  border-image: url("/src/assets/lobby/tavern-match/score-pennant.webp") 0 144 fill stretch;
+  pointer-events: none;
+  content: "";
+}
+
+@media (min-width: 640px) and (min-height: 651px) and (orientation: landscape) {
+  .match-scoreboard:not([data-two-scores]) {
+    padding-inline: 4.5rem;
+  }
+
+  .match-scoreboard::before {
+    /* Scale the end slices by the same factor as the banner height. */
+    border-inline-width: calc(3.5rem * 144 / 114);
+  }
+}

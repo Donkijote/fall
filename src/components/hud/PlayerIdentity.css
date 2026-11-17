@@ -1,0 +1,21 @@
+.game-player-copy::before {
+  --backdrop-overhang: clamp(1.75rem, 3.5vw, 3.25rem);
+  position: absolute;
+  inset-block: -0.95rem;
+  inset-inline: calc(-1 * (var(--player-portrait-width) + var(--player-gap)))
+    calc(-1 * var(--backdrop-overhang));
+  z-index: -1;
+  pointer-events: none;
+  content: "";
+  background: color-mix(in oklch, var(--artwork-shadow) 65%, transparent);
+  mask-image:
+    linear-gradient(
+      to right,
+      transparent,
+      black calc(var(--player-portrait-width) * 0.8),
+      black calc(100% - var(--backdrop-overhang) * 1.25),
+      transparent
+    ),
+    linear-gradient(to bottom, transparent, black 28%, black 72%, transparent);
+  mask-composite: intersect;
+}

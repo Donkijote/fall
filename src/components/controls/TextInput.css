@@ -1,0 +1,80 @@
+.text-input::before,
+.text-input::after {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  content: "";
+  border: 7px solid transparent;
+  border-image: url("../../assets/ui/controls/text-input.webp") 22 stretch;
+}
+
+.text-input::before {
+  border-image-slice: 22 fill;
+  filter: brightness(calc(1 + 0.38 * var(--input-focus, 0)));
+}
+
+.text-input::after {
+  opacity: calc(0.8 * var(--input-focus, 0));
+  /* Drop the charcoal from the highlight layer before blending it over the skin. */
+  filter: brightness(1.8) contrast(3) saturate(0.8);
+  mix-blend-mode: screen;
+  mask-image: conic-gradient(
+    from var(--input-glint-angle, 35deg),
+    transparent 0deg,
+    black 12deg,
+    transparent 28deg
+  );
+}
+
+.text-input:focus-within {
+  --input-focus: 1;
+}
+
+.text-input:has(input[aria-invalid="true"]) {
+  outline: 1px solid var(--destructive);
+  outline-offset: 1px;
+}
+
+.text-input:has(input[aria-invalid="true"]:focus-visible) {
+  outline-width: 2px;
+  outline-offset: 2px;
+}
+
+.text-input:has(input:disabled) {
+  opacity: 0.6;
+}
+
+@media (forced-colors: active) {
+  .text-input::before {
+    border: 1px solid CanvasText;
+  }
+
+  .text-input::after {
+    display: none;
+  }
+
+  .text-input:focus-within {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+}
+
+.text-input input[type="search"]::-webkit-search-cancel-button {
+  appearance: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-inline-start: 0.25rem;
+  cursor: pointer;
+  background: currentColor;
+  mask: url("../../assets/icons/cross-mark.svg") center / 0.75rem no-repeat;
+  color: var(--gold);
+}
+
+.text-input input[type="search"]::-webkit-search-cancel-button:hover {
+  color: var(--artwork-foreground);
+}
+
+.text-input input[type="search"]::-webkit-search-cancel-button:active {
+  color: var(--gold);
+}

@@ -11,12 +11,11 @@ import cupSuit from "@/assets/login/icons/jeweled-chalice.svg";
 import passwordIcon from "@/assets/login/icons/padlock.svg";
 import seatIcon from "@/assets/login/icons/plain-arrow.svg";
 import clubSuit from "@/assets/login/icons/wood-club.svg";
-import { ActionButton, FramedCard, TextInput } from "@/components";
+import { ActionButton, ArrowDivider, BronzeArrow, FramedCard, TextInput } from "@/components";
 import { Icon } from "@/components/icons/Icon";
 import { Button } from "@/components/ui/button";
 import { CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 import { useReducedMotion } from "@/infrastructure/ui/hooks/useGamePreferences";
 import { HOME_PATH } from "@/routes/Routes";
 
@@ -24,12 +23,11 @@ import { useGSAP } from "@gsap/react";
 
 import { LoginAtmosphere } from "./LoginAtmosphere";
 import { ProviderIcon } from "./ProviderIcon";
-import "./LoginScreen.css";
 
 const suitIcons = [coinSuit, cupSuit, swordSuit, clubSuit];
 
 const credentialInputClass =
-  "h-11 pl-11 sm:h-12 md:text-base lg:text-sm max-xl:landscape:h-[clamp(2.75rem,12dvh,3.25rem)] max-xl:landscape:text-base transition-none";
+  "h-11 sm:h-12 md:text-base lg:text-sm max-xl:landscape:h-[clamp(2.75rem,12dvh,3.25rem)] max-xl:landscape:text-base";
 
 const staticButtonClass = "transition-none active:not-aria-[haspopup]:translate-y-0";
 const cardLinkClass = cn(staticButtonClass, "h-6 px-0 text-foreground");
@@ -40,7 +38,6 @@ export function LoginScreen() {
   const navigate = useNavigate();
   const screenRef = useRef<HTMLElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
-  const rimRef = useRef<HTMLSpanElement>(null);
 
   useGSAP(
     () => {
@@ -51,19 +48,6 @@ export function LoginScreen() {
           .timeline({ defaults: { ease: "power2.out", clearProps: "opacity,transform" } })
           .from(".login-intro > *", { opacity: 0, y: 18, duration: 0.85, stagger: 0.09 })
           .from(cardRef.current, { opacity: 0, y: 24, duration: 1 }, 0.15);
-
-        const rim = rimRef.current;
-        if (!rim) return;
-
-        gsap
-          .timeline({ delay: 0.9, repeat: -1, repeatDelay: 2.5 })
-          .fromTo(
-            rim,
-            { "--login-rim-angle": "-65deg" },
-            { "--login-rim-angle": "295deg", duration: 8, ease: "none" },
-          )
-          .to(rim, { opacity: 0.9, duration: 1.25, ease: "sine.out" }, 0)
-          .to(rim, { opacity: 0, duration: 1.5, ease: "sine.in" }, 6.5);
       });
       return () => motion.revert();
     },
@@ -83,10 +67,7 @@ export function LoginScreen() {
             className="login-intro min-w-0 space-y-3 text-artwork-foreground [text-shadow:0_1px_4px_var(--artwork-shadow)] sm:space-y-5 lg:space-y-7 max-xl:landscape:space-y-4 max-sm:landscape:hidden"
           >
             <p className="flex items-center gap-2 text-[0.625rem] font-semibold tracking-[0.2em] text-gold uppercase sm:gap-3 sm:text-xs sm:tracking-[0.24em] max-xl:landscape:gap-2 max-xl:landscape:text-[0.625rem] max-xl:landscape:tracking-[0.16em]">
-              <span
-                className="h-px w-6 shrink-0 bg-gold sm:w-10 max-xl:landscape:w-6"
-                aria-hidden="true"
-              />
+              <BronzeArrow className="w-6 shrink-0 sm:w-10 max-xl:landscape:w-6" />
               The classic. Reimagined.
             </p>
             <h1
@@ -99,7 +80,8 @@ export function LoginScreen() {
                 A new story.
               </span>
             </h1>
-            <p className="hidden max-w-md border-l border-gold/60 pl-4 text-sm leading-relaxed lg:block lg:pl-5 lg:text-base xl:text-lg max-xl:landscape:pl-3 max-xl:landscape:text-sm sm:landscape:block">
+            <p className="relative hidden max-w-md pl-4 text-sm leading-relaxed lg:block lg:pl-5 lg:text-base xl:text-lg max-xl:landscape:pl-3 max-xl:landscape:text-sm sm:landscape:block">
+              <BronzeArrow direction="down" className="absolute inset-y-0 left-0" />
               Beyond the mist, a new challenge awaits.
               <span className="max-xl:landscape:hidden">
                 {" "}
@@ -127,11 +109,6 @@ export function LoginScreen() {
             ref={cardRef}
             className="login-card relative w-full min-w-0 [--card-spacing:--spacing(4)] sm:[--card-spacing:--spacing(5)] xl:[--card-spacing:--spacing(6)] max-xl:landscape:[--card-spacing:clamp(1rem,calc(12dvh-1.5rem),2rem)]"
           >
-            <span
-              ref={rimRef}
-              aria-hidden="true"
-              className="login-card-rim pointer-events-none absolute inset-0 rounded-[inherit] opacity-0 forced-colors:hidden"
-            />
             <CardHeader className="justify-items-center gap-2 pt-0 text-center sm:gap-3 xl:pt-2 max-xl:landscape:flex max-xl:landscape:items-center max-xl:landscape:justify-center max-xl:landscape:gap-3">
               <span className="mb-1 flex size-10 items-center justify-center rounded-full border border-gold/60 bg-linear-to-b from-secondary to-card text-muted-foreground shadow-sm sm:size-12 xl:size-16 max-xl:landscape:mb-0 max-xl:landscape:size-[clamp(2rem,10dvh,2.75rem)] max-xl:landscape:shrink-0">
                 <Icon icon={appEmblem} className="size-5 sm:size-6 xl:size-8" />
@@ -148,19 +125,14 @@ export function LoginScreen() {
               >
                 <div className="min-w-0 space-y-2">
                   <Label htmlFor={`${formId}-email`}>Email address</Label>
-                  <div className="relative">
-                    <Icon
-                      icon={mailIcon}
-                      className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-muted-foreground"
-                    />
-                    <TextInput
-                      id={`${formId}-email`}
-                      type="email"
-                      autoComplete="email"
-                      placeholder="you@example.com"
-                      className={credentialInputClass}
-                    />
-                  </div>
+                  <TextInput
+                    id={`${formId}-email`}
+                    type="email"
+                    autoComplete="email"
+                    placeholder="you@example.com"
+                    leadingIcon={<Icon icon={mailIcon} className="size-4" />}
+                    className={credentialInputClass}
+                  />
                 </div>
 
                 <div className="min-w-0 space-y-2">
@@ -170,19 +142,14 @@ export function LoginScreen() {
                       Forgot password?
                     </Button>
                   </div>
-                  <div className="relative">
-                    <Icon
-                      icon={passwordIcon}
-                      className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-muted-foreground"
-                    />
-                    <TextInput
-                      id={`${formId}-password`}
-                      type="password"
-                      autoComplete="current-password"
-                      placeholder="Enter your password"
-                      className={credentialInputClass}
-                    />
-                  </div>
+                  <TextInput
+                    id={`${formId}-password`}
+                    type="password"
+                    autoComplete="current-password"
+                    placeholder="Enter your password"
+                    leadingIcon={<Icon icon={passwordIcon} className="size-4" />}
+                    className={credentialInputClass}
+                  />
                 </div>
 
                 <ActionButton
@@ -197,11 +164,9 @@ export function LoginScreen() {
               </form>
 
               <div className="login-alternatives flow-root min-w-0 max-xl:landscape:flex max-xl:landscape:flex-col max-xl:landscape:justify-center max-xl:landscape:rounded-2xl max-xl:landscape:bg-muted/30 max-xl:landscape:p-4">
-                <div className="my-4 flex items-center gap-4 sm:my-5 xl:my-7 max-xl:landscape:mt-0 max-xl:landscape:mb-3 max-xl:landscape:justify-center">
-                  <Separator className="flex-1 bg-gold/50 max-xl:landscape:hidden" />
+                <ArrowDivider className="my-4 sm:my-5 xl:my-7 max-xl:landscape:mt-0 max-xl:landscape:mb-3 max-xl:landscape:justify-center max-xl:landscape:[&>span[aria-hidden]]:hidden">
                   <span className="shrink-0 text-xs text-muted-foreground">Or continue with</span>
-                  <Separator className="flex-1 bg-gold/50 max-xl:landscape:hidden" />
-                </div>
+                </ArrowDivider>
                 <div
                   className="flex justify-center gap-4 max-xl:landscape:grid max-xl:landscape:grid-cols-[repeat(2,auto)] max-xl:landscape:gap-4"
                   role="group"

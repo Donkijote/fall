@@ -2,11 +2,13 @@ import { cn } from "cn";
 import { useRef, useState } from "react";
 
 import cardBack from "@/assets/cards/back.svg";
+import { EmptyCardSlot } from "@/components/cards/EmptyCardSlot";
 import { SuitGlyph } from "@/components/cards/SuitGlyph";
 import type { Card } from "@/domain/entities/Card";
 import { toCardKey } from "@/domain/helpers/card";
 
 import { MatchHandCard } from "./MatchHandCard";
+import { MatchPlaque } from "./MatchPlaque";
 import { placeTableCards, type TableSlots } from "./tableSlots";
 import { useHandReflow } from "./useHandReflow";
 
@@ -45,7 +47,7 @@ function CardStack({
       className="grid min-w-[2.1rem] shrink-0 justify-items-center gap-0.5"
     >
       <div aria-hidden="true" className="relative w-(--match-card-width)">
-        <div className="aspect-[63/88] w-full rounded-[10%] border border-dashed border-gold/55 bg-artwork-shadow/55" />
+        <EmptyCardSlot />
         {count > 0 && (
           <div data-pile-back="" className="absolute inset-0">
             <div
@@ -58,12 +60,12 @@ function CardStack({
           </div>
         )}
       </div>
-      <span
+      <MatchPlaque
         aria-hidden="true"
-        className="rounded-sm bg-artwork-shadow/90 px-1 py-0.5 text-[clamp(0.55rem,1.35cqmin,0.75rem)] leading-none whitespace-nowrap text-artwork-foreground"
+        className="text-[clamp(0.55rem,1.35cqmin,0.75rem)] compact-landscape:px-1.5 compact-landscape:py-0.5"
       >
         {label}
-      </span>
+      </MatchPlaque>
     </div>
   );
 }
@@ -154,6 +156,13 @@ export function MatchSeatCards({
           centered ? "top-1/2 right-full mr-2 -translate-y-1/2" : "bottom-full mb-2",
           align === "left" && "left-1",
           align === "right" && "right-1 flex-row-reverse",
+          centered && "compact-landscape:mr-[calc(var(--seat-size)*0.38+0.25rem)]",
+          deck === undefined &&
+            align === "left" &&
+            "compact-landscape:left-[calc(var(--seat-size)/2)] compact-landscape:-translate-x-1/2",
+          deck === undefined &&
+            align === "right" &&
+            "compact-landscape:right-[calc(var(--seat-size)/2)] compact-landscape:translate-x-1/2",
         )}
       >
         <CardStack count={collected} player={player} />

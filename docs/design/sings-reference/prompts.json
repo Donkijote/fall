@@ -42,6 +42,34 @@
       "method": "reconstructed",
       "references": ["background.png"],
       "prompt": "Recompose the approved sorting table for tablet portrait. Preserve its angle, wood, lighting and quiet central card area. Keep artwork free of text and UI; reframe the same table without stretching the scene."
+    },
+    {
+      "file": "../../../src/assets/sings-reference/combination-mandatory.webp",
+      "method": "reconstructed",
+      "references": ["mockup-detailed.png"],
+      "prompt": "Blank hammered brass declaration plate with chamfered tips and two dark pin heads. Standalone front view on a transparent background, with even lighting and no lettering.",
+      "notes": "The supplied combination-entry mockup guided the badge and parchment details."
+    },
+    {
+      "file": "../../../src/assets/sings-reference/combination-optional.webp",
+      "method": "reconstructed",
+      "references": ["mockup-detailed.png"],
+      "prompt": "Blank elongated pressed oxblood wax badge with gently tapered ends and a raised rim made of wax. Standalone front view on a transparent background, with even lighting and no lettering.",
+      "notes": "The supplied combination-entry mockup guided the badge and parchment details."
+    },
+    {
+      "file": "../../../src/assets/sings-reference/combination-points.webp",
+      "method": "reconstructed",
+      "references": ["mockup-detailed.png"],
+      "prompt": "Blank round dark bronze points medallion with a rich aged gold rim and engraved laurels on the left and right edges. Standalone front view on a transparent background, with even lighting and no lettering.",
+      "notes": "The supplied combination-entry mockup guided the badge and parchment details."
+    },
+    {
+      "file": "../../../src/assets/sings-reference/combination-card-holder.webp",
+      "method": "reconstructed",
+      "references": ["mockup-detailed.png"],
+      "prompt": "Blank horizontal parchment mat with softly rounded corners and a gently aged paper edge for three live card faces. Standalone front view on a transparent background, with even lighting and no lettering.",
+      "notes": "The supplied combination-entry mockup guided the badge and parchment details."
     }
   ]
 }

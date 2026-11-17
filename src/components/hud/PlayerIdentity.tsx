@@ -1,7 +1,6 @@
-import { UserRound } from "lucide-react";
-import { useState } from "react";
-
 import { Icon } from "../icons/Icon";
+import "./PlayerIdentity.css";
+import { PlayerPortrait } from "./PlayerPortrait";
 
 const formatExperience = new Intl.NumberFormat();
 
@@ -22,14 +21,6 @@ export function PlayerIdentity({
   level,
   experience,
 }: PlayerIdentityProps) {
-  const [failedAvatar, setFailedAvatar] = useState<string>();
-  const [failedFallback, setFailedFallback] = useState<string>();
-  const avatarAvailable = avatarUrl && avatarUrl !== failedAvatar;
-  const source = avatarAvailable
-    ? avatarUrl
-    : fallbackAvatarUrl !== failedFallback
-      ? fallbackAvatarUrl
-      : undefined;
   const hasLevel = level !== undefined && Number.isInteger(level) && level > 0;
   const hasExperience =
     experience &&
@@ -41,24 +32,16 @@ export function PlayerIdentity({
 
   return (
     <div
-      className="game-player flex min-w-0 items-center gap-1.5 sm:gap-[clamp(0.6rem,1vw,1rem)]"
+      className="game-player relative isolate flex min-w-0 items-center gap-(--player-gap) [--player-gap:0.375rem] [--player-portrait-width:clamp(44px,5vw,78px)] sm:[--player-gap:clamp(0.6rem,1vw,1rem)] portrait:[--player-portrait-width:2.75rem] compact-landscape:[--player-portrait-width:2.75rem]"
       role="group"
       aria-label="Player identity"
     >
-      <span className="game-player-avatar grid aspect-square w-[clamp(44px,5vw,78px)] shrink-0 place-items-center overflow-hidden rounded-full border-2 border-gold/70 bg-card text-muted-foreground portrait:w-11 compact-landscape:w-11 [&_svg]:size-1/2">
-        {source ? (
-          <img
-            src={source}
-            className="size-full object-cover"
-            alt=""
-            referrerPolicy="no-referrer"
-            onError={() => (avatarAvailable ? setFailedAvatar(source) : setFailedFallback(source))}
-          />
-        ) : (
-          <UserRound aria-hidden="true" />
-        )}
-      </span>
-      <span className="game-player-copy grid w-full max-w-40 min-w-0 gap-0.5 portrait:max-w-[17ch]">
+      <PlayerPortrait
+        avatarUrl={avatarUrl}
+        fallbackAvatarUrl={fallbackAvatarUrl}
+        className="w-(--player-portrait-width)"
+      />
+      <span className="game-player-copy relative grid w-full max-w-40 min-w-0 gap-0.5 portrait:max-w-[17ch]">
         <span className="flex min-w-0 items-center gap-1">
           <span className="grid min-w-0">
             <span

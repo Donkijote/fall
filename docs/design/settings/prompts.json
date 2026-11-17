@@ -12,6 +12,27 @@
       "method": "reconstructed",
       "references": ["mockup-simplified.png", "../home-lobby/mockup-detailed.png"],
       "prompt": "Keep the same Card Hall backdrop, centered dialog, copy, controls and section order. Render a more ornate material study with engraved brass trim, subtly textured charcoal, recessed controls and a framed oxblood Done action. Keep labels and selected states crisp."
+    },
+    {
+      "file": "../../../src/assets/ui/controls/brass-wax-thumb.webp",
+      "method": "recorded",
+      "references": [],
+      "prompt": "Single isolated perfectly round medieval UI control thumb, front view. One thick raised softly rounded aged antique bronze rim with a dark oxblood red wax center, simple short engraved vertical grip notch centered in the wax. Designed to read at 18 pixels, bold simple material contrasts, no tiny ornate details. Even neutral lighting around circumference, no glow, no cast shadow, no directional hot spots, no text. Transparent outside the circular silhouette, square canvas.",
+      "notes": "Trim transparent margins and export at 72 × 72 WebP."
+    },
+    {
+      "file": "../../../src/assets/ui/controls/volume-rail.webp",
+      "method": "reconstructed",
+      "references": [],
+      "prompt": "A long capsule rail with a recessed blackened iron channel. Paint a pronounced aged bronze rim and an iron grain on the face, front-on with neutral light. Keep the exterior transparent and the face free of lettering, icons, handles, and highlights.",
+      "notes": "Trim and export at 256 × 36 WebP."
+    },
+    {
+      "file": "../../../src/assets/ui/controls/mute-track.webp",
+      "method": "reconstructed",
+      "references": [],
+      "prompt": "A compact capsule plate with a recessed blackened iron channel. Paint a pronounced aged bronze rim and an iron grain on the face, front-on with neutral light. Keep the exterior transparent and the face free of lettering, icons, handles, and highlights.",
+      "notes": "Trim and export at 168 × 72 WebP."
     }
   ]
 }

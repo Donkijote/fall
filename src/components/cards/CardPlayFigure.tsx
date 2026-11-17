@@ -1,8 +1,7 @@
-import { ArrowRight } from "lucide-react";
-
 import { ParchmentFigure } from "@/components/surfaces/ParchmentFigure";
 import type { Card } from "@/domain/entities/Card";
 
+import { BronzeArrow } from "../dividers/BronzeArrow";
 import { CardFaces } from "./CardFaces";
 
 type CardPlayFigureProps = {
@@ -28,7 +27,7 @@ export function CardPlayFigure({ title, played, table, captured, caption }: Card
       <div className="grid items-center justify-items-center gap-5 sm:grid-cols-[1fr_2fr_auto_1.4fr] sm:gap-3">
         <CardGroup label="You play" cards={[played]} />
         <CardGroup label="On the table" cards={table} />
-        <ArrowRight aria-hidden="true" className="size-6 rotate-90 sm:rotate-0" />
+        <BronzeArrow className="w-10 rotate-90 sm:rotate-0" />
         <CardGroup label="Your capture" cards={captured} />
       </div>
     </ParchmentFigure>

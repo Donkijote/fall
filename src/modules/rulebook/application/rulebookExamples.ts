@@ -39,7 +39,8 @@ export const cascadeExample = {
 
 export const illustratedSings = RULES.singsRanking.map((sing) => {
   const id = sing.name === "Pair + any" ? "pair" : sing.name.toLowerCase().replaceAll(" ", "-");
-  return { ...sing, example: HAND_META[id]?.example ?? [] };
+  const meta = HAND_META[id];
+  return { ...sing, description: meta?.description ?? sing.pattern, example: meta?.example ?? [] };
 });
 
 const quota = RULES.modeQuotas.duel;

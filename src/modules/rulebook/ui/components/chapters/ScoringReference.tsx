@@ -1,3 +1,5 @@
+import { PointsBadge } from "@/components/cards/PointsBadge";
+import { ParchmentArtwork } from "@/components/surfaces/ParchmentArtwork";
 import { RULES } from "@/domain/constants/rules";
 
 import { fallRankValues } from "../../../application/rulebookContent";
@@ -10,10 +12,18 @@ export function ScoringReference() {
       </h3>
       <dl className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
         {fallRankValues.map(([rank, points]) => (
-          <div key={rank} className="rounded-md bg-muted p-3">
-            <dt className="text-sm text-muted-foreground">Rank {rank}</dt>
-            <dd className="mt-1 w-fit rounded-full bg-primary px-3 py-1 font-semibold text-primary-foreground">
-              +{points}
+          <div
+            key={rank}
+            className="relative isolate grid justify-items-center gap-2 p-4 text-artwork-shadow"
+          >
+            <ParchmentArtwork />
+            <dt className="title-type text-sm">Rank {rank}</dt>
+            <dd>
+              <PointsBadge
+                points={`+${points}`}
+                label={`${points} points`}
+                className="size-13 @2xl:size-13"
+              />
             </dd>
           </div>
         ))}

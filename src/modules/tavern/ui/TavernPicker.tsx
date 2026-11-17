@@ -1,9 +1,6 @@
 import { useState } from "react";
 import { useLocation, useNavigate, useNavigationType } from "react-router";
 
-import duel from "@/assets/lobby/tavern/duel.webp";
-import freeForAll from "@/assets/lobby/tavern/free-for-all.webp";
-import teamMatch from "@/assets/lobby/tavern/team-match.webp";
 import { HallReturnAction } from "@/components/navigation/HallReturnAction";
 import {
   Dialog,
@@ -12,46 +9,16 @@ import {
   DialogPortal,
   DialogTitle,
 } from "@/components/ui/dialog";
-import type { GameMode } from "@/domain/entities/GameState";
 import { useCardAudio } from "@/infrastructure/ui/hooks/useCardAudio";
 import { GAME_PATH, LOCAL_MATCH_ID } from "@/routes/Routes";
 
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
 
 import { TavernFormatCard } from "./components/TavernFormatCard";
+import { tavernFormats } from "./components/tavernFormats";
 import { TavernRoom } from "./components/TavernRoom";
 import { useMatchTravel } from "./components/useMatchTravel";
 import { useTavernMotion } from "./components/useTavernMotion";
-
-const formats = [
-  {
-    mode: "1vs1",
-    title: "Duel",
-    players: "2 players",
-    description: "Face one opponent.",
-    artwork: duel,
-  },
-  {
-    mode: "1vs2",
-    title: "Free-for-All",
-    players: "3 players",
-    description: "Everyone plays solo.",
-    artwork: freeForAll,
-  },
-  {
-    mode: "2vs2",
-    title: "Team Match",
-    players: "4 players",
-    description: "Play two against two.",
-    artwork: teamMatch,
-  },
-] as const satisfies {
-  mode: GameMode;
-  title: string;
-  players: string;
-  description: string;
-  artwork: string;
-}[];
 
 type TavernPickerProps = {
   open: boolean;
@@ -70,7 +37,7 @@ export function TavernPicker({ open, canPlay, origin, onClose }: TavernPickerPro
   const openedFromUrl = Boolean(new URLSearchParams(location.search).get("bottomSidebar"));
   const focusMode =
     navigationType === "REPLACE"
-      ? formats.find(({ mode }) => mode === location.state?.returnFocusMode)?.mode
+      ? tavernFormats.find(({ mode }) => mode === location.state?.returnFocusMode)?.mode
       : undefined;
   const { dismiss } = useTavernMotion(popup, origin, Boolean(focusMode));
   const { departing, depart } = useMatchTravel(popup);
@@ -141,7 +108,7 @@ export function TavernPicker({ open, canPlay, origin, onClose }: TavernPickerPro
                 <DialogDescription className="sr-only">Choose a match format.</DialogDescription>
               </header>
               <div className="mx-auto my-auto grid w-full max-w-95 gap-3 py-4 landscape:max-w-[min(100%,calc(var(--tavern-card-height)*2.2))] landscape:grid-cols-3 landscape:items-start landscape:gap-[clamp(0.75rem,2vw,2rem)] landscape:[--tavern-card-height:clamp(9rem,44dvh,27rem)] compact-landscape:py-1 compact-landscape:[--tavern-card-height:clamp(6.5rem,calc(100dvh_-_9.25rem_-_var(--safe-area-top)_-_var(--safe-area-bottom)),13rem)]">
-                {formats.map((format) => (
+                {tavernFormats.map((format) => (
                   <TavernFormatCard
                     key={format.title}
                     {...format}

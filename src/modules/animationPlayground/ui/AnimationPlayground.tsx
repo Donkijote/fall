@@ -2,13 +2,12 @@ import { ArrowLeft, Play, RotateCcw } from "lucide-react";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { Link } from "react-router";
 
-import { SelectTrigger, TextInput } from "@/components";
+import { SelectField, TextInput } from "@/components";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RULES } from "@/domain/constants/rules";
 import { HOME_PATH } from "@/routes/Routes";
@@ -357,23 +356,14 @@ function Choice({
   return (
     <div className="space-y-2">
       <Label>{label}</Label>
-      <Select
+      <SelectField
         value={value}
+        options={choices.map(([key, text]) => ({ value: key, label: text }))}
         onValueChange={(next) => {
           if (next) change(next);
         }}
-      >
-        <SelectTrigger aria-label={label} className="w-full">
-          <SelectValue>{choices.find(([key]) => key === value)?.[1]}</SelectValue>
-        </SelectTrigger>
-        <SelectContent>
-          {choices.map(([key, text]) => (
-            <SelectItem key={key} value={key}>
-              {text}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+        triggerProps={{ "aria-label": label, className: "w-full" }}
+      />
     </div>
   );
 }

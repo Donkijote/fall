@@ -19,3 +19,13 @@ show some proposed preferences beyond the current controls.
 See the [Home module](../../../src/modules/home/README.md) for the live dialog
 and preference behavior. Check both themes, short and narrow viewports, and
 keyboard dismissal and focus return to the gear when iterating.
+
+The audio controls share a standalone brass and red wax thumb. Each has its
+own illustrated blackened-iron track with a bronze rim. The volume rail scales
+through the middle to preserve its ends, and the mute track gains an oxblood
+tint when muted. The live controls also appear in the component
+gallery.
+
+The red fills use alpha masks traced from the painted channels. The slider mask
+uses the same end slices as the rail so the curves stay aligned at different
+widths.

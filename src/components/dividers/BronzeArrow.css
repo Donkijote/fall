@@ -1,0 +1,19 @@
+.bronze-arrow {
+  border-inline: 0.5rem solid transparent;
+  border-image: url("../../assets/ui/dividers/bronze-arrow.webp") 0 52 fill stretch;
+}
+
+.bronze-arrow-vertical {
+  border-inline-width: 0;
+  border-block: 0.5rem solid transparent;
+  border-image: url("../../assets/ui/dividers/bronze-arrow-vertical.webp") 52 0 fill stretch;
+}
+
+.bronze-arrow-faded {
+  border: 0;
+  background: url("../../assets/ui/dividers/faded-rule.webp") center / 100% 100% no-repeat;
+}
+
+.bronze-arrow-faded.bronze-arrow-vertical {
+  background-image: url("../../assets/ui/dividers/faded-rule-vertical.webp");
+}

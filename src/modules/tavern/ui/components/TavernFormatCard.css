@@ -1,0 +1,17 @@
+[data-tavern-card-frame] {
+  filter: brightness(calc(1 + 0.32 * var(--tavern-frame-light, 0)));
+}
+
+[data-tavern-card][data-active="true"] [data-tavern-card-frame] {
+  --tavern-frame-light: 1;
+}
+
+.tavern-format-ribbon::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  content: "";
+  border-inline: 0.875rem solid transparent;
+  border-image: url("../../../../assets/lobby/tavern/format-ribbon.webp") 0 58 fill stretch;
+}

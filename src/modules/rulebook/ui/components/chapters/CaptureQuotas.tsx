@@ -1,12 +1,18 @@
+import fadedRule from "@/assets/ui/dividers/faded-rule.webp";
+import { ParchmentArtwork } from "@/components/surfaces/ParchmentArtwork";
 import { RULES } from "@/domain/constants/rules";
 
 export function CaptureQuotas() {
   return (
-    <div className="mt-5 overflow-x-auto">
+    <div className="relative isolate mt-5 overflow-x-auto p-5 text-artwork-shadow sm:p-6">
+      <ParchmentArtwork />
       <table className="w-full text-left text-sm">
-        <caption className="mb-3 text-left font-semibold">Captured-card quotas</caption>
+        <caption className="mb-3 text-left title-type text-base">Captured-card quotas</caption>
         <thead>
-          <tr className="border-b border-border">
+          <tr
+            className="bg-[length:100%_2px] bg-bottom bg-no-repeat"
+            style={{ backgroundImage: `url(${fadedRule})` }}
+          >
             <th scope="col" className="py-2 pr-4">
               Format
             </th>
@@ -24,7 +30,11 @@ export function CaptureQuotas() {
             ],
             ["2v2", `${RULES.modeQuotas.teams2v2.quota} per team`],
           ].map(([label, quota]) => (
-            <tr key={label} className="border-b border-border">
+            <tr
+              key={label}
+              className="bg-[length:100%_2px] bg-bottom bg-no-repeat"
+              style={{ backgroundImage: `url(${fadedRule})` }}
+            >
               <th scope="row" className="py-3 pr-4 font-medium">
                 {label}
               </th>

@@ -151,3 +151,49 @@ formats at desktop, phone portrait and landscape, and tablet portrait and
 landscape sizes. Complete local matches exercised both result crests,
 standings, and the return to Tavern. Additional desktop and phone
 landscape checks ran with standard motion in light and dark themes.
+
+Seat nameplates and the Deck and Collected labels use a shared blackened iron
+plaque with rounded inward corners. Dealer appears beside the player name. A
+bronze arrowhead points toward the active portrait, and the ring artwork
+brightens with a continuous GSAP glint around the ring. Reduced motion keeps the ring steadily lit.
+
+The approved [Tavern Pennant scoreboard](scoreboard-mockup.png) pairs a charcoal
+cloth banner and embroidered oak sprigs with ivory tiles and wax seals. The blue
+sword, red cup, and green wooden club identify the score sides. The board uses
+live numbers and sizes the pennant around two or three equal tiles.
+
+The approved [Counting Captures mockup](capture-count-mockup.png) retains the
+illustrated tray. Team nameplates sit above the leather pockets and ivory
+capture totals. The bonus coin sits in the center of each pocket, with the
+scoreboard's wax seal at the lower right. The parchment ribbon appears when
+the capture playback awards an extra card.
+
+The approved [Dealer’s Ledger opening deal](opening-deal-mockup.jpg) places
+two wax selection groups beside a parchment preview. Hands first and Table
+first swap the destination illustrations. The four ivory tiles show the chosen
+bonus target. GSAP slides illustrations and tiles into position, while reduced
+motion updates immediately. Portrait phones stack the preview below the
+choices. The existing frame uses protected corner and crest slices.
+
+The final standings pair the shared team nameplates with points medallions.
+Both victory and defeat use the same responsive rows inside the illustrated
+standings panel.
+
+Opening Deal uses a card-hand glyph and a round wooden table in its preview,
+with a solid directional arrow. Faded rules flank the preview headings, and
+the main heading has a centered oak sprig divider. Rank tiles use lining serif
+numerals and a small shadow to lift them from the parchment. The wax selectors
+sit inside the shared input frame with clearance around their painted edges.
+
+The approved [waiting seat tokens](waiting-seats-mockup.jpg) replace the occupied
+seat check with an illustrated bronze coin stamped with a seated traveller.
+Open seats retain their wooden chair glyphs. New arrivals settle into place
+with a short GSAP motion, and reduced motion updates immediately. The gallery
+includes a join preview to inspect the transition.
+
+## Empty pile artwork
+
+Empty collected and deck piles use shared EmptyCardSlot, a recessed treatment
+composed from the approved [input artwork](../text-input/README.md). Card faces,
+stack movement, pile labels, and game behavior remain unchanged. The gallery
+exposes this decorative recess separately for future reuse.

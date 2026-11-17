@@ -1,0 +1,4 @@
+.leave-match-dialog.brass-panel::before,
+.leave-match-dialog.brass-panel::after {
+  content: none;
+}

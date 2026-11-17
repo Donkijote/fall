@@ -6,6 +6,7 @@ import { ModalContent } from "@/components/surfaces/ModalContent";
 import { Dialog, DialogClose, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 
 import { TavernOverlayAction } from "./TavernOverlayAction";
+import "./LeaveMatchDialog.css";
 
 export function LeaveMatchDialog({
   open,
@@ -25,7 +26,7 @@ export function LeaveMatchDialog({
         showCloseButton={false}
         initialFocus={keepPlaying}
         finalFocus={leaveButton}
-        className="isolate gap-3 border-0 bg-transparent bg-none px-8 pt-[5.75rem] pb-8 text-center text-artwork-shadow ring-0 inset-ring-0 compact-landscape:max-w-md compact-landscape:gap-4 compact-landscape:pt-[5.25rem] compact-landscape:pb-9"
+        className="leave-match-dialog gap-3 border-0 bg-transparent px-8 pt-[5.75rem] pb-8 text-center text-artwork-shadow compact-landscape:max-w-md compact-landscape:gap-4 compact-landscape:pt-[5.25rem] compact-landscape:pb-9"
       >
         <img
           src={parchment}
@@ -46,11 +47,7 @@ export function LeaveMatchDialog({
           >
             Keep playing
           </DialogClose>
-          <TavernOverlayAction
-            tone="outline"
-            className="text-artwork-shadow hover:bg-artwork-shadow/10 hover:text-artwork-shadow"
-            onClick={leave}
-          >
+          <TavernOverlayAction tone="outline" onClick={leave}>
             Leave match
           </TavernOverlayAction>
         </div>

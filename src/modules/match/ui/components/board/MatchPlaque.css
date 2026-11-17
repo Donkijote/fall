@@ -1,0 +1,33 @@
+.match-plaque {
+  --plaque-cap-width: max(0.625rem, 0.8em);
+}
+
+.match-plaque::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-inline: var(--plaque-cap-width) solid transparent;
+  border-image: url("/src/assets/lobby/tavern-match/seat-plaque.webp") 0 16 fill stretch;
+  pointer-events: none;
+  content: "";
+}
+
+.match-plaque-team-face {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.56;
+  /* The team tint shares the same end slices as the bronze artwork. */
+  mask:
+    url("/src/assets/lobby/tavern-match/seat-plaque-face-left.png") left / var(--plaque-cap-width)
+      100% no-repeat,
+    linear-gradient(transparent 5.8%, black 6.7% 92.5%, transparent 94%) center /
+      calc(100% - 2 * var(--plaque-cap-width) + 1px) 100% no-repeat,
+    url("/src/assets/lobby/tavern-match/seat-plaque-face-right.png") right / var(--plaque-cap-width)
+      100% no-repeat;
+}
+
+.match-plaque:has(.match-plaque-team-face)::before {
+  filter: brightness(1.35) saturate(1.14);
+}

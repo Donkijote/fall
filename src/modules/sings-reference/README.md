@@ -34,3 +34,7 @@ covers chapter and position restoration. Run `pnpm check`,
 `pnpm exec vitest run`, and `pnpm build`. For manual verification, reuse port
 3000 and check Hall and guide entry/return, both themes, touch and keyboard,
 reduced motion, narrow portrait, and notched landscape.
+
+The module entry point also exports `singsGallery` for the development-only
+Component gallery. Preview fixtures live under `ui/components/previews` and
+render this module’s styled components with sample props.

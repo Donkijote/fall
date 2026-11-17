@@ -38,7 +38,7 @@ export function ReferenceResults({
         >
           <p className="font-semibold">No combinations match your filters.</p>
           <p className="text-sm">Try another name or pattern, or reset the filters.</p>
-          <ActionButton tone="outline" className="bg-background" type="button" onClick={onReset}>
+          <ActionButton tone="outline" type="button" onClick={onReset}>
             Reset filters
           </ActionButton>
         </div>

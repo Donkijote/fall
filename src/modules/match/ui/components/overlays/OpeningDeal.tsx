@@ -1,124 +1,114 @@
-import { ArrowDown, ArrowRight, ArrowUp, Hand, LayoutGrid } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import { useId, useState } from "react";
 
-import board from "@/assets/lobby/tavern-match/dealer-board.webp";
+import sprig from "@/assets/ui/dividers/oak-sprig.webp";
+import { ChoiceButton } from "@/components/controls/ChoiceButton";
+import { BronzeArrow } from "@/components/dividers/BronzeArrow";
+import { ToggleGroup } from "@/components/ui/toggle-group";
 import type { DealOrder, TablePattern } from "@/domain/entities/GameState";
 
+import { OpeningDealPreview } from "./OpeningDealPreview";
 import { TavernOverlayAction } from "./TavernOverlayAction";
-
-const choiceStyle =
-  "grid min-h-12 cursor-pointer place-items-center rounded-md border border-gold/30 bg-artwork-shadow/60 px-3 text-artwork-foreground peer-checked:border-gold peer-checked:bg-artwork-shadow peer-checked:text-gold peer-checked:inset-ring-1 peer-checked:inset-ring-gold/35 peer-focus-visible:ring-2 peer-focus-visible:ring-ring compact-landscape:min-h-11";
-
-function DealChoices<Value extends string>({
-  title,
-  name,
-  value,
-  choices,
-  select,
-}: {
-  title: string;
-  name: string;
-  value: Value;
-  choices: readonly (readonly [Value, string, ReactNode])[];
-  select: (choice: Value) => void;
-}) {
-  return (
-    <fieldset className="min-w-0">
-      <legend className="mx-auto pb-2 title-type text-xs text-gold sm:text-sm">{title}</legend>
-      <div className="grid grid-cols-2 gap-3">
-        {choices.map(([choice, label, icon]) => (
-          <label key={choice} title={label}>
-            <input
-              type="radio"
-              name={name}
-              value={choice}
-              checked={value === choice}
-              onChange={() => select(choice)}
-              className="peer sr-only"
-            />
-            <span className="sr-only">{label}</span>
-            <span className={choiceStyle} aria-hidden="true">
-              {icon}
-            </span>
-          </label>
-        ))}
-      </div>
-    </fieldset>
-  );
-}
-
-function DealOrderIcon({ tableFirst = false }: { tableFirst?: boolean }) {
-  const First = tableFirst ? LayoutGrid : Hand;
-  const Second = tableFirst ? Hand : LayoutGrid;
-  return (
-    <span className="flex items-center gap-1.5">
-      <First className="size-4" />
-      <ArrowRight className="size-3 opacity-70" />
-      <Second className="size-4" />
-    </span>
-  );
-}
-
-function PatternIcon({ descending = false }: { descending?: boolean }) {
-  const Arrow = descending ? ArrowDown : ArrowUp;
-  return (
-    <span className="flex items-center gap-1">
-      <Arrow className="size-4" />
-      <span
-        className="flex h-4 items-end gap-0.5"
-        style={{ flexDirection: descending ? "row-reverse" : "row" }}
-      >
-        {[5, 8, 11, 14].map((height) => (
-          <span key={height} className="w-1 rounded-[1px] bg-current" style={{ height }} />
-        ))}
-      </span>
-    </span>
-  );
-}
+import "./OpeningDeal.css";
 
 export function OpeningDeal({ deal }: { deal: (order: DealOrder, pattern: TablePattern) => void }) {
   const [order, setOrder] = useState<DealOrder>("playersThenTable");
   const [pattern, setPattern] = useState<TablePattern>("inc");
+  const id = useId();
 
   return (
     <form
-      aria-labelledby="opening-deal-title"
-      className="pointer-events-auto absolute top-1/2 left-1/2 z-10 grid w-[min(calc(100%-1rem),36rem)] -translate-1/2 justify-items-center gap-5 px-7 pt-20 pb-9 text-artwork-foreground sm:px-12 compact-landscape:w-[min(calc(100%-2rem),29rem)] compact-landscape:gap-3 compact-landscape:px-8 compact-landscape:pt-[3.75rem] compact-landscape:pb-6"
+      aria-labelledby={`${id}-title`}
+      className="opening-deal [container-type:inline-size] pointer-events-auto absolute top-1/2 left-1/2 isolate z-10 grid w-[min(calc(100%-1rem),46rem)] -translate-1/2 justify-items-center gap-4 px-7 pt-0 pb-7 text-artwork-foreground sm:px-12 compact-landscape:w-[min(calc(100%-2rem),40rem)] compact-landscape:gap-2 compact-landscape:px-8 compact-landscape:pb-5"
       onSubmit={(event) => {
         event.preventDefault();
         deal(order, pattern);
       }}
     >
-      <img src={board} alt="" className="pointer-events-none absolute inset-0 -z-10 size-full" />
-      <h2
-        id="opening-deal-title"
-        className="text-center artwork-title text-[clamp(1rem,4vmin,1.5rem)] leading-tight"
-      >
-        Choose the opening deal
-      </h2>
-      <div className="grid w-full max-w-md grid-cols-2 gap-6 max-sm:portrait:max-w-64 max-sm:portrait:grid-cols-1 max-sm:portrait:gap-4 compact-landscape:gap-5">
-        <DealChoices<DealOrder>
-          title="Deal order"
-          name="opening-deal-order"
-          value={order}
-          choices={[
-            ["playersThenTable", "Hands first", <DealOrderIcon />],
-            ["tableThenPlayers", "Table first", <DealOrderIcon tableFirst />],
-          ]}
-          select={setOrder}
-        />
-        <DealChoices<TablePattern>
-          title="Table pattern"
-          name="opening-table-pattern"
-          value={pattern}
-          choices={[
-            ["inc", "1–2–3–4", <PatternIcon />],
-            ["dec", "4–3–2–1", <PatternIcon descending />],
-          ]}
-          select={setPattern}
-        />
+      <header className="opening-deal-heading mt-[calc(13.1cqw+0.75rem)] grid w-full justify-items-center gap-2">
+        <h2
+          id={`${id}-title`}
+          className="text-center artwork-title text-[clamp(1.125rem,3.8cqw,2rem)] leading-tight"
+        >
+          Choose the opening deal
+        </h2>
+        <div aria-hidden="true" className="flex w-[78%] items-center gap-2">
+          <BronzeArrow tone="faded" className="h-0.5 min-w-0 flex-1" />
+          <img src={sprig} alt="" className="h-3.5 w-auto" />
+          <BronzeArrow tone="faded" direction="left" className="h-0.5 min-w-0 flex-1" />
+        </div>
+      </header>
+      <div className="opening-deal-content grid w-full min-w-0 items-center gap-4">
+        <div className="grid min-w-0 gap-4 compact-landscape:gap-3">
+          <div className="min-w-0">
+            <h3 id={`${id}-order-label`} className="sr-only">
+              Deal order
+            </h3>
+            <p id={`${id}-order-help`} className="text-xs leading-relaxed">
+              Choose what gets dealt first.
+            </p>
+            <ToggleGroup
+              aria-labelledby={`${id}-order-label`}
+              aria-describedby={`${id}-order-help`}
+              value={[order]}
+              onValueChange={([next]) => {
+                if (next === "playersThenTable" || next === "tableThenPlayers") setOrder(next);
+              }}
+              className="opening-deal-options mt-2 grid w-full grid-cols-2 gap-1"
+            >
+              <ChoiceButton
+                value="playersThenTable"
+                className="min-w-0 px-2 title-type text-xs text-artwork-foreground"
+              >
+                Hands first
+              </ChoiceButton>
+              <ChoiceButton
+                value="tableThenPlayers"
+                className="min-w-0 px-2 title-type text-xs text-artwork-foreground"
+              >
+                Table first
+              </ChoiceButton>
+            </ToggleGroup>
+          </div>
+          <div className="min-w-0">
+            <h3 id={`${id}-pattern-label`} className="sr-only">
+              Bonus pattern
+            </h3>
+            <p id={`${id}-pattern-help`} className="text-xs leading-relaxed">
+              Matching ranks in the right slots earn bonus points.
+            </p>
+            <ToggleGroup
+              aria-labelledby={`${id}-pattern-label`}
+              aria-describedby={`${id}-pattern-help`}
+              value={[pattern]}
+              onValueChange={([next]) => {
+                if (next === "inc" || next === "dec") setPattern(next);
+              }}
+              className="opening-deal-options mt-2 grid w-full grid-cols-2 gap-1"
+            >
+              <ChoiceButton
+                value="inc"
+                aria-label="Ascending, 1–2–3–4"
+                className="min-w-0 px-2 font-[family-name:Times_New_Roman,Times,serif] text-lg text-artwork-foreground lining-nums tabular-nums"
+              >
+                1 2 3 4
+              </ChoiceButton>
+              <ChoiceButton
+                value="dec"
+                aria-label="Descending, 4–3–2–1"
+                className="min-w-0 px-2 font-[family-name:Times_New_Roman,Times,serif] text-lg text-artwork-foreground lining-nums tabular-nums"
+              >
+                4 3 2 1
+              </ChoiceButton>
+            </ToggleGroup>
+          </div>
+        </div>
+        <OpeningDealPreview order={order} pattern={pattern} />
       </div>
-      <TavernOverlayAction type="submit" className="text-sm">
+      <p role="status" aria-atomic="true" className="sr-only">
+        {order === "playersThenTable" ? "Hands first, then table." : "Table first, then hands."}{" "}
+        Bonus target: {pattern === "inc" ? "1, 2, 3, 4." : "4, 3, 2, 1."}
+      </p>
+      <TavernOverlayAction type="submit" className="min-w-44 text-sm">
         Deal cards
       </TavernOverlayAction>
     </form>

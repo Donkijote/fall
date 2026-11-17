@@ -2,6 +2,7 @@ import { cn } from "cn";
 import { Link } from "react-router";
 
 import { CardPlayFigure } from "@/components/cards/CardPlayFigure";
+import { NumberMedallion } from "@/components/hud/NumberMedallion";
 import { RULES } from "@/domain/constants/rules";
 
 import { chapterUrl } from "../../../adapters/rulebookRoutes";
@@ -20,9 +21,7 @@ export function QuickStartLesson() {
             key={step.title}
             className="flex items-start gap-3 text-sm leading-relaxed sm:text-base"
           >
-            <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary font-semibold text-primary-foreground">
-              {index + 1}
-            </span>
+            <NumberMedallion className="size-8 text-lg">{index + 1}</NumberMedallion>
             <p>
               <strong>{step.title}</strong>
               <span aria-hidden="true"> — </span>

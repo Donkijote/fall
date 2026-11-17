@@ -1,0 +1,6 @@
+.popover-brass-frame {
+  --brass-frame-image: url("../../assets/ui/surfaces/riveted-frame.webp");
+  --brass-frame-slice: 44;
+  --brass-frame-width: 1rem;
+  --brass-fill-radius: 0.5rem;
+}

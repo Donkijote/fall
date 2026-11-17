@@ -1,6 +1,7 @@
 import { ChevronDown } from "lucide-react";
 import { useRef, type ReactNode } from "react";
-import { Link } from "react-router";
+
+import { GuideLink } from "@/components/navigation/GuideLink";
 
 import { chapterUrl } from "../../../adapters/rulebookRoutes";
 import { chapters, type Chapter } from "../../../application/rulebookContent";
@@ -24,20 +25,23 @@ export function ChapterNavigation({
     if (disclosure.current) disclosure.current.open = false;
   }
   const links = (
-    <nav aria-label="Rulebook chapters" className="space-y-1.5">
+    <nav
+      aria-label="Rulebook chapters"
+      className="space-y-1.5 [--guide-ink:var(--artwork-foreground)]"
+    >
       {chapters.map((entry, index) => (
-        <Link
+        <GuideLink
           key={entry.id}
           to={chapterUrl(entry.id)}
           onClick={choose}
           aria-current={chapter.id === entry.id && !searching ? "page" : undefined}
-          className="flex min-h-11 items-center gap-3 rounded-md border-l-4 border-transparent px-3 py-2 text-base text-artwork-foreground hover:border-gold/45 hover:bg-artwork-foreground/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring aria-[current=page]:border-gold aria-[current=page]:bg-gold/25 aria-[current=page]:font-semibold aria-[current=page]:hover:border-gold aria-[current=page]:hover:bg-gold/25"
+          className="flex items-center gap-3 py-2 ps-7 pe-9 text-base"
         >
-          <span className="text-sm tabular-nums opacity-80">
+          <span className="text-sm text-gold tabular-nums">
             {String(index + 1).padStart(2, "0")}
           </span>
           {entry.title}
-        </Link>
+        </GuideLink>
       ))}
     </nav>
   );

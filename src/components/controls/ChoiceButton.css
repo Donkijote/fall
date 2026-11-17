@@ -1,0 +1,45 @@
+.choice-button {
+  --choice-selected: 0;
+  --choice-preview: 0;
+  --choice-tilt-x: 0;
+  --choice-tilt-y: 0;
+}
+
+.choice-button[aria-pressed="true"] {
+  --choice-selected: 1;
+}
+
+.choice-button:is(:hover, :focus-visible):not(:disabled, [aria-disabled="true"]) {
+  --choice-preview: 1;
+}
+
+.choice-button::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  content: "";
+  border: 8px solid transparent;
+  border-image: url("../../assets/ui/controls/choice-wax.webp") 25 32 fill stretch;
+  opacity: calc(
+    0.38 * var(--choice-preview) * (1 - var(--choice-selected)) + var(--choice-selected)
+  );
+  filter: grayscale(calc(0.85 * (1 - var(--choice-selected))))
+    drop-shadow(0 2px 2px var(--artwork-shadow));
+  transform: translateY(calc(var(--choice-offset, 0) * 1px)) perspective(180px)
+    rotateX(calc(var(--choice-tilt-x) * 1deg)) rotateY(calc(var(--choice-tilt-y) * 1deg))
+    scale(calc(0.94 + 0.06 * var(--choice-selected) + 0.025 * var(--choice-preview)))
+    scaleX(calc(1 + var(--choice-squash, 0) * 0.35)) scaleY(calc(1 - var(--choice-squash, 0)));
+}
+
+.choice-button[aria-pressed="true"] {
+  color: var(--primary-foreground);
+}
+
+@media (forced-colors: active) {
+  .choice-button[aria-pressed="true"] {
+    color: ButtonText;
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
+}

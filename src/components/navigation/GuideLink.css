@@ -1,0 +1,39 @@
+.guide-link {
+  --guide-progress: var(--guide-reveal, var(--guide-rest, 0));
+  color: color-mix(
+    in oklch,
+    var(--guide-ink, var(--foreground)) calc(100% * (1 - clamp(0, var(--guide-progress), 1))),
+    var(--artwork-foreground)
+  );
+}
+
+.guide-link::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-inline: 2rem solid transparent;
+  border-image: url("/src/assets/rulebook/chapter-tab.webp") 0 100 fill stretch;
+  opacity: var(--guide-progress);
+  transform: translateX(calc(-8px * (1 - var(--guide-progress))))
+    scaleX(calc(0.965 + 0.035 * var(--guide-progress)));
+  transform-origin: left center;
+  pointer-events: none;
+  content: "";
+}
+
+.guide-link:focus-visible {
+  --guide-rest: 0.92;
+}
+@media (any-hover: hover) {
+  .guide-link:hover {
+    --guide-rest: 0.92;
+  }
+}
+.guide-link[aria-current="page"] {
+  --guide-rest: 1;
+}
+@media (forced-colors: active) {
+  .guide-link:is(:focus-visible, [aria-current="page"]) {
+    outline: 2px solid LinkText;
+  }
+}

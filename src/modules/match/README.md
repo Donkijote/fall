@@ -51,3 +51,17 @@ The capture tray enters before the first card lands and exits after the count
 settles. The next frame then presents the opening deal, a bot deal, or the
 result. Confirming the opening deal fades its controls before card motion
 begins. Reduced motion keeps these handoffs immediate.
+
+The module entry point also exports `matchGallery` for the development-only
+Component gallery. Preview fixtures live under `ui/components/previews` and
+render this module’s styled components with sample props.
+
+OpeningDeal owns the selected deal order and bonus pattern and passes them to
+the existing deal callback. OpeningDealPreview renders the destination diagram
+and bonus tiles, with GSAP position changes and a reduced-motion preference.
+OpeningDeal.test.tsx checks keyboard selection, retained selections, and the
+submitted options.
+
+WaitingSign shares the occupied-seat token between the live lobby and gallery.
+It animates newly occupied seats using GSAP while retaining the live seat count
+and honoring reduced motion.

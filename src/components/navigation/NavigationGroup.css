@@ -1,0 +1,29 @@
+.game-navigation-group::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  content: "";
+  /* Preserve the painted corners and extend the rails across joined buttons. */
+  border: 11px solid transparent;
+  border-image: url("/src/assets/ui/navigation/dock-tile.webp") 30 fill stretch;
+  filter: brightness(1.18);
+}
+
+.game-navigation-group > li + li {
+  position: relative;
+}
+
+.game-navigation-group > li + li::before {
+  position: absolute;
+  inset-block: 18%;
+  inset-inline-start: 0;
+  width: 1px;
+  pointer-events: none;
+  content: "";
+  background: linear-gradient(
+    transparent,
+    color-mix(in oklch, var(--gold) 40%, transparent),
+    transparent
+  );
+}
