@@ -4,6 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "credits:notices": "node scripts/credits-notices.mjs",
+    "credits:notices:check": "node scripts/credits-notices.mjs --check",
     "dev": "vp dev --host",
     "build": "tsc -b && vp build",
     "deploy": "pnpm run build && wrangler deploy",

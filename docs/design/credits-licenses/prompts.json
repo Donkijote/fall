@@ -1,4 +1,21 @@
 {
   "art_direction": "../art-direction.md#shared-generation-prompt",
-  "outputs": []
+  "outputs": [
+    {
+      "file": "mockup-simplified.png",
+      "method": "reconstructed",
+      "references": [
+        "../home-lobby/background.png",
+        "../../../src/assets/ui/actions/outline.webp",
+        "../../../src/assets/ui/dividers/faded-rule.webp",
+        "../../../src/assets/ui/dividers/bronze-arrow.webp"
+      ],
+      "prompt": "Create a tall full-content UI mockup for Fall Credits & licenses in the Chronicle direction. Preserve the cool Card Hall, subdued charcoal reading area, ivory Spline Sans text and Cinzel Regular headings. Center a live Fall title, then sequential sections: Created by (Donkijote), Artwork & sound, Icons (Lorc, Delapouite, Faithtoken, Sbed, Skoll), Typography (Cinzel and Spline Sans), Open-source software, Legal notices, and thanks to players. Keep one Settings return action using the supplied ActionButton outline artwork; use the supplied faded bronze divider between sections. No category menus, tabs, submenus, cards, accordions or automatically rolling credits. Long notices use readable left-aligned text. Only the content region scrolls inside a fixed viewport; the Hall background and return action remain stationary. Preserve the ordinary 8px component radius, semantic colors and existing component design. Attribution copy is illustrative; do not invent sources, licenses, policies or contributors.",
+      "refinements": [
+        "Approved 2026-11-17 with a behavior correction: only credits content scrolls, within the fixed viewport. The Hall backdrop and Settings return action remain stationary.",
+        "Implement the shared ActionButton and BronzeArrow components rather than reproducing the controls in CSS. Full verified notices remain in the continuous content."
+      ],
+      "notes": "Reconstructed from the built-in ImageGen output and final user feedback. Original generation used a user-supplied Chronicle screenshot and the listed component artwork. For future edits attach this approved output as the target. The tall full-content reference does not prescribe document/page scrolling. Reuse the canonical Card Hall background; there is no separate credits background master."
+    }
+  ]
 }

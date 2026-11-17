@@ -1,6 +1,7 @@
 import {
   ANIMATION_PLAYGROUND_PATH,
   CARDS_PATH,
+  CREDITS_PATH,
   GAME_PATH,
   HOME_PATH,
   LOGIN_PATH,
@@ -16,6 +17,9 @@ vi.mock("@/infrastructure/ui/screens/Home", () => ({
 }));
 vi.mock("@/modules/match", () => ({
   MatchScreen: () => <div data-testid="match">Match</div>,
+}));
+vi.mock("@/modules/credits", () => ({
+  CreditsScreen: () => <div data-testid="credits">Credits</div>,
 }));
 vi.mock("@/infrastructure/ui/components/card/CardList", () => ({
   CardList: () => <div data-testid="cards">Cards</div>,
@@ -62,6 +66,13 @@ describe("AppRouter", () => {
     const AppRouter = await importRouter();
     render(<AppRouter />);
     expect(await screen.findByTestId("match")).toBeInTheDocument();
+  });
+
+  it("loads credits directly without requiring a player session", async () => {
+    window.history.pushState({}, "", CREDITS_PATH);
+    const AppRouter = await importRouter();
+    render(<AppRouter />);
+    expect(await screen.findByTestId("credits")).toBeInTheDocument();
   });
 
   it.each([true, false])(

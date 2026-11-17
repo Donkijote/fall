@@ -4,20 +4,17 @@ Tracking [issue #105](https://github.com/Donkijote/fall/issues/105).
 
 ## Review status
 
-Design review started on 2026-11-17. The user prefers the Chronicle direction,
-revised into one continuous scrolling document with the existing component
-designs. The revised mockup remains under review before screen implementation.
-The existing app is unchanged. Draft images stay in the working chat, outside
-the approved tree.
-The [prompt manifest](prompts.json) will record accepted outputs after review.
+Design locked on 2026-11-17. The user approved the [continuous Chronicle mockup](mockup-simplified.png) with one behavior correction: **only the content scrolls**, inside a fixed viewport. The Hall backdrop and Settings return action stay stationary. There are no menus, submenus, or page scrolling. The [prompt manifest](prompts.json) preserves a reconstructed brief and the final correction.
 
-## References and proposed direction
+The implementation lives in [the Credits module](../../../src/modules/credits/README.md). Runtime art reuses the canonical [Card Hall exports](../../../src/assets/lobby/card-hall/README.md); the mockup is never imported by the app. No separate background master or detailed treatment is needed.
+
+## Approved direction and references
 
 Use the [shared art direction](../art-direction.md),
 [Settings composition](../settings/README.md), and
 [Card Hall backdrop](../home-lobby/README.md). Reuse that backdrop and the
 shared ActionButton, BronzeArrow dividers, semantic theme tokens, and Cinzel
-Regular titles. The selected direction is a full page without a modal frame.
+Regular titles. The selected direction is a fixed-viewport screen without a modal frame.
 No new background master is proposed.
 
 The local sibling folder `../../../../inspirations/credits` contains supplied
@@ -32,11 +29,12 @@ and Frostpunk. These are investigation references, not runtime assets.
 - Anno: an opening acknowledgement with breathing room. Keep long notices on
   an opaque semantic surface so they remain readable.
 
-The Chronicle revision opens from Settings as one full-page, manually scrolling
-document over the subdued Hall. Keep a persistent Settings return action using
+The Chronicle opens from Settings as one fixed-viewport screen over the subdued
+Hall. Only its content region scrolls manually. Keep a persistent Settings return action using
 the shared ActionButton design. There are no category menus, tabs, submenus,
-accordions, or internal scroll panels. The user's request for an "infinite
-scroll list" means all sections appear in sequence as the page scrolls; it
+accordions, or nested scroll panels. One keyboard-focusable content region owns scrolling.
+The user's request for an "infinite scroll list" means all sections appear in
+sequence as the content scrolls; it
 does not require endlessly repeated content or automatic scrolling.
 
 Use a centered role/name hierarchy for people, followed by artwork and audio,
@@ -71,15 +69,15 @@ statement that all shipped notices have been accounted for.
 | Dependencies                  | `package.json`, `pnpm-lock.yaml`, installed package licenses                                                                                                                                                                                          | Inspect the shipped dependency graph and copyright/NOTICE files, including transitive runtime dependencies and icon libraries. Development tools require a separate shipping assessment. |
 | App branding and public icons | `src/assets/branding/wingfoot.svg`, `public` icon variants                                                                                                                                                                                            | Connect exported icons to their source and preserve applicable notices.                                                                                                                  |
 
-## Implementation plan after design review
+## Implementation and verification
 
-Own the screen and inventory in `src/modules/credits`, exporting a small public
-entry point. Home Settings should compose that entry point without importing
-module internals. Keep structured attribution data framework-independent;
+The screen and inventory live in `src/modules/credits`, exported through a small
+public entry point. Routing lazy-loads that entry point; Home Settings links to
+the public route without importing module internals. Keep structured attribution data framework-independent;
 add layers only where an actual external dependency requires them.
 
-Use one reviewable inventory for asset/group name, creator, source, license,
-required notice, modifications, and provenance evidence. Keep unresolved audit
+The inventory records asset/group name, creator, source, license, required
+notice, modifications, and provenance evidence. Keep unresolved audit
 status explicit for maintainers. Document the procedure for adding an asset,
 retaining license text, and updating the screen from that inventory in the
 module README. Do not maintain a second independent list in the UI.
@@ -95,9 +93,12 @@ must use GSAP and respect reduced motion.
 - Confirmed issue #105 and the repository branch/PR conventions.
 - Located the requested inspiration screenshots in the sibling project folder.
 - Proposed a Settings-based reading surface with distinct credits and notices.
-- Screen implementation and final composition remain pending user feedback.
+- Final composition locked after the user approved the continuous-list revision.
 - Compared three distinct concepts: Chronicle, Ledger, and Makers' Table.
 - The user prefers Chronicle and explicitly removed category navigation in
   favor of one continuous scrolling list.
 - The revision must use the existing shared component designs, including the
   actual ActionButton skin and bronze divider artwork.
+- Final behavior correction: content scrolling only, fixed Hall and return action.
+- Initial implementation includes structured attribution, complete retained font/project notices, and generated production dependency notices. Asset sources and missing upstream package notices remain explicit audit follow-ups.
+- The user will check the undocumented deck and sound origins later. Browser visual review is pending because the Mac is locked and the user is away.
