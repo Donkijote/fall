@@ -54,6 +54,25 @@
 - The user already runs the app on port 3000. Reuse it; do not start another server.
 - Preserve manual edits and deletions. Do not commit or push without a request.
 
+# Asset attribution
+
+- When the user supplies downloaded assets, ask where they found them unless
+  that information is already provided. Request the specific asset URL or stock
+  ID, creator, license/usage terms, and any download or purchase record needed
+  to identify permission. A platform search page alone is incomplete provenance.
+- Automatically add or update the supplied asset's record in
+  `src/modules/credits/domain/inventory.ts` as part of importing or adopting it.
+  Record its files, creator, source, license, required notice, modifications and
+  evidence. Keep missing details or permission checks explicitly pending; do
+  not invent attribution or assume a manual redraw grants rights.
+- When generating images for the project, automatically record their provenance
+  without waiting for a separate request. For adopted artwork, update the
+  credits inventory and the owning feature's prompt manifest together, retaining
+  the provider/model when known, generation date, prompts, input references,
+  edits and exported files. Generated provenance is separate from permission or
+  provider-term review. Keep draft-only generation records outside the approved
+  design tree until adoption; do not list rejected concepts as shipped credits.
+
 # Design documentation
 
 - Follow [the design folder standard](docs/design/README.md) for investigations,

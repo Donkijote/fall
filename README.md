@@ -175,6 +175,28 @@ The [design library](docs/design/README.md) indexes approved mockups, background
 Record design decisions in the feature's README under `docs/design` and keep temporary reviews outside the repository.
 Generate production illustrations as standalone artwork at the required aspect ratio and resolution. Use full mockups as visual references and export runtime assets from the standalone originals. Do not crop illustrations out of a full mockup.
 
+### Asset sources and automatic credits
+
+When you provide downloaded assets, the agent should ask where you found them
+unless you have already supplied that information. Provide the specific asset
+URL or stock ID, creator, license/usage terms, and any relevant download or
+purchase record. A general search-page link establishes the platform but does
+not identify the individual asset or its permissions.
+
+The agent must automatically add or update adopted assets in
+`src/modules/credits/domain/inventory.ts`, including their files, creator,
+source, license, required notice, modifications and provenance evidence. Missing
+details stay explicitly pending; attribution does not replace permission.
+
+Generated project images must also receive provenance metadata automatically.
+For adopted artwork, update the credits inventory and the owning feature's
+prompt manifest together with the provider/model when known, generation date,
+prompts, input references, edits and exports. Keep draft-only generation records
+outside the approved design tree until adoption, and exclude rejected concepts
+from shipped credits. Generated origin does not by itself establish legal
+clearance. See the [Credits module](src/modules/credits/README.md) for the record
+format and verification commands.
+
 ## 📖 Overview
 
 Fall is a traditional Venezuelan card game played with the **Spanish 40-card deck**.  

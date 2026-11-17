@@ -78,6 +78,7 @@ recorded in each affected entry; provenance and license review are separate.
   as third-party input and permission as pending. Do not label this deck original,
   public domain, generated, or MIT. The exact listing/artist is still unknown.
   An independently generated set of faces and back is planned, not implemented.
+  Replacement work is tracked in [issue #132](https://github.com/Donkijote/fall/issues/132).
   An attribution line or a future replacement does not establish authorization
   for the existing adapted artwork.
 - **Sounds:** all three files are from Pixabay, confirmed by the user. Individual
