@@ -4,10 +4,11 @@ Tracking [issue #105](https://github.com/Donkijote/fall/issues/105).
 
 ## Review status
 
-Design review started on 2026-11-17. No composition or new artwork is approved.
-The user requested mockups and iteration before screen implementation. This
-change records the proposed direction and audit scope; the existing app is
-unchanged. Draft images stay in the working chat, outside the approved tree.
+Design review started on 2026-11-17. The user prefers the Chronicle direction,
+revised into one continuous scrolling document with the existing component
+designs. The revised mockup remains under review before screen implementation.
+The existing app is unchanged. Draft images stay in the working chat, outside
+the approved tree.
 The [prompt manifest](prompts.json) will record accepted outputs after review.
 
 ## References and proposed direction
@@ -15,8 +16,9 @@ The [prompt manifest](prompts.json) will record accepted outputs after review.
 Use the [shared art direction](../art-direction.md),
 [Settings composition](../settings/README.md), and
 [Card Hall backdrop](../home-lobby/README.md). Reuse that backdrop and the
-shared ModalContent frame, ActionButton, semantic theme tokens, and Cinzel
-Regular titles. No new background master is proposed.
+shared ActionButton, BronzeArrow dividers, semantic theme tokens, and Cinzel
+Regular titles. The selected direction is a full page without a modal frame.
+No new background master is proposed.
 
 The local sibling folder `../../../../inspirations/credits` contains supplied
 reference screenshots from Armello, GWENT, Legends of Runeterra, Anno 1800,
@@ -30,19 +32,27 @@ and Frostpunk. These are investigation references, not runtime assets.
 - Anno: an opening acknowledgement with breathing room. Keep long notices on
   an opaque semantic surface so they remain readable.
 
-The first proposed composition expands the existing Settings credits view.
-Its header and footer remain visible while the body scrolls. Three sections
-separate people and provenance (Credits), third-party notices (Licenses), and
-published project legal documents (Legal). Small screens stack entry metadata
-and links without horizontal scrolling. Settings returns to preferences;
-Done or the close control dismisses the dialog and restores trigger focus.
+The Chronicle revision opens from Settings as one full-page, manually scrolling
+document over the subdued Hall. Keep a persistent Settings return action using
+the shared ActionButton design. There are no category menus, tabs, submenus,
+accordions, or internal scroll panels. The user's request for an "infinite
+scroll list" means all sections appear in sequence as the page scrolls; it
+does not require endlessly repeated content or automatic scrolling.
 
-The people view uses a centered role/name hierarchy. Licenses use left-aligned
-entries with creator, source, license, modifications, and expandable notices.
-Links and full notice text must remain selectable and keyboard accessible.
-The Legal section is proposed space for actual published documents: do not
-invent terms, a privacy policy, or legal assurances to fill the design.
-Decide whether to expose that section at launch once its real content is known.
+Use a centered role/name hierarchy for people, followed by artwork and audio,
+icons, typography, open-source software, and legal notices. Reuse the existing
+faded bronze dividers between sections. Longer notices use a readable
+left-aligned measure within that same document. Include creator, source,
+license, modifications, and applicable full notice text without hiding required
+content behind another menu. Source links remain available alongside entries.
+Keep all text selectable and keyboard accessible. Small screens stack metadata
+without horizontal scrolling and preserve safe areas around the return action.
+Settings returns to preferences and restores meaningful focus.
+
+Legal content includes actual published project documents and applicable
+notices. Do not invent terms, a privacy policy, or legal assurances to fill the
+design. The mockup's sample attribution rows do not establish provenance or
+replace the audit.
 
 ## Initial audit findings
 
@@ -86,3 +96,8 @@ must use GSAP and respect reduced motion.
 - Located the requested inspiration screenshots in the sibling project folder.
 - Proposed a Settings-based reading surface with distinct credits and notices.
 - Screen implementation and final composition remain pending user feedback.
+- Compared three distinct concepts: Chronicle, Ledger, and Makers' Table.
+- The user prefers Chronicle and explicitly removed category navigation in
+  favor of one continuous scrolling list.
+- The revision must use the existing shared component designs, including the
+  actual ActionButton skin and bronze divider artwork.
