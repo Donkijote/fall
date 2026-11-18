@@ -14,10 +14,14 @@ const elementalLift = {
   flame: { apex: 0.383, activation: 0.074, height: 2.05 },
 } as const;
 
+export function captureElementStart(effect: CardDropEffect) {
+  return effect === "plain" ? 0 : elementalLift[effect].apex + (effect === "flame" ? 0.017 : 0);
+}
+
 export function captureElement(progress: number, effect: CardDropEffect) {
   if (effect === "plain") return 0;
-  const { apex, activation } = elementalLift[effect];
-  const start = apex + (effect === "flame" ? 0.017 : 0);
+  const { activation } = elementalLift[effect];
+  const start = captureElementStart(effect);
   return MathUtils.smoothstep(progress, start, start + activation);
 }
 
@@ -25,9 +29,13 @@ export function captureDuration(effect: CardDropEffect) {
   return effect === "flame" ? 4.05 : 3.05;
 }
 
+export function captureFallStart(effect: CardDropEffect) {
+  return impactAt - cardImpactProfiles[effect].fall / captureDuration(effect);
+}
+
 export function captureFlight(progress: number, effect: CardDropEffect, drop: CardImpactSample) {
   const profile = cardImpactProfiles[effect];
-  const release = impactAt - profile.fall / captureDuration(effect);
+  const release = captureFallStart(effect);
   const lift =
     effect === "plain"
       ? { apex: release, height: (profile.height - 0.8) * 0.59 }

@@ -97,7 +97,7 @@ function CardStudy({
   const { rate } = settings;
 
   if (cardFalls) {
-    return <CardDrop attempt={revision} effect={state.cardDropEffect} />;
+    return <CardDrop lab={lab} attempt={revision} effect={state.cardDropEffect} />;
   }
 
   return (

@@ -216,6 +216,108 @@ const artworkRecords: ArtworkRecord[] = [
       "Used as a card-playing sound effect. Any edits to the original download are not recorded.",
   },
   {
+    id: "freeze-capture-sound",
+    name: "Ice and mud",
+    files: ["src/assets/audio/captures/frozen-card-effect.mp3"],
+    creator: "Irhouen",
+    source: "https://pixabay.com/es/sound-effects/naturaleza-ice-and-mud-619090/",
+    license: "Pixabay Content License",
+    licenseUrl: "https://pixabay.com/service/license-summary/",
+    licenseStatus: "source-verified",
+    notice: "Ice and mud by Irhouen, obtained from Pixabay.",
+    modifications:
+      "Playground audition: excerpt 1.400–1.950 s; linear gain 0.55; 0.035 s fade in and 0.09 s fade out; mono 44.1 kHz MP3 at 128 kbit/s. See edits.json for source fingerprint.",
+    provenance: "third-party",
+    evidence:
+      "User supplied original MP3 and specific Pixabay item URL on 2026-11-18. Source hash, selected interval, attenuation and fades recorded in src/assets/audio/captures/edits.json. Original download record not supplied. Creator and Content License verified on the Russian-language official page for the same Pixabay item 619090 on 2026-11-18; the supplied Spanish page was unavailable. Verification URL recorded in edits.json.",
+  },
+  {
+    id: "shatter-capture-sound",
+    name: "Chunks of Ice Shattering | Ice Blocks Breaking",
+    files: ["src/assets/audio/captures/break-frozen-card.mp3"],
+    creator: "Lesiakower",
+    source:
+      "https://pixabay.com/es/sound-effects/pel%C3%ADculas-y-efectos-especiales-chunks-of-ice-shattering-ice-blocks-breaking-466220/",
+    license: "Pixabay Content License",
+    licenseUrl: "https://pixabay.com/service/license-summary/",
+    licenseStatus: "source-verified",
+    notice: "Chunks of Ice Shattering | Ice Blocks Breaking by Lesiakower, obtained from Pixabay.",
+    modifications:
+      "Playground audition: card-contact layer mixed underneath ice at playback gain 0.22 (normal card contact 0.7); ice excerpt 5.735–6.400 s; linear gain 0.45; 0.002 s fade in and 0.1 s fade out; mono 44.1 kHz MP3 at 128 kbit/s. See edits.json for source fingerprint.",
+    provenance: "third-party",
+    evidence:
+      "User supplied original MP3 and specific Pixabay item URL on 2026-11-18. Source hash, selected interval, attenuation and fades recorded in src/assets/audio/captures/edits.json. Original download record not supplied. Creator and Content License identified on the official item page on 2026-11-18.",
+  },
+  {
+    id: "simple-capture-sound",
+    name: "Whip Crack 02",
+    files: [
+      "src/assets/audio/captures/simple-capture.mp3",
+      "src/assets/audio/captures/capture-flight.mp3",
+    ],
+    creator: "Universfield",
+    source:
+      "https://pixabay.com/es/sound-effects/pel%C3%ADculas-y-efectos-especiales-whip-crack-02-244949/",
+    license: "Pixabay Content License",
+    licenseUrl: "https://pixabay.com/service/license-summary/",
+    licenseStatus: "source-verified",
+    notice: "Whip Crack 02 by Universfield, obtained from Pixabay.",
+    modifications:
+      "Playground audition: movement excerpt 0.080–0.395 s at gain 2.5 with 15/25 ms fades, and contact excerpt 0.395–0.715 s at gain 0.65; 0.002 s fade in and 0.06 s fade out; mono 44.1 kHz MP3 at 128 kbit/s. See edits.json for source fingerprint.",
+    provenance: "third-party",
+    evidence:
+      "User supplied original MP3 and specific Pixabay item URL on 2026-11-18. Source hash, selected interval, attenuation and fades recorded in src/assets/audio/captures/edits.json. Original download record not supplied. Creator and Content License identified on the official item page on 2026-11-18.",
+  },
+  {
+    id: "heat-transfer-sound",
+    name: "Fire Sound Effects (heat transfer)",
+    files: ["src/assets/audio/captures/heat-transfer.mp3"],
+    creator: "Alice_soundz",
+    source:
+      "https://pixabay.com/es/sound-effects/pel%C3%ADculas-y-efectos-especiales-fire-sound-effects-224089/",
+    license: "Pixabay Content License",
+    licenseUrl: "https://pixabay.com/service/license-summary/",
+    licenseStatus: "source-verified",
+    notice: "Fire Sound Effects by Alice_soundz, obtained from Pixabay.",
+    modifications:
+      "Also plays during the Flame impact hover, overlapping flight wind before earth contact. Heat-transfer audition: excerpt 0.700–2.400 s from the first fire burst; linear gain 0.5; 25 ms fade in and 500 ms fade out; mono 44.1 kHz MP3 at 128 kbit/s. Playback gain 0.6 during the precontact lift, with a later card-contact layer at gain 0.22. See edits.json for source fingerprint and export details.",
+    provenance: "third-party",
+    evidence:
+      "User supplied original fire-card.mp3 and specific Pixabay item 224089 URL on 2026-11-18. Creator and Content License verified on the English-language official item page; verification URL recorded in src/assets/audio/captures/edits.json. Original download certificate/date not supplied.",
+  },
+  {
+    id: "flame-buildup-sound",
+    name: "Blizzard Wind (flame flight)",
+    files: ["src/assets/audio/captures/flame-rise.mp3"],
+    creator: "DRAGON-STUDIO",
+    source: "https://pixabay.com/es/sound-effects/naturaleza-blizzard-wind-463217/",
+    license: "Pixabay Content License",
+    licenseUrl: "https://pixabay.com/service/license-summary/",
+    licenseStatus: "source-verified",
+    notice: "Blizzard Wind by DRAGON-STUDIO, obtained from Pixabay.",
+    modifications:
+      "Flame audition: rising wind excerpt 6.100–7.500 s; gain 0.4; 90 ms fade in and 150 ms fade out; mono 44.1 kHz MP3 at 160 kbit/s. Playback gain 0.55 from hand release until contact, overlapping the hover fire; loops for slower playback and stops at contact. See edits.json for source fingerprint.",
+    provenance: "third-party",
+    evidence:
+      "User supplied blizzard.mp3 and Pixabay item 463217 URL on 2026-11-18. Creator and Content License verified on the official item page. Original download certificate/date not supplied.",
+  },
+  {
+    id: "flame-earth-impact-sound",
+    name: "Earth Spell Impact (flame impact and rumble)",
+    files: ["src/assets/audio/captures/flame-impact.mp3"],
+    creator: "DRAGON-STUDIO",
+    source: "https://pixabay.com/es/sound-effects/horror-earth-spell-impact-478381/",
+    license: "Pixabay Content License",
+    licenseUrl: "https://pixabay.com/service/license-summary/",
+    licenseStatus: "source-verified",
+    notice: "Earth Spell Impact by DRAGON-STUDIO, obtained from Pixabay.",
+    modifications:
+      "Flame audition: excerpt 2.500–4.900 s, 30 Hz high-pass, gain 0.42, 12 ms fade in and 600 ms fade out. Starts at contact; fire plays separately during the hover. Mono export limited to 0.7 without makeup gain; 44.1 kHz MP3 at 160 kbit/s. Playback gain 0.5. Exact filter and source hash are in edits.json.",
+    provenance: "third-party",
+    evidence:
+      "User supplied earth-shake.mp3 and Pixabay item 478381 URL on 2026-11-18. Creator and Content License verified on the official item page. Original download certificate/date not supplied.",
+  },
+  {
     id: "geometry",
     name: "Help and Log out icons",
     files: [

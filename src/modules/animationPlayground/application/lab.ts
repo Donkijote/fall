@@ -1,4 +1,5 @@
 import type { CardDropEffect } from "@/components/cards/motion/cardFlights";
+import type { CaptureCue } from "@/domain/audio/captureCue";
 
 export type { CardDropEffect } from "@/components/cards/motion/cardFlights";
 
@@ -82,12 +83,17 @@ export type LabStatePort = LabReader & {
   update: (transition: (state: LabState) => LabState) => void;
 };
 
-export type AudioPort = { playDealCard: () => void; playCard: () => void };
+export type AudioPort = {
+  playDealCard: () => void;
+  playCard: () => void;
+  playCapture?: (cue: CaptureCue) => void;
+};
 
 export type Lab = LabReader & {
   run: (experiment: Experiment) => void;
   playDealCard: () => void;
   playCard: () => void;
+  playCapture?: (cue: CaptureCue) => void;
   setCaptureIntensity: (effect: CardDropEffect) => void;
 };
 
@@ -97,6 +103,7 @@ export function createLab(state: LabStatePort, audio: AudioPort): Lab {
     subscribe: state.subscribe,
     playDealCard: audio.playDealCard,
     playCard: audio.playCard,
+    playCapture: audio.playCapture,
     setCaptureIntensity(effect) {
       state.update((current) => ({ ...current, captureIntensity: effect }));
     },
