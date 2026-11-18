@@ -1,5 +1,7 @@
 import { Settings } from "lucide-react";
+import { useState } from "react";
 
+import traveller from "@/assets/lobby/card-hall/traveller.webp";
 import {
   ActionButton,
   ActivityCard,
@@ -9,6 +11,7 @@ import {
   PopoverPanel,
   SelectField,
 } from "@/components";
+import { PlayerPortrait } from "@/components/hud/PlayerPortrait";
 import { CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Popover, PopoverTitle, PopoverTrigger } from "@/components/ui/popover";
@@ -117,5 +120,22 @@ export function PopoverPreview() {
         scoring reference here.
       </PopoverPanel>
     </Popover>
+  );
+}
+
+export function TurnRingPreview() {
+  const [highlighted, setHighlighted] = useState(false);
+  return (
+    <div className="flex flex-wrap items-center gap-5">
+      <PlayerPortrait avatarUrl={traveller} className="size-18" />
+      <PlayerPortrait
+        fallback={<span className="title-type text-2xl">M</span>}
+        className="size-18"
+      />
+      <PlayerPortrait avatarUrl={traveller} highlighted={highlighted} className="size-18" />
+      <ActionButton aria-pressed={highlighted} onClick={() => setHighlighted((value) => !value)}>
+        Toggle active turn
+      </ActionButton>
+    </div>
   );
 }

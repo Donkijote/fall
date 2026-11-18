@@ -11,3 +11,11 @@ fades softly at the top and bottom and past the end of the experience bar.
 
 Card Hall and occupied Tavern match seats both render the shared
 [PlayerPortrait](../../../src/components/hud/PlayerPortrait.tsx).
+
+## Interaction review — GHI #124
+
+The shared portrait ring eases into an active turn over 380ms and releases over
+240ms. A new turn interrupts from the current brightness rather than resetting
+it. The orbit keeps its existing owner; only the brass light changes, leaving
+the portrait artwork intact. Reduced motion changes the light immediately and
+stops the orbit. The gallery's turn toggle exercises the real component.

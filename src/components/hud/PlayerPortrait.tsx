@@ -10,6 +10,8 @@ import { useGSAP } from "@gsap/react";
 
 import "./PlayerPortrait.css";
 
+gsap.registerPlugin(useGSAP);
+
 export function PlayerPortrait({
   avatarUrl,
   fallbackAvatarUrl,
@@ -24,7 +26,26 @@ export function PlayerPortrait({
   highlighted?: boolean;
 }) {
   const portrait = useRef<HTMLSpanElement>(null);
+  const turnLight = useRef<gsap.core.Tween | null>(null);
   const reducedMotion = useReducedMotion();
+  // Keep the current light level when a turn changes mid-tween.
+  useGSAP(
+    () => {
+      if (!portrait.current) return;
+      turnLight.current?.kill();
+      if (reducedMotion) {
+        gsap.set(portrait.current, { "--portrait-turn": highlighted ? 1 : 0 });
+        return;
+      }
+      turnLight.current = gsap.to(portrait.current, {
+        "--portrait-turn": highlighted ? 1 : 0,
+        duration: highlighted ? 0.38 : 0.24,
+        ease: "power2.out",
+        overwrite: "auto",
+      });
+    },
+    { dependencies: [highlighted, reducedMotion] },
+  );
   useGSAP(
     () => {
       const element = portrait.current;
@@ -79,6 +100,7 @@ export function PlayerPortrait({
     <span
       ref={portrait}
       data-highlighted={highlighted || undefined}
+      data-motion={!reducedMotion || undefined}
       className={cn(
         "game-player-avatar relative isolate grid aspect-square shrink-0 place-items-center rounded-full bg-artwork-shadow text-muted-foreground [&_svg]:size-1/2",
         className,

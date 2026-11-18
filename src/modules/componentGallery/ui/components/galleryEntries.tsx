@@ -21,7 +21,6 @@ import { BrassCheckbox } from "@/components/controls/BrassCheckbox";
 import { BronzeSlider } from "@/components/controls/BronzeSlider";
 import { WaxSwitch } from "@/components/controls/WaxSwitch";
 import { NumberMedallion } from "@/components/hud/NumberMedallion";
-import { PlayerPortrait } from "@/components/hud/PlayerPortrait";
 import { GuideLink } from "@/components/navigation/GuideLink";
 import { ParchmentFigure } from "@/components/surfaces/ParchmentFigure";
 import { homeGallery } from "@/modules/home";
@@ -39,6 +38,7 @@ import {
   ModalPreview,
   PopoverPreview,
   SelectPreview,
+  TurnRingPreview,
 } from "./ComponentPreviews";
 import { gameIcons, GameIconPreview } from "./GameIconPreview";
 
@@ -268,16 +268,7 @@ export const gallerySections: { title: string; folder: string; entries: Entry[] 
         name: "PlayerPortrait",
         variants: "Portrait, initials, and highlighted turn ring",
         usage: "Card Hall, Tavern seats, match seats",
-        Preview: () => (
-          <div className="flex flex-wrap items-center gap-5">
-            <PlayerPortrait avatarUrl={traveller} className="size-18" />
-            <PlayerPortrait
-              fallback={<span className="title-type text-2xl">M</span>}
-              className="size-18"
-            />
-            <PlayerPortrait avatarUrl={traveller} highlighted className="size-18" />
-          </div>
-        ),
+        Preview: TurnRingPreview,
       },
       {
         name: "NumberMedallion",

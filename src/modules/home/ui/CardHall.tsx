@@ -159,7 +159,7 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
 
   return (
     <div
-      className="card-hall relative isolate grid min-h-dvh grid-rows-[auto_1fr_auto] bg-background text-foreground [--hall-card-height:min(44dvh,440px,calc((var(--hall-safe-width)_-_8rem)/2))] [--hall-safe-width:calc(100vw_-_var(--safe-area-left)_-_var(--safe-area-right))] portrait:[--hall-card-height:min(46dvh,390px,calc((var(--hall-safe-width)_-_4rem)*1.5))] compact-landscape:[--hall-card-height:min(55dvh,calc(100dvh_-_9.85rem_-_var(--safe-area-top)_-_var(--safe-area-bottom)),calc((var(--hall-safe-width)_-_7rem)/2))] compact-portrait:[--hall-card-height:min(42dvh,275px,calc((var(--hall-safe-width)_-_4rem)*1.5))]"
+      className="card-hall relative isolate grid min-h-dvh grid-rows-[auto_1fr_auto] bg-background text-foreground [--hall-card-height:min(44dvh,440px,calc((var(--hall-safe-width)_-_8rem)/2))] [--hall-gutter:0.25rem] [--hall-safe-width:calc(100vw_-_var(--safe-area-left)_-_var(--safe-area-right))] min-[360px]:[--hall-gutter:0.75rem] sm:[--hall-gutter:1rem] lg:[--hall-gutter:clamp(1rem,2.6vw,3rem)] portrait:[--hall-card-height:min(46dvh,390px,calc((var(--hall-safe-width)_-_4rem)*1.5))] compact-landscape:[--hall-card-height:min(55dvh,calc(100dvh_-_9.85rem_-_var(--safe-area-top)_-_var(--safe-area-bottom)),calc((var(--hall-safe-width)_-_7rem)/2))] compact-landscape:[--hall-gutter:0.375rem] compact-portrait:[--hall-card-height:min(42dvh,275px,calc((var(--hall-safe-width)_-_4rem)*1.5))]"
       data-slot="card-hall"
       onPointerDown={(event) => {
         touchPointer.current =
@@ -206,7 +206,7 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
         <div className="absolute inset-x-0 top-0 hidden h-[calc(var(--safe-area-top)+1.5rem)] bg-linear-to-b from-artwork-shadow via-artwork-shadow/55 to-transparent standalone:portrait:block" />
       </div>
       <header
-        className="card-hall-header grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-start gap-4 pt-[calc(var(--hall-header-top)+var(--safe-area-top))] pr-[calc(var(--hall-header-gutter)+var(--safe-area-right))] pb-3 pl-[calc(var(--hall-header-gutter)+var(--safe-area-left))] text-artwork-foreground [--hall-header-gutter:clamp(1rem,2.6vw,3rem)] [--hall-header-top:1rem] [text-shadow:0_1px_4px_var(--artwork-shadow)] max-[480px]:grid-cols-[minmax(0,1fr)_auto] portrait:gap-1.5 portrait:pb-2 portrait:[--hall-header-gutter:0.75rem] portrait:[--hall-header-top:0.7rem] compact-landscape:items-center compact-landscape:gap-2 compact-landscape:pb-0 compact-landscape:[--hall-header-gutter:1rem] compact-landscape:[--hall-header-top:0.25rem]"
+        className="card-hall-header grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-start gap-4 pt-[calc(var(--hall-header-top)+var(--safe-area-top))] pr-[calc(var(--hall-gutter)+var(--safe-area-right))] pb-3 pl-[calc(var(--hall-gutter)+var(--safe-area-left))] text-artwork-foreground [--hall-header-top:1rem] [text-shadow:0_1px_4px_var(--artwork-shadow)] max-[480px]:grid-cols-[minmax(0,1fr)_auto] portrait:gap-1.5 portrait:pb-2 portrait:[--hall-header-top:0.7rem] compact-landscape:items-center compact-landscape:gap-2 compact-landscape:pb-0 compact-landscape:[--hall-header-top:0.25rem]"
         aria-label="Player HUD"
       >
         <PlayerIdentity
@@ -287,7 +287,7 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
       <p role="status" className="sr-only">
         {touchFocusedId === "tavern" ? "Tavern focused." : ""}
       </p>
-      <footer className="flex flex-wrap items-end justify-between gap-1 pt-1 pr-[calc(var(--hall-footer-gutter)+var(--safe-area-right))] pb-[calc(var(--hall-footer-bottom)+var(--safe-area-bottom))] pl-[calc(var(--hall-footer-gutter)+var(--safe-area-left))] [--hall-footer-bottom:0.625rem] [--hall-footer-gutter:0.25rem] min-[360px]:[--hall-footer-gutter:0.75rem] sm:[--hall-footer-bottom:0.75rem] sm:[--hall-footer-gutter:1rem] compact-landscape:[--hall-footer-bottom:0.125rem] compact-landscape:[--hall-footer-gutter:0.375rem] [&>nav:last-child]:ml-auto">
+      <footer className="flex flex-wrap items-end justify-between gap-1 pt-1 pr-[calc(var(--hall-gutter)+var(--safe-area-right))] pb-[calc(var(--hall-footer-bottom)+var(--safe-area-bottom))] pl-[calc(var(--hall-gutter)+var(--safe-area-left))] [--hall-footer-bottom:0.625rem] sm:[--hall-footer-bottom:0.75rem] compact-landscape:[--hall-footer-bottom:0.125rem] [&>nav:last-child]:ml-auto">
         <PlayerSystemsDock />
         <HomeUtilities onSettings={onSettings} />
       </footer>

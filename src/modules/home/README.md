@@ -68,3 +68,8 @@ Compact portrait counters stack their contents; desktop and short-landscape
 counters use horizontal content. Help rows use the shared `GuideLink` bookmark
 and a BronzeArrow, keeping native link activation and the existing popover focus
 and dismissal behavior.
+
+GHI #124 unifies header and footer spacing through `--hall-gutter` on CardHall;
+children add their respective safe-area inset. The responsive values and the
+interaction review live in the owning design README. Shared motion owners and
+verification boundaries are inventoried in `src/components/README.md`.

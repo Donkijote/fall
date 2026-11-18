@@ -1,5 +1,5 @@
 [data-tavern-card-frame] {
-  filter: brightness(calc(1 + 0.32 * var(--tavern-frame-light, 0)));
+  filter: brightness(calc(1 + 0.8 * var(--tavern-frame-light, 0)));
 }
 
 [data-tavern-card][data-active="true"] [data-tavern-card-frame] {

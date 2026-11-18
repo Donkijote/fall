@@ -43,3 +43,17 @@ with live icons and values. Portrait layouts stack icon/value within compact mou
 desktop and short landscape use rows. Help menu links reuse the How to Play leather
 bookmark through `GuideLink`, with an artwork arrow. These compositions reuse
 canonical runtime assets; no new generation or alternate skins are introduced.
+
+## Interaction review — GHI #124
+
+The priority pass strengthens the available Tavern card's brass light and broadens
+its moving reflection. Hover, keyboard focus and the first touch tap use the same
+attention state. Coming-soon cards keep their existing subdued treatment. The
+frame arrives in 280ms and releases in 360ms; its sweep takes 3.4s, without adding
+another transform owner. Reduced motion keeps a static bright frame and focus cue.
+
+Header and dock share one safe-area-aware horizontal gutter: the existing dock
+values below `lg` (4px below 360px, 12px from 360px, 16px from `sm`, and 6px in
+compact landscape), then the existing header clamp of 16px–48px at `lg` and above.
+Resource readouts retain the outline artwork, sliced on all four sides so only
+the straight middles stretch when phone counters become taller.

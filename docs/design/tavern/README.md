@@ -52,3 +52,12 @@ Component Gallery use the same format data.
 
 Idle breathing and the slower hover lift move the illustrated card above the
 ribbon. The ribbon and its text stay anchored while the brass brightens.
+
+## Interaction review — GHI #124
+
+Format-card attention remains owned by `useTavernCardMotion`. Hover, keyboard
+focus and touch selection now brighten the brass frame by 80% rather than 32%,
+settling over 280ms with a small 320ms lift. Reversing the existing timeline
+handles interrupted attention without stacking transforms. Reduced motion uses
+the same static brass highlight without the lift or idle reflection. Existing
+Hall-to-room travel, dismissal, lanterns and table travel retain their owners.

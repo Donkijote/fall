@@ -6,8 +6,9 @@
   pointer-events: none;
   content: "";
   border: solid transparent;
-  border-width: 0 13px;
-  border-image: url("../../assets/ui/actions/outline.webp") 0 52 fill stretch;
+  /* Nine-slice all four edges so tall phone counters do not stretch the end caps. */
+  border-width: 5px 13px;
+  border-image: url("../../assets/ui/actions/outline.webp") 20 52 fill stretch;
 }
 .resource-readout::after {
   opacity: var(--border-glint, 0);
