@@ -1,18 +1,16 @@
 import { cn } from "cn";
-import gsap from "gsap";
 import { useImperativeHandle, useState } from "react";
 import type { ComponentProps } from "react";
 
 import crossMark from "@/assets/icons/cross-mark.svg";
 import { DialogClose, DialogOverlay, DialogPortal } from "@/components/ui/dialog";
 import type { DialogContent } from "@/components/ui/dialog";
-import { useReducedMotion } from "@/infrastructure/ui/hooks/useGamePreferences";
 
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
-import { useGSAP } from "@gsap/react";
 
 import { ActionButton } from "../actions/ActionButton";
 import { Icon } from "../icons/Icon";
+import { usePopupMotion } from "./PopupMotion";
 import { modalSurfaceClassName } from "./surfaceStyles";
 import "./ModalContent.css";
 
@@ -26,20 +24,12 @@ export function ModalContent({
   const [popup, setPopup] = useState<HTMLDivElement | null>(null);
   const [overlay, setOverlay] = useState<HTMLDivElement | null>(null);
   useImperativeHandle(ref, () => popup!, [popup]);
-  const reducedMotion = useReducedMotion();
 
-  useGSAP(
-    () => {
-      if (!popup || !overlay || reducedMotion) return;
-      gsap.from(overlay, { opacity: 0, duration: 0.16 });
-      gsap.from(popup, { opacity: 0, y: 4, duration: 0.18, ease: "power2.out" });
-    },
-    { dependencies: [popup, overlay, reducedMotion], revertOnUpdate: true },
-  );
+  usePopupMotion(popup, overlay);
 
   return (
     <DialogPortal>
-      <DialogOverlay ref={setOverlay} className="data-open:animate-none data-closed:animate-none" />
+      <DialogOverlay ref={setOverlay} className="animate-none! transition-none!" />
       <DialogPrimitive.Popup
         ref={setPopup}
         data-slot="dialog-content"

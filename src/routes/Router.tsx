@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 
 import { CardList } from "@/infrastructure/ui/components/card/CardList";
+import { useAssetInteractions } from "@/infrastructure/ui/hooks/useAssetInteractions";
 import { HomeScreen } from "@/infrastructure/ui/screens/Home";
 import { RulesScreen } from "@/infrastructure/ui/screens/Rules";
 import { SingsSheetScreen } from "@/infrastructure/ui/screens/SingsSheet";
@@ -77,4 +78,7 @@ const router = createBrowserRouter([
   },
 ]);
 
-export const AppRouter = () => <RouterProvider router={router} />;
+export const AppRouter = () => {
+  useAssetInteractions();
+  return <RouterProvider router={router} />;
+};

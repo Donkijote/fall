@@ -1,19 +1,8 @@
 import { Search } from "lucide-react";
 import type { ComponentType } from "react";
 
-import diamonds from "@/assets/lobby/card-hall/icons/cut-diamond.svg";
-import energy from "@/assets/lobby/card-hall/icons/electric.svg";
-import levelCrest from "@/assets/lobby/card-hall/icons/rank-1.svg";
-import coins from "@/assets/lobby/card-hall/icons/two-coins.svg";
 import traveller from "@/assets/lobby/card-hall/traveller.webp";
-import {
-  ArrowDivider,
-  BronzeArrow,
-  Callout,
-  PlayerIdentity,
-  ResourceReadout,
-  TextInput,
-} from "@/components";
+import { ArrowDivider, BronzeArrow, Callout, TextInput } from "@/components";
 import { DeclarationBadge } from "@/components/cards/DeclarationBadge";
 import { EmptyCardSlot } from "@/components/cards/EmptyCardSlot";
 import { PointsBadge } from "@/components/cards/PointsBadge";
@@ -21,7 +10,7 @@ import { BrassCheckbox } from "@/components/controls/BrassCheckbox";
 import { BronzeSlider } from "@/components/controls/BronzeSlider";
 import { WaxSwitch } from "@/components/controls/WaxSwitch";
 import { NumberMedallion } from "@/components/hud/NumberMedallion";
-import { PlayerPortrait } from "@/components/hud/PlayerPortrait";
+import { ProfileButton } from "@/components/hud/ProfileButton";
 import { GuideLink } from "@/components/navigation/GuideLink";
 import { ParchmentFigure } from "@/components/surfaces/ParchmentFigure";
 import { homeGallery } from "@/modules/home";
@@ -38,7 +27,10 @@ import {
   FramePreview,
   ModalPreview,
   PopoverPreview,
+  ProgressionPreview,
+  ResourcePreview,
   SelectPreview,
+  TurnRingPreview,
 } from "./ComponentPreviews";
 import { gameIcons, GameIconPreview } from "./GameIconPreview";
 
@@ -268,16 +260,7 @@ export const gallerySections: { title: string; folder: string; entries: Entry[] 
         name: "PlayerPortrait",
         variants: "Portrait, initials, and highlighted turn ring",
         usage: "Card Hall, Tavern seats, match seats",
-        Preview: () => (
-          <div className="flex flex-wrap items-center gap-5">
-            <PlayerPortrait avatarUrl={traveller} className="size-18" />
-            <PlayerPortrait
-              fallback={<span className="title-type text-2xl">M</span>}
-              className="size-18"
-            />
-            <PlayerPortrait avatarUrl={traveller} highlighted className="size-18" />
-          </div>
-        ),
+        Preview: TurnRingPreview,
       },
       {
         name: "NumberMedallion",
@@ -292,30 +275,22 @@ export const gallerySections: { title: string; folder: string; entries: Entry[] 
         ),
       },
       {
+        name: "ProfileButton",
+        variants: "Pointer hover, keyboard focus, static shine with reduced motion",
+        usage: "Card Hall profile action; optional activation handler",
+        Preview: () => <ProfileButton fallbackAvatarUrl={traveller} />,
+      },
+      {
         name: "PlayerIdentity",
         variants: "Traveller avatar, level crest, experience",
         usage: "Card Hall player HUD",
-        Preview: () => (
-          <PlayerIdentity
-            name="Traveller"
-            fallbackAvatarUrl={traveller}
-            levelCrestUrl={levelCrest}
-            level={4}
-            experience={{ value: 60, maximum: 100 }}
-          />
-        ),
+        Preview: ProgressionPreview,
       },
       {
         name: "ResourceReadout",
-        variants: "Count, capped count, unavailable",
+        variants: "Count, capped count, unavailable; hover/focus orbit with pause and resume",
         usage: "Card Hall resource HUD",
-        Preview: () => (
-          <div className="flex flex-wrap gap-3">
-            <ResourceReadout label="Coins" icon={coins} value={120} />
-            <ResourceReadout label="Energy" icon={energy} value={8} maximum={10} />
-            <ResourceReadout label="Diamonds" icon={diamonds} />
-          </div>
-        ),
+        Preview: ResourcePreview,
       },
     ],
   },

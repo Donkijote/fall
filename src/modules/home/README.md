@@ -68,3 +68,15 @@ Compact portrait counters stack their contents; desktop and short-landscape
 counters use horizontal content. Help rows use the shared `GuideLink` bookmark
 and a BronzeArrow, keeping native link activation and the existing popover focus
 and dismissal behavior.
+
+GHI #124 unifies header and footer spacing through `--hall-gutter` on CardHall;
+children add their respective safe-area inset. The responsive values and the
+interaction review live in the owning design README. Shared motion owners and
+verification boundaries are inventoried in `src/components/README.md`.
+
+`PlayerIdentity` now composes the shared `ProfileButton`; resources are native
+`ResourceReadout` actions. Their optional callbacks are ready for future profile
+and resource features. No new screen, navigation or balance mutation is wired
+by this presentation pass. Shared component notes own hover/focus behavior,
+reduced-motion rules, the global cursor/selection policy and implemented
+state-change animations. `CardHall.test.tsx` asserts the updated accessible resource action names.

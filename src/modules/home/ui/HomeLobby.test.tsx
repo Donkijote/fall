@@ -254,13 +254,17 @@ test.each(["{Enter}", " "])("the tavern opens the Tavern picker with %s", async 
   expect(setupGame).not.toHaveBeenCalled();
 });
 
-test("the presentational HUD never writes an economy or performs network requests", () => {
+test("the presentational HUD never writes an economy or performs network requests", async () => {
+  const user = userEvent.setup();
   const storageSpy = vi.spyOn(Storage.prototype, "setItem");
   const fetchSpy = vi.spyOn(globalThis, "fetch");
   renderLobby();
   for (const resource of ["Energy", "Coins", "Diamonds"]) {
-    expect(screen.getByRole("group", { name: resource })).toHaveTextContent("Unavailable");
+    const action = screen.getByRole("button", { name: `${resource}: Unavailable` });
+    expect(action).toHaveTextContent("—");
+    await user.click(action);
   }
+  await user.click(screen.getByRole("button", { name: "Player profile" }));
   expect(screen.getByText("Level —")).toBeVisible();
   expect(screen.getByRole("img", { name: "Experience unavailable" })).toBeVisible();
   expect(storageSpy).not.toHaveBeenCalled();

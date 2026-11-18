@@ -3,7 +3,6 @@ import gsap from "gsap";
 import { useRef } from "react";
 import type { ReactNode } from "react";
 
-import turnPointer from "@/assets/lobby/tavern-match/turn-pointer.webp";
 import woodenChair from "@/assets/lobby/tavern-match/wooden-chair.svg";
 import { PlayerPortrait } from "@/components/hud/PlayerPortrait";
 import { Icon } from "@/components/icons/Icon";
@@ -13,6 +12,7 @@ import { useGSAP } from "@gsap/react";
 import type { MatchSeat } from "../../../application/matchSeats";
 import { MatchPlaque } from "./MatchPlaque";
 import { scoreSideStyle } from "./scoreSideStyle";
+import { TurnPointer } from "./TurnPointer";
 
 export type SeatPlayer = { name: string; avatarUrl?: string };
 
@@ -74,16 +74,8 @@ export function MatchSeatMarker({
       )}
     >
       <div className="relative z-10 shrink-0">
-        {active && (
-          <>
-            <span className="sr-only">Active seat</span>
-            <img
-              src={turnPointer}
-              alt=""
-              className="pointer-events-none absolute top-1/2 right-full mr-1 w-[clamp(0.5rem,calc(var(--seat-size)*0.25),1rem)] -translate-y-1/2 group-data-[side=right]:right-auto group-data-[side=right]:left-full group-data-[side=right]:mr-0 group-data-[side=right]:ml-1 group-data-[side=right]:rotate-180"
-            />
-          </>
-        )}
+        {active && <span className="sr-only">Active seat</span>}
+        <TurnPointer active={active} />
         <div ref={portrait} aria-hidden="true">
           {player ? (
             <PlayerPortrait

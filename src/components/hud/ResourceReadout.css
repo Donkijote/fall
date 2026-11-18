@@ -1,25 +1,26 @@
-.resource-readout::before,
-.resource-readout::after {
+.resource-readout-frame::before,
+.resource-readout-frame::after {
   position: absolute;
   inset: 0;
-  z-index: -1;
   pointer-events: none;
   content: "";
   border: solid transparent;
-  border-width: 0 13px;
+  /* Scale each intact 52 × 116 end strip uniformly with the readout's height.
+     Only the middle stretches horizontally; no seam crosses the painted face. */
+  border-width: 0 calc(100cqh * 52 / 116);
   border-image: url("../../assets/ui/actions/outline.webp") 0 52 fill stretch;
 }
-.resource-readout::after {
+.resource-readout-frame::after {
   opacity: var(--border-glint, 0);
   filter: brightness(2.35) saturate(0.8);
   mask-image: radial-gradient(
-    1.8rem 5px at var(--border-glint-x, 50%) var(--border-glint-y, 0%),
+    0.9rem at var(--border-glint-x, 50%) var(--border-glint-y, 0%),
     black 12%,
     transparent
   );
 }
 @media (forced-colors: active) {
-  .resource-readout::after {
+  .resource-readout-frame::after {
     display: none;
   }
   .resource-readout {

@@ -6,7 +6,8 @@ import logout from "@/assets/lobby/card-hall/icons/logout.svg";
 import { Navigation, PopoverPanel } from "@/components";
 import { BronzeArrow } from "@/components/dividers/BronzeArrow";
 import { GuideLink } from "@/components/navigation/GuideLink";
-import { Popover, PopoverTrigger } from "@/components/ui/popover";
+import { MotionPopover as Popover } from "@/components/surfaces/PopupMotion";
+import { PopoverTrigger } from "@/components/ui/popover";
 import { LOGIN_PATH, RULES_PATH, SINGS_SHEETS } from "@/routes/Routes";
 
 import { cardHallIcons } from "./cardHallIcons";

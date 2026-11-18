@@ -1,6 +1,14 @@
+import gsap from "gsap";
+import { useRef, useState } from "react";
+
+import { useReducedMotion } from "@/infrastructure/ui/hooks/useGamePreferences";
+
+import { useGSAP } from "@gsap/react";
+
 import { Icon } from "../icons/Icon";
 import "./PlayerIdentity.css";
-import { PlayerPortrait } from "./PlayerPortrait";
+import { ExperienceMeter } from "./ExperienceMeter";
+import { ProfileButton } from "./ProfileButton";
 
 const formatExperience = new Intl.NumberFormat();
 
@@ -11,6 +19,7 @@ export type PlayerIdentityProps = {
   levelCrestUrl?: string;
   level?: number;
   experience?: { value: number; maximum: number };
+  onProfileClick?: () => void;
 };
 
 export function PlayerIdentity({
@@ -20,6 +29,7 @@ export function PlayerIdentity({
   levelCrestUrl,
   level,
   experience,
+  onProfileClick,
 }: PlayerIdentityProps) {
   const hasLevel = level !== undefined && Number.isInteger(level) && level > 0;
   const hasExperience =
@@ -30,16 +40,63 @@ export function PlayerIdentity({
     experience.value >= 0 &&
     experience.value <= experience.maximum;
 
+  const crest = useRef<HTMLSpanElement>(null);
+  const identity = useRef<HTMLDivElement>(null);
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const previousLevel = useRef(level);
+  const attentionMotion = useRef<gsap.core.Tween | null>(null);
+  const reduced = useReducedMotion();
+  useGSAP(
+    () => {
+      const old = previousLevel.current;
+      previousLevel.current = level;
+      if (!crest.current || reduced || old === undefined || !hasLevel || level <= old) return;
+      gsap.fromTo(
+        crest.current,
+        { filter: "brightness(1.8)" },
+        {
+          filter: "brightness(1)",
+          duration: 0.5,
+          clearProps: "filter",
+        },
+      );
+    },
+    { dependencies: [level, reduced], revertOnUpdate: true },
+  );
+  useGSAP(
+    () => {
+      attentionMotion.current?.kill();
+      attentionMotion.current = gsap.to(identity.current, {
+        "--identity-attention": hovered || focused ? 1 : 0,
+        duration: reduced ? 0 : 0.18,
+        overwrite: "auto",
+      });
+    },
+    { dependencies: [hovered, focused, reduced] },
+  );
+
   return (
     <div
+      ref={identity}
+      onPointerEnter={(event) => {
+        if (event.pointerType !== "touch") setHovered(true);
+      }}
+      onPointerLeave={() => setHovered(false)}
+      onPointerCancel={() => setHovered(false)}
+      onFocusCapture={(event) => setFocused(event.target.matches(":focus-visible"))}
+      onBlurCapture={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false);
+      }}
       className="game-player relative isolate flex min-w-0 items-center gap-(--player-gap) [--player-gap:0.375rem] [--player-portrait-width:clamp(44px,5vw,78px)] sm:[--player-gap:clamp(0.6rem,1vw,1rem)] portrait:[--player-portrait-width:2.75rem] compact-landscape:[--player-portrait-width:2.75rem]"
       role="group"
       aria-label="Player identity"
     >
-      <PlayerPortrait
+      <ProfileButton
+        attention={hovered || focused}
         avatarUrl={avatarUrl}
         fallbackAvatarUrl={fallbackAvatarUrl}
-        className="w-(--player-portrait-width)"
+        onClick={onProfileClick}
       />
       <span className="game-player-copy relative grid w-full max-w-40 min-w-0 gap-0.5 portrait:max-w-[17ch]">
         <span className="flex min-w-0 items-center gap-1">
@@ -50,7 +107,10 @@ export function PlayerIdentity({
             >
               {name}
             </span>
-            <span className={levelCrestUrl ? "sr-only" : "text-xs font-semibold"}>
+            <span
+              ref={!levelCrestUrl ? crest : undefined}
+              className={levelCrestUrl ? "sr-only" : "text-xs font-semibold"}
+            >
               Level {hasLevel ? level : "—"}
             </span>
             {hasExperience && (
@@ -65,6 +125,7 @@ export function PlayerIdentity({
           </span>
           {levelCrestUrl && (
             <span
+              ref={crest}
               className="relative isolate grid size-10 shrink-0 place-items-center text-artwork-foreground drop-shadow-[0_2px_2px_var(--artwork-shadow)] md:size-12 compact-landscape:size-9"
               title={hasLevel ? `Level ${level}` : "Level unavailable"}
             >
@@ -82,21 +143,11 @@ export function PlayerIdentity({
             </span>
           )}
         </span>
-        <span
-          className="h-1.5 w-full overflow-hidden rounded-full border border-gold/50 bg-artwork-shadow/75"
-          role={hasExperience ? "meter" : "img"}
-          aria-label={hasExperience ? "Experience" : "Experience unavailable"}
-          aria-valuemin={hasExperience ? 0 : undefined}
-          aria-valuemax={hasExperience ? experience.maximum : undefined}
-          aria-valuenow={hasExperience ? experience.value : undefined}
-        >
-          {hasExperience && (
-            <span
-              className="block h-full rounded-full bg-linear-to-r from-gold to-artwork-foreground"
-              style={{ width: `${(experience.value / experience.maximum) * 100}%` }}
-            />
-          )}
-        </span>
+        <ExperienceMeter
+          value={hasExperience ? experience.value : undefined}
+          maximum={hasExperience ? experience.maximum : undefined}
+          level={level}
+        />
       </span>
     </div>
   );

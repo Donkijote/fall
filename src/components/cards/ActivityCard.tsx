@@ -192,7 +192,7 @@ export function ActivityCard({
             moving && !unavailable
               ? gsap.to(frame, {
                   "--activity-shine-angle": "360deg",
-                  duration: 6,
+                  duration: 3.4,
                   repeat: -1,
                   ease: "none",
                   paused: true,
@@ -211,7 +211,7 @@ export function ActivityCard({
                 if (isActive) shine?.play();
                 gsap.to(frame, {
                   "--activity-frame-light": isActive ? 1 : 0,
-                  duration: isActive ? 0.42 : 0.52,
+                  duration: isActive ? 0.28 : 0.36,
                   ease: "sine.inOut",
                   overwrite: "auto",
                   onComplete: () => {
@@ -328,7 +328,7 @@ export function ActivityCard({
                   "game-activity-shimmer absolute -inset-x-[80%] -inset-y-[30%] opacity-0",
                   unavailable
                     ? "bg-linear-[115deg,transparent_36%,var(--artwork-shadow)_50%,transparent_64%]"
-                    : "bg-[linear-gradient(115deg,transparent_40%,color-mix(in_oklch,var(--gold)_12%,transparent)_49%,transparent_58%)]",
+                    : "bg-[linear-gradient(115deg,transparent_40%,color-mix(in_oklch,var(--gold)_28%,transparent)_49%,transparent_58%)]",
                 )}
               />
               {sparks.map((spark) => (

@@ -1,7 +1,11 @@
+import gsap from "gsap";
 import { ChevronDown } from "lucide-react";
-import { useRef, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 
 import { GuideLink } from "@/components/navigation/GuideLink";
+import { useReducedMotion } from "@/infrastructure/ui/hooks/useGamePreferences";
+
+import { useGSAP } from "@gsap/react";
 
 import { chapterUrl } from "../../../adapters/rulebookRoutes";
 import { chapters, type Chapter } from "../../../application/rulebookContent";
@@ -20,9 +24,56 @@ export function ChapterNavigation({
   onChoose: () => void;
 }) {
   const disclosure = useRef<HTMLDetailsElement>(null);
+  const content = useRef<HTMLDivElement>(null);
+  const chevron = useRef<SVGSVGElement>(null);
+  const [expanded, setExpanded] = useState(false);
+  const motion = useRef<gsap.core.Timeline | null>(null);
+  const reduced = useReducedMotion();
+  useGSAP(
+    () => {
+      motion.current?.kill();
+      const details = disclosure.current;
+      const panel = content.current;
+      if (!details || !panel) return;
+      if (expanded) details.open = true;
+      // Closed links leave the focus order immediately, including during the exit.
+      panel.inert = !expanded;
+      if (reduced) {
+        details.open = expanded;
+        gsap.set(panel, { height: expanded ? "auto" : 0, opacity: expanded ? 1 : 0 });
+        gsap.set(chevron.current, { rotation: expanded ? 180 : 0 });
+        return;
+      }
+      const timeline = (motion.current = gsap.timeline({
+        onComplete: () => {
+          if (!expanded) details.open = false;
+          if (expanded) gsap.set(panel, { height: "auto" });
+        },
+      }));
+      timeline.to(
+        panel,
+        {
+          height: expanded ? panel.scrollHeight : 0,
+          opacity: expanded ? 1 : 0,
+          duration: reduced ? 0 : 0.2,
+          ease: "power2.out",
+        },
+        0,
+      );
+      timeline.to(
+        chevron.current,
+        { rotation: expanded ? 180 : 0, duration: reduced ? 0 : 0.18 },
+        0,
+      );
+      return () => {
+        timeline.kill();
+      };
+    },
+    { dependencies: [expanded, reduced] },
+  );
   function choose() {
     onChoose();
-    if (disclosure.current) disclosure.current.open = false;
+    setExpanded(false);
   }
   const links = (
     <nav
@@ -63,12 +114,21 @@ export function ChapterNavigation({
         ref={disclosure}
         className="rounded-md bg-artwork-shadow/90 p-3 text-artwork-foreground lg:hidden"
       >
-        <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 rounded-md px-2 font-semibold focus-visible:outline-2 focus-visible:outline-ring">
+        <summary
+          onClick={(event) => {
+            event.preventDefault();
+            setExpanded((value) => !value);
+          }}
+          aria-expanded={expanded}
+          className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 rounded-md px-2 font-semibold focus-visible:outline-2 focus-visible:outline-ring"
+        >
           Chapters: {chapter.title}
-          <ChevronDown aria-hidden="true" className="size-4" />
+          <ChevronDown ref={chevron} aria-hidden="true" className="size-4" />
         </summary>
-        {links}
-        <div className="px-3">{singsLink}</div>
+        <div ref={content} className="h-0 overflow-hidden opacity-0">
+          {links}
+          <div className="px-3">{singsLink}</div>
+        </div>
       </details>
     </>
   );

@@ -197,3 +197,18 @@ Empty collected and deck piles use shared EmptyCardSlot, a recessed treatment
 composed from the approved [input artwork](../text-input/README.md). Card faces,
 stack movement, pile labels, and game behavior remain unchanged. The gallery
 exposes this decorative recess separately for future reuse.
+
+## Current-turn motion review — GHI #124
+
+The shared portrait ring draws and wipes clockwise behind its orbiting glint;
+see the [player identity motion specification](../player-identity/README.md).
+The turn arrow springs into place once, then scales/fades away at handoff rather
+than disappearing with an unmounted image. It does not bob continuously or move
+the seat, nameplate or portrait artwork. Reduced motion keeps immediate active
+ring and arrow states. The live MatchSeatMarker gallery preview includes a Pass
+turn control to compare both players and interrupt handoffs.
+
+During card-deal playback, including the table/hand deal after dealer selection,
+the dealer keeps the active ring and arrow until the deal completes. The next
+player's turn begins at the completed frame. Partial ring arcs use soft gradient
+edges for both arrival and release rather than a sharp radial cutoff.

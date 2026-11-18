@@ -37,8 +37,8 @@ export function useTavernCardMotion(button: RefObject<HTMLButtonElement | null>,
       gsap.set(border, { "--tavern-frame-light": 0 });
       const highlight = gsap.timeline({ paused: true });
       highlight
-        .to(artwork, { y: -4, scale: 1.018, duration: 0.56, ease: "sine.inOut" }, 0)
-        .to(border, { "--tavern-frame-light": 1, duration: 0.62, ease: "sine.inOut" }, 0);
+        .to(artwork, { y: -5, scale: 1.025, duration: 0.32, ease: "sine.inOut" }, 0)
+        .to(border, { "--tavern-frame-light": 1, duration: 0.28, ease: "sine.inOut" }, 0);
       attention.current = highlight;
 
       return () => {

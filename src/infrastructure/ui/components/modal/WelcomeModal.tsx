@@ -3,7 +3,8 @@ import { v4 as uuidv4 } from "uuid";
 
 import { StorageKeys, StorageService } from "@/application/services/StorageService";
 import { ActionButton, ModalContent, TextInput } from "@/components";
-import { Dialog, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { MotionDialog as Dialog } from "@/components/surfaces/PopupMotion";
+import { DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import type { User } from "@/domain/entities/User";
 

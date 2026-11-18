@@ -1,4 +1,19 @@
 .game-player-avatar {
+  --portrait-turn-origin: 0deg;
+  --portrait-turn-sweep: 0deg;
+  /* Both layers share one arc so the glint cannot survive on an erased segment. */
+  --portrait-turn-feather: min(
+    18deg,
+    calc(var(--portrait-turn-sweep) / 2),
+    calc((360deg - var(--portrait-turn-sweep)) / 2)
+  );
+  --portrait-turn-mask: conic-gradient(
+    from var(--portrait-turn-origin),
+    transparent 0deg,
+    black var(--portrait-turn-feather),
+    black calc(var(--portrait-turn-sweep) - var(--portrait-turn-feather)),
+    transparent var(--portrait-turn-sweep) 360deg
+  );
   --portrait-ring: url("../../assets/ui/player-identity/brass-ring.webp");
   box-shadow: 0 3px 6px var(--artwork-shadow);
 }
@@ -15,7 +30,8 @@
 }
 
 .game-player-avatar::before,
-.game-player-avatar::after {
+.game-player-avatar::after,
+.game-player-turn-ring {
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -25,33 +41,30 @@
 
 .game-player-avatar::before {
   z-index: 1;
+  filter: brightness(calc(1 + var(--portrait-attention, 0) * 0.85))
+    drop-shadow(
+      0 0 3px color-mix(in oklch, var(--gold) calc(var(--portrait-attention, 0) * 65%), transparent)
+    );
 }
 
-.game-player-avatar[data-highlighted]::before {
+.game-player-turn-ring {
   filter: brightness(1.9) drop-shadow(0 0 2px color-mix(in oklch, var(--gold) 72%, transparent));
+  mask-image: var(--portrait-turn-mask);
 }
 
 .game-player-avatar::after {
   z-index: 2;
   opacity: var(--portrait-glint, 0);
-  filter: brightness(2.15);
-  mask-image: conic-gradient(
-    from var(--portrait-glint-angle, 0deg),
-    transparent,
-    black 19deg,
-    transparent 45deg
-  );
-}
-
-.game-player-avatar[data-highlighted]::after {
-  opacity: 0.95;
-  filter: brightness(3.1) drop-shadow(0 0 3px var(--gold));
-  mask-image: conic-gradient(
-    from var(--portrait-glint-angle, 0deg),
-    transparent,
-    black 42deg,
-    transparent 100deg
-  );
+  filter: brightness(3.1);
+  mask-image:
+    conic-gradient(
+      from calc(var(--portrait-glint-angle, 0deg) - 30deg),
+      transparent,
+      black 30deg,
+      transparent 60deg
+    ),
+    var(--portrait-glint-clip, linear-gradient(black, black));
+  mask-composite: intersect;
 }
 
 @media (forced-colors: active) {

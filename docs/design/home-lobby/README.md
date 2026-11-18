@@ -43,3 +43,42 @@ with live icons and values. Portrait layouts stack icon/value within compact mou
 desktop and short landscape use rows. Help menu links reuse the How to Play leather
 bookmark through `GuideLink`, with an artwork arrow. These compositions reuse
 canonical runtime assets; no new generation or alternate skins are introduced.
+
+## Interaction review — GHI #124
+
+The priority pass strengthens the available Tavern card's brass light and broadens
+its moving reflection. Hover, keyboard focus and the first touch tap use the same
+attention state. Coming-soon cards keep their existing subdued treatment. The
+frame arrives in 280ms and releases in 360ms; its sweep takes 3.4s, without adding
+another transform owner. Reduced motion keeps a static bright frame and focus cue.
+
+Header and dock share one safe-area-aware horizontal gutter: the existing dock
+values below `lg` (4px below 360px, 12px from 360px, 16px from `sm`, and 6px in
+compact landscape), then the existing header clamp of 16px–48px at `lg` and above.
+Resource readouts retain the outline artwork and its intact full-height end
+strips. An absolute size container scales their width from the actual readout
+height using the source's 52:116 ratio; only the center stretches horizontally.
+The earlier four-sided slicing split the painted face and was reverted. Compact
+counters reserve enough width and padding for the end ornaments and their value.
+
+Resource-frame correction was reviewed in the running app at 1280×800,
+375×667, 320×568 and 667×375 for the HUD, and at 1280×800, 375×667 and
+768×1024 in the standalone gallery. Both gallery themes were checked. The end
+ornaments keep their source proportions and the 320px HUD has no horizontal
+overflow. The broader app-wide motion/device acceptance matrix remains pending.
+
+In compact landscape, resources use a 4px gap rather than the wider 16px spacing.
+The header reserves at least 24px between its columns and gives resources their
+intrinsic minimum width. It keeps the title centered when there is room, allowing
+the player column to yield space on narrower phones. Reviewed at 568×320,
+667×375 and 844×390: title-to-resource clearance is at least 24px, with no
+horizontal overflow. Portrait and non-compact desktop spacing are unchanged.
+
+HUD resources and the profile portrait are now native action-ready buttons.
+Resource glints travel around their bevels only on hover or keyboard focus,
+pause at the exit position and resume the same lap. Profile attention orbits
+its glint without adding a turn rim. Reduced motion retains static shine. The
+optional action callbacks are reserved for future resource/profile features.
+Static interface text uses an arrow cursor without selection; actual editable
+fields retain text cursors and selection. Shared surface exits, resource-value feedback, progression and control motion
+are implemented by their owners in `src/components`.

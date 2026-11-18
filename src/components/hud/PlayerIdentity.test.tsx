@@ -33,3 +33,18 @@ test.each([undefined, -1, 0, Number.NaN, Number.POSITIVE_INFINITY, 1.5])(
     expect(screen.getByRole("img", { name: "Experience unavailable" })).toBeVisible();
   },
 );
+
+test("hovering the identity copy also shines the profile frame without marking a turn", async () => {
+  const { default: gsap } = await import("gsap");
+  const { container } = render(<PlayerIdentity name="Player" />);
+  fireEvent.pointerEnter(screen.getByRole("group", { name: "Player identity" }), {
+    pointerType: "mouse",
+  });
+  const portrait = container.querySelector<HTMLElement>(".game-player-avatar")!;
+  const attention = gsap
+    .getTweensOf(portrait)
+    .find((tween) => "--portrait-attention" in tween.vars)!;
+  attention.progress(1);
+  expect(portrait.style.getPropertyValue("--portrait-attention")).toBe("1");
+  expect(portrait).not.toHaveAttribute("data-highlighted");
+});
