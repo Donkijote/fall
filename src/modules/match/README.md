@@ -113,3 +113,17 @@ tests retain timing, preference, layering, disposal and volume coverage.
 Regression coverage also resolves real single and consecutive-rank table captures
 through `playMatchCard` and verifies they never emit Fall cues. Only a resolved
 Fall uses the imported flight/impact clips; cascade pickups use original card audio.
+
+## Current-turn presentation — GHI #124
+
+`MatchSeatMarker` composes the shared `PlayerPortrait` orbit-led brass draw/wipe
+and the feature-owned `TurnPointer`. The pointer stays mounted for its exit,
+uses a brief spring arrival and scale/fade release, and reads the real stored/system
+motion preference. PlayableBoard suppresses seat arrival motion separately; that
+suppression must not disable current-turn cues. Native active-seat text changes
+immediately, and decorative arrow/ring artwork remains outside the accessibility tree.
+
+`TurnPointer.test.tsx` covers interruption, reduced motion and unmount cleanup;
+`PlayerPortrait.test.tsx` covers arc/head alignment and ring lifecycle. The module
+gallery's seat preview has a Pass turn control for exercising both occupied seats
+and retains an open-seat example.

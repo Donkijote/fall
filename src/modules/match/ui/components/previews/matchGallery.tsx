@@ -115,27 +115,43 @@ function OpeningDealPreview() {
   );
 }
 
+const previewSeatPlayers = { mara: { name: "Mara" }, rowan: { name: "Rowan" } };
+
 function SeatsPreview() {
   const reducedMotion = useReducedMotion();
+  const [maraActive, setMaraActive] = useState(true);
   return (
-    <PositionedPreview>
-      <ul aria-label="Example table seats">
-        <MatchSeatMarker
-          position="top"
-          player={{ name: "Mara" }}
-          scoreSide="2"
-          active
-          dealer
-          reducedMotion={reducedMotion}
-        />
-        <MatchSeatMarker
-          position="right"
-          active={false}
-          dealer={false}
-          reducedMotion={reducedMotion}
-        />
-      </ul>
-    </PositionedPreview>
+    <div className="grid gap-3">
+      <ActionButton className="justify-self-start" onClick={() => setMaraActive((value) => !value)}>
+        Pass turn
+      </ActionButton>
+      <PositionedPreview>
+        <ul aria-label="Example table seats">
+          <MatchSeatMarker
+            position="top"
+            player={previewSeatPlayers.mara}
+            scoreSide="2"
+            active={maraActive}
+            dealer
+            reducedMotion={reducedMotion}
+          />
+          <MatchSeatMarker
+            position="left"
+            player={previewSeatPlayers.rowan}
+            scoreSide="3"
+            active={!maraActive}
+            dealer={false}
+            reducedMotion={reducedMotion}
+          />
+          <MatchSeatMarker
+            position="right"
+            active={false}
+            dealer={false}
+            reducedMotion={reducedMotion}
+          />
+        </ul>
+      </PositionedPreview>
+    </div>
   );
 }
 

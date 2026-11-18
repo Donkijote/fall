@@ -95,27 +95,26 @@ Long ambient loops remain decorative and stop under reduced motion. State
 changes must remain readable immediately when motion is reduced. Extend each
 owner below instead of adding competing transforms. No new idle motion is needed.
 
-| Interaction                                    | Existing owner and decision                                                                                                                               |
-| ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Login arrival and atmosphere                   | `LoginScreen`, `LoginAtmosphere`: retain coordinated arrival and WebGL fade.                                                                              |
-| Card Hall background and activity attention    | `CardHall`, `ActivityCard`: retain parallax/sway; strengthen available frame and reflection, shorten attention arrival.                                   |
-| Settings, onboarding and confirmation dialogs  | `ModalContent`: retain shared fade/4px entry and native dismissal/focus restoration. No delayed close orchestration added.                                |
-| Help/menu popover                              | `PopoverPanel`: retain short entry and native immediate dismissal.                                                                                        |
-| Shared actions and guide links                 | `ActionButton`, `GuideLink`: retain existing reveal owners.                                                                                               |
-| Choices, text focus and select menus/options   | `BrassCheckbox`, `TextInput`, `SelectField`: retain wax press, input light and option reveal. Sliders/switches keep immediate value cues.                 |
-| Tavern room entry, dismissal and table travel  | `useTavernMotion`, `useMatchTravel`: retain coordinated travel; do not replay an overlay entry on top.                                                    |
-| Tavern format hover/focus/touch selection      | `useTavernCardMotion`: increase frame light, shorten lift/settle; reuse its reversible attention timeline.                                                |
-| Current-turn ring                              | `PlayerPortrait`: add interruptible brass-light arrival/release, preserve orbit owner; immediate light under reduced motion.                              |
-| How to Play chapter/disclosure navigation      | `useArticleMotion`, `GuideLink`: retain chapter entry and current-page reveal; keep disclosure state immediate.                                           |
-| Sings search, filters, lists and empty results | `useSingsFilterMotion`: retain outgoing clones, list reflow and incoming results; no second list animation. Empty-state content stays immediate/readable. |
-| Loading and empty handoffs                     | Keep existing readable placeholders/statuses; no artificial delay or idle control animation.                                                              |
+| Interaction                                    | Existing owner and decision                                                                                                                                                                                  |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Login arrival and atmosphere                   | `LoginScreen`, `LoginAtmosphere`: retain coordinated arrival and WebGL fade.                                                                                                                                 |
+| Card Hall background and activity attention    | `CardHall`, `ActivityCard`: retain parallax/sway; strengthen available frame and reflection, shorten attention arrival.                                                                                      |
+| Settings, onboarding and confirmation dialogs  | `ModalContent`: retain shared fade/4px entry and native dismissal/focus restoration. No delayed close orchestration added.                                                                                   |
+| Help/menu popover                              | `PopoverPanel`: retain short entry and native immediate dismissal.                                                                                                                                           |
+| Shared actions and guide links                 | `ActionButton`, `GuideLink`: retain existing reveal owners.                                                                                                                                                  |
+| Choices, text focus and select menus/options   | `BrassCheckbox`, `TextInput`, `SelectField`: retain wax press, input light and option reveal. Sliders/switches keep immediate value cues.                                                                    |
+| Tavern room entry, dismissal and table travel  | `useTavernMotion`, `useMatchTravel`: retain coordinated travel; do not replay an overlay entry on top.                                                                                                       |
+| Tavern format hover/focus/touch selection      | `useTavernCardMotion`: increase frame light, shorten lift/settle; reuse its reversible attention timeline.                                                                                                   |
+| Current-turn ring                              | `PlayerPortrait` / `usePortraitTurnMotion`: orbit-led 650ms draw/wipe of the bright rim, then the existing 1.9s orbit; interruptions retrace the current arc, reduced motion uses a complete immediate ring. |
+| How to Play chapter/disclosure navigation      | `useArticleMotion`, `GuideLink`: retain chapter entry and current-page reveal; keep disclosure state immediate.                                                                                              |
+| Sings search, filters, lists and empty results | `useSingsFilterMotion`: retain outgoing clones, list reflow and incoming results; no second list animation. Empty-state content stays immediate/readable.                                                    |
+| Loading and empty handoffs                     | Keep existing readable placeholders/statuses; no artificial delay or idle control animation.                                                                                                                 |
 
 Shared previews use the live ActivityCard, ModalContent, PopoverPanel and resource
 readouts. PlayerPortrait now has a manual turn toggle for repeated interruption
 and preference changes. Tavern's module gallery retains the real picker/cards.
 
-Focused automated coverage exercises turn interruption, preference changes during
-arrival, and unmount cleanup. Existing feature tests cover activity navigation,
+Focused automated coverage exercises ring/head alignment, orbital release, interrupted draws/wipes, completed-exit reactivation, preference changes during arrival, and unmount cleanup. Existing feature tests cover activity navigation,
 touch selection and dialog semantics. A visual pass on desktop, phone portrait
 and landscape, both themes and physical touch remains required before acceptance;
 unit tests do not establish artwork quality or device layout. Score-award travel

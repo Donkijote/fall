@@ -14,8 +14,22 @@ Card Hall and occupied Tavern match seats both render the shared
 
 ## Interaction review — GHI #124
 
-The shared portrait ring eases into an active turn over 380ms and releases over
-240ms. A new turn interrupts from the current brightness rather than resetting
-it. The orbit keeps its existing owner; only the brass light changes, leaving
-the portrait artwork intact. Reduced motion changes the light immediately and
-stops the orbit. The gallery's turn toggle exercises the real component.
+The orbit now leads a 650ms clockwise draw of the bright brass ring. The full
+ring then retains the existing 1.9s orbit. At handoff, a 650ms clockwise wipe
+starts at that live orbital position and removes the bright ring behind it;
+the next player's draw can begin immediately. The portrait artwork stays still.
+An interrupted first draw retraces its lit arc, and a reactivated wipe retraces
+its removed arc, preserving both edges and the glint position. A completed wipe
+starts its next draw from the current quiet reflection rather than an old angle.
+Reduced motion shows a complete active ring immediately and removes it immediately.
+`usePortraitTurnMotion` owns the mask, head, release and idle reflection together.
+
+The match turn arrow uses a bounded 380ms scale/fade with a small spring on
+arrival and a 200ms scale/fade on departure. It stays mounted through departure
+and reads the actual motion preference independently of seat-arrival suppression
+in the playable board. Reduced motion changes visibility immediately.
+
+The gallery's portrait toggle and MatchSeatMarker's Pass turn control render the
+real components, including two occupied seats for repeated handoffs. Focused
+checks cover draw/head alignment, orbital release, interrupted draw/wipe reversal,
+reactivation after a completed exit, reduced motion and cleanup.

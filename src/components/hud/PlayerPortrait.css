@@ -1,5 +1,6 @@
 .game-player-avatar {
-  --portrait-turn: 0;
+  --portrait-turn-origin: 0deg;
+  --portrait-turn-sweep: 0deg;
   --portrait-ring: url("../../assets/ui/player-identity/brass-ring.webp");
   box-shadow: 0 3px 6px var(--artwork-shadow);
 }
@@ -16,7 +17,8 @@
 }
 
 .game-player-avatar::before,
-.game-player-avatar::after {
+.game-player-avatar::after,
+.game-player-turn-ring {
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -26,25 +28,26 @@
 
 .game-player-avatar::before {
   z-index: 1;
-  filter: brightness(calc(1 + 0.9 * var(--portrait-turn)))
-    drop-shadow(
-      0 0 2px color-mix(in oklch, var(--gold) calc(72% * var(--portrait-turn)), transparent)
-    );
 }
 
-.game-player-avatar[data-highlighted]:not([data-motion]) {
-  --portrait-turn: 1;
+.game-player-turn-ring {
+  filter: brightness(1.9) drop-shadow(0 0 2px color-mix(in oklch, var(--gold) 72%, transparent));
+  mask-image: conic-gradient(
+    from var(--portrait-turn-origin),
+    black 0deg var(--portrait-turn-sweep),
+    transparent var(--portrait-turn-sweep) 360deg
+  );
 }
 
 .game-player-avatar::after {
   z-index: 2;
-  opacity: max(var(--portrait-glint, 0), calc(0.95 * var(--portrait-turn)));
-  filter: brightness(calc(2.15 + 0.95 * var(--portrait-turn)));
+  opacity: var(--portrait-glint, 0);
+  filter: brightness(3.1);
   mask-image: conic-gradient(
-    from var(--portrait-glint-angle, 0deg),
+    from calc(var(--portrait-glint-angle, 0deg) - 60deg),
     transparent,
-    black 42deg,
-    transparent 100deg
+    black 55deg,
+    transparent 60deg
   );
 }
 
