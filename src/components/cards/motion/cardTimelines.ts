@@ -166,8 +166,7 @@ export function appendCapture(
             cascadeFirstPickupDuration +
             step.travel
           : step.start + step.travel;
-        timeline.call(() => cue("flight"), [], at - step.travel);
-        timeline.call(() => cue("capture"), [], at);
+        timeline.call(audio.playCard, [], at - step.travel);
       }
     }
     // A sweep has no new impact: it silently returns the remaining cards to the pile.

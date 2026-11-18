@@ -21,8 +21,8 @@ The user-approved studies and the live match share these cues:
   lift, and shatter plus the quiet card hit at `impactAt`. The far player's initial ordinary play retains its own cue.
 - Table → Capture card: the original play-card sound at movement start, matching
   Play a card. It does not use the new Fall movement or contact cues.
-- Table → Cascade capture: a movement/contact pair at each existing pickup;
-  the repeated rhythm distinguishes it from an ordinary single capture.
+- Table → Cascade capture: the original play-card sound at each pickup start.
+  Only a resolved Fall uses the new movement and impact clips.
 - Table → Fall capture → Card drop: movement as the matching card leaves the
   hand, then a simple-capture accent on impact.
 - Card → Drop hot card and Table → Fall capture → Heat transfer: the 1.7-second
@@ -47,8 +47,7 @@ voice so following cascade pickups do not cut off the rumble. Shatter and heat l
 Runtime exports and reproducible edits live in
 [`src/assets/audio/captures`](../../assets/audio/captures/README.md). The credits
 inventory records source verification and outstanding download-record gaps.
-Playground audio was approved by the user on 2026-11-18; live-match human
-audition is still pending.
+Playground audio was approved by the user on 2026-11-18; live-match playback was also approved on 2026-11-18.
 
 Verification: `lab.test.ts` checks state and capture intensity;
 `AnimationPlayground.test.tsx` covers replay and audio lifecycle;

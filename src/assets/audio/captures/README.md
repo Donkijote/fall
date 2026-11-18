@@ -17,8 +17,7 @@ Credits & Licenses reads the corresponding entries in the credits inventory.
 | flame-impact.mp3       | 2.500–4.900 s   | Earth contact and rumble                            |
 
 Selection used decoded waveform RMS, transient timing, silence separation and peak
-measurements. The user approved playground playback on 2026-11-18; live-match
-human audition remains pending. The shatter original decodes above full scale; attenuation is
+measurements. The user approved playground playback on 2026-11-18; the user also approved live-match playback on 2026-11-18. The shatter original decodes above full scale; attenuation is
 applied before encoding. All exports have fades and decoded peaks below 0.70.
 The adapter adds per-cue gain under the user's master volume. Movement has its
 own voice so freezing does not cancel it. At frozen contact, the ice clip plays
@@ -69,4 +68,4 @@ card hit. Its tail continues through following pickups.
 The wind and earth exports use mono 44.1 kHz MP3 at 160 kbit/s. Use the exact
 earth filter in `edits.json`, including the limiter's latency compensation.
 The manifest retains source fingerprints, URLs, verification and download-record
-gaps. Live-match human audition remains pending.
+gaps. Live-match playback was approved by the user on 2026-11-18.

@@ -26,15 +26,18 @@ function setup(
 }
 afterEach(() => gsap.globalTimeline.clear());
 
-it("keeps ordinary capture identical to the original play-card sound", () => {
-  const { audio, timeline } = setup("card");
-  timeline.time(0.001, false);
-  expect(audio.playCard).toHaveBeenCalledOnce();
-  timeline.time(cardCaptureDuration * 0.42 + 0.001, false);
-  timeline.progress(1, false);
-  expect(audio.playCard).toHaveBeenCalledOnce();
-  expect(audio.playCapture).not.toHaveBeenCalled();
-});
+it.each(["plain", "ice", "heat", "flame"] as const)(
+  "keeps ordinary capture on play-card audio regardless of Fall effect %s",
+  (effect) => {
+    const { audio, timeline } = setup("card", effect);
+    timeline.time(0.001, false);
+    expect(audio.playCard).toHaveBeenCalledOnce();
+    timeline.time(cardCaptureDuration * 0.42 + 0.001, false);
+    timeline.progress(1, false);
+    expect(audio.playCard).toHaveBeenCalledOnce();
+    expect(audio.playCapture).not.toHaveBeenCalled();
+  },
+);
 
 it("separates the target play, frost buildup and actual Fall impact", () => {
   const { audio, timeline } = setup("fall", "ice");
@@ -57,20 +60,23 @@ it("does not repeat the previous turn's target sound for an existing Fall target
   expect(audio.playCard).not.toHaveBeenCalled();
 });
 
-it("follows each cascade contact and keeps sweep silent", () => {
-  const { audio, timeline } = setup("cascade", "plain", 4);
-  for (const [index, step] of getCascadeSteps(4).entries()) {
-    timeline.time(step.start + step.travel - 0.001, false);
-    expect(audio.playCapture).toHaveBeenCalledTimes(index * 2 + 1);
-    timeline.time(step.start + step.travel + 0.001, false);
-    expect(audio.playCapture).toHaveBeenCalledTimes((index + 1) * 2);
-  }
-  expect(audio.playCard).not.toHaveBeenCalled();
-  const sweep = setup("sweep");
-  sweep.timeline.progress(1, false);
-  expect(sweep.audio.playCapture).not.toHaveBeenCalled();
-  expect(sweep.audio.playCard).not.toHaveBeenCalled();
-});
+it.each(["plain", "ice", "heat", "flame"] as const)(
+  "uses only original card sounds for cascade pickups regardless of Fall effect %s",
+  (effect) => {
+    const { audio, timeline } = setup("cascade", effect, 4);
+    for (const [index, step] of getCascadeSteps(4).entries()) {
+      timeline.time(step.start + 0.001, false);
+      expect(audio.playCard).toHaveBeenCalledTimes(index + 1);
+      timeline.time(step.start + step.travel + 0.001, false);
+      expect(audio.playCard).toHaveBeenCalledTimes(index + 1);
+      expect(audio.playCapture).not.toHaveBeenCalled();
+    }
+    const sweep = setup("sweep");
+    sweep.timeline.progress(1, false);
+    expect(sweep.audio.playCapture).not.toHaveBeenCalled();
+    expect(sweep.audio.playCard).not.toHaveBeenCalled();
+  },
+);
 
 it("retains the current live-match audio path until the new port is adopted", () => {
   const audio = { playCard: vi.fn(), playDealCard: vi.fn() };
@@ -96,16 +102,8 @@ it("killing an interrupted timeline prevents later impact cues", () => {
 it("plays the Fall once before its extra cascade contacts", () => {
   const { audio, timeline } = setup("fall", "ice", 3, true);
   timeline.progress(1, false);
-  expect(audio.playCapture.mock.calls).toEqual([
-    ["flight"],
-    ["freeze"],
-    ["shatter"],
-    ["flight"],
-    ["capture"],
-    ["flight"],
-    ["capture"],
-  ]);
-  expect(audio.playCard).not.toHaveBeenCalled();
+  expect(audio.playCapture.mock.calls).toEqual([["flight"], ["freeze"], ["shatter"]]);
+  expect(audio.playCard).toHaveBeenCalledTimes(2);
 });
 
 test("deals each card with the original stagger and its own sound cue", () => {
@@ -285,5 +283,6 @@ it("plays the flame impact once before follow-through cascade contacts", () => {
   expect(audio.playCapture.mock.calls).toEqual([["flame-rise"], ["heat"], ["flame"]]);
   timeline.progress(1, false);
   expect(audio.playCapture.mock.calls.filter(([cue]) => cue === "flame")).toHaveLength(1);
-  expect(audio.playCapture.mock.calls.filter(([cue]) => cue === "capture")).toHaveLength(2);
+  expect(audio.playCapture).not.toHaveBeenCalledWith("capture");
+  expect(audio.playCard).toHaveBeenCalledTimes(2);
 });

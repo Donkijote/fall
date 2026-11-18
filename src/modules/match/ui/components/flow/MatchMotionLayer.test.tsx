@@ -4,7 +4,7 @@ import { StrictMode } from "react";
 import { act, render } from "@testing-library/react";
 
 import type { CardScene, PlaybackChannel } from "../../../adapters/three/matchCardScene";
-import { startMatch, type MatchFrame } from "../../../application/localMatch";
+import { playMatchCard, startMatch, type MatchFrame } from "../../../application/localMatch";
 import { MatchMotionLayer } from "./MatchMotionLayer";
 
 const mocks = vi.hoisted(() => ({
@@ -143,15 +143,8 @@ it("plays a Fall once before its cascade pickups", () => {
   act(() => {
     timelines[0].progress(1, false);
   });
-  expect(mocks.audio.playCapture.mock.calls).toEqual([
-    ["flame-rise"],
-    ["heat"],
-    ["flame"],
-    ["flight"],
-    ["capture"],
-    ["flight"],
-    ["capture"],
-  ]);
+  expect(mocks.audio.playCapture.mock.calls).toEqual([["flame-rise"], ["heat"], ["flame"]]);
+  expect(mocks.audio.playCard).toHaveBeenCalledTimes(2);
 });
 
 it("stops interrupted fallback wind when leaving and prevents later contact", () => {
@@ -236,22 +229,36 @@ it("uses the audio-only sequence once when the renderer misses its startup deadl
   expect(view.complete).toHaveBeenCalledOnce();
 });
 
-it("uses a movement/contact pair for each ordinary cascade pickup", () => {
-  const view = mount(frame(7, "cascade", 3));
-  act(() => {
-    timelines[0].progress(1, false);
-  });
-  expect(mocks.audio.playCapture.mock.calls).toEqual([
-    ["flight"],
-    ["capture"],
-    ["flight"],
-    ["capture"],
-    ["flight"],
-    ["capture"],
-  ]);
-  expect(mocks.audio.playCard).not.toHaveBeenCalled();
-  expect(view.complete).toHaveBeenCalledOnce();
-});
+it.each([false, true])(
+  "keeps resolved table captures off Fall sounds (consecutive ranks: %s)",
+  (cascade) => {
+    const card = { suit: "coins", rank: 3 } as const;
+    const target = { suit: "swords", rank: 3 } as const;
+    const previous = { suit: "cups", rank: 6 } as const;
+    const current: MatchFrame["state"] = {
+      ...state,
+      phase: "play",
+      currentPlayer: "local",
+      lastPlayedCard: previous,
+      table: cascade ? [target, { suit: "clubs", rank: 4 }, previous] : [target, previous],
+      players: state.players.map((player) =>
+        player.id === "local" ? { ...player, hand: [card, { suit: "clubs", rank: 2 }] } : player,
+      ),
+    };
+    const resolved = playMatchCard(current, "local", card)[0];
+    expect(resolved.motion).toMatchObject({
+      kind: "collect",
+      capture: cascade ? "cascade" : "card",
+    });
+    const view = mount(resolved);
+    act(() => {
+      timelines[0].progress(1, false);
+    });
+    expect(mocks.audio.playCapture).not.toHaveBeenCalled();
+    expect(mocks.audio.playCard).toHaveBeenCalledTimes(cascade ? 2 : 1);
+    expect(view.complete).toHaveBeenCalledOnce();
+  },
+);
 
 it("retains ordinary play, deal and count sounds in fallback playback", () => {
   vi.useFakeTimers();
