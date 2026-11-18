@@ -58,7 +58,10 @@ outside the accessibility tree and never intercepts input.
 
 `ResourceReadout` mounts live balances in the existing ActionButton outline skin;
 compact portrait layouts stack the glyph and value while wider layouts use a row.
-It remains a noninteractive status group, with full amounts in its accessible text.
+Its decorative size container scales intact end strips with the readout height
+rather than using a fixed end width or cutting seams through the face. The
+minimum compact width and padding keep the ornaments clear of the value. It
+remains a noninteractive status group, with full amounts in its accessible text.
 `BrassCheckbox` composes Base UI directly, using the approved input frame and
 ChoiceButton wax. It preserves the hidden native input, controlled values, refs,
 form submission, disabled state, and Space-key selection. Generated `ui/` files

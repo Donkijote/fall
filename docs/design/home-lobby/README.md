@@ -55,5 +55,14 @@ another transform owner. Reduced motion keeps a static bright frame and focus cu
 Header and dock share one safe-area-aware horizontal gutter: the existing dock
 values below `lg` (4px below 360px, 12px from 360px, 16px from `sm`, and 6px in
 compact landscape), then the existing header clamp of 16px–48px at `lg` and above.
-Resource readouts retain the outline artwork, sliced on all four sides so only
-the straight middles stretch when phone counters become taller.
+Resource readouts retain the outline artwork and its intact full-height end
+strips. An absolute size container scales their width from the actual readout
+height using the source's 52:116 ratio; only the center stretches horizontally.
+The earlier four-sided slicing split the painted face and was reverted. Compact
+counters reserve enough width and padding for the end ornaments and their value.
+
+Resource-frame correction was reviewed in the running app at 1280×800,
+375×667, 320×568 and 667×375 for the HUD, and at 1280×800, 375×667 and
+768×1024 in the standalone gallery. Both gallery themes were checked. The end
+ornaments keep their source proportions and the 320px HUD has no horizontal
+overflow. The broader app-wide motion/device acceptance matrix remains pending.

@@ -41,8 +41,12 @@ export function ResourceReadout({
       role="group"
       aria-label={label}
       title={`${label}: ${description}`}
-      className="resource-readout relative isolate flex min-h-12 min-w-11 flex-col items-center justify-center gap-0.5 px-2 py-2 text-artwork-foreground lg:min-h-12 lg:min-w-22 lg:flex-row lg:gap-2 lg:px-4 compact-landscape:min-h-9 compact-landscape:min-w-16 compact-landscape:flex-row compact-landscape:gap-1 compact-landscape:px-3 compact-landscape:py-1"
+      className="resource-readout relative isolate flex min-h-12 min-w-14 flex-col items-center justify-center gap-0.5 px-3 py-2 text-artwork-foreground sm:px-4 lg:min-h-12 lg:min-w-22 lg:flex-row lg:gap-2 lg:px-4 compact-landscape:min-h-9 compact-landscape:min-w-16 compact-landscape:flex-row compact-landscape:gap-1 compact-landscape:px-3 compact-landscape:py-1"
     >
+      <span
+        aria-hidden="true"
+        className="resource-readout-frame [container-type:size] pointer-events-none absolute inset-0 -z-10"
+      />
       <Icon
         icon={icon}
         className={cn(
