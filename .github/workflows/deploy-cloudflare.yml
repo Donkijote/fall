@@ -9,40 +9,78 @@ on:
         default: develop
         type: string
       preview-name:
-        description: Optional descriptive Preview name (defaults to the branch name)
+        description: Optional manual Preview name (separate namespace from PR previews)
         required: false
         type: string
   pull_request:
     branches: [develop, main]
-    types: [opened, synchronize, reopened, ready_for_review]
+    # Draft/ready conversions do not change the deployed code or opt-in.
+    types: [opened, synchronize, reopened, labeled]
 
 permissions:
   contents: read
 
+# Shared with cleanup. Do not interrupt provisioning: cleanup must run AFTER it settles.
+# Stale queued runs re-read the PR before deploying and reporting.
 concurrency:
-  group: preview-fall-${{ github.event.pull_request.number || inputs.branch }}
-  cancel-in-progress: true
+  group: preview-fall-${{ github.repository_id }}-${{ github.event.pull_request.number || format('manual-{0}', inputs.branch) }}
+  cancel-in-progress: false
+  queue: max
 
 jobs:
   preview:
     if: >-
       github.event_name == 'workflow_dispatch' ||
-      (github.event.pull_request.draft == false &&
-      github.event.pull_request.head.repo.full_name == github.repository)
+      (github.event.pull_request.head.repo.full_name == github.repository &&
+      contains(github.event.pull_request.labels.*.name, 'autodeploy') &&
+      (github.event.action != 'labeled' || github.event.label.name == 'autodeploy'))
+    permissions:
+      contents: read
+      pull-requests: write
+      actions: read
     runs-on: ubuntu-latest
     timeout-minutes: 15
     environment:
       name: preview
       url: ${{ steps.preview.outputs.url }}
+    env:
+      PREVIEW_SHA: ${{ github.event.pull_request.head.sha }}
 
     steps:
+      - name: Checkout lifecycle code
+        id: lifecycle
+        uses: actions/checkout@v4
+        with:
+          # Use the workflow revision, not the deployed branch, for reporting code.
+          ref: ${{ github.workflow_sha }}
+          path: lifecycle
+          persist-credentials: false
+
+      - name: Check current opt-in and head
+        id: gate
+        uses: actions/github-script@v7
+        env:
+          MANUAL_NAME: ${{ inputs.preview-name || inputs.branch }}
+        with:
+          script: |
+            const m = await import(`${process.env.GITHUB_WORKSPACE}/lifecycle/scripts/preview-lifecycle.mjs`);
+            const manual = context.eventName === 'workflow_dispatch';
+            const pr = manual ? null : await m.current({github, context, sha: process.env.PREVIEW_SHA});
+            core.setOutput('deploy', manual || Boolean(pr));
+            core.setOutput('name', manual ? m.manualName(process.env.MANUAL_NAME) : m.previewName(context.payload.repository.id, context.payload.pull_request.number));
+
       - name: Checkout Preview revision
+        if: steps.gate.outputs.deploy == 'true'
+        id: checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event_name == 'workflow_dispatch' && inputs.branch || github.event.pull_request.head.sha }}
+          path: app
           persist-credentials: false
 
       - name: Verify deployment credentials
+        if: steps.gate.outputs.deploy == 'true'
+        id: credentials
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -51,48 +89,64 @@ jobs:
           test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "::error::Missing CLOUDFLARE_ACCOUNT_ID secret"; exit 1; }
 
       - name: Setup pnpm
+        if: steps.gate.outputs.deploy == 'true'
+        id: pnpm
         uses: pnpm/action-setup@v4
+        with:
+          package_json_file: app/package.json
+          run_install: false
 
       - name: Setup Node
+        if: steps.gate.outputs.deploy == 'true'
+        id: node
         uses: actions/setup-node@v4
         with:
-          node-version-file: .nvmrc
+          node-version-file: app/.nvmrc
           cache: pnpm
+          cache-dependency-path: app/pnpm-lock.yaml
 
       - name: Install dependencies
+        if: steps.gate.outputs.deploy == 'true'
+        id: install
+        working-directory: app
         run: pnpm install --frozen-lockfile
 
       - name: Check formatting and lint
+        if: steps.gate.outputs.deploy == 'true'
+        id: checks
+        working-directory: app
         run: pnpm check
 
       - name: Tests
+        if: steps.gate.outputs.deploy == 'true'
+        id: tests
+        working-directory: app
         run: pnpm run test:coverage
 
       - name: Build
+        if: steps.gate.outputs.deploy == 'true'
+        id: build
+        working-directory: app
         run: pnpm run build
 
+      - name: Recheck PR before provisioning
+        if: steps.gate.outputs.deploy == 'true'
+        id: provision
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const m = await import(`${process.env.GITHUB_WORKSPACE}/lifecycle/scripts/preview-lifecycle.mjs`);
+            core.setOutput('deploy', context.eventName === 'workflow_dispatch' || Boolean(await m.current({github, context, sha: process.env.PREVIEW_SHA})));
+
       - name: Deploy isolated Preview
+        if: steps.provision.outputs.deploy == 'true'
         id: preview
+        working-directory: app
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          PREVIEW_NAME: ${{ inputs.preview-name }}
-          PREVIEW_TITLE: ${{ github.event.pull_request.title }}
-          PREVIEW_BRANCH: ${{ github.event.pull_request.head.ref || inputs.branch }}
+          PREVIEW_NAME: ${{ steps.gate.outputs.name }}
         run: |
-          PREVIEW_NAME="$(node --input-type=module <<'NODE'
-          const source = process.env.PREVIEW_NAME?.trim() || process.env.PREVIEW_TITLE || process.env.PREVIEW_BRANCH;
-          const slug = source.replace(/^\[GHI#\d+\]\s*/i, '').normalize('NFKD')
-            .replace(/\p{M}/gu, '').toLowerCase().replace(/[^a-z0-9]+/g, '-')
-            .replace(/^-+|-+$/g, '');
-          if (!slug) throw new Error('Preview name must contain letters or numbers.');
-          const limit = 48;
-          const readable = slug.length > limit
-            ? slug.slice(0, limit).replace(/-[^-]*$/, '') || slug.slice(0, limit)
-            : slug;
-          console.log(readable);
-          NODE
-          )"
           output="$(pnpm exec wrangler preview --name "$PREVIEW_NAME" --json)"
           printf '%s\n' "$output"
           url="$(printf '%s\n' "$output" | sed -n '/^{/,$p' | jq -er '.preview.urls[0]')"
@@ -100,6 +154,8 @@ jobs:
           printf '### Cloudflare Preview\n\nName: `%s`\n\n%s\n' "$PREVIEW_NAME" "$url" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Probe Preview deep link
+        if: steps.provision.outputs.deploy == 'true'
+        id: probe
         env:
           PREVIEW_URL: ${{ steps.preview.outputs.url }}
         run: >-
@@ -107,3 +163,24 @@ jobs:
           --retry-delay 2 --header 'Accept: text/html'
           --header 'Sec-Fetch-Mode: navigate'
           "$PREVIEW_URL/login" --output /dev/null
+
+      - name: Append terminal PR status
+        if: >-
+          always() && !cancelled() && github.event_name == 'pull_request' &&
+          steps.lifecycle.outcome == 'success' &&
+          (failure() || steps.probe.outcome == 'success')
+        uses: actions/github-script@v7
+        env:
+          STEP_RESULTS: ${{ toJSON(steps) }}
+          PREVIEW_URL: ${{ steps.preview.outputs.url }}
+        with:
+          script: |
+            const m = await import(`${process.env.GITHUB_WORKSPACE}/lifecycle/scripts/preview-lifecycle.mjs`);
+            const valid = () => m.current({github, context, sha: process.env.PREVIEW_SHA});
+            if (!await valid()) return;
+            const steps = JSON.parse(process.env.STEP_RESULTS);
+            const stage = Object.keys(steps).find(key => steps[key].outcome === 'failure');
+            const body = m.statusBody({status: stage ? 'failure' : 'success', stage,
+              sha: process.env.PREVIEW_SHA, url: process.env.PREVIEW_URL,
+              runUrl: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`});
+            await m.replaceStatus({github, context, valid, body});

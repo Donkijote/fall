@@ -3,11 +3,13 @@ name: Report Build Status
 on:
   pull_request:
     branches: [develop]
-    types: [ready_for_review, synchronize]
+    types: [opened, reopened, ready_for_review, converted_to_draft, synchronize]
+
+permissions:
+  contents: read
 
 jobs:
   report-build-status:
-    if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     concurrency:
       group: build-${{ github.head_ref || github.ref_name }}
@@ -16,6 +18,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -26,7 +29,7 @@ jobs:
         uses: pnpm/action-setup@v4
 
       - name: Install
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Check formatting and lint
         run: pnpm check
