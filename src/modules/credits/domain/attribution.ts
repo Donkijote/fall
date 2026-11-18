@@ -9,6 +9,10 @@ export type Attribution = {
   notice: string;
   modifications: string;
   provenance: "third-party" | "generated" | "original" | "unresolved";
-  licenseStatus?: "source-details-pending" | "provider-terms-pending" | "permission-pending";
+  licenseStatus?:
+    | "source-verified"
+    | "source-details-pending"
+    | "provider-terms-pending"
+    | "permission-pending";
   evidence: string;
 };

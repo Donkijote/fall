@@ -81,12 +81,15 @@ recorded in each affected entry; provenance and license review are separate.
   Replacement work is tracked in [issue #132](https://github.com/Donkijote/fall/issues/132).
   An attribution line or a future replacement does not establish authorization
   for the existing adapted artwork.
-- **Sounds:** all three files are from Pixabay, confirmed by the user. Individual
-  track URLs/IDs, creators, download dates and applicable license records remain
-  pending. `play-card.mp3` and `deal-card.mp3` are used in the game; `ember.wav`
-  has only a development-playground import. The current Pixabay license is
-  linked for reference; the platform search URL alone does not verify the
-  particular downloads. The user is looking for their specific pages.
+- **Card sounds:** the user supplied both individual Pixabay pages on
+  2026-11-18. `deal-card.mp3` is recorded against [Taking playing card - 2,
+  item 522516](https://pixabay.com/sound-effects/film-special-effects-taking-playing-card-2-522516/)
+  and `play-card.mp3` against [Taking playing card 3, item 522513](https://pixabay.com/es/sound-effects/pel%C3%ADculas-y-efectos-especiales-taking-playing-card-3-522513/),
+  following their deal/play order. Both official pages identify **OxidVideos**
+  and the Pixabay Content License. Their sources are now recorded individually;
+  the original download dates and any edits remain undocumented. The user
+  clarified that the ember mock audio was self-generated, not from Pixabay;
+  it and the playground's one-off sound lesson were removed at their request.
 - **Login castle:** generated in Google Stitch and taken from its mockup,
   confirmed by the user. The former "supplied" record now has a known generated
   origin. Record provider terms and any generation/export evidence when available.
@@ -126,6 +129,6 @@ remain pending: computer use reported a locked Mac and no browser, and the user
 confirmed they are away. No second server was started; use the existing app on
 port 3000 for that review.
 
-Automated verification on 2026-11-17: all 315 repository tests passed; formatting,
+Automated verification on 2026-11-18: all 315 repository tests passed; formatting,
 lint, notice freshness and production build passed. The build retains its bundle
 size advisory; complete license text is lazy-loaded with the Credits route.

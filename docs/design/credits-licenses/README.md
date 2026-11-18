@@ -65,7 +65,7 @@ statement that all shipped notices have been accounted for.
 | Typography                    | `src/index.css` imports Cinzel and Spline Sans through Google Fonts                                                                                                                                                                                   | Verify upstream creators, exact license and copyright notices; retain complete applicable texts.                                                                                         |
 | Illustrations and UI artwork  | Feature prompt manifests under `docs/design`; runtime exports under `src/assets`                                                                                                                                                                      | Map every shipped group to recorded generation, supplied inputs, or original work. Keep provenance separate from third-party license grants; investigate missing records.                |
 | Spanish deck                  | SVG faces and back under `src/assets/cards`                                                                                                                                                                                                           | Establish source, creator, license and modifications; no adjacent provenance README was found in the initial review.                                                                     |
-| Audio                         | `src/assets/cards/play-card.mp3`, `deal-card.mp3`, and `src/assets/audio/ember.wav`                                                                                                                                                                   | Establish sources and permissions, and determine production versus development usage. No adjacent attribution record was found in the initial review.                                    |
+| Audio                         | `src/assets/cards/play-card.mp3` and `deal-card.mp3`                                                                                                                                                                                                  | Establish sources and permissions, and determine production versus development usage. No adjacent attribution record was found in the initial review.                                    |
 | Dependencies                  | `package.json`, `pnpm-lock.yaml`, installed package licenses                                                                                                                                                                                          | Inspect the shipped dependency graph and copyright/NOTICE files, including transitive runtime dependencies and icon libraries. Development tools require a separate shipping assessment. |
 | App branding and public icons | `src/assets/branding/wingfoot.svg`, `public` icon variants                                                                                                                                                                                            | Connect exported icons to their source and preserve applicable notices.                                                                                                                  |
 
@@ -114,10 +114,14 @@ This records provenance and outstanding permission checks, not legal clearance.
   and [full terms](https://pixabay.com/service/terms/) allow commercial and
   non-commercial use subject to restrictions; attribution is not generally
   required under the current summary. The terms distinguish incorporation in a
-  new creative work from prohibited standalone redistribution. All three sounds
-  were obtained there according to the user. Exact item pages and download-time
-  records are pending; do not call the files CC0 or assume the latest terms
-  identify the license applicable to those specific downloads.
+  new creative work from prohibited standalone redistribution. On 2026-11-18
+  the user supplied the two card-sound item pages, [522516](https://pixabay.com/sound-effects/film-special-effects-taking-playing-card-2-522516/)
+  and [522513](https://pixabay.com/es/sound-effects/pel%C3%ADculas-y-efectos-especiales-taking-playing-card-3-522513/).
+  Both pages identify OxidVideos and the Pixabay Content License; the inventory
+  records them in the user's deal/play order. Download dates and any edits are
+  not documented. The user corrected the ember mock audio's origin to
+  self-generated and requested its removal; it is no longer a shipped credit.
+  Do not call the retained sounds CC0.
 - [Shutterstock's terms](https://www.shutterstock.com/terms), particularly its
   intellectual-property and content-use provisions, require licensing for use
   of its content, including derivative works. The user reported redrawing the
@@ -144,3 +148,5 @@ This records provenance and outstanding permission checks, not legal clearance.
   ornament. Do not use unlicensed stock images as edit inputs or request a copy
   of a named commercial deck. Generate standalone production assets and follow
   the artwork review/export standard. The replacement remains future work.
+
+- 2026-11-18: recorded the individual Pixabay card-sound sources and creator; removed the self-generated ember mock audio and its dedicated playground lesson. The visual ember SVG/effects are separate and retained.

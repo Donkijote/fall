@@ -40,7 +40,7 @@ test("retains the existing icon credits, full font notices and project MIT notic
   expect(creditsInventory.project.notice).toBe(readFileSync(resolve("LICENSE"), "utf8"));
 });
 
-test("records supplied provenance without treating a stock-art redraw or a platform URL as cleared rights", () => {
+test("records pending deck permission and the identified Pixabay sound sources", () => {
   const byId = (id: string) => creditsInventory.artwork.find((entry) => entry.id === id);
   expect(byId("cards")).toMatchObject({
     provenance: "third-party",
@@ -48,11 +48,19 @@ test("records supplied provenance without treating a stock-art redraw or a platf
     source: "https://www.shutterstock.com/",
   });
   expect(byId("cards")?.modifications).toContain("Adobe Illustrator");
-  expect(byId("sounds")).toMatchObject({
-    provenance: "third-party",
-    licenseStatus: "source-details-pending",
-    licenseUrl: "https://pixabay.com/service/license-summary/",
-  });
+  for (const [id, file, assetId] of [
+    ["deal-card-sound", "src/assets/cards/deal-card.mp3", "522516"],
+    ["play-card-sound", "src/assets/cards/play-card.mp3", "522513"],
+  ]) {
+    expect(byId(id)).toMatchObject({
+      creator: "OxidVideos",
+      files: [file],
+      provenance: "third-party",
+      licenseStatus: "source-verified",
+      licenseUrl: "https://pixabay.com/service/license-summary/",
+    });
+    expect(byId(id)?.source).toContain(assetId);
+  }
   expect(byId("login")).toMatchObject({
     provenance: "generated",
     source: "https://stitch.google.com/",

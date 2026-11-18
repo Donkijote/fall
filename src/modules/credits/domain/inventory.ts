@@ -14,7 +14,6 @@ const evidencePages: Record<string, string> = {
   controls: "src/components/README.md",
   login: "docs/design/login/prompts.json",
   cards: "src/assets/cards",
-  sounds: "src/assets/cards",
   geometry: "src/assets/lobby/card-hall/icons/README.md",
   effects: "src/assets/effects",
   "public-icons": "public",
@@ -172,24 +171,38 @@ const artworkRecords: ArtworkRecord[] = [
     modifications: "Redrawn as SVG in Adobe Illustrator from a Shutterstock reference.",
   },
   {
-    id: "sounds",
-    name: "Card and ember sounds",
-    files: [
-      "src/assets/cards/play-card.mp3",
-      "src/assets/cards/deal-card.mp3",
-      "src/assets/audio/ember.wav",
-    ],
+    id: "deal-card-sound",
+    name: "Taking playing card - 2 (deal card)",
+    files: ["src/assets/cards/deal-card.mp3"],
     evidence:
-      "User confirmed all sounds came from Pixabay on 2026-11-17 and supplied its sound-effects search URL. Individual track URLs/IDs, creators and download-date/license records remain pending. ember.wav is imported only by the development animation playground.",
+      "User supplied Pixabay item 522516 on 2026-11-18 in deal/play order. Creator and Pixabay Content License verified from the item's official page. Original download date and any file edits are not recorded.",
     provenance: "third-party",
-    creator: "Pixabay contributors; individual creators not yet identified",
-    source: "https://pixabay.com/es/sound-effects/search/",
-    license: "Pixabay Content License; individual downloads awaiting verification",
+    creator: "OxidVideos",
+    source:
+      "https://pixabay.com/es/sound-effects/pel%C3%ADculas-y-efectos-especiales-taking-playing-card-2-522516/",
+    license: "Pixabay Content License",
     licenseUrl: "https://pixabay.com/service/license-summary/",
-    licenseStatus: "source-details-pending",
-    notice:
-      "Sounds sourced from Pixabay. Individual asset pages and download records are being verified.",
-    modifications: "Used as sound effects. Any edits to the original downloads remain unverified.",
+    licenseStatus: "source-verified",
+    notice: "Taking playing card - 2 by OxidVideos, obtained from Pixabay.",
+    modifications:
+      "Used as a card-dealing sound effect. Any edits to the original download are not recorded.",
+  },
+  {
+    id: "play-card-sound",
+    name: "Taking playing card 3 (play card)",
+    files: ["src/assets/cards/play-card.mp3"],
+    evidence:
+      "User supplied Pixabay item 522513 on 2026-11-18 in deal/play order. Creator and Pixabay Content License verified from the item's official page. Original download date and any file edits are not recorded.",
+    provenance: "third-party",
+    creator: "OxidVideos",
+    source:
+      "https://pixabay.com/es/sound-effects/pel%C3%ADculas-y-efectos-especiales-taking-playing-card-3-522513/",
+    license: "Pixabay Content License",
+    licenseUrl: "https://pixabay.com/service/license-summary/",
+    licenseStatus: "source-verified",
+    notice: "Taking playing card 3 by OxidVideos, obtained from Pixabay.",
+    modifications:
+      "Used as a card-playing sound effect. Any edits to the original download are not recorded.",
   },
   {
     id: "geometry",

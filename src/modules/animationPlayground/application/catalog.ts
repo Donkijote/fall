@@ -90,12 +90,6 @@ const cardLessons: Lesson[] = [
     libraries: "Rapier",
     description: "Release a poker chip and watch gravity and restitution determine its motion.",
   },
-  {
-    experiment: "sound",
-    label: "Play sound",
-    libraries: "Howler",
-    description: "Play a short local cue to try the audio path.",
-  },
 ];
 
 const deckLessons: Lesson[] = [
