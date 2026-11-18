@@ -1,0 +1,53 @@
+name: Sync Project Status
+
+on:
+  workflow_run:
+    workflows: [Deploy Cloudflare Preview]
+    types: [completed]
+  issues:
+    types: [closed]
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: read
+  issues: read
+
+# Serializing all project updates prevents a late review update racing a closure.
+concurrency:
+  group: fall-project-status
+  cancel-in-progress: false
+  queue: max
+
+jobs:
+  sync:
+    if: >-
+      github.event_name == 'issues' ||
+      (github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout trusted project automation
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.workflow_sha }}
+          persist-credentials: false
+
+      # Never expose the project token to a PR checkout, dependency install, or build.
+      - name: Update linked issue status
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PROJECTS_TOKEN || secrets.TOKEN }}
+          script: |
+            const m = await import(`${process.env.GITHUB_WORKSPACE}/scripts/project-status.mjs`);
+            const log = message => core.info(message);
+            try {
+              if (context.eventName === 'issues') {
+                await m.completeIssue({github, context, issue: context.payload.issue, log});
+              } else {
+                await m.reviewDeployment({github, context, run: context.payload.workflow_run, log});
+              }
+            } catch (error) {
+              core.setFailed(`Project status sync failed: ${error.message}. Verify PROJECTS_TOKEN (or TOKEN) has Projects write and repository read access, then retry this run.`);
+            }

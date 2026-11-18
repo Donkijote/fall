@@ -56,6 +56,17 @@
 
 # Git workflow
 
+- When beginning implementation of an issue, move its existing item in the
+  [Fall project](https://github.com/users/Donkijote/projects/5) to `In progress`
+  with `node scripts/project-status.mjs start <issue-number>`. Do this before
+  implementation, not only when opening the PR. Use a GitHub CLI login with
+  project write access; report permission failures rather than silently skipping.
+- Link fully resolved issues with closing keywords in the PR body. The trusted
+  project-status workflow moves these issues to `In review` only after the
+  current opted-in PR Preview passes its deep-link probe, and to `Done` when
+  a merged PR actually closes the issue. References alone do not trigger moves.
+  Keep closed issues out of earlier columns and preserve unrelated project items.
+
 - Derive issue branches from the issue's `kind/*` label: `kind/feature` becomes
   `feature/ghi#105`, `kind/bugfix` becomes `bugfix/ghi#109`, and likewise for
   other kinds. Require exactly one type label; resolve missing or conflicting

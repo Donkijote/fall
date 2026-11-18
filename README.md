@@ -39,6 +39,17 @@ Issue branches follow the issue's single `kind/*` label: for example,
 `kind/feature` → `feature/ghi#105`, or `kind/bugfix` → `bugfix/ghi#109`.
 Resolve missing or conflicting type labels before creating a branch.
 
+Before beginning implementation, move the issue's existing item in the
+[Fall project](https://github.com/users/Donkijote/projects/5) to **In progress**:
+
+```sh
+node scripts/project-status.mjs start <issue-number>
+```
+
+The command uses your GitHub CLI login, which needs project write access
+(`gh auth refresh -s project` for a classic OAuth login if necessary). It skips
+issues outside the Fall project and does not create new project items.
+
 Use `bash scripts/ghi-pr.sh <issue-number>` to create the branch and draft PR.
 The PR targets `develop`, uses `[GHI#<issue>] <issue title>`, is assigned to
 its creator, and inherits the issue's labels, including its `kind/*` type.
@@ -50,6 +61,39 @@ partial work. GitHub closes linked issues when the PR merges into the default
 branch, currently `develop`; closing keywords are ignored for other targets.
 Verify the target, assignee, labels and closing lines before handing off a PR.
 See [GitHub's issue linking rules](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue).
+
+#### Project status automation
+
+**Sync Project Status** uses trusted default-branch code to maintain Fall's
+`Status` field. It is independent of the ready-only build workflow:
+
+- A successful **Deploy Cloudflare Preview** run moves open issues linked by
+  closing keywords (`Closes`, `Fixes`, `Resolves`) to **In review**, after checking
+  that the `/login` probe succeeded and the PR is still open, opted in,
+  same-repository, and on the deployed head. Manual deployments, skipped previews,
+  failed/canceled runs, stale commits and `Refs`-only issues do not advance status.
+- When an issue is closed as completed, its latest closing event must identify a
+  merged PR in this repository before it moves to **Done**. Closing an issue
+  manually or as not planned does not trigger this transition. The issue closure
+  event is used because merging a PR and automatic issue closure can arrive in
+  different orders. Reopened/closed issues are rechecked before each update.
+- Updates target only existing items in project 5; other projects and fields are
+  untouched. A shared queue serializes updates, and closed issues cannot be moved
+  back to In review by a delayed deployment event. The CLI and workflow share
+  `scripts/project-status.mjs`, with tests in `scripts/project-status.test.mjs`.
+
+Configure a repository secret **PROJECTS_TOKEN** with write access to Fall's
+user-owned Project and read access to this repository (issues, PRs and Actions).
+A classic PAT needs `project` and, for this private repository, `repo` scopes;
+a fine-grained PAT must explicitly permit the user Project and repository reads.
+The existing **TOKEN** secret is used as a fallback; its Project permission must
+be verified separately. The default `GITHUB_TOKEN` cannot update Projects v2.
+Project credentials are exposed only to the trusted status-sync step, never to
+PR checkout/build code or downloaded workflow artifacts. The workflow must exist
+on the default branch before automatic events can trigger it. If access or a
+project option is missing, the run fails with diagnostics; fix permissions or
+field configuration and rerun it from Actions. For a queue overflow, retry the
+canceled run after the queue drains.
 
 ### Theme colours
 
