@@ -6,16 +6,16 @@ import { createLab } from "./lab";
 import type { CardDropEffect } from "./lab";
 
 function setup() {
-  const audio = { play: vi.fn(), playDealCard: vi.fn(), playCard: vi.fn() };
+  const audio = { playDealCard: vi.fn(), playCard: vi.fn() };
   return { lab: createLab(createZustandLabState(), audio), audio };
 }
 
 describe("ported animation engine", () => {
-  it("exposes each of the 22 commands exactly once in the catalog", () => {
+  it("exposes each of the 21 commands exactly once in the catalog", () => {
     const commands = Object.values(lessonsByStudy)
       .flat()
       .map((lesson) => lesson.experiment);
-    expect(commands).toHaveLength(22);
+    expect(commands).toHaveLength(21);
     expect(new Set(commands).size).toBe(commands.length);
     for (const experiment of commands) {
       const first = setup();

@@ -1,0 +1,42 @@
+{
+  "art_direction": "../art-direction.md#shared-generation-prompt",
+  "outputs": [
+    {
+      "file": "mockup-simplified.png",
+      "method": "reconstructed",
+      "references": [
+        "../home-lobby/background.png",
+        "../../../src/assets/ui/actions/outline.webp",
+        "../../../src/assets/ui/dividers/faded-rule.webp",
+        "../../../src/assets/ui/dividers/bronze-arrow.webp"
+      ],
+      "prompt": "Create a tall full-content UI mockup for Fall Credits & licenses in the Chronicle direction. Preserve the cool Card Hall, subdued charcoal reading area, ivory Spline Sans text and Cinzel Regular headings. Center a live Fall title, then sequential sections: Created by (Donkijote), Artwork & sound, Icons (Lorc, Delapouite, Faithtoken, Sbed, Skoll), Typography (Cinzel and Spline Sans), Open-source software, Legal notices, and thanks to players. Keep one Settings return action using the supplied ActionButton outline artwork; use the supplied faded bronze divider between sections. No category menus, tabs, submenus, cards, accordions or automatically rolling credits. Long notices use readable left-aligned text. Only the content region scrolls inside a fixed viewport; the Hall background and return action remain stationary. Preserve the ordinary 8px component radius, semantic colors and existing component design. Attribution copy is illustrative; do not invent sources, licenses, policies or contributors.",
+      "refinements": [
+        "Approved 2026-11-17 with a behavior correction: only credits content scrolls, within the fixed viewport. The Hall backdrop and Settings return action remain stationary.",
+        "Implement the shared ActionButton and BronzeArrow components rather than reproducing the controls in CSS. Full verified notices remain in the continuous content."
+      ],
+      "notes": "Composition reference for the approved continuous Chronicle layout. The live screen now uses the standalone atelier backgrounds below, a softer reading wash, and a proprietary project notice; copy in this mockup is illustrative."
+    },
+    {
+      "file": "background.png",
+      "method": "recorded",
+      "references": ["../home-lobby/background.png", "../how-to-play/background.png"],
+      "prompt": "Use case: stylized-concept. Create a standalone landscape background illustration for the Credits & licenses screen of Fall, a medieval Spanish-card game. Target 16:9, 2048 x 1152. No UI, letters, lettering, readable text, logos, watermarks, card designs or banners.\nReference image 1 (Card Hall) is the palette and architecture anchor: cool slate stone, believable oak, restrained aged brass, natural window light. Reference image 2 (archive) is the matte painted material reference, not a layout to copy.\nScene: an original quiet medieval illuminator's atelier, a room where the game's makers might record their work. One weathered oak writing desk sits low on the left with an open blank parchment ledger, a feather quill in a dark inkwell, a small red wax seal and rolled parchment. A modest shelf of hand-bound books and a single unlit brass candleholder occupy the right edge. A tall narrow stone window at the far left admits gentle cool morning daylight. Soft local warm reflected oak/parchment color, no scene-wide amber or burgundy wash. No characters needed.\nComposition is designed for live center-aligned scrolling credits: the middle 55\u201360% of the image is broad, quiet mid-dark slate wall and soft atmospheric depth, with very low-contrast material detail. Keep the central region dark enough for ivory live type without making it a flat black vertical rectangle. Place the telling props around the lower left and outer right, never behind the main reading column. Show airy breathing room around architecture, soft shadow gradients and subtle reflected light. The center should feel like a naturally quiet room, not an empty UI panel painted onto scenery.\nStyle: polished painterly game environment with broad matte value groups, grounded perspective, selective detail on desk and books, aged materials. Same world and color balance as Card Hall. Avoid ornate fantasy machinery, glowing magic, glossy bevels, extreme black vignettes, cinematic bloom, dust clouds, dramatic orange candles or excessively dense books. Keep the visual focus on authorship and craftsmanship through the ledger/quill props.\nThis is a new production background, not a mockup or crop of a mockup.",
+      "notes": "Generated 2026-11-18 with the OpenAI built-in ImageGen tool; model identifier not exposed. Standalone landscape artwork, not extracted from a UI mockup. Runtime landscape export: ../../../src/assets/credits/atelier-landscape.webp. PNG output exported to WebP quality 83, effort 6, preserving the original dimensions."
+    },
+    {
+      "file": "../../../src/assets/credits/atelier-tablet.webp",
+      "method": "recorded",
+      "references": ["background.png"],
+      "prompt": "Create a standalone tablet-portrait painting for Fall's Credits & licenses, intended aspect ratio 4:5 (1120x1400). Use the attached landscape atelier as the exact scene identity and palette reference. Recompose the SAME medieval illuminator's atelier for a tablet, not a crop or stretched landscape. Keep the cool slate arch and soft morning daylight from the window on the left. Place the weathered oak desk low-left with its open BLANK ledger, quill in an inkwell, tiny red wax seal and rolled parchment. Keep a modest bookcase at the far right with hand-bound books and an unlit candleholder. Broad quiet mid-dark slate space in the center for live reading text; no flat dark rectangle. Painterly matte materials and selective detail, same restrained balance as Card Hall. No UI, letters, text, logos, card designs, people or watermarks. Avoid orange wash, glossy bevels or strong black vignette. This is a dedicated runtime tablet illustration.",
+      "notes": "Generated 2026-11-18 with the OpenAI built-in ImageGen tool; model identifier not exposed. Standalone tablet artwork, not extracted from a UI mockup. PNG output exported to WebP quality 83, effort 6, preserving the original dimensions."
+    },
+    {
+      "file": "../../../src/assets/credits/atelier-phone.webp",
+      "method": "recorded",
+      "references": ["background.png"],
+      "prompt": "Create a standalone tall phone-portrait painting for Fall's Credits & licenses, intended aspect ratio 9:19.5 (900x1950). Use the attached landscape atelier as the exact scene identity and palette reference. Recompose the SAME medieval illuminator's atelier vertically, not a crop or stretched landscape. Keep cool slate stone, gentle cool daylight, and matte painterly oak. A narrow edge of the window at upper left, stone arch high above; a low corner of the writing desk with open BLANK ledger, quill, inkwell, red wax seal and rolled parchment near the bottom left; a slim bookcase at the far right. Preserve a broad quiet mid-dark slate reading area through the middle 70% of the frame, with naturally soft illumination rather than a black panel. Keep the recognizable props low or along the edges so credits remain readable. No UI, text, letters, logos, cards, people, watermarks or painted frame. Avoid orange wash, glossy materials or heavy black vignette. This is a dedicated runtime phone illustration.",
+      "notes": "Generated 2026-11-18 with the OpenAI built-in ImageGen tool; model identifier not exposed. Standalone phone artwork, not extracted from a UI mockup. PNG output exported to WebP quality 83, effort 6, preserving the original dimensions."
+    }
+  ]
+}

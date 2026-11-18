@@ -46,6 +46,9 @@ export default defineConfig({
     },
   },
   plugins: lazyPlugins(() => [react({ compiler: true }), tailwindcss()]),
+  build: {
+    license: { fileName: "bundled-code-licenses.json" },
+  },
   server: {
     open: true,
     port: 3000,
@@ -54,7 +57,7 @@ export default defineConfig({
     environment: "jsdom",
     globals: true,
     setupFiles: ["./vite.setup-tests.ts"],
-    include: ["./src/**/*.test.ts", "./src/**/*.test.tsx"],
+    include: ["./src/**/*.test.ts", "./src/**/*.test.tsx", "./scripts/**/*.test.mjs"],
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],

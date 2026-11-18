@@ -2,6 +2,7 @@ import { ThemeProvider } from "next-themes";
 import { MemoryRouter, Route, Routes } from "react-router";
 
 import { StorageKeys, StorageService } from "@/application/services/StorageService";
+import { CreditsScreen } from "@/modules/credits";
 import { MatchScreen } from "@/modules/match";
 import { MATCH_PATH } from "@/routes/Routes";
 
@@ -26,6 +27,7 @@ function renderLobby(entry = "/") {
       <MemoryRouter initialEntries={[entry]}>
         <Routes>
           <Route path="/" element={<HomeLobby />} />
+          <Route path="/credits" element={<CreditsScreen />} />
           <Route path={MATCH_PATH} element={<MatchScreen />} />
           <Route path="/rules" element={<h1>Rules scene</h1>} />
           <Route path="/sings" element={<h1>Sings scene</h1>} />
@@ -216,6 +218,20 @@ test("Settings preserves appearance switching and returns keyboard focus on Esca
   await user.keyboard("{Escape}");
   await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
   await waitFor(() => expect(settings).toHaveFocus());
+});
+
+test("Settings opens credits, then returns focus to its credits link", async () => {
+  const user = userEvent.setup();
+  renderLobby();
+  await user.click(screen.getByRole("button", { name: "Settings" }));
+  await user.click(screen.getByRole("link", { name: "Credits & licenses" }));
+  expect(await screen.findByRole("region", { name: "Credits content" })).toBeVisible();
+  expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  await user.click(screen.getByRole("link", { name: "Settings" }));
+  expect(await screen.findByRole("dialog", { name: "Settings" })).toBeVisible();
+  await waitFor(() =>
+    expect(screen.getByRole("link", { name: "Credits & licenses" })).toHaveFocus(),
+  );
 });
 
 test("Escape closes the mode picker and returns focus to Tavern", async () => {

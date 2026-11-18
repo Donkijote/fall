@@ -54,6 +54,53 @@
 - The user already runs the app on port 3000. Reuse it; do not start another server.
 - Preserve manual edits and deletions. Do not commit or push without a request.
 
+# Git workflow
+
+- Derive issue branches from the issue's `kind/*` label: `kind/feature` becomes
+  `feature/ghi#105`, `kind/bugfix` becomes `bugfix/ghi#109`, and likewise for
+  other kinds. Require exactly one type label; resolve missing or conflicting
+  kinds before creating the branch. This issue-based pattern takes precedence
+  over a generic branch prefix.
+- Create draft PRs against `develop`, titled `[GHI#<issue>] <issue title>`.
+  Assign the PR to its creator and copy the issue's labels, including the same
+  `kind/*` type label. Preserve these fields when updating an existing PR.
+- Include `Closes #<issue>` in the PR body for every issue fully resolved by
+  the PR. `Refs #<issue>` alone does not close it. Use references for partial
+  work that should leave an issue open.
+- Confirm the target is the repository's default branch (currently `develop`)
+  when automatic closure is intended; GitHub ignores closing keywords for
+  other targets. Verify the assignee, labels and closing lines after creation
+  or editing. Use `scripts/ghi-pr.sh` for the issue-to-draft workflow.
+
+# Project licensing
+
+- Fall is a proprietary, closed-source commercial game. Keep the root LICENSE,
+  package metadata and the game notice consistent with that intent. Do not
+  label project-owned code or generated artwork MIT/open source by default.
+- Preserve third-party license and attribution notices separately; the game's
+  proprietary notice does not override them. Do not claim that changing the
+  current notice revokes rights validly granted for earlier versions. Repository
+  visibility changes require a separate user instruction.
+
+# Asset attribution
+
+- When the user supplies downloaded assets, ask where they found them unless
+  that information is already provided. Request the specific asset URL or stock
+  ID, creator, license/usage terms, and any download or purchase record needed
+  to identify permission. A platform search page alone is incomplete provenance.
+- Automatically add or update the supplied asset's record in
+  `src/modules/credits/domain/inventory.ts` as part of importing or adopting it.
+  Record its files, creator, source, license, required notice, modifications and
+  evidence. Keep missing details or permission checks explicitly pending; do
+  not invent attribution or assume a manual redraw grants rights.
+- When generating images for the project, automatically record their provenance
+  without waiting for a separate request. For adopted artwork, update the
+  credits inventory and the owning feature's prompt manifest together, retaining
+  the provider/model when known, generation date, prompts, input references,
+  edits and exported files. Generated provenance is separate from permission or
+  provider-term review. Keep draft-only generation records outside the approved
+  design tree until adoption; do not list rejected concepts as shipped credits.
+
 # Design documentation
 
 - Follow [the design folder standard](docs/design/README.md) for investigations,

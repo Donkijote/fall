@@ -18,7 +18,6 @@ export type Experiment =
   | "drop-hot-card"
   | "drop-flame-card"
   | "drop"
-  | "sound"
   | "fan"
   | "riffle"
   | "deal"
@@ -83,7 +82,7 @@ export type LabStatePort = LabReader & {
   update: (transition: (state: LabState) => LabState) => void;
 };
 
-export type AudioPort = { play: () => void; playDealCard: () => void; playCard: () => void };
+export type AudioPort = { playDealCard: () => void; playCard: () => void };
 
 export type Lab = LabReader & {
   run: (experiment: Experiment) => void;
@@ -237,9 +236,6 @@ export function createLab(state: LabStatePort, audio: AudioPort): Lab {
             tableCaptures: 0,
             tableCounts: 0,
           }));
-          break;
-        case "sound":
-          audio.play();
           break;
       }
     },

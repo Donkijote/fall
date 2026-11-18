@@ -10,7 +10,7 @@ uses the same backdrop.
 - `CardHall.tsx`: activity selection, keyboard traversal, responsive Tailwind layout and decorative background.
 - `cardHallArtwork.ts`: the three activity records and cropped runtime illustrations.
 - `HomeUtilities.tsx`: Home-only Messages, Help, Settings, and Log out controls with the anchored guide panel.
-- `HomeSettings.tsx`: persisted appearance, audio and motion controls, reset, credits, and development tools.
+- `HomeSettings.tsx`: persisted appearance, audio and motion controls, reset, the Credits entry point, and development tools. The [Credits module](../credits/README.md) owns the screen and attribution inventory. `/?settings=true` opens preferences on return and restores focus to the credits link.
 - `src/components`: reusable themed components and component styles.
 - `src/components/ui`: upstream shadcn primitives; no edits for this implementation.
 

@@ -18,7 +18,11 @@ export function HomeLobby() {
   const [player, setPlayer] = useState(() => StorageService.get<User>(StorageKeys.FALL_USER));
   const [tavernOrigin, setTavernOrigin] = useState<HTMLButtonElement | null>(null);
   const [panel, setPanel] = useState<"play" | "settings" | null>(() =>
-    searchParams.get("bottomSidebar") ? "play" : null,
+    searchParams.get("bottomSidebar")
+      ? "play"
+      : searchParams.get("settings") === "true"
+        ? "settings"
+        : null,
   );
 
   return (

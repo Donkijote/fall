@@ -1,5 +1,12 @@
 # 🎴 Fall* — Rules Specification
 
+Fall is a proprietary, closed-source game intended for commercial distribution.
+Project-owned code and original materials are reserved under the root [LICENSE](LICENSE).
+Third-party components and assets retain their own licenses and attribution
+requirements. This notice does not revoke rights validly granted for earlier
+versions under a different license. Repository visibility is a separate setting;
+the user chose to keep its current visibility on 2026-11-18.
+
 ## Development
 
 Use Node **26.12.1** (`nvm use`) and pnpm **12.15.0**, as pinned in `.nvmrc` and `package.json`. CI reads the same version pins.
@@ -14,9 +21,35 @@ The project uses Vite Plus (`vite-plus`), with its compatible Vite, Vitest, Oxli
 
 Run `pnpm check` for formatting and lint checks, `pnpm build` for TypeScript project checking and the production build, and `pnpm test:coverage` for the test suite and coverage report. CI runs these same commands.
 
+Software notices follow the packages in the production bundle, including lazy
+chunks, plus reviewed distributed CSS. Run `pnpm credits:notices` after changing
+shipped imports or dependencies. `pnpm credits:notices:check` audits a fresh
+in-memory build; `pnpm build` validates notices against its own emitted package
+report and fails if they are stale. See the [Credits module](src/modules/credits/README.md)
+for asset attribution and notice maintenance. Build-tool tests are colocated
+under `scripts` and run alongside the feature tests.
+
 Use `pnpm lint` to check code with Oxlint and `pnpm lint:fix` to apply safe fixes. Use `pnpm format` to format the project with Oxfmt, or `pnpm format:check` to check formatting without writing files.
 
 Linting and formatting use Vite Plus defaults. The `lint` block in `vite.config.ts` adds browser globals; TypeScript checking runs as part of `pnpm build`. The `fmt` block preserves the custom Tailwind class sorting (using `src/index.css`) and import groups with blank-line separation: unscoped packages and Node built-ins, `@react/*`, `@/*` project aliases, other scoped packages, then relative imports. All other formatting options use the toolchain defaults, including the 100-column print width. Side-effect imports retain their default ordering behavior.
+
+### Git workflow
+
+Issue branches follow the issue's single `kind/*` label: for example,
+`kind/feature` → `feature/ghi#105`, or `kind/bugfix` → `bugfix/ghi#109`.
+Resolve missing or conflicting type labels before creating a branch.
+
+Use `bash scripts/ghi-pr.sh <issue-number>` to create the branch and draft PR.
+The PR targets `develop`, uses `[GHI#<issue>] <issue title>`, is assigned to
+its creator, and inherits the issue's labels, including its `kind/*` type.
+Apply the same conventions when creating or updating PRs manually.
+
+Include `Closes #<issue>` in the PR body for each issue the change fully resolves.
+`Refs #<issue>` links a reference without closing it and is appropriate for
+partial work. GitHub closes linked issues when the PR merges into the default
+branch, currently `develop`; closing keywords are ignored for other targets.
+Verify the target, assignee, labels and closing lines before handing off a PR.
+See [GitHub's issue linking rules](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue).
 
 ### Theme colours
 
@@ -166,6 +199,28 @@ See [the design-system and migration guide](docs/shadcn-migration.md) for conven
 The [design library](docs/design/README.md) indexes approved mockups, background masters, and reusable prompts, and explains how to organize new design work.
 Record design decisions in the feature's README under `docs/design` and keep temporary reviews outside the repository.
 Generate production illustrations as standalone artwork at the required aspect ratio and resolution. Use full mockups as visual references and export runtime assets from the standalone originals. Do not crop illustrations out of a full mockup.
+
+### Asset sources and automatic credits
+
+When you provide downloaded assets, the agent should ask where you found them
+unless you have already supplied that information. Provide the specific asset
+URL or stock ID, creator, license/usage terms, and any relevant download or
+purchase record. A general search-page link establishes the platform but does
+not identify the individual asset or its permissions.
+
+The agent must automatically add or update adopted assets in
+`src/modules/credits/domain/inventory.ts`, including their files, creator,
+source, license, required notice, modifications and provenance evidence. Missing
+details stay explicitly pending; attribution does not replace permission.
+
+Generated project images must also receive provenance metadata automatically.
+For adopted artwork, update the credits inventory and the owning feature's
+prompt manifest together with the provider/model when known, generation date,
+prompts, input references, edits and exports. Keep draft-only generation records
+outside the approved design tree until adoption, and exclude rejected concepts
+from shipped credits. Generated origin does not by itself establish legal
+clearance. See the [Credits module](src/modules/credits/README.md) for the record
+format and verification commands.
 
 ## 📖 Overview
 

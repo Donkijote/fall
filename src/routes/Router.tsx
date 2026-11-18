@@ -10,6 +10,7 @@ import {
   ANIMATION_PLAYGROUND_PATH,
   CARDS_PATH,
   COMPONENT_GALLERY_PATH,
+  CREDITS_PATH,
   HOME_PATH,
   LOGIN_PATH,
   MATCH_PATH,
@@ -18,6 +19,13 @@ import {
 } from "./Routes";
 
 const router = createBrowserRouter([
+  {
+    path: CREDITS_PATH,
+    lazy: async () => {
+      const { CreditsScreen } = await import("@/modules/credits");
+      return { Component: CreditsScreen };
+    },
+  },
   {
     path: LOGIN_PATH,
     lazy: async () => {

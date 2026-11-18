@@ -29,7 +29,10 @@ Fog and embers advance using elapsed frame time. Pointer motion adds parallax.
 `animateMaterials.ts` updates the attached shader uniforms because React Three
 Fiber copies scalar uniform wrappers during prop application.
 
-The supplied original is stored locally for both render paths.
+The supplied original is stored locally for both render paths. The user confirmed
+on 2026-11-17 that the painting was generated through Google Stitch and taken
+from its mockup; the foreground mask was generated too. The Credits inventory
+records this provenance separately from any license or provider-term review.
 [Runtime painting](../../assets/login/mountain-castle.png) ·
 [Supplied image](https://lh3.googleusercontent.com/aida-public/AB6AXuAKaXX2NpZGOiKY03IIoZqBkCIr-iky3MJZoj-Bqoibja80wp6Fx4Sng0afqhOmHsEF93HbNicBjJsO2Sigdvfqg6x9cvgKWfdOiD9JzmXjRVjiMwUbb00yJDZBmM5SetfGBZiml7YCyTInQCEhbVf_HeUQxNwtQmexsUnn8FZNNfeLgECiE4PEm2i7Hs-iOQnrRS-x3gZBZ-DDVzaD5U31EOT-t6ynn8Tzmh2-o94pFpr16mMPz2pzv_AVIDpHQdX_zXem8Eeid8k) ·
 [Foreground mask](../../assets/login/foreground-mask.svg) ·
