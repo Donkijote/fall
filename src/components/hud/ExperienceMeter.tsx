@@ -78,16 +78,18 @@ export function ExperienceMeter({
               left: () => `${progress.current.value}%`,
               x: 0,
               y: 0,
-              opacity: 0.95,
-              scale: 1,
+              xPercent: -50,
+              yPercent: -50,
+              opacity: 1,
+              scale: 1 + (index % 3) * 0.2,
             },
             {
-              x: 3 + (index % 4) * 2,
-              y: (index % 2 ? -1 : 1) * (5 + (index % 5) * 2),
+              x: (index % 3 ? -1 : 1) * (6 + (index % 6) * 2),
+              y: (index % 2 ? -1 : 1) * (8 + (index % 7) * 2),
               opacity: 0,
               scale: 0.2,
-              duration: 0.3,
-              ease: "power2.out",
+              duration: 0.48,
+              ease: "power1.out",
               immediateRender: false,
             },
             (index / sparks.length) * travelDuration,
@@ -124,11 +126,15 @@ export function ExperienceMeter({
         </span>
       </span>
       <span ref={particles} aria-hidden="true" className="pointer-events-none absolute inset-0">
-        {Array.from({ length: 16 }, (_, index) => (
+        {Array.from({ length: 40 }, (_, index) => (
           <span
             key={index}
             data-xp-particle=""
-            className="absolute top-1/2 size-0.5 rounded-full bg-gold opacity-0 shadow-[0_0_3px_var(--gold)]"
+            className={
+              index % 3 === 0
+                ? "absolute top-1/2 size-0.75 rounded-full bg-artwork-foreground opacity-0 shadow-[0_0_6px_1px_var(--gold)]"
+                : "absolute top-1/2 size-0.5 rounded-full bg-gold opacity-0 shadow-[0_0_5px_1px_var(--gold)]"
+            }
           />
         ))}
       </span>

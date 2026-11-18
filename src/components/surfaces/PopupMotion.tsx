@@ -135,17 +135,18 @@ export function usePopupMotion(popup: HTMLElement | null, overlay: HTMLElement |
           if (!open) finish.current?.();
         },
       }));
+      const duration = open ? 0.32 : 0.26;
       timeline.to(
         popup,
         {
           opacity: open ? 1 : 0,
           y: open ? 0 : 3,
-          duration: reduced ? 0 : open ? 0.18 : 0.14,
-          ease: "power2.out",
+          duration,
+          ease: "sine.inOut",
         },
         0,
       );
-      if (overlay) timeline.to(overlay, { opacity: open ? 1 : 0, duration: reduced ? 0 : 0.14 }, 0);
+      if (overlay) timeline.to(overlay, { opacity: open ? 1 : 0, duration, ease: "sine.inOut" }, 0);
       return () => {
         timeline.kill();
       };

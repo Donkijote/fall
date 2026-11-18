@@ -48,6 +48,7 @@ that ordering, including a fresh activation after release.
 
 The shared identity hover/focus treatment brightens the full brass rim and adds a
 soft gold light behind the copy. `ExperienceMeter` owns progressive XP fills and
-sixteen bounded DOM sparks, emitted along the advancing edge with GSAP. On level-up,
+forty bounded DOM sparks with bright cores, broader scatter and 480ms trails,
+emitted along the advancing edge with GSAP. On level-up,
 the previous bar finishes before the next level begins. Reduced motion sets the
 new fill immediately and suppresses sparks; accessibility values remain immediate.

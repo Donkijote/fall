@@ -145,14 +145,14 @@ disclosures retain pointer feedback; slider thumbs retain their grab cursor.
 ## State changes and surface lifecycle
 
 `MotionDialog` pairs with `ModalContent`, and `MotionPopover` pairs with
-`PopoverPanel`. These roots defer Base UI unmounting for a 140ms GSAP exit,
+`PopoverPanel`. These roots use a 320ms entry and defer Base UI unmounting for a 260ms GSAP exit,
 including controlled closes, and cancel that exit when reopened. Native focus,
 Escape and outside dismissal remain owned by Base UI. Tavern travel keeps its
 existing orchestration. Keep surface children mounted through closing.
 
 `ResourceReadout` briefly brightens changed amounts without delaying accessible
 values. `PlayerIdentity` delegates XP to `ExperienceMeter`: gains advance over 750ms,
-with a bounded set of sparks emitted from the live leading edge. Level-up fills
+with forty brighter sparks emitted from the live leading edge and a short trailing fade. Level-up fills
 the old bar over 450ms before progressing from zero in the next level; interrupted
 gains continue from their displayed position. Accessible values update immediately.
 The crest lights once on level-up. Hovering the identity copy or portrait brightens
