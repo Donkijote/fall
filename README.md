@@ -62,6 +62,13 @@ branch, currently `develop`; closing keywords are ignored for other targets.
 Verify the target, assignee, labels and closing lines before handing off a PR.
 See [GitHub's issue linking rules](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue).
 
+Review acceptance-criteria and task checklists in the issue and PR before
+starting work. Check off each item in the corresponding issue and PR when its
+implementation and applicable verification are complete. Keep overlapping
+checklists consistent and preserve existing wording and unrelated edits. Leave
+partial, incomplete or unverified items unchecked. Before handing off the work,
+reconcile both checklists and report any remaining tasks or verification gaps.
+
 #### Project status automation
 
 **Sync Project Status** uses trusted default-branch code to maintain Fall's

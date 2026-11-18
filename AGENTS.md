@@ -72,6 +72,12 @@
   other kinds. Require exactly one type label; resolve missing or conflicting
   kinds before creating the branch. This issue-based pattern takes precedence
   over a generic branch prefix.
+- Review acceptance-criteria and task checklists in the issue and PR bodies when
+  starting work. As each item is implemented and its applicable verification
+  passes, mark its checkbox complete in the corresponding issue and PR. Keep
+  overlapping checklists consistent, preserve their wording and unrelated edits,
+  and leave incomplete, partial or unverified items unchecked. Before handoff,
+  reconcile both checklists and report any remaining items or verification gaps.
 - Create draft PRs against `develop`, titled `[GHI#<issue>] <issue title>`.
   Assign the PR to its creator and copy the issue's labels, including the same
   `kind/*` type label. Preserve these fields when updating an existing PR.
