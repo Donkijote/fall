@@ -21,13 +21,21 @@ import { useGSAP } from "@gsap/react";
 import { PerspectiveCamera, RoundedBox, useTexture } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 
-import type { CardDropEffect } from "../../application/lab";
+import type { CardDropEffect, Lab } from "../../application/lab";
 import { useMotionSettings } from "./MotionSettings";
 
 const baseHeight = 0.066;
 const restingHeight = 0.099;
 
-export function CardDrop({ attempt, effect }: { attempt: number; effect: CardDropEffect }) {
+export function CardDrop({
+  lab,
+  attempt,
+  effect,
+}: {
+  lab: Lab;
+  attempt: number;
+  effect: CardDropEffect;
+}) {
   const motionSettings = useMotionSettings();
   const shatter = effect === "ice";
   const transfersHeat = effect === "heat";
@@ -101,11 +109,25 @@ export function CardDrop({ attempt, effect }: { attempt: number; effect: CardDro
       const leadIn = 0.15 + profile.fall;
       motion.current.seconds = -leadIn;
       const end = flameImpact ? 0.4 + flameCooldownDuration : 2.05;
-      gsap
-        .to(motion.current, { seconds: end, duration: leadIn + end, ease: "none" })
-        .timeScale(motionSettings.speed);
+      const timeline = gsap.timeline().timeScale(motionSettings.speed);
+      timeline.to(motion.current, { seconds: end, duration: leadIn + end, ease: "none" });
+      if (shatter || transfersHeat || effect === "plain")
+        timeline.call(() => lab.playCapture?.("flight"), [], 0.15);
+      if (shatter) {
+        timeline.call(() => lab.playCapture?.("freeze"), [], 0);
+        timeline.call(() => lab.playCapture?.("shatter"), [], leadIn);
+      } else if (transfersHeat) {
+        timeline.call(() => lab.playCapture?.("heat"), [], 0);
+        timeline.call(() => lab.playCapture?.("soft-contact"), [], leadIn);
+      } else if (flameImpact) {
+        timeline.call(() => lab.playCapture?.("heat"), [], 0);
+        timeline.call(() => lab.playCapture?.("flame-rise"), [], 0);
+        timeline.call(() => lab.playCapture?.("flame"), [], leadIn);
+      } else if (effect === "plain") {
+        timeline.call(() => lab.playCapture?.("capture"), [], leadIn);
+      }
     },
-    { dependencies: [attempt, effect], revertOnUpdate: true },
+    { dependencies: [lab, attempt, effect], revertOnUpdate: true },
   );
 
   return (

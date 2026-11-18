@@ -43,6 +43,7 @@ export function Card({
       if (!turn.current || !hit.current) return;
       // A new preview restarts shader envelopes without replacing the card mesh.
       frost.current.value = 0;
+      if (frozen) lab.playCapture?.("freeze");
       heat.current.strength.value = 0;
       heat.current.scorch.value = 0;
       const flip = gsap
@@ -76,6 +77,7 @@ export function Card({
         );
 
       return lab.subscribe((state, previous) => {
+        if (state.cardFrozen && !previous.cardFrozen) lab.playCapture?.("freeze");
         if (state.faceUp !== previous.faceUp) {
           if (state.faceUp) flip.reverse();
           else flip.play();

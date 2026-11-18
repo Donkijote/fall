@@ -14,6 +14,7 @@ const smooth = (value: number, start: number, end: number) => {
 const lerp = (from: number, to: number, t: number) => from + (to - from) * t;
 
 export const cardCaptureDuration = 2.1;
+export const cardCaptureContactAt = 0.42;
 const pickupEnd = 1 - cardFlights.collect.duration / cardCaptureDuration;
 
 export function sampleCardCapture(
@@ -27,7 +28,7 @@ export function sampleCardCapture(
   const landing = captureLanding(0);
   if (progress <= pickupEnd) {
     if (!topCard) return { position: [table.x, table.y, table.z], rotation: [0, Math.PI, 0] };
-    const gesture = captureGesture(progress / 0.42, 0, 0.32);
+    const gesture = captureGesture(progress / cardCaptureContactAt, 0, 0.32);
     const { travel } = gesture;
     const bend = captureBend(hand, table, gesture.side);
     return {

@@ -49,6 +49,10 @@ export function createCardAudio() {
     playCard() {
       getPlay().play();
     },
+    stop() {
+      deal?.stop();
+      play?.stop();
+    },
     dispose() {
       unsubscribe();
       deal?.unload();

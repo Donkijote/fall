@@ -1,10 +1,14 @@
 import gsap from "gsap";
 import { lazy, Suspense, useLayoutEffect, useMemo, useRef, useState, type RefObject } from "react";
 
+import { appendCapture } from "@/components/cards/motion/cardTimelines";
 import { SceneBoundary } from "@/components/surfaces/SceneBoundary";
-import { useCardAudio } from "@/infrastructure/ui/hooks/useCardAudio";
+import type { CaptureCue } from "@/domain/audio/captureCue";
+import { toCardKey } from "@/domain/helpers/card";
+import { useMotionAudio } from "@/infrastructure/ui/hooks/useMotionAudio";
 
 import { createPlaybackChannel } from "../../../adapters/three/matchCardScene";
+import { matchFallEffect } from "../../../adapters/three/matchFallEffect";
 import type { MatchFrame } from "../../../application/localMatch";
 import { createCaptureCounterPlayback } from "./captureCounterPlayback";
 import { measureCardScene } from "./measureCardScene";
@@ -26,15 +30,18 @@ export function MatchMotionLayer({
   complete: () => void;
 }) {
   const { motion } = frame;
-  const audioRef = useCardAudio(!returning);
+  const audioRef = useMotionAudio(!returning);
   const audio = useMemo(
     () => ({
       playCard: () => audioRef.current?.playCard(),
       playDealCard: () => audioRef.current?.playDealCard(),
+      playCapture: (cue: CaptureCue) => audioRef.current?.playCapture(cue),
+      stop: () => audioRef.current?.stop(),
     }),
     [audioRef],
   );
   const sequence = useRef(0);
+  const playback = useRef<{ motion: typeof motion; started: boolean }>({ motion, started: false });
   const [failed, setFailed] = useState(false);
   const [channel] = useState(createPlaybackChannel);
   const animate = !reducedMotion && !failed && typeof WebGL2RenderingContext !== "undefined";
@@ -42,6 +49,7 @@ export function MatchMotionLayer({
   useLayoutEffect(() => {
     const root = board.current;
     if (!root || !motion || returning) return;
+    if (playback.current.motion !== motion) playback.current = { motion, started: false };
     const counters =
       motion.kind === "count" ? createCaptureCounterPlayback(root, motion.groups) : undefined;
     const overlay = motion.kind === "count" && root.querySelector("[data-count-overlay]");
@@ -69,7 +77,38 @@ export function MatchMotionLayer({
     };
     const measured = animate && measureCardScene(root, frame);
     if (!measured) {
-      // Motion preferences do not mute the game; use a single cue for an instant event.
+      // If WebGL failed after handoff, settle without replaying already-started cues.
+      if (playback.current.started) {
+        audio.stop();
+        showFinalCount();
+        settle();
+        return () => {
+          exit?.revert();
+          counters?.dispose();
+        };
+      }
+      if (motion.kind === "collect") {
+        const target = frame.state.table.find((card) => toCardKey(card) === motion.targets[0]);
+        let finished = false;
+        const timeline = appendCapture(
+          gsap.timeline({ paused: true }),
+          { progress: 0, cooldown: 0, followThrough: 0 },
+          motion.capture,
+          motion.targets.length,
+          audio,
+          matchFallEffect(target?.rank),
+          true,
+        );
+        timeline.eventCallback("onComplete", () => {
+          finished = true;
+          complete();
+        });
+        timeline.play();
+        return () => {
+          timeline.kill();
+          if (!finished) audio.stop();
+        };
+      }
       if (motion.kind === "deal" || motion.kind === "count") audio.playDealCard();
       else audio.playCard();
       if (motion.kind === "count") {
@@ -100,14 +139,17 @@ export function MatchMotionLayer({
     };
     const deadline = createMotionDeadline(() => {
       if (!started) {
-        if (motion.kind === "deal" || motion.kind === "count") audio.playDealCard();
-        else audio.playCard();
+        // Rerun this effect through its full audio-only fallback.
+        setFailed(true);
+        return;
       }
+      audio.stop();
       finish();
     });
     const handoff = (seconds: number) => {
       if (!active) return;
       started = true;
+      playback.current.started = true;
       deadline.started(seconds);
       hideCards();
     };
@@ -147,6 +189,7 @@ export function MatchMotionLayer({
     };
     window.addEventListener("resize", remeasure);
     return () => {
+      if (active) audio.stop();
       active = false;
       deadline.dispose();
       counters?.dispose();

@@ -15,7 +15,7 @@ const smooth = (value: number) => {
 export const cascadeOrder = [0, 1, 3, 2] as const;
 // A short contact pause and varied cadence avoid four identical mechanical hops.
 const cadence = [0.78, 0.69, 0.84, 0.72];
-function stepsFor(count: number) {
+export function getCascadeSteps(count: number) {
   let start = 0;
   return Array.from({ length: count }, (_, index) => {
     const duration = cadence[index % cadence.length];
@@ -24,10 +24,10 @@ function stepsFor(count: number) {
     return step;
   });
 }
-export const cascadeSteps = stepsFor(cascadeOrder.length);
+export const cascadeSteps = getCascadeSteps(cascadeOrder.length);
 export const cascadeReturnTime = 0.96;
 export function getCascadeDuration(count: number) {
-  const last = stepsFor(count).at(-1);
+  const last = getCascadeSteps(count).at(-1);
   return (last ? last.start + last.duration : 0) + cascadeReturnTime;
 }
 export const cascadeFirstPickupDuration = cadence[0];
@@ -43,7 +43,8 @@ export function sampleCascadeCapture(
   pile: Point,
   pitch: number,
 ) {
-  const steps = targets.length === cascadeOrder.length ? cascadeSteps : stepsFor(targets.length);
+  const steps =
+    targets.length === cascadeOrder.length ? cascadeSteps : getCascadeSteps(targets.length);
   const lastStep = steps.at(-1)!;
   const pickupDuration = lastStep.start + lastStep.duration;
   const seconds = Math.max(0, Math.min(1, progress)) * (pickupDuration + cascadeReturnTime);

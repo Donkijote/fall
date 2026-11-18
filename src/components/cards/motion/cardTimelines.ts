@@ -1,15 +1,28 @@
+import type { CaptureCue } from "@/domain/audio/captureCue";
+
 import { cardCaptureDuration } from "./cardCapture";
 import type { CardDropEffect } from "./cardFlights";
 import { cardFlights } from "./cardFlights";
 import { flameCooldownDuration } from "./cardImpactMotion";
 import {
   cascadeFirstPickupDuration,
+  getCascadeSteps,
   cascadeReturnTime,
   getCascadeDuration,
 } from "./cascadeCapture";
-import { captureDuration, collectAt, fallRiseAt, impactAt } from "./tableCapture";
+import {
+  captureDuration,
+  captureElementStart,
+  collectAt,
+  fallRiseAt,
+  impactAt,
+} from "./tableCapture";
 
-export type CardMotionAudio = { playDealCard: () => void; playCard: () => void };
+export type CardMotionAudio = {
+  playDealCard: () => void;
+  playCard: () => void;
+  playCapture?: (cue: CaptureCue) => void;
+};
 export type CaptureKind = "fall" | "card" | "cascade" | "sweep";
 export type FlightProgress = { progress: number };
 
@@ -74,7 +87,9 @@ export function appendCapture(
     timeline
       .set(motion, { progress: fallRiseAt })
       .to(motion, { progress: impactAt, duration: 0.42, ease: "none" })
-      .call(audio.playCard)
+      .call(() => {
+        if (!audio.playCapture) audio.playCard();
+      })
       .to(motion, {
         progress: collectAt,
         duration: duration * (collectAt - impactAt),
@@ -85,9 +100,11 @@ export function appendCapture(
       progress: fall ? collectAt : 1,
       duration: fall ? duration * collectAt : duration,
       ease: "none",
-      onStart: audio.playCard,
+      onStart: () => {
+        if (!audio.playCapture || fall || kind === "card") audio.playCard();
+      },
     });
-    if (fall) timeline.call(audio.playCard, [], duration * fallRiseAt);
+    if (fall && !audio.playCapture) timeline.call(audio.playCard, [], duration * fallRiseAt);
   }
   if (fall) {
     if (fallCascade) {
@@ -109,6 +126,50 @@ export function appendCapture(
           ease: "none",
         });
     }
+  }
+  const cue = audio.playCapture;
+  if (cue) {
+    const fallImpact = targetAlreadyOnTable ? 0.42 : duration * impactAt;
+    if (fall) {
+      const release = fall && !targetAlreadyOnTable ? duration * fallRiseAt : 0;
+      timeline.call(() => cue(effect === "flame" ? "flame-rise" : "flight"), [], release);
+    }
+    if (fall && effect === "ice") {
+      const freezeAt = targetAlreadyOnTable
+        ? 0.42 * ((captureElementStart(effect) - fallRiseAt) / (impactAt - fallRiseAt))
+        : duration * captureElementStart(effect);
+      timeline.call(() => cue("freeze"), [], freezeAt);
+      timeline.call(() => cue("shatter"), [], fallImpact);
+    } else if (fall && effect === "heat") {
+      const heatAt = targetAlreadyOnTable
+        ? 0.42 * ((captureElementStart(effect) - fallRiseAt) / (impactAt - fallRiseAt))
+        : duration * captureElementStart(effect);
+      timeline.call(() => cue("heat"), [], heatAt);
+      timeline.call(() => cue("soft-contact"), [], fallImpact);
+    } else if (fall && effect === "flame") {
+      const buildup = targetAlreadyOnTable
+        ? 0.42 * ((captureElementStart(effect) - fallRiseAt) / (impactAt - fallRiseAt))
+        : duration * captureElementStart(effect);
+      timeline.call(() => cue("heat"), [], buildup);
+      timeline.call(() => cue("flame"), [], fallImpact);
+    } else if (fall) {
+      timeline.call(() => cue("capture"), [], fallImpact);
+    }
+    if (kind === "cascade" || fallCascade) {
+      const steps = getCascadeSteps(targets);
+      for (const [index, step] of steps.entries()) {
+        if (fallCascade && index === 0) continue;
+        const at = fallCascade
+          ? fallImpact +
+            duration * (collectAt - impactAt) +
+            step.start -
+            cascadeFirstPickupDuration +
+            step.travel
+          : step.start + step.travel;
+        timeline.call(audio.playCard, [], at - step.travel);
+      }
+    }
+    // A sweep has no new impact: it silently returns the remaining cards to the pile.
   }
   return timeline;
 }

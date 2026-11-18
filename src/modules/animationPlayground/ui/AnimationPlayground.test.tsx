@@ -12,6 +12,9 @@ const audio = vi.hoisted(() => ({
   playDealCard: vi.fn(),
   playCard: vi.fn(),
   dispose: vi.fn(),
+  stop: vi.fn(),
+  prepare: vi.fn(),
+  playCapture: vi.fn(),
 }));
 vi.mock("../adapters/audio/howlerAudio", () => ({ createHowlerAudio: () => audio }));
 vi.mock("../adapters/three/LabViewport", () => ({
@@ -173,5 +176,24 @@ describe("Animation playground", () => {
       target: { value: "0" },
     });
     expect(screen.getByRole("spinbutton", { name: "Timeline speed" })).toHaveValue(0.5);
+  });
+  it("prepares audio in Play and cancels old audio on replay, reset, study changes and unmount", () => {
+    const view = render(
+      <MemoryRouter>
+        <AnimationPlayground />
+      </MemoryRouter>,
+    );
+    expect(audio.prepare).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "Play / replay" }));
+    expect(audio.prepare).toHaveBeenCalledOnce();
+    expect(audio.stop).toHaveBeenCalledOnce();
+    fireEvent.click(screen.getByRole("button", { name: "Play / replay" }));
+    expect(audio.stop).toHaveBeenCalledTimes(2);
+    fireEvent.click(screen.getByRole("button", { name: "Reset scene" }));
+    expect(audio.stop).toHaveBeenCalledTimes(3);
+    fireEvent.click(screen.getByRole("tab", { name: /Table/ }));
+    expect(audio.stop).toHaveBeenCalledTimes(4);
+    view.unmount();
+    expect(audio.dispose).toHaveBeenCalledOnce();
   });
 });

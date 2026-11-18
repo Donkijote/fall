@@ -97,6 +97,8 @@ export function AnimationPlayground() {
   useEffect(() => () => audio.dispose(), [audio]);
 
   function updateSettings(patch: Partial<Settings>) {
+    audio.stop();
+    audio.prepare();
     setSettings((current) => ({ ...current, ...patch }));
     setPreview((current) =>
       createPreview(
@@ -109,6 +111,8 @@ export function AnimationPlayground() {
   }
 
   function play() {
+    audio.stop();
+    audio.prepare();
     setPreview((current) => createPreview(audio, current.revision + 1, settings.effect, selected));
   }
 
@@ -132,6 +136,7 @@ export function AnimationPlayground() {
         <Tabs
           value={study}
           onValueChange={(value) => {
+            audio.stop();
             const nextStudy = value as Study;
             setStudy(nextStudy);
             setSelected(lessonsByStudy[nextStudy][0].experiment);
@@ -163,7 +168,13 @@ export function AnimationPlayground() {
                       variant={selected === item.experiment ? "secondary" : "ghost"}
                       aria-pressed={selected === item.experiment}
                       className="h-auto w-full justify-start py-3 text-left whitespace-normal"
-                      onClick={() => setSelected(item.experiment)}
+                      onClick={() => {
+                        audio.stop();
+                        setSelected(item.experiment);
+                        setPreview((current) =>
+                          createPreview(audio, current.revision + 1, settings.effect),
+                        );
+                      }}
                     >
                       {item.label}
                     </Button>
@@ -186,11 +197,12 @@ export function AnimationPlayground() {
                         </Button>
                         <Button
                           variant="outline"
-                          onClick={() =>
+                          onClick={() => {
+                            audio.stop();
                             setPreview((current) =>
                               createPreview(audio, current.revision + 1, settings.effect),
-                            )
-                          }
+                            );
+                          }}
                         >
                           <RotateCcw /> Reset scene
                         </Button>
