@@ -139,6 +139,8 @@ test.each([
 test("touch previews one Tavern format and clears selection on the second tap", async () => {
   const user = userEvent.setup();
   renderLobby("/?bottomSidebar=true");
+  // Let the dialog's initial focus settle before sending touch input.
+  await waitFor(() => expect(screen.getByRole("dialog", { name: "Tavern" })).toHaveFocus());
   const duel = screen.getByRole("button", { name: "Duel" });
   const team = screen.getByRole("button", { name: "Team Match" });
   const tap = (target: HTMLElement) => user.pointer({ keys: "[TouchA]", target });
