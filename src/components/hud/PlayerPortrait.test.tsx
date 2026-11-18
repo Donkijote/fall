@@ -121,3 +121,32 @@ test("starts a fresh draw at the current glint after a completed exit and idle r
   expect(value(portrait, "turn-sweep")).toBeCloseTo(180);
   unmount();
 });
+
+test("clips the glint to the live rim until the exit is completely dark", () => {
+  const { container, rerender, unmount } = render(
+    <PlayerPortrait className="size-12" highlighted />,
+  );
+  const portrait = container.firstElementChild as HTMLElement;
+  const clip = () => portrait.style.getPropertyValue("--portrait-glint-clip");
+  expect(clip()).toBe("var(--portrait-turn-mask)");
+  advance(portrait, 1);
+  rerender(<PlayerPortrait className="size-12" />);
+  const timeline = sweepTween(portrait).parent as gsap.core.Timeline;
+  for (const time of [0.1, 0.35, 0.64]) {
+    act(() => {
+      timeline.time(time);
+    });
+    expect(value(portrait, "turn-sweep")).toBeGreaterThan(0);
+    expect(clip()).toBe("var(--portrait-turn-mask)");
+  }
+  act(() => {
+    timeline.time(0.65);
+  });
+  expect(value(portrait, "turn-sweep")).toBe(0);
+  expect(value(portrait, "glint")).toBe(0);
+  expect(clip()).toBe("linear-gradient(black, black)");
+  rerender(<PlayerPortrait className="size-12" highlighted />);
+  expect(clip()).toBe("var(--portrait-turn-mask)");
+  unmount();
+  expect(gsap.getTweensOf(portrait)).toHaveLength(0);
+});

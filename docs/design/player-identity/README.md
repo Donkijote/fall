@@ -38,3 +38,10 @@ The draw/wipe mask feathers both ends of its partial arc over up to 18 degrees,
 and the orbiting glint fades across its leading edge. Feather width collapses at
 zero and 360 degrees so inactive rings disappear cleanly and complete active
 rings have no dim seam. These static gradients follow the existing GSAP angles.
+
+The glint peak is centered on the tracked angular edge (rather than trailing it
+by 30 degrees). During drawing and wiping, its mask intersects the exact same
+feathered arc as the bright rim, preventing a detached highlight on an erased
+segment. The independent idle-reflection mask is restored only after the exit
+has zero sweep and zero glint opacity. A lifecycle regression check verifies
+that ordering, including a fresh activation after release.

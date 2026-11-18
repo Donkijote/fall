@@ -1,6 +1,19 @@
 .game-player-avatar {
   --portrait-turn-origin: 0deg;
   --portrait-turn-sweep: 0deg;
+  /* Both layers share one arc so the glint cannot survive on an erased segment. */
+  --portrait-turn-feather: min(
+    18deg,
+    calc(var(--portrait-turn-sweep) / 2),
+    calc((360deg - var(--portrait-turn-sweep)) / 2)
+  );
+  --portrait-turn-mask: conic-gradient(
+    from var(--portrait-turn-origin),
+    transparent 0deg,
+    black var(--portrait-turn-feather),
+    black calc(var(--portrait-turn-sweep) - var(--portrait-turn-feather)),
+    transparent var(--portrait-turn-sweep) 360deg
+  );
   --portrait-ring: url("../../assets/ui/player-identity/brass-ring.webp");
   box-shadow: 0 3px 6px var(--artwork-shadow);
 }
@@ -31,32 +44,23 @@
 }
 
 .game-player-turn-ring {
-  /* Soften both moving edges, collapsing the feather for a complete or empty rim. */
-  --portrait-turn-feather: min(
-    18deg,
-    calc(var(--portrait-turn-sweep) / 2),
-    calc((360deg - var(--portrait-turn-sweep)) / 2)
-  );
   filter: brightness(1.9) drop-shadow(0 0 2px color-mix(in oklch, var(--gold) 72%, transparent));
-  mask-image: conic-gradient(
-    from var(--portrait-turn-origin),
-    transparent 0deg,
-    black var(--portrait-turn-feather),
-    black calc(var(--portrait-turn-sweep) - var(--portrait-turn-feather)),
-    transparent var(--portrait-turn-sweep) 360deg
-  );
+  mask-image: var(--portrait-turn-mask);
 }
 
 .game-player-avatar::after {
   z-index: 2;
   opacity: var(--portrait-glint, 0);
   filter: brightness(3.1);
-  mask-image: conic-gradient(
-    from calc(var(--portrait-glint-angle, 0deg) - 60deg),
-    transparent,
-    black 30deg,
-    transparent 60deg
-  );
+  mask-image:
+    conic-gradient(
+      from calc(var(--portrait-glint-angle, 0deg) - 30deg),
+      transparent,
+      black 30deg,
+      transparent 60deg
+    ),
+    var(--portrait-glint-clip, linear-gradient(black, black));
+  mask-composite: intersect;
 }
 
 @media (forced-colors: active) {

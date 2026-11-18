@@ -12,6 +12,9 @@ const origin = "--portrait-turn-origin";
 const sweep = "--portrait-turn-sweep";
 const head = "--portrait-glint-angle";
 const light = "--portrait-glint";
+const clip = "--portrait-glint-clip";
+const rimClip = "var(--portrait-turn-mask)";
+const idleClip = "linear-gradient(black, black)";
 
 /** One owner for the drawn rim, moving head, release and quiet brass reflection. */
 export function usePortraitTurnMotion(
@@ -33,6 +36,7 @@ export function usePortraitTurnMotion(
           [sweep]: highlighted ? "360deg" : "0deg",
           [head]: "0deg",
           [light]: highlighted ? 0.95 : 0,
+          [clip]: highlighted ? rimClip : idleClip,
         });
         release.current = null;
         return;
@@ -47,6 +51,7 @@ export function usePortraitTurnMotion(
       animation.current = timeline;
 
       if (highlighted) {
+        gsap.set(element, { [clip]: rimClip });
         // Reactivation during a wipe retraces that same edge, without jumping the head.
         const reversingWipe = currentSweep > 0 && release.current?.kind === "wipe";
         const start = reversingWipe
@@ -86,6 +91,7 @@ export function usePortraitTurnMotion(
 
       let releaseDuration = 0;
       if (currentSweep > 0) {
+        gsap.set(element, { [clip]: rimClip });
         if (currentSweep >= 359.9 || release.current?.kind === "wipe") {
           // A full ring can move its mask origin to the orbit's current head invisibly.
           const start = release.current?.kind === "wipe" ? release.current.start : currentHead;
@@ -125,6 +131,8 @@ export function usePortraitTurnMotion(
         );
       }
 
+      // Unclip only after the exit is dark; the idle reflection is independent of turn state.
+      timeline.set(element, { [light]: 0, [clip]: idleClip }, releaseDuration);
       const angle = gsap.utils.random(0, 360);
       const idle = gsap.timeline({ repeat: -1, repeatDelay: 5, delay: 1.4 });
       idle
