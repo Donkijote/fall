@@ -3,13 +3,14 @@ name: Report Build Status
 on:
   pull_request:
     branches: [develop]
-    types: [opened, reopened, ready_for_review, converted_to_draft, synchronize]
+    types: [ready_for_review, synchronize]
 
 permissions:
   contents: read
 
 jobs:
   report-build-status:
+    if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     concurrency:
       group: build-${{ github.head_ref || github.ref_name }}

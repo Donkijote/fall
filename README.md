@@ -178,8 +178,9 @@ Both paths check formatting, lint, tests, and the build before uploading assets.
   `preview` environment. GitHub permissions are read-only by default; only the
   preview/cleanup jobs receive PR comment write access, and deployment receives
   Actions read access for stale-run checks.
-- **Report Build Status / report-build-status** runs for drafts and ready PRs,
-  including unlabelled and fork PRs, on open/reopen/push and draft/ready changes.
+- **Report Build Status / report-build-status** runs only for ready-for-review
+  PRs, when marked ready or when new commits arrive. Draft PRs skip this job.
+  The check is independent of `autodeploy` and also supports fork PRs.
   It is the independent build check to require in branch protection. Do not
   require optional deployment/cleanup jobs: intentionally skipped previews must
   not gate unrelated PRs. Deployment supports both `develop` and `main`; the
