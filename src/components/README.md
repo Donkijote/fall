@@ -61,7 +61,8 @@ compact portrait layouts stack the glyph and value while wider layouts use a row
 Its decorative size container scales intact end strips with the readout height
 rather than using a fixed end width or cutting seams through the face. The
 minimum compact width and padding keep the ornaments clear of the value. It
-remains a noninteractive status group, with full amounts in its accessible text.
+is a native resource-action button, with the full balance in its accessible name
+and an optional activation handler for the future resource screens.
 `BrassCheckbox` composes Base UI directly, using the approved input frame and
 ChoiceButton wax. It preserves the hidden native input, controlled values, refs,
 form submission, disabled state, and Space-key selection. Generated `ui/` files
@@ -80,9 +81,12 @@ PointsBadge, PlayerPortrait, and ParchmentFigure. Runtime art stays at its canon
 source rather than being duplicated for these compositions.
 
 ActionButton and ResourceReadout share `surfaces/useBorderGlint`: one random
-highlight position per mount, a continuously visible light that varies subtly in
-intensity, and a static highlight under reduced motion. GSAP contexts clean up
-on unmount. NumberMedallion offsets serif digits optically within the coin.
+highlight position per mount. Actions retain their subtle intensity variation;
+resource buttons opt into a 3.2s orbit around the outline's actual beveled rim
+while hovered or keyboard-focused. It pauses at its current point and resumes
+that same lap. Resize preserves the lap phase, touch does not synthesize hover,
+and reduced motion uses a static light. GSAP contexts, resize observers and
+interaction listeners clean up on unmount. NumberMedallion offsets serif digits optically within the coin.
 
 GuideLink keyboard focus reveals its brass-edged bookmark artwork without an
 additional colored outline; forced-colors mode retains a system outline.
@@ -119,3 +123,45 @@ touch selection and dialog semantics. A visual pass on desktop, phone portrait
 and landscape, both themes and physical touch remains required before acceptance;
 unit tests do not establish artwork quality or device layout. Score-award travel
 and winner celebrations remain owned by #127 and #128.
+
+## HUD action preparation and cursor policy — GHI #124
+
+`ProfileButton` owns native profile activation, pointer/focus cues and portrait
+attention; `PlayerIdentity.onProfileClick` supplies its future destination.
+`ResourceReadout.onClick` supplies each future resource destination. These optional
+callbacks do not yet open new screens or mutate balances. Native Enter/Space,
+focus outlines and accessible resource amounts are present now. The gallery
+renders both controls directly and through the real HUD.
+
+`PlayerPortrait.attention` drives only the existing glint owner, without drawing
+a turn rim. A turn indicator takes priority over hover attention. Reduced motion
+keeps a static highlight. Shared primitives under `ui/` remain unchanged.
+
+The global base layer uses an arrow cursor and nonselectable static interface
+text, including titles and modal copy. Text inputs, textareas and editable
+content explicitly retain selection and text cursors. Links, buttons and native
+disclosures retain pointer feedback; slider thumbs retain their grab cursor.
+
+## Further animation audit — GHI #124
+
+This follow-up audit reviewed live owners in HUD, actions/navigation, settings,
+shared surfaces, How to Play and Sings. The ideas below are future work; this
+pass implements only the requested HUD attention and cursor changes. Prioritize
+responses to real user actions or value changes, with immediate readable reduced
+motion states. Keep imagery, hit targets and focus stable.
+
+| Priority | Component / owner                          | Current behavior                                                             | Suggested next animation and guardrails                                                                                                                                                                                                                                      |
+| -------- | ------------------------------------------ | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1        | `ModalContent`, `PopoverPanel`             | Short GSAP entry; native close unmounts immediately.                         | Add a coordinated 120–160ms dim/settle exit through Base UI's supported presence lifecycle. Keep Escape, outside press and focus restoration native; test reopen during exit and overlapping dialogs. Do not add a second entry on Tavern travel.                            |
+| 1        | `ResourceReadout`                          | Hover/focus border orbit; balances replace immediately.                      | On a real balance change, briefly brighten the value or count to the new integer over 200–350ms. Keep accessible amounts immediate, interrupted updates deterministic, and this separate from the hover path. Wait for real balance updates rather than looping sample data. |
+| 1        | `PlayerIdentity` XP meter / level crest    | Fill width and numbers update directly.                                      | Settle a changed XP fill over 300ms and give one bounded crest light on level-up. Handle level resets explicitly; never animate the whole portrait/nameplate or replay on rerender. Requires real progression updates.                                                       |
+| 2        | `NavigationButton` / `NavigationGroup`     | ActionButton already reveals brass corners over 240ms.                       | A single short light pass on an enabled item's outer corners could clarify hover/current-page selection. Extend its existing reveal owner; do not travel through joined interior edges or light disabled coming-soon items.                                                  |
+| 2        | `BronzeSlider`                             | Thumb and value follow native input immediately; decorative rail is static.  | A 120–180ms halo settle on release or keyboard adjustment, using a separate decoration. Never ease the actual drag value or delay volume feedback. WaxSwitch, BrassCheckbox and ChoiceButton already have GSAP material responses.                                           |
+| 2        | How to Play `ChapterNavigation` disclosure | Native summary opens/closes immediately; chapter/link motion already exists. | A 160–220ms chevron/content reveal around the existing disclosure. Keep the summary usable through interruption and ensure hidden links cannot retain focus. Reuse chapter motion rather than replaying articles.                                                            |
+| 3        | Future resource/profile panel content      | Native action hooks are ready; destinations are not implemented.             | When a real panel exists, let the shared surface own entry/exit and stagger only a few new rows over 120–200ms. Do not add placeholder dialogs or competing button/overlay transforms now.                                                                                   |
+
+Keep Login's existing arrival/atmosphere, GuideLink reveals, Tavern travel and
+format attention, Sings filter reflow, switch/choice/checkbox motion and current
+turn effects with their owners. They already provide meaningful motion. Avoid
+extra idle loops on controls or decorative score transfers: #127 owns score
+travel and #128 owns winning-Sing celebrations.

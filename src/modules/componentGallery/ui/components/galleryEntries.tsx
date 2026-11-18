@@ -21,6 +21,7 @@ import { BrassCheckbox } from "@/components/controls/BrassCheckbox";
 import { BronzeSlider } from "@/components/controls/BronzeSlider";
 import { WaxSwitch } from "@/components/controls/WaxSwitch";
 import { NumberMedallion } from "@/components/hud/NumberMedallion";
+import { ProfileButton } from "@/components/hud/ProfileButton";
 import { GuideLink } from "@/components/navigation/GuideLink";
 import { ParchmentFigure } from "@/components/surfaces/ParchmentFigure";
 import { homeGallery } from "@/modules/home";
@@ -283,6 +284,12 @@ export const gallerySections: { title: string; folder: string; entries: Entry[] 
         ),
       },
       {
+        name: "ProfileButton",
+        variants: "Pointer hover, keyboard focus, static shine with reduced motion",
+        usage: "Card Hall profile action; optional activation handler",
+        Preview: () => <ProfileButton fallbackAvatarUrl={traveller} />,
+      },
+      {
         name: "PlayerIdentity",
         variants: "Traveller avatar, level crest, experience",
         usage: "Card Hall player HUD",
@@ -298,7 +305,7 @@ export const gallerySections: { title: string; folder: string; entries: Entry[] 
       },
       {
         name: "ResourceReadout",
-        variants: "Count, capped count, unavailable",
+        variants: "Count, capped count, unavailable; hover/focus orbit with pause and resume",
         usage: "Card Hall resource HUD",
         Preview: () => (
           <div className="flex flex-wrap gap-3">

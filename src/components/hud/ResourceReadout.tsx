@@ -1,5 +1,6 @@
 import { cn } from "cn";
 import type { LucideIcon } from "lucide-react";
+import type { ComponentProps } from "react";
 import { useRef } from "react";
 
 import { Icon } from "../icons/Icon";
@@ -14,6 +15,7 @@ export type ResourceReadoutProps = {
   iconClassName?: string;
   value?: number;
   maximum?: number;
+  onClick?: ComponentProps<"button">["onClick"];
 };
 
 export function ResourceReadout({
@@ -22,9 +24,10 @@ export function ResourceReadout({
   iconClassName,
   value,
   maximum,
+  onClick,
 }: ResourceReadoutProps) {
-  const surface = useRef<HTMLDivElement>(null);
-  useBorderGlint(surface);
+  const surface = useRef<HTMLButtonElement>(null);
+  useBorderGlint(surface, true, { orbitOnAttention: true });
 
   const available =
     value !== undefined &&
@@ -36,12 +39,13 @@ export function ResourceReadout({
     : "Unavailable";
 
   return (
-    <div
+    <button
+      type="button"
       ref={surface}
-      role="group"
-      aria-label={label}
+      onClick={onClick}
+      aria-label={`${label}: ${description}`}
       title={`${label}: ${description}`}
-      className="resource-readout relative isolate flex min-h-12 min-w-14 flex-col items-center justify-center gap-0.5 px-3 py-2 text-artwork-foreground sm:px-4 lg:min-h-12 lg:min-w-22 lg:flex-row lg:gap-2 lg:px-4 compact-landscape:min-h-9 compact-landscape:min-w-16 compact-landscape:flex-row compact-landscape:gap-1 compact-landscape:px-3 compact-landscape:py-1"
+      className="resource-readout relative isolate flex min-h-12 min-w-14 cursor-pointer flex-col items-center justify-center gap-0.5 rounded-md px-3 py-2 text-artwork-foreground outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:px-4 lg:min-h-12 lg:min-w-22 lg:flex-row lg:gap-2 lg:px-4 compact-landscape:min-h-9 compact-landscape:min-w-16 compact-landscape:flex-row compact-landscape:gap-1 compact-landscape:px-3 compact-landscape:py-1"
     >
       <span
         aria-hidden="true"
@@ -61,7 +65,6 @@ export function ResourceReadout({
         {available ? fullFormat.format(value) : "—"}
         {available && maximum !== undefined && `/${fullFormat.format(maximum)}`}
       </span>
-      <span className="sr-only">{description}</span>
-    </div>
+    </button>
   );
 }

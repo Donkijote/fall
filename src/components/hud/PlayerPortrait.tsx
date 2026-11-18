@@ -12,15 +12,17 @@ export function PlayerPortrait({
   fallback = <UserRound aria-hidden="true" />,
   className,
   highlighted = false,
+  attention = false,
 }: {
   avatarUrl?: string;
   fallbackAvatarUrl?: string;
   fallback?: ReactNode;
   className: string;
   highlighted?: boolean;
+  attention?: boolean;
 }) {
   const portrait = useRef<HTMLSpanElement>(null);
-  usePortraitTurnMotion(portrait, highlighted);
+  usePortraitTurnMotion(portrait, highlighted, !highlighted && attention);
 
   const [failedAvatar, setFailedAvatar] = useState<string>();
   const [failedFallback, setFailedFallback] = useState<string>();

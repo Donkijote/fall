@@ -171,9 +171,34 @@ body {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply cursor-default bg-background text-foreground select-none;
   }
   html {
     @apply font-sans;
+  }
+  :where(
+    a[href]:not([aria-disabled="true"]),
+    button:not(:disabled, [aria-disabled="true"]),
+    [role="button"]:not([aria-disabled="true"]),
+    summary
+  ) {
+    @apply cursor-pointer;
+  }
+  :where(
+    input:not(:disabled):not(
+        [type="checkbox"],
+        [type="radio"],
+        [type="range"],
+        [type="button"],
+        [type="submit"],
+        [type="reset"],
+        [type="color"],
+        [type="file"],
+        [type="image"]
+      ),
+    textarea:not(:disabled),
+    [contenteditable]:not([contenteditable="false"])
+  ) {
+    @apply cursor-text select-text;
   }
 }

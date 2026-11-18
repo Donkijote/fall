@@ -1,6 +1,6 @@
 import { Icon } from "../icons/Icon";
 import "./PlayerIdentity.css";
-import { PlayerPortrait } from "./PlayerPortrait";
+import { ProfileButton } from "./ProfileButton";
 
 const formatExperience = new Intl.NumberFormat();
 
@@ -11,6 +11,7 @@ export type PlayerIdentityProps = {
   levelCrestUrl?: string;
   level?: number;
   experience?: { value: number; maximum: number };
+  onProfileClick?: () => void;
 };
 
 export function PlayerIdentity({
@@ -20,6 +21,7 @@ export function PlayerIdentity({
   levelCrestUrl,
   level,
   experience,
+  onProfileClick,
 }: PlayerIdentityProps) {
   const hasLevel = level !== undefined && Number.isInteger(level) && level > 0;
   const hasExperience =
@@ -36,10 +38,10 @@ export function PlayerIdentity({
       role="group"
       aria-label="Player identity"
     >
-      <PlayerPortrait
+      <ProfileButton
         avatarUrl={avatarUrl}
         fallbackAvatarUrl={fallbackAvatarUrl}
-        className="w-(--player-portrait-width)"
+        onClick={onProfileClick}
       />
       <span className="game-player-copy relative grid w-full max-w-40 min-w-0 gap-0.5 portrait:max-w-[17ch]">
         <span className="flex min-w-0 items-center gap-1">

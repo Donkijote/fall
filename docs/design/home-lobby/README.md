@@ -73,3 +73,12 @@ intrinsic minimum width. It keeps the title centered when there is room, allowin
 the player column to yield space on narrower phones. Reviewed at 568×320,
 667×375 and 844×390: title-to-resource clearance is at least 24px, with no
 horizontal overflow. Portrait and non-compact desktop spacing are unchanged.
+
+HUD resources and the profile portrait are now native action-ready buttons.
+Resource glints travel around their bevels only on hover or keyboard focus,
+pause at the exit position and resume the same lap. Profile attention orbits
+its glint without adding a turn rim. Reduced motion retains static shine. The
+optional action callbacks are reserved for future resource/profile features.
+Static interface text uses an arrow cursor without selection; actual editable
+fields retain text cursors and selection. The additional-animation audit lives
+in the shared [component motion notes](../../../src/components/README.md).

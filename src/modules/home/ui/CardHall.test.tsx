@@ -161,7 +161,7 @@ test("displays supplied progression and resource amounts in the HUD", () => {
   const hud = within(screen.getByRole("banner", { name: "Player HUD" }));
   expect(hud.getByText("Level 3")).toBeVisible();
   expect(hud.getByRole("meter", { name: "Experience" })).toHaveAttribute("aria-valuemax", "50");
-  expect(hud.getByRole("group", { name: "Energy" })).toHaveTextContent("5/10");
-  expect(hud.getByRole("group", { name: "Coins" })).toHaveTextContent("42");
-  expect(hud.getByRole("group", { name: "Diamonds" })).toHaveTextContent("0");
+  expect(hud.getByRole("button", { name: "Energy: 5 of 10" })).toHaveTextContent("5/10");
+  expect(hud.getByRole("button", { name: "Coins: 42" })).toHaveTextContent("42");
+  expect(hud.getByRole("button", { name: "Diamonds: 0" })).toHaveTextContent("0");
 });

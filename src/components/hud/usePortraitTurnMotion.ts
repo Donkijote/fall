@@ -20,6 +20,7 @@ const idleClip = "linear-gradient(black, black)";
 export function usePortraitTurnMotion(
   portrait: RefObject<HTMLElement | null>,
   highlighted: boolean,
+  attention = false,
 ) {
   const reducedMotion = useReducedMotion();
   const animation = useRef<gsap.core.Timeline | null>(null);
@@ -35,7 +36,7 @@ export function usePortraitTurnMotion(
           [origin]: "0deg",
           [sweep]: highlighted ? "360deg" : "0deg",
           [head]: "0deg",
-          [light]: highlighted ? 0.95 : 0,
+          [light]: highlighted || attention ? 0.95 : 0,
           [clip]: highlighted ? rimClip : idleClip,
         });
         release.current = null;
@@ -49,6 +50,18 @@ export function usePortraitTurnMotion(
       const currentHead = read(head);
       const timeline = gsap.timeline();
       animation.current = timeline;
+
+      if (attention && currentSweep === 0) {
+        gsap.set(element, { [clip]: idleClip });
+        timeline
+          .to(element, { [light]: 0.95, duration: 0.18 }, 0)
+          .to(
+            element,
+            { [head]: `${currentHead + 360}deg`, duration: 1.9, repeat: -1, ease: "none" },
+            0,
+          );
+        return;
+      }
 
       if (highlighted) {
         gsap.set(element, { [clip]: rimClip });
@@ -90,6 +103,10 @@ export function usePortraitTurnMotion(
       }
 
       let releaseDuration = 0;
+      if (currentSweep === 0 && read(light) > 0) {
+        releaseDuration = 0.18;
+        timeline.to(element, { [light]: 0, duration: releaseDuration });
+      }
       if (currentSweep > 0) {
         gsap.set(element, { [clip]: rimClip });
         if (currentSweep >= 359.9 || release.current?.kind === "wipe") {
@@ -156,6 +173,6 @@ export function usePortraitTurnMotion(
         .to(element, { [light]: 0, duration: 1.15, ease: "sine.in" }, 0.65);
       timeline.add(idle, releaseDuration);
     },
-    { dependencies: [highlighted, reducedMotion], scope: portrait },
+    { dependencies: [highlighted, reducedMotion, attention], scope: portrait },
   );
 }

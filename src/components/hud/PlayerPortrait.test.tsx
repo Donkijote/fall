@@ -150,3 +150,29 @@ test("clips the glint to the live rim until the exit is completely dark", () => 
   unmount();
   expect(gsap.getTweensOf(portrait)).toHaveLength(0);
 });
+
+test("profile attention orbits only the glint and releases it without a turn rim", () => {
+  const { container, rerender, unmount } = render(<PlayerPortrait className="size-12" attention />);
+  const portrait = container.firstElementChild as HTMLElement;
+  const orbit = gsap
+    .getTweensOf(portrait)
+    .find((tween) => "--portrait-glint-angle" in tween.vars && tween.repeat() === -1)!;
+  act(() => {
+    (orbit.parent as gsap.core.Timeline).time(0.5);
+  });
+  const head = value(portrait, "glint-angle");
+  expect(head).toBeGreaterThan(0);
+  expect(value(portrait, "turn-sweep")).toBe(0);
+  rerender(<PlayerPortrait className="size-12" />);
+  expect(value(portrait, "glint-angle")).toBe(head);
+  const fade = gsap
+    .getTweensOf(portrait)
+    .find((tween) => "--portrait-glint" in tween.vars && tween.duration() === 0.18)!;
+  act(() => {
+    fade.progress(1);
+  });
+  expect(value(portrait, "glint")).toBe(0);
+  expect(value(portrait, "turn-sweep")).toBe(0);
+  unmount();
+  expect(gsap.getTweensOf(portrait)).toHaveLength(0);
+});
