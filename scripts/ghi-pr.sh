@@ -13,7 +13,8 @@ set -euo pipefail
 #   - Creates/switches to branch: <kind>/ghi#<issue>
 #   - Pushes branch if remote doesn't exist
 #   - Creates draft PR: "[GHI#<issue>] <issue title>" → <base>
-#   - PR inherits issue labels and auto-closes it on merge
+#   - PR inherits issue labels and is assigned to its creator
+#   - Closes the issue on merge when the base is the default branch
 
 ghi-pr() {
 
@@ -45,9 +46,9 @@ ghi-pr() {
   title="$(gh issue view "$issue" --json title --jq .title)"
   body="$(gh issue view "$issue"  --json body  --jq .body)"
 
-  # Collect labels, find first kind/* label
+  # Collect labels and require one unambiguous branch type.
   # Bash 3.2-compatible label collection
-  labels=()
+  local labels=() labels_output l
   labels_output="$(gh issue view "$issue" --json labels --jq '.labels[].name' || true)"
   while IFS= read -r l; do
     [[ -n "$l" ]] && labels+=("$l")
@@ -56,14 +57,26 @@ ghi-pr() {
   local kind_label="" kind_prefix=""
 
   for l in "${labels[@]:-}"; do
-    if [[ "$l" == kind/* ]]; then kind_label="$l"; break; fi
+    if [[ "$l" == kind/* ]]; then
+      if [[ -n "$kind_label" ]]; then
+        echo "Multiple kind/* labels found; resolve the issue type first." >&2
+        return 2
+      fi
+      kind_label="$l"
+    fi
   done
 
   if [[ -z "$kind_label" ]]; then
-    echo "No kind/* label found — using 'chore' as branch prefix."
-    kind_prefix="chore"
-  else
-    kind_prefix="${kind_label#kind/}" # 'kind/feature' → 'feature'
+    echo "Missing kind/* label; set the issue type before creating a branch." >&2
+    return 2
+  fi
+  kind_prefix="${kind_label#kind/}" # 'kind/feature' → 'feature'
+
+  local creator default_branch
+  creator="$(gh api user --jq .login)"
+  default_branch="$(gh repo view --json defaultBranchRef --jq .defaultBranchRef.name)"
+  if [[ "$base" != "$default_branch" ]]; then
+    echo "Note: Closes #${issue} only auto-closes on merge into ${default_branch}, not ${base}." >&2
   fi
 
   local branch="${kind_prefix}/ghi#${issue}"
@@ -101,13 +114,21 @@ ghi-pr() {
   local pr_title="[GHI#$issue] $title"
   echo "🚀 Creating DRAFT PR: \"$pr_title\" ($branch → $base)"
 
+  local body_file create_status=0
+  body_file="$(mktemp)"
+  printf '%s\n\nCloses #%s\n' "$body" "$issue" > "$body_file"
   gh pr create \
     --draft \
     --title "$pr_title" \
-    --body "$body"$'\n\n'"Closes #$issue" \
+    --body-file "$body_file" \
+    --assignee "$creator" \
     --base "$base" \
     --head "$branch" \
-    "${label_flags[@]}"
+    "${label_flags[@]}" || create_status=$?
+  rm -f "$body_file"
+  if [[ "$create_status" -ne 0 ]]; then
+    return "$create_status"
+  fi
 
   echo "Done! Branch '$branch' and draft PR created."
 }

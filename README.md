@@ -33,6 +33,24 @@ Use `pnpm lint` to check code with Oxlint and `pnpm lint:fix` to apply safe fixe
 
 Linting and formatting use Vite Plus defaults. The `lint` block in `vite.config.ts` adds browser globals; TypeScript checking runs as part of `pnpm build`. The `fmt` block preserves the custom Tailwind class sorting (using `src/index.css`) and import groups with blank-line separation: unscoped packages and Node built-ins, `@react/*`, `@/*` project aliases, other scoped packages, then relative imports. All other formatting options use the toolchain defaults, including the 100-column print width. Side-effect imports retain their default ordering behavior.
 
+### Git workflow
+
+Issue branches follow the issue's single `kind/*` label: for example,
+`kind/feature` → `feature/ghi#105`, or `kind/bugfix` → `bugfix/ghi#109`.
+Resolve missing or conflicting type labels before creating a branch.
+
+Use `bash scripts/ghi-pr.sh <issue-number>` to create the branch and draft PR.
+The PR targets `develop`, uses `[GHI#<issue>] <issue title>`, is assigned to
+its creator, and inherits the issue's labels, including its `kind/*` type.
+Apply the same conventions when creating or updating PRs manually.
+
+Include `Closes #<issue>` in the PR body for each issue the change fully resolves.
+`Refs #<issue>` links a reference without closing it and is appropriate for
+partial work. GitHub closes linked issues when the PR merges into the default
+branch, currently `develop`; closing keywords are ignored for other targets.
+Verify the target, assignee, labels and closing lines before handing off a PR.
+See [GitHub's issue linking rules](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue).
+
 ### Theme colours
 
 Use the existing shadcn tokens for surfaces, text, actions, borders, inputs, and

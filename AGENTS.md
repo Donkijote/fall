@@ -54,6 +54,24 @@
 - The user already runs the app on port 3000. Reuse it; do not start another server.
 - Preserve manual edits and deletions. Do not commit or push without a request.
 
+# Git workflow
+
+- Derive issue branches from the issue's `kind/*` label: `kind/feature` becomes
+  `feature/ghi#105`, `kind/bugfix` becomes `bugfix/ghi#109`, and likewise for
+  other kinds. Require exactly one type label; resolve missing or conflicting
+  kinds before creating the branch. This issue-based pattern takes precedence
+  over a generic branch prefix.
+- Create draft PRs against `develop`, titled `[GHI#<issue>] <issue title>`.
+  Assign the PR to its creator and copy the issue's labels, including the same
+  `kind/*` type label. Preserve these fields when updating an existing PR.
+- Include `Closes #<issue>` in the PR body for every issue fully resolved by
+  the PR. `Refs #<issue>` alone does not close it. Use references for partial
+  work that should leave an issue open.
+- Confirm the target is the repository's default branch (currently `develop`)
+  when automatic closure is intended; GitHub ignores closing keywords for
+  other targets. Verify the assignee, labels and closing lines after creation
+  or editing. Use `scripts/ghi-pr.sh` for the issue-to-draft workflow.
+
 # Project licensing
 
 - Fall is a proprietary, closed-source commercial game. Keep the root LICENSE,
