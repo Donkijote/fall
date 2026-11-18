@@ -146,7 +146,9 @@ disclosures retain pointer feedback; slider thumbs retain their grab cursor.
 
 `MotionDialog` pairs with `ModalContent`, and `MotionPopover` pairs with
 `PopoverPanel`. These roots use a 320ms entry and defer Base UI unmounting for a 260ms GSAP exit,
-including controlled closes, and cancel that exit when reopened. Native focus,
+including controlled closes, and cancel that exit when reopened. The shared
+backdrop and popover unconditionally override inherited primitive CSS animation
+and transition utilities, keeping GSAP the sole fade owner in every state. Native focus,
 Escape and outside dismissal remain owned by Base UI. Tavern travel keeps its
 existing orchestration. Keep surface children mounted through closing.
 

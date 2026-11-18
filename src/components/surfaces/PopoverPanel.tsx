@@ -19,11 +19,7 @@ export function PopoverPanel({ className, ref, ...props }: ComponentProps<typeof
     <PopoverContent
       {...props}
       ref={setPopup}
-      className={cn(
-        popoverSurfaceClassName,
-        "transition-none data-open:animate-none data-closed:animate-none",
-        className,
-      )}
+      className={cn(popoverSurfaceClassName, "animate-none! transition-none!", className)}
     />
   );
 }

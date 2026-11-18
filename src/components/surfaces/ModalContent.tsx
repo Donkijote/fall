@@ -29,7 +29,7 @@ export function ModalContent({
 
   return (
     <DialogPortal>
-      <DialogOverlay ref={setOverlay} className="data-open:animate-none data-closed:animate-none" />
+      <DialogOverlay ref={setOverlay} className="animate-none! transition-none!" />
       <DialogPrimitive.Popup
         ref={setPopup}
         data-slot="dialog-content"
