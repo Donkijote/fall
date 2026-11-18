@@ -9,7 +9,11 @@ import { toCardKey } from "@/domain/helpers/card";
 import { useGSAP } from "@gsap/react";
 
 import { localPlayerId, playMatchCard, type MatchFrame } from "../../../application/localMatch";
-import { getMatchSeats, simulatedGuests } from "../../../application/matchSeats";
+import {
+  getActiveSeatPlayer,
+  getMatchSeats,
+  simulatedGuests,
+} from "../../../application/matchSeats";
 import { MatchMotionLayer } from "../flow/MatchMotionLayer";
 import { MatchResult } from "../overlays/MatchResult";
 import { MatchSeatCards, MatchTableCards } from "./MatchBoardCards";
@@ -47,6 +51,7 @@ export function PlayableBoard({
   const restoreHandFocus = useRef(false);
   const { state, motion } = frame;
   const seats = getMatchSeats(mode);
+  const activePlayer = getActiveSeatPlayer(frame);
   const landing =
     motion?.kind === "play"
       ? state.players
@@ -120,11 +125,7 @@ export function PlayableBoard({
                   position={position}
                   player={index === 0 ? player : simulatedGuests[index - 1]}
                   reducedMotion
-                  active={
-                    state.phase === "dealerChoice"
-                      ? seat.id === state.dealer
-                      : state.phase === "play" && seat.id === state.currentPlayer
-                  }
+                  active={seat.id === activePlayer}
                   dealer={seat.id === state.dealer}
                   scoreSide={String(seat.team)}
                 >

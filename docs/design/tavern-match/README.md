@@ -207,3 +207,8 @@ than disappearing with an unmounted image. It does not bob continuously or move
 the seat, nameplate or portrait artwork. Reduced motion keeps immediate active
 ring and arrow states. The live MatchSeatMarker gallery preview includes a Pass
 turn control to compare both players and interrupt handoffs.
+
+During card-deal playback, including the table/hand deal after dealer selection,
+the dealer keeps the active ring and arrow until the deal completes. The next
+player's turn begins at the completed frame. Partial ring arcs use soft gradient
+edges for both arrival and release rather than a sharp radial cutoff.

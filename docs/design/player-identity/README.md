@@ -33,3 +33,8 @@ The gallery's portrait toggle and MatchSeatMarker's Pass turn control render the
 real components, including two occupied seats for repeated handoffs. Focused
 checks cover draw/head alignment, orbital release, interrupted draw/wipe reversal,
 reactivation after a completed exit, reduced motion and cleanup.
+
+The draw/wipe mask feathers both ends of its partial arc over up to 18 degrees,
+and the orbiting glint fades across its leading edge. Feather width collapses at
+zero and 360 degrees so inactive rings disappear cleanly and complete active
+rings have no dim seam. These static gradients follow the existing GSAP angles.

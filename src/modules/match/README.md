@@ -127,3 +127,10 @@ immediately, and decorative arrow/ring artwork remains outside the accessibility
 `PlayerPortrait.test.tsx` covers arc/head alignment and ring lifecycle. The module
 gallery's seat preview has a Pass turn control for exercising both occupied seats
 and retains an open-seat example.
+
+The application seat model's `getActiveSeatPlayer` keeps the dealing frame's
+dealer highlighted until motion completion, then derives the next active player
+from the completed play frame. This is presentation ownership only: it does not
+change domain turn order or enable card input during a deal. `matchSeats.test.ts`
+covers the deal-to-play handoff in every mode and both deal orders, including a
+playable destination state while deal playback still owns the indicator.
