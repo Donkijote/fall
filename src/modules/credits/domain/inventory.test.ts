@@ -25,7 +25,7 @@ test("every runtime asset has an inventory owner, including unresolved provenanc
   }
 });
 
-test("retains the existing icon credits, full font notices and project MIT notice", () => {
+test("retains third-party notices separately from the proprietary project notice", () => {
   expect(creditsInventory.icons.map((entry) => entry.creator)).toEqual([
     "Lorc",
     "Delapouite",
@@ -38,6 +38,8 @@ test("retains the existing icon credits, full font notices and project MIT notic
     expect(font.notice).toContain("DISCLAIMER");
   }
   expect(creditsInventory.project.notice).toBe(readFileSync(resolve("LICENSE"), "utf8"));
+  expect(creditsInventory.project.license).toBe("Proprietary · All rights reserved");
+  expect(creditsInventory.project.notice).not.toContain("Permission is hereby granted");
 });
 
 test("records pending deck permission and the identified Pixabay sound sources", () => {

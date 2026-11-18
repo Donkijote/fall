@@ -54,6 +54,16 @@
 - The user already runs the app on port 3000. Reuse it; do not start another server.
 - Preserve manual edits and deletions. Do not commit or push without a request.
 
+# Project licensing
+
+- Fall is a proprietary, closed-source commercial game. Keep the root LICENSE,
+  package metadata and the game notice consistent with that intent. Do not
+  label project-owned code or generated artwork MIT/open source by default.
+- Preserve third-party license and attribution notices separately; the game's
+  proprietary notice does not override them. Do not claim that changing the
+  current notice revokes rights validly granted for earlier versions. Repository
+  visibility changes require a separate user instruction.
+
 # Asset attribution
 
 - When the user supplies downloaded assets, ask where they found them unless

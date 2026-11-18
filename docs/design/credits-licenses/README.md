@@ -4,18 +4,18 @@ Tracking [issue #105](https://github.com/Donkijote/fall/issues/105).
 
 ## Review status
 
-Design locked on 2026-11-17. The user approved the [continuous Chronicle mockup](mockup-simplified.png) with one behavior correction: **only the content scrolls**, inside a fixed viewport. The Hall backdrop and Settings return action stay stationary. There are no menus, submenus, or page scrolling. The [prompt manifest](prompts.json) preserves a reconstructed brief and the final correction.
+Design locked on 2026-11-17. The user approved the [continuous Chronicle mockup](mockup-simplified.png) with one behavior correction: **only the content scrolls**, inside a fixed viewport. The backdrop and Settings return action stay stationary. There are no menus, submenus, or page scrolling. The [prompt manifest](prompts.json) preserves a reconstructed brief and the final correction.
 
-The implementation lives in [the Credits module](../../../src/modules/credits/README.md). Runtime art reuses the canonical [Card Hall exports](../../../src/assets/lobby/card-hall/README.md); the mockup is never imported by the app. No separate background master or detailed treatment is needed.
+The implementation lives in [the Credits module](../../../src/modules/credits/README.md). The original mockup remains a composition reference; the live screen now uses the [Credits atelier background](background.png), dedicated phone/tablet exports under `src/assets/credits`, a softer reading wash, and the proprietary project notice. The mockup is never imported by the app.
 
 ## Approved direction and references
 
 Use the [shared art direction](../art-direction.md),
 [Settings composition](../settings/README.md), and
-[Card Hall backdrop](../home-lobby/README.md). Reuse that backdrop and the
+[Card Hall backdrop](../home-lobby/README.md) as a palette reference. Reuse the
 shared ActionButton, BronzeArrow dividers, semantic theme tokens, and Cinzel
 Regular titles. The selected direction is a fixed-viewport screen without a modal frame.
-No new background master is proposed.
+The 2026-11-18 background revision uses a dedicated illuminator’s atelier while preserving the Card Hall palette and materials.
 
 The local sibling folder `../../../../inspirations/credits` contains supplied
 reference screenshots from Armello, GWENT, Legends of Runeterra, Anno 1800,
@@ -30,7 +30,7 @@ and Frostpunk. These are investigation references, not runtime assets.
   an opaque semantic surface so they remain readable.
 
 The Chronicle opens from Settings as one fixed-viewport screen over the subdued
-Hall. Only its content region scrolls manually. Keep a persistent Settings return action using
+atelier. Only its content region scrolls manually. Keep a persistent Settings return action using
 the shared ActionButton design. There are no category menus, tabs, submenus,
 accordions, or nested scroll panels. One keyboard-focusable content region owns scrolling.
 The user's request for an "infinite scroll list" means all sections appear in
@@ -59,7 +59,7 @@ statement that all shipped notices have been accounted for.
 
 | Group                         | Existing evidence                                                                                                                                                                                                                                     | Remaining work                                                                                                                                                                           |
 | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Fall software                 | Root [MIT license](../../../LICENSE), copyright 2025 Donkijote                                                                                                                                                                                        | Preserve the complete project notice; distinguish software licensing from asset licensing.                                                                                               |
+| Fall software                 | Root [proprietary notice](../../../LICENSE), copyright 2025–2026 Donkijote                                                                                                                                                                            | Keep the proprietary project notice separate from third-party licenses and respect valid grants for prior versions.                                                                      |
 | Game-icons silhouettes        | [Card Hall](../../../src/assets/lobby/card-hall/icons/README.md), [login and emblem](../../../src/assets/login/icons/README.md), [game glyphs](../../../src/assets/icons/README.md), [wooden chair](../../../src/assets/lobby/tavern-match/README.md) | Consolidate each included icon, creator, source, CC BY 3.0 notice, and recoloring/masking modifications. Preserve Lorc, Delapouite, Faithtoken, Sbed, and Skoll credits.                 |
 | Project geometry              | Card Hall documents Help and Log out as project-drawn                                                                                                                                                                                                 | Record separately from third-party icons; retain the existing Help notice.                                                                                                               |
 | Typography                    | `src/index.css` imports Cinzel and Spline Sans through Google Fonts                                                                                                                                                                                   | Verify upstream creators, exact license and copyright notices; retain complete applicable texts.                                                                                         |
@@ -99,9 +99,9 @@ must use GSAP and respect reduced motion.
   favor of one continuous scrolling list.
 - The revision must use the existing shared component designs, including the
   actual ActionButton skin and bronze divider artwork.
-- Final behavior correction: content scrolling only, fixed Hall and return action.
+- Final behavior correction: content scrolling only, fixed backdrop and return action.
 - Initial implementation includes structured attribution, complete retained font/project notices, and generated production dependency notices. Asset sources and missing upstream package notices remain explicit audit follow-ups.
-- The user will check the undocumented deck and sound origins later. Browser visual review is pending because the Mac is locked and the user is away.
+- Sound sources were subsequently identified, deck replacement is tracked in #132, and the 2026-11-18 atelier revision was visually checked on desktop, phone and tablet.
 
 - Software notices now follow the actual production JavaScript build, including lazy chunks, plus reviewed CSS imports. Installed-only dependencies are excluded. Fonts, artwork and sound provenance remain separate inventory responsibilities.
 
@@ -150,3 +150,33 @@ This records provenance and outstanding permission checks, not legal clearance.
   the artwork review/export standard. The replacement remains future work.
 
 - 2026-11-18: recorded the individual Pixabay card-sound sources and creator; removed the self-generated ember mock audio and its dedicated playground lesson. The visual ember SVG/effects are separate and retained.
+
+## 2026-11-18 licensing and backdrop revision
+
+The user confirmed Fall is a closed-source commercial game. The root LICENSE,
+package metadata, inventory and Legal notices now state proprietary / all rights
+reserved for project-owned materials, while retaining third-party notices.
+[OSI explains that commercial and proprietary are separate concepts](https://opensource.org/faq#commercial).
+The current notice explicitly preserves valid prior-version grants. The user
+chose to leave repository visibility public; it was not changed. No end-user
+purchase agreement or third-party ownership assignment has been invented.
+
+The new [atelier master](background.png) was generated with built-in ImageGen
+using the Hall and archive as palette/material references. Its blank ledger,
+quill, wax seal and bookcase suggest the makers' work; the quiet slate center
+supports the credits. Separate phone and tablet recompositions preserve the
+scene rather than cropping it out of mockups. The [prompt manifest](prompts.json)
+records the prompts, input references, known provider/date, unexposed model ID,
+and WebP exports. Runtime files preserve their native dimensions: landscape
+1672×941, tablet 1122×1402, phone 852×1846.
+
+The opaque narrow column is replaced by a 25% overall shadow wash and a soft
+radial reading gradient, strongest at the center and fading towards the edges.
+The viewport and return action remain fixed, with content-only scrolling.
+
+The live 2026-11-18 revision was checked at desktop 1280×720, phone 390×844
+and tablet 768×1024. The return action stayed fixed while the content scrolled,
+and the proprietary notice was checked at the end. Physical-device notch/PWA
+checks remain separate. The original full-content mockup is retained only for
+its approved composition; this revision’s background master and live code own
+the updated artwork, reading treatment and legal copy.

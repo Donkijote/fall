@@ -2,6 +2,7 @@
   "name": "fall",
   "version": "0.2.0",
   "private": true,
+  "license": "UNLICENSED",
   "type": "module",
   "scripts": {
     "credits:notices": "node scripts/credits-notices.mjs",

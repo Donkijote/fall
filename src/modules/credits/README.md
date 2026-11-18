@@ -27,14 +27,28 @@ link. Direct entry is public and requires no player session.
 - `ui/CreditsScreen.tsx` composes the inventory, sections and routing integration.
   Supporting content and scenery live under `ui/components`. There is no
   application service or port because this static inventory needs neither.
-- The viewport and Hall are stationary. One focusable `Credits content` region
+- The viewport and atelier are stationary. One focusable `Credits content` region
   owns scrolling. The return action is outside it. No tabs, nested scrollers,
   accordions or section menus are used. Native scrolling supports reduced
   motion; shared components retain their existing GSAP behavior.
 
-The screen reuses ActionButton, BronzeArrow, Icon and the existing responsive
-Card Hall assets. No generated primitives, global palette or radius tokens were
+The screen reuses ActionButton, BronzeArrow, Icon and the dedicated responsive
+Credits atelier assets. No generated primitives, global palette or radius tokens were
 modified. Typography follows Cinzel Regular titles and Spline Sans reading text.
+The root LICENSE now reserves rights in project-owned code and original game
+materials, matching the user's closed-source commercial intent. The screen
+shows that proprietary notice under Legal notices and retains font, icon and
+software notices under their own terms. `package.json` uses `UNLICENSED` and
+remains private for package publication. This change does not revoke valid
+prior-version grants, establish third-party permissions, or supply future store
+purchase/player terms. Repository visibility stays public by the user's choice;
+licensing and access are separate settings.
+
+`CreditsBackdrop` uses standalone landscape/tablet/phone atelier exports under
+`src/assets/credits`, a 25% overall artwork-shadow wash and a broad, soft radial
+reading gradient. There is no opaque vertical reading panel. The new artwork
+has its own inventory entry and recorded prompts, date, references and exports.
+
 The [approved design](../../../docs/design/credits-licenses/README.md) records
 the fixed-viewport correction and links the canonical background.
 
@@ -44,7 +58,7 @@ the fixed-viewport correction and links the canonical background.
    group name, creator, source URL, license and license URL, required notice,
    modifications, provenance kind and evidence. `files` contains repo-relative
    glob patterns for the covered exports. Do not treat generated provenance as
-   a third-party license or assume the code's MIT license covers supplied art.
+   a third-party license or assume the proprietary project notice covers supplied art.
 2. Preserve any required full license/copyright text under `domain/notices`
    and import it into the entry. Keep the source URL and retrieval evidence.
    The screen renders entries directly; never add another independent UI list.
@@ -124,10 +138,12 @@ unit tests live beside `scripts/credits-notices.mjs` and use the Node environmen
 feature tests remain colocated inside the module. Full repository tests, `pnpm check`,
 `pnpm credits:notices:check` and `pnpm build` are the completion checks.
 
-Manual desktop/mobile, light/dark, safe-area and short-viewport visual checks
-remain pending: computer use reported a locked Mac and no browser, and the user
-confirmed they are away. No second server was started; use the existing app on
-port 3000 for that review.
+Visual review on 2026-11-18 used the existing app on port 3000 at desktop
+1280×720, phone 390×844 and tablet 768×1024. Confirmed readable artwork, no hard
+vertical panel, a fixed return action, content-only scrolling and no horizontal
+overflow at the checked tablet size. The proprietary notice was inspected at
+the end of the content. Actual notched-device safe areas and installed-PWA
+presentation still need physical-device review. No second server was started.
 
 Automated verification on 2026-11-18: all 315 repository tests passed; formatting,
 lint, notice freshness and production build passed. The build retains its bundle

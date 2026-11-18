@@ -1,5 +1,12 @@
 # 🎴 Fall* — Rules Specification
 
+Fall is a proprietary, closed-source game intended for commercial distribution.
+Project-owned code and original materials are reserved under the root [LICENSE](LICENSE).
+Third-party components and assets retain their own licenses and attribution
+requirements. This notice does not revoke rights validly granted for earlier
+versions under a different license. Repository visibility is a separate setting;
+the user chose to keep its current visibility on 2026-11-18.
+
 ## Development
 
 Use Node **26.12.1** (`nvm use`) and pnpm **12.15.0**, as pinned in `.nvmrc` and `package.json`. CI reads the same version pins.

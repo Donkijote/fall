@@ -21,7 +21,7 @@ test("renders every section in one keyboard-scrollable content region with a fix
     "Artwork & sound",
     "Icons",
     "Typography",
-    "Open-source software",
+    "Third-party software",
     "Legal notices",
   ]) {
     expect(content).toContainElement(screen.getByRole("heading", { name }));
@@ -34,8 +34,11 @@ test("renders every section in one keyboard-scrollable content region with a fix
   ).toBeInTheDocument();
   expect(
     within(screen.getByRole("region", { name: "Legal notices" })).getByText(
-      /THE SOFTWARE IS PROVIDED "AS IS"/,
+      /Fall is a proprietary game/,
     ),
+  ).toBeInTheDocument();
+  expect(
+    screen.getByRole("heading", { name: "Fall · Proprietary · All rights reserved" }),
   ).toBeInTheDocument();
 });
 

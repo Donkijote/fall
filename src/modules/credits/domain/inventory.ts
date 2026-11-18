@@ -12,6 +12,7 @@ const evidencePages: Record<string, string> = {
   archive: "docs/design/how-to-play/prompts.json",
   sings: "docs/design/sings-reference/prompts.json",
   controls: "src/components/README.md",
+  credits: "docs/design/credits-licenses/prompts.json",
   login: "docs/design/login/prompts.json",
   cards: "src/assets/cards",
   geometry: "src/assets/lobby/card-hall/icons/README.md",
@@ -106,6 +107,16 @@ type ArtworkRecord = Pick<Attribution, "id" | "name" | "files" | "evidence" | "p
   Partial<Attribution>;
 
 const artworkRecords: ArtworkRecord[] = [
+  {
+    id: "credits",
+    name: "Credits atelier",
+    files: ["src/assets/credits/*.webp"],
+    provenance: "generated",
+    creator: "Generated with OpenAI ImageGen for Fall",
+    evidence:
+      "Generated 2026-11-18 with built-in ImageGen. The Card Hall and rulebook archive were palette/material references; the atelier landscape and dedicated phone/tablet recompositions were generated as standalone backgrounds. Provider model ID is not exposed by the tool. Prompts and exports: docs/design/credits-licenses/prompts.json.",
+    modifications: "Prepared as standalone landscape, tablet and phone backgrounds.",
+  },
   {
     id: "hall",
     name: "Card Hall paintings and Traveller portrait",
@@ -261,7 +272,7 @@ export const creditsInventory = {
     name: "Fall",
     creator: "Donkijote",
     source: "https://github.com/Donkijote/fall",
-    license: "MIT License",
+    license: "Proprietary · All rights reserved",
     notice: projectLicense,
   },
   artwork: artworkAttributions,

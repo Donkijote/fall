@@ -77,15 +77,15 @@ export function CreditsScreen() {
           <CreditSection title="Typography">
             <CreditEntries entries={creditsInventory.fonts} fullNotices />
           </CreditSection>
-          <CreditSection title="Open-source software">
+          <CreditSection title="Third-party software">
             <SoftwareCredits />
           </CreditSection>
           <CreditSection title="Legal notices">
-            <h3 className="text-xl font-normal">Fall software · MIT License</h3>
+            <h3 className="text-xl font-normal">Fall · {creditsInventory.project.license}</h3>
             <NoticeText>{creditsInventory.project.notice}</NoticeText>
             <p className="mt-6 text-sm leading-relaxed">
-              The software license applies to the project code. Third-party assets and dependencies
-              retain their respective terms, listed above.
+              Fall is a closed-source commercial game. Third-party components and assets retain
+              their respective licences and notices, listed above.
             </p>
           </CreditSection>
           <BronzeArrow tone="faded" className="mx-auto h-0.5 w-full" />
