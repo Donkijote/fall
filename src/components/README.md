@@ -151,8 +151,12 @@ Escape and outside dismissal remain owned by Base UI. Tavern travel keeps its
 existing orchestration. Keep surface children mounted through closing.
 
 `ResourceReadout` briefly brightens changed amounts without delaying accessible
-values. `PlayerIdentity` settles changed XP over 300ms, resets the fill on a level
-change, and lights the crest once on level-up. Neither replays on an unchanged
+values. `PlayerIdentity` delegates XP to `ExperienceMeter`: gains advance over 750ms,
+with a bounded set of sparks emitted from the live leading edge. Level-up fills
+the old bar over 450ms before progressing from zero in the next level; interrupted
+gains continue from their displayed position. Accessible values update immediately.
+The crest lights once on level-up. Hovering the identity copy or portrait brightens
+the brass rim and nameplate; keyboard profile focus receives the same shine. Neither replays on an unchanged
 render. Navigation extends the existing action reveal with one outer-frame light
 pass. `BronzeSlider` adds a 160ms decorative halo on committed changes; native
 values and callbacks remain immediate. All effects honor reduced motion.

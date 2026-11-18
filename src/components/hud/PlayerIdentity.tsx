@@ -1,5 +1,5 @@
 import gsap from "gsap";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 import { useReducedMotion } from "@/infrastructure/ui/hooks/useGamePreferences";
 
@@ -7,6 +7,7 @@ import { useGSAP } from "@gsap/react";
 
 import { Icon } from "../icons/Icon";
 import "./PlayerIdentity.css";
+import { ExperienceMeter } from "./ExperienceMeter";
 import { ProfileButton } from "./ProfileButton";
 
 const formatExperience = new Intl.NumberFormat();
@@ -39,64 +40,60 @@ export function PlayerIdentity({
     experience.value >= 0 &&
     experience.value <= experience.maximum;
 
-  const fill = useRef<HTMLSpanElement>(null);
   const crest = useRef<HTMLSpanElement>(null);
-  const previous = useRef<{ level: number | undefined; percent?: number; ready: boolean }>({
-    level,
-    ready: false,
-  });
+  const identity = useRef<HTMLDivElement>(null);
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const previousLevel = useRef(level);
+  const attentionMotion = useRef<gsap.core.Tween | null>(null);
   const reduced = useReducedMotion();
-  const motion = useRef<gsap.core.Timeline | null>(null);
-  const percent = hasExperience ? (experience.value / experience.maximum) * 100 : undefined;
   useGSAP(
     () => {
-      motion.current?.kill();
-      const old = previous.current;
-      previous.current = { level, percent, ready: true };
-      const levelChanged = old.ready && old.level !== level;
-      const timeline = (motion.current = gsap.timeline());
-      if (reduced && crest.current) gsap.set(crest.current, { clearProps: "filter" });
-      if (fill.current && percent !== undefined) {
-        if (!old.ready || old.percent === undefined || reduced)
-          gsap.set(fill.current, { width: `${percent}%` });
-        else {
-          if (levelChanged) gsap.set(fill.current, { width: "0%" });
-          timeline.to(fill.current, { width: `${percent}%`, duration: 0.3, ease: "power2.out" }, 0);
-        }
-      }
-      if (
-        crest.current &&
-        levelChanged &&
-        hasLevel &&
-        old.level !== undefined &&
-        level > old.level &&
-        !reduced
-      ) {
-        timeline.fromTo(
-          crest.current,
-          { filter: "brightness(1.8)" },
-          {
-            filter: "brightness(1)",
-            duration: 0.35,
-            clearProps: "filter",
-          },
-          0,
-        );
-      }
-      return () => {
-        timeline.kill();
-      };
+      const old = previousLevel.current;
+      previousLevel.current = level;
+      if (!crest.current || reduced || old === undefined || !hasLevel || level <= old) return;
+      gsap.fromTo(
+        crest.current,
+        { filter: "brightness(1.8)" },
+        {
+          filter: "brightness(1)",
+          duration: 0.5,
+          clearProps: "filter",
+        },
+      );
     },
-    { dependencies: [percent, level, reduced] },
+    { dependencies: [level, reduced], revertOnUpdate: true },
+  );
+  useGSAP(
+    () => {
+      attentionMotion.current?.kill();
+      attentionMotion.current = gsap.to(identity.current, {
+        "--identity-attention": hovered || focused ? 1 : 0,
+        duration: reduced ? 0 : 0.18,
+        overwrite: "auto",
+      });
+    },
+    { dependencies: [hovered, focused, reduced] },
   );
 
   return (
     <div
+      ref={identity}
+      onPointerEnter={(event) => {
+        if (event.pointerType !== "touch") setHovered(true);
+      }}
+      onPointerLeave={() => setHovered(false)}
+      onPointerCancel={() => setHovered(false)}
+      onFocusCapture={(event) => setFocused(event.target.matches(":focus-visible"))}
+      onBlurCapture={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false);
+      }}
       className="game-player relative isolate flex min-w-0 items-center gap-(--player-gap) [--player-gap:0.375rem] [--player-portrait-width:clamp(44px,5vw,78px)] sm:[--player-gap:clamp(0.6rem,1vw,1rem)] portrait:[--player-portrait-width:2.75rem] compact-landscape:[--player-portrait-width:2.75rem]"
       role="group"
       aria-label="Player identity"
     >
       <ProfileButton
+        attention={hovered || focused}
         avatarUrl={avatarUrl}
         fallbackAvatarUrl={fallbackAvatarUrl}
         onClick={onProfileClick}
@@ -146,21 +143,11 @@ export function PlayerIdentity({
             </span>
           )}
         </span>
-        <span
-          className="h-1.5 w-full overflow-hidden rounded-full border border-gold/50 bg-artwork-shadow/75"
-          role={hasExperience ? "meter" : "img"}
-          aria-label={hasExperience ? "Experience" : "Experience unavailable"}
-          aria-valuemin={hasExperience ? 0 : undefined}
-          aria-valuemax={hasExperience ? experience.maximum : undefined}
-          aria-valuenow={hasExperience ? experience.value : undefined}
-        >
-          {hasExperience && (
-            <span
-              className="block h-full rounded-full bg-linear-to-r from-gold to-artwork-foreground"
-              ref={fill}
-            />
-          )}
-        </span>
+        <ExperienceMeter
+          value={hasExperience ? experience.value : undefined}
+          maximum={hasExperience ? experience.maximum : undefined}
+          level={level}
+        />
       </span>
     </div>
   );

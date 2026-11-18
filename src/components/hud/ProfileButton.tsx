@@ -6,10 +6,12 @@ export function ProfileButton({
   avatarUrl,
   fallbackAvatarUrl,
   onClick,
+  attention = false,
 }: {
   avatarUrl?: string;
   fallbackAvatarUrl?: string;
   onClick?: () => void;
+  attention?: boolean;
 }) {
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
@@ -30,7 +32,7 @@ export function ProfileButton({
       <PlayerPortrait
         avatarUrl={avatarUrl}
         fallbackAvatarUrl={fallbackAvatarUrl}
-        attention={hovered || focused}
+        attention={attention || hovered || focused}
         className="w-[var(--player-portrait-width,3rem)]"
       />
     </button>

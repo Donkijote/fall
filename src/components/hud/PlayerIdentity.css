@@ -19,3 +19,17 @@
     linear-gradient(to bottom, transparent, black 28%, black 72%, transparent);
   mask-composite: intersect;
 }
+
+.game-player-copy::after {
+  content: "";
+  position: absolute;
+  inset: -0.5rem;
+  z-index: -1;
+  pointer-events: none;
+  opacity: var(--identity-attention, 0);
+  background: radial-gradient(
+    ellipse,
+    color-mix(in oklch, var(--gold) 24%, transparent),
+    transparent 72%
+  );
+}

@@ -41,6 +41,10 @@
 
 .game-player-avatar::before {
   z-index: 1;
+  filter: brightness(calc(1 + var(--portrait-attention, 0) * 0.85))
+    drop-shadow(
+      0 0 3px color-mix(in oklch, var(--gold) calc(var(--portrait-attention, 0) * 65%), transparent)
+    );
 }
 
 .game-player-turn-ring {

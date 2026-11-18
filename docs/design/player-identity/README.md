@@ -45,3 +45,9 @@ feathered arc as the bright rim, preventing a detached highlight on an erased
 segment. The independent idle-reflection mask is restored only after the exit
 has zero sweep and zero glint opacity. A lifecycle regression check verifies
 that ordering, including a fresh activation after release.
+
+The shared identity hover/focus treatment brightens the full brass rim and adds a
+soft gold light behind the copy. `ExperienceMeter` owns progressive XP fills and
+sixteen bounded DOM sparks, emitted along the advancing edge with GSAP. On level-up,
+the previous bar finishes before the next level begins. Reduced motion sets the
+new fill immediately and suppresses sparks; accessibility values remain immediate.

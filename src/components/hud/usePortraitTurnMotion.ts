@@ -24,6 +24,7 @@ export function usePortraitTurnMotion(
 ) {
   const reducedMotion = useReducedMotion();
   const animation = useRef<gsap.core.Timeline | null>(null);
+  const attentionMotion = useRef<gsap.core.Tween | null>(null);
   const release = useRef<{ kind: "wipe" | "undraw"; start: number } | null>(null);
 
   useGSAP(
@@ -31,6 +32,12 @@ export function usePortraitTurnMotion(
       const element = portrait.current;
       if (!element) return;
       animation.current?.kill();
+      attentionMotion.current?.kill();
+      attentionMotion.current = gsap.to(element, {
+        "--portrait-attention": attention ? 1 : 0,
+        duration: reducedMotion ? 0 : 0.18,
+        overwrite: "auto",
+      });
       if (reducedMotion) {
         gsap.set(element, {
           [origin]: "0deg",
