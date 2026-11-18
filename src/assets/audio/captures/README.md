@@ -1,6 +1,7 @@
 # Capture sound audition exports
 
-These are edited user-supplied sounds for the animation playground phase of #125.
+These are edited user-supplied sounds approved in the animation playground and
+shared with live match playback for #125.
 Full originals remain in the supplied chat attachments; `edits.json` records their
 SHA-256 fingerprints, source URLs, authors, exact source intervals and edits.
 Credits & Licenses reads the corresponding entries in the credits inventory.
@@ -16,8 +17,8 @@ Credits & Licenses reads the corresponding entries in the credits inventory.
 | flame-impact.mp3       | 2.500–4.900 s   | Earth contact and rumble                            |
 
 Selection used decoded waveform RMS, transient timing, silence separation and peak
-measurements. This is an initial edit for human audition, not a claim of subjective
-listening approval. The shatter original decodes above full scale; attenuation is
+measurements. The user approved playground playback on 2026-11-18; live-match
+human audition remains pending. The shatter original decodes above full scale; attenuation is
 applied before encoding. All exports have fades and decoded peaks below 0.70.
 The adapter adds per-cue gain under the user's master volume. Movement has its
 own voice so freezing does not cancel it. At frozen contact, the ice clip plays
@@ -68,4 +69,4 @@ card hit. Its tail continues through following pickups.
 The wind and earth exports use mono 44.1 kHz MP3 at 160 kbit/s. Use the exact
 earth filter in `edits.json`, including the limiter's latency compensation.
 The manifest retains source fingerprints, URLs, verification and download-record
-gaps. Human audition remains pending.
+gaps. Live-match human audition remains pending.

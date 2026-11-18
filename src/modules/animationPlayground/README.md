@@ -4,14 +4,15 @@ Development-only card, deck and table studies. `ui/AnimationPlayground.tsx`
 composes experiment selection, replay and tuning. `application/lab.ts` owns study
 state and passes an audio port to renderers; it does not implement capture rules.
 `adapters/three` renders shared card poses/timelines and supplies contact markers.
-`adapters/audio/howlerAudio.ts` lazily creates an audition session in the Play
-user gesture, delegates preferences to the infrastructure audio adapters, and
+`adapters/audio/howlerAudio.ts` aliases the shared infrastructure
+`createMotionAudio` session used by the live match. The Play gesture lazily
+creates and unlocks the session. It delegates preferences to the audio adapters, and
 stops playback on reset, replay, tuning and tab changes, and disposes it on unmount.
 It creates no audio resources during render, including Strict Mode's extra render.
 
-## Capture audio audition (#125)
+## Approved capture audio (#125)
 
-The first supplied assets are used here before live-match adoption:
+The user-approved studies and the live match share these cues:
 
 - Card → Freeze card: short freeze texture when the frost starts forming.
 - Card → Shatter frozen card: freeze texture and movement, followed by shatter
@@ -20,8 +21,8 @@ The first supplied assets are used here before live-match adoption:
   lift, and shatter plus the quiet card hit at `impactAt`. The far player's initial ordinary play retains its own cue.
 - Table → Capture card: the original play-card sound at movement start, matching
   Play a card. It does not use the new Fall movement or contact cues.
-- Table → Cascade capture: the same short accent at each existing pickup contact;
-  its distinct final treatment remains under review with the remaining assets.
+- Table → Cascade capture: a movement/contact pair at each existing pickup;
+  the repeated rhythm distinguishes it from an ordinary single capture.
 - Table → Fall capture → Card drop: movement as the matching card leaves the
   hand, then a simple-capture accent on impact.
 - Card → Drop hot card and Table → Fall capture → Heat transfer: the 1.7-second
@@ -35,8 +36,8 @@ The first supplied assets are used here before live-match adoption:
 - Sweep has no new contact and receives no capture hit with the new audio port.
 
 Shared `appendCapture` opts into these cues only when the audio port supplies
-`playCapture`. The live match still supplies its original port during this
-playground-first phase. Ordinary deal, play and count clips remain separate.
+`playCapture`. Both the live match and playground now provide the same port.
+Ordinary deal, play and count clips remain separate.
 GSAP markers use the animation clock and obey timeline speed; clip pitch remains
 unchanged. Movement can overlap frost; an impact stops the previous impact
 layers. Flame stops its flight wind at contact and keeps a separate aftermath
@@ -45,8 +46,9 @@ voice so following cascade pickups do not cut off the rumble. Shatter and heat l
 
 Runtime exports and reproducible edits live in
 [`src/assets/audio/captures`](../../assets/audio/captures/README.md). The credits
-inventory records source verification gaps. No issue acceptance criterion is
-complete until live integration, fallback coverage and human audition are done.
+inventory records source verification and outstanding download-record gaps.
+Playground audio was approved by the user on 2026-11-18; live-match human
+audition is still pending.
 
 Verification: `lab.test.ts` checks state and capture intensity;
 `AnimationPlayground.test.tsx` covers replay and audio lifecycle;

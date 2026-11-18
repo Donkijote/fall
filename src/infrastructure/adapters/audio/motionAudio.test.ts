@@ -1,4 +1,4 @@
-import { createHowlerAudio } from "./howlerAudio";
+import { createMotionAudio } from "./motionAudio";
 
 const sessions = vi.hoisted(() => ({ cards: vi.fn(), captures: vi.fn() }));
 vi.mock("@/infrastructure/adapters/audio/cardAudio", () => ({ createCardAudio: sessions.cards }));
@@ -12,6 +12,8 @@ function sound() {
     playCapture: vi.fn(),
     unlock: vi.fn(),
     preload: vi.fn(),
+    preloadDeal: vi.fn(),
+    preloadPlay: vi.fn(),
     stop: vi.fn(),
     dispose: vi.fn(),
   };
@@ -19,7 +21,7 @@ function sound() {
 beforeEach(() => vi.clearAllMocks());
 
 it("creates no audio resources during render or Strict Mode's initial cleanup", () => {
-  const audio = createHowlerAudio();
+  const audio = createMotionAudio();
   audio.dispose();
   audio.playCapture("freeze");
   expect(sessions.cards).not.toHaveBeenCalled();
@@ -32,6 +34,11 @@ it("creates no audio resources during render or Strict Mode's initial cleanup", 
   audio.prepare();
   expect(sessions.cards).toHaveBeenCalledOnce();
   expect(sessions.captures).toHaveBeenCalledOnce();
+  expect(cards.preloadDeal).toHaveBeenCalledOnce();
+  expect(cards.preloadPlay).toHaveBeenCalledOnce();
+  expect(captures.preload).toHaveBeenCalledOnce();
+  expect(cards.unlock).toHaveBeenCalledTimes(2);
+  expect(captures.unlock).toHaveBeenCalledTimes(2);
   audio.playCapture("shatter");
   expect(captures.playCapture).toHaveBeenCalledExactlyOnceWith("shatter");
   audio.dispose();
@@ -42,7 +49,7 @@ it("stops both buses and disposes sessions before a new audition", () => {
   const captures = sound();
   sessions.cards.mockReturnValue(cards);
   sessions.captures.mockReturnValue(captures);
-  const audio = createHowlerAudio();
+  const audio = createMotionAudio();
   audio.prepare();
   audio.stop();
   expect(cards.stop).toHaveBeenCalledOnce();
