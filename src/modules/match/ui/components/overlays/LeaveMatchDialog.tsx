@@ -3,7 +3,8 @@ import type { RefObject } from "react";
 
 import parchment from "@/assets/lobby/tavern-match/leave-parchment.webp";
 import { ModalContent } from "@/components/surfaces/ModalContent";
-import { Dialog, DialogClose, DialogDescription, DialogTitle } from "@/components/ui/dialog";
+import { MotionDialog as Dialog } from "@/components/surfaces/PopupMotion";
+import { DialogClose, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 
 import { TavernOverlayAction } from "./TavernOverlayAction";
 import "./LeaveMatchDialog.css";

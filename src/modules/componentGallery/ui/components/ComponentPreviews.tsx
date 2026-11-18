@@ -1,7 +1,12 @@
 import { Settings } from "lucide-react";
 import { useState } from "react";
 
+import diamonds from "@/assets/lobby/card-hall/icons/cut-diamond.svg";
+import energy from "@/assets/lobby/card-hall/icons/electric.svg";
+import levelCrest from "@/assets/lobby/card-hall/icons/rank-1.svg";
+import coins from "@/assets/lobby/card-hall/icons/two-coins.svg";
 import traveller from "@/assets/lobby/card-hall/traveller.webp";
+import { PlayerIdentity, ResourceReadout } from "@/components";
 import {
   ActionButton,
   ActivityCard,
@@ -12,9 +17,11 @@ import {
   SelectField,
 } from "@/components";
 import { PlayerPortrait } from "@/components/hud/PlayerPortrait";
+import { MotionPopover as Popover } from "@/components/surfaces/PopupMotion";
+import { MotionDialog as Dialog } from "@/components/surfaces/PopupMotion";
 import { CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Popover, PopoverTitle, PopoverTrigger } from "@/components/ui/popover";
+import { DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { PopoverTitle, PopoverTrigger } from "@/components/ui/popover";
 import { ToggleGroup } from "@/components/ui/toggle-group";
 import { homeActivities } from "@/modules/home";
 
@@ -136,6 +143,46 @@ export function TurnRingPreview() {
       <ActionButton aria-pressed={highlighted} onClick={() => setHighlighted((value) => !value)}>
         Toggle active turn
       </ActionButton>
+    </div>
+  );
+}
+
+export function ProgressionPreview() {
+  const [progress, setProgress] = useState({ level: 4, value: 60 });
+  return (
+    <div className="grid gap-4">
+      <PlayerIdentity
+        name="Traveller"
+        fallbackAvatarUrl={traveller}
+        levelCrestUrl={levelCrest}
+        level={progress.level}
+        experience={{ value: progress.value, maximum: 100 }}
+      />
+      <ActionButton
+        onClick={() =>
+          setProgress(({ level, value }) =>
+            value + 25 >= 100
+              ? { level: level + 1, value: value + 25 - 100 }
+              : { level, value: value + 25 },
+          )
+        }
+      >
+        Gain XP
+      </ActionButton>
+    </div>
+  );
+}
+
+export function ResourcePreview() {
+  const [value, setValue] = useState(120);
+  return (
+    <div className="grid gap-3">
+      <div className="flex flex-wrap gap-3">
+        <ResourceReadout label="Coins" icon={coins} value={value} />
+        <ResourceReadout label="Energy" icon={energy} value={8} maximum={10} />
+        <ResourceReadout label="Diamonds" icon={diamonds} />
+      </div>
+      <ActionButton onClick={() => setValue((amount) => amount + 25)}>Change balance</ActionButton>
     </div>
   );
 }

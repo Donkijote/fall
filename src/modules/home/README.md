@@ -78,5 +78,5 @@ verification boundaries are inventoried in `src/components/README.md`.
 `ResourceReadout` actions. Their optional callbacks are ready for future profile
 and resource features. No new screen, navigation or balance mutation is wired
 by this presentation pass. Shared component notes own hover/focus behavior,
-reduced-motion rules, the global cursor/selection policy and the next-animation
-audit. `CardHall.test.tsx` asserts the updated accessible resource action names.
+reduced-motion rules, the global cursor/selection policy and implemented
+state-change animations. `CardHall.test.tsx` asserts the updated accessible resource action names.

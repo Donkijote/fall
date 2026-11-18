@@ -54,7 +54,7 @@ Use GSAP for DOM motion and honor both the stored and device reduced-motion
 preference. Clean up animation contexts and listeners. Decorative artwork stays
 outside the accessibility tree and never intercepts input.
 
-## Artwork audit follow-up
+## Artwork and interaction behavior
 
 `ResourceReadout` mounts live balances in the existing ActionButton outline skin;
 compact portrait layouts stack the glyph and value while wider layouts use a row.
@@ -142,26 +142,17 @@ text, including titles and modal copy. Text inputs, textareas and editable
 content explicitly retain selection and text cursors. Links, buttons and native
 disclosures retain pointer feedback; slider thumbs retain their grab cursor.
 
-## Further animation audit — GHI #124
+## State changes and surface lifecycle
 
-This follow-up audit reviewed live owners in HUD, actions/navigation, settings,
-shared surfaces, How to Play and Sings. The ideas below are future work; this
-pass implements only the requested HUD attention and cursor changes. Prioritize
-responses to real user actions or value changes, with immediate readable reduced
-motion states. Keep imagery, hit targets and focus stable.
+`MotionDialog` pairs with `ModalContent`, and `MotionPopover` pairs with
+`PopoverPanel`. These roots defer Base UI unmounting for a 140ms GSAP exit,
+including controlled closes, and cancel that exit when reopened. Native focus,
+Escape and outside dismissal remain owned by Base UI. Tavern travel keeps its
+existing orchestration. Keep surface children mounted through closing.
 
-| Priority | Component / owner                          | Current behavior                                                             | Suggested next animation and guardrails                                                                                                                                                                                                                                      |
-| -------- | ------------------------------------------ | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1        | `ModalContent`, `PopoverPanel`             | Short GSAP entry; native close unmounts immediately.                         | Add a coordinated 120–160ms dim/settle exit through Base UI's supported presence lifecycle. Keep Escape, outside press and focus restoration native; test reopen during exit and overlapping dialogs. Do not add a second entry on Tavern travel.                            |
-| 1        | `ResourceReadout`                          | Hover/focus border orbit; balances replace immediately.                      | On a real balance change, briefly brighten the value or count to the new integer over 200–350ms. Keep accessible amounts immediate, interrupted updates deterministic, and this separate from the hover path. Wait for real balance updates rather than looping sample data. |
-| 1        | `PlayerIdentity` XP meter / level crest    | Fill width and numbers update directly.                                      | Settle a changed XP fill over 300ms and give one bounded crest light on level-up. Handle level resets explicitly; never animate the whole portrait/nameplate or replay on rerender. Requires real progression updates.                                                       |
-| 2        | `NavigationButton` / `NavigationGroup`     | ActionButton already reveals brass corners over 240ms.                       | A single short light pass on an enabled item's outer corners could clarify hover/current-page selection. Extend its existing reveal owner; do not travel through joined interior edges or light disabled coming-soon items.                                                  |
-| 2        | `BronzeSlider`                             | Thumb and value follow native input immediately; decorative rail is static.  | A 120–180ms halo settle on release or keyboard adjustment, using a separate decoration. Never ease the actual drag value or delay volume feedback. WaxSwitch, BrassCheckbox and ChoiceButton already have GSAP material responses.                                           |
-| 2        | How to Play `ChapterNavigation` disclosure | Native summary opens/closes immediately; chapter/link motion already exists. | A 160–220ms chevron/content reveal around the existing disclosure. Keep the summary usable through interruption and ensure hidden links cannot retain focus. Reuse chapter motion rather than replaying articles.                                                            |
-| 3        | Future resource/profile panel content      | Native action hooks are ready; destinations are not implemented.             | When a real panel exists, let the shared surface own entry/exit and stagger only a few new rows over 120–200ms. Do not add placeholder dialogs or competing button/overlay transforms now.                                                                                   |
-
-Keep Login's existing arrival/atmosphere, GuideLink reveals, Tavern travel and
-format attention, Sings filter reflow, switch/choice/checkbox motion and current
-turn effects with their owners. They already provide meaningful motion. Avoid
-extra idle loops on controls or decorative score transfers: #127 owns score
-travel and #128 owns winning-Sing celebrations.
+`ResourceReadout` briefly brightens changed amounts without delaying accessible
+values. `PlayerIdentity` settles changed XP over 300ms, resets the fill on a level
+change, and lights the crest once on level-up. Neither replays on an unchanged
+render. Navigation extends the existing action reveal with one outer-frame light
+pass. `BronzeSlider` adds a 160ms decorative halo on committed changes; native
+values and callbacks remain immediate. All effects honor reduced motion.

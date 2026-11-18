@@ -1,3 +1,10 @@
+import gsap from "gsap";
+import { useRef } from "react";
+
+import { useReducedMotion } from "@/infrastructure/ui/hooks/useGamePreferences";
+
+import { useGSAP } from "@gsap/react";
+
 import { Icon } from "../icons/Icon";
 import "./PlayerIdentity.css";
 import { ProfileButton } from "./ProfileButton";
@@ -32,6 +39,57 @@ export function PlayerIdentity({
     experience.value >= 0 &&
     experience.value <= experience.maximum;
 
+  const fill = useRef<HTMLSpanElement>(null);
+  const crest = useRef<HTMLSpanElement>(null);
+  const previous = useRef<{ level: number | undefined; percent?: number; ready: boolean }>({
+    level,
+    ready: false,
+  });
+  const reduced = useReducedMotion();
+  const motion = useRef<gsap.core.Timeline | null>(null);
+  const percent = hasExperience ? (experience.value / experience.maximum) * 100 : undefined;
+  useGSAP(
+    () => {
+      motion.current?.kill();
+      const old = previous.current;
+      previous.current = { level, percent, ready: true };
+      const levelChanged = old.ready && old.level !== level;
+      const timeline = (motion.current = gsap.timeline());
+      if (reduced && crest.current) gsap.set(crest.current, { clearProps: "filter" });
+      if (fill.current && percent !== undefined) {
+        if (!old.ready || old.percent === undefined || reduced)
+          gsap.set(fill.current, { width: `${percent}%` });
+        else {
+          if (levelChanged) gsap.set(fill.current, { width: "0%" });
+          timeline.to(fill.current, { width: `${percent}%`, duration: 0.3, ease: "power2.out" }, 0);
+        }
+      }
+      if (
+        crest.current &&
+        levelChanged &&
+        hasLevel &&
+        old.level !== undefined &&
+        level > old.level &&
+        !reduced
+      ) {
+        timeline.fromTo(
+          crest.current,
+          { filter: "brightness(1.8)" },
+          {
+            filter: "brightness(1)",
+            duration: 0.35,
+            clearProps: "filter",
+          },
+          0,
+        );
+      }
+      return () => {
+        timeline.kill();
+      };
+    },
+    { dependencies: [percent, level, reduced] },
+  );
+
   return (
     <div
       className="game-player relative isolate flex min-w-0 items-center gap-(--player-gap) [--player-gap:0.375rem] [--player-portrait-width:clamp(44px,5vw,78px)] sm:[--player-gap:clamp(0.6rem,1vw,1rem)] portrait:[--player-portrait-width:2.75rem] compact-landscape:[--player-portrait-width:2.75rem]"
@@ -52,7 +110,10 @@ export function PlayerIdentity({
             >
               {name}
             </span>
-            <span className={levelCrestUrl ? "sr-only" : "text-xs font-semibold"}>
+            <span
+              ref={!levelCrestUrl ? crest : undefined}
+              className={levelCrestUrl ? "sr-only" : "text-xs font-semibold"}
+            >
               Level {hasLevel ? level : "—"}
             </span>
             {hasExperience && (
@@ -67,6 +128,7 @@ export function PlayerIdentity({
           </span>
           {levelCrestUrl && (
             <span
+              ref={crest}
               className="relative isolate grid size-10 shrink-0 place-items-center text-artwork-foreground drop-shadow-[0_2px_2px_var(--artwork-shadow)] md:size-12 compact-landscape:size-9"
               title={hasLevel ? `Level ${level}` : "Level unavailable"}
             >
@@ -95,7 +157,7 @@ export function PlayerIdentity({
           {hasExperience && (
             <span
               className="block h-full rounded-full bg-linear-to-r from-gold to-artwork-foreground"
-              style={{ width: `${(experience.value / experience.maximum) * 100}%` }}
+              ref={fill}
             />
           )}
         </span>

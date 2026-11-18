@@ -6,13 +6,8 @@ import { Link, useLocation } from "react-router";
 import { ActionButton, BronzeArrow, ChoiceButton, ModalContent, SelectField } from "@/components";
 import { BronzeSlider } from "@/components/controls/BronzeSlider";
 import { WaxSwitch } from "@/components/controls/WaxSwitch";
-import {
-  Dialog,
-  DialogClose,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { MotionDialog as Dialog } from "@/components/surfaces/PopupMotion";
+import { DialogClose, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { ToggleGroup } from "@/components/ui/toggle-group";
 import {
@@ -32,18 +27,18 @@ const appearances = [
 const rowClassName = "flex min-h-16 flex-wrap items-center justify-between gap-x-4 gap-y-2 py-3";
 const sectionClassName = "text-base";
 
-function SettingsContent({ onOpenChange }: Pick<HomeSettingsProps, "onOpenChange">) {
+function SettingsContent({ open, onOpenChange }: HomeSettingsProps) {
   const { theme, setTheme } = useTheme();
   const { volume, muted, motion } = useGamePreferences();
   const id = useId();
   const location = useLocation();
   const creditsLink = useRef<HTMLAnchorElement>(null);
   useEffect(() => {
-    if (location.state?.focusCredits) {
+    if (open && location.state?.focusCredits) {
       const frame = requestAnimationFrame(() => creditsLink.current?.focus());
       return () => cancelAnimationFrame(frame);
     }
-  }, [location.key, location.state]);
+  }, [open, location.key, location.state]);
 
   return (
     <ModalContent className="home-settings max-h-[calc(100dvh-var(--safe-area-top)-var(--safe-area-bottom)-2rem)] grid-rows-[auto_minmax(0,1fr)_auto] gap-4 overflow-hidden sm:max-w-xl">
@@ -210,7 +205,7 @@ function SettingsContent({ onOpenChange }: Pick<HomeSettingsProps, "onOpenChange
 export function HomeSettings({ open, onOpenChange }: HomeSettingsProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      {open && <SettingsContent onOpenChange={onOpenChange} />}
+      <SettingsContent open={open} onOpenChange={onOpenChange} />
     </Dialog>
   );
 }

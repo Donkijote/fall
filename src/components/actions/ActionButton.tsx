@@ -40,16 +40,36 @@ export function ActionButton({
         { "--action-reveal": 0 },
         { "--action-reveal": 1, duration: 0.24, ease: "power2.out", paused: true },
       );
+      const navigation = element.classList.contains("game-navigation-item");
+      const light = navigation
+        ? gsap
+            .timeline({ paused: true })
+            .fromTo(
+              element,
+              { "--navigation-light": 0, "--navigation-pass": "0%" },
+              {
+                "--navigation-light": 1,
+                "--navigation-pass": "100%",
+                duration: 0.38,
+                ease: "power1.inOut",
+              },
+            )
+            .to(element, { "--navigation-light": 0, duration: 0.12 })
+        : null;
+      let wasActive = false;
       const sync = () => {
         const active =
           !element.matches(':disabled, [aria-disabled="true"]') &&
-          element.matches(':hover, :focus-visible, [aria-expanded="true"]');
+          element.matches(':hover, :focus-visible, [aria-expanded="true"], [aria-current="page"]');
+        if (active && !wasActive) light?.restart();
+        if (!active) light?.pause(0);
+        wasActive = active;
         if (active) reveal.play();
         else reveal.reverse();
       };
       const observer = new MutationObserver(sync);
       observer.observe(element, {
-        attributeFilter: ["aria-expanded", "disabled", "aria-disabled"],
+        attributeFilter: ["aria-expanded", "aria-current", "disabled", "aria-disabled"],
       });
       const events = ["pointerenter", "pointerleave", "focus", "blur"];
       events.forEach((event) => element.addEventListener(event, sync));

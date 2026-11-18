@@ -1,4 +1,5 @@
-import { Dialog, DialogDescription, DialogTitle } from "@/components/ui/dialog";
+import { MotionDialog as Dialog } from "@/components/surfaces/PopupMotion";
+import { DialogDescription, DialogTitle } from "@/components/ui/dialog";
 
 import { render, screen } from "@testing-library/react";
 

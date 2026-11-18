@@ -14,8 +14,14 @@
   content: "";
   border: 11px solid transparent;
   border-image: url("/src/assets/ui/navigation/dock-tile.webp") 30;
-  filter: brightness(2.05) drop-shadow(0 0 1px var(--gold));
+  filter: brightness(calc(2.05 + var(--navigation-light, 0))) drop-shadow(0 0 1px var(--gold));
   opacity: var(--action-reveal, 0);
+  background: radial-gradient(
+    circle at var(--navigation-pass, 0%) 50%,
+    color-mix(in oklch, var(--gold) calc(var(--navigation-light, 0) * 100%), transparent),
+    transparent 65%
+  );
+  background-clip: border-box;
   --leaf-fade: black 52%, transparent 100%;
   --leaf-top-left: radial-gradient(circle 7px at 5px 5px, var(--leaf-fade));
   --leaf-top-right: radial-gradient(circle 7px at calc(100% - 5px) 5px, var(--leaf-fade));

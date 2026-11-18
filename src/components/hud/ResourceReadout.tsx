@@ -1,7 +1,12 @@
 import { cn } from "cn";
+import gsap from "gsap";
 import type { LucideIcon } from "lucide-react";
 import type { ComponentProps } from "react";
 import { useRef } from "react";
+
+import { useReducedMotion } from "@/infrastructure/ui/hooks/useGamePreferences";
+
+import { useGSAP } from "@gsap/react";
 
 import { Icon } from "../icons/Icon";
 import { useBorderGlint } from "../surfaces/useBorderGlint";
@@ -38,6 +43,31 @@ export function ResourceReadout({
     ? fullFormat.format(value) + (maximum === undefined ? "" : ` of ${fullFormat.format(maximum)}`)
     : "Unavailable";
 
+  const amount = useRef<HTMLSpanElement>(null);
+  const previous = useRef(value);
+  const reduced = useReducedMotion();
+  useGSAP(
+    () => {
+      const changed = previous.current !== value;
+      previous.current = value;
+      if (!amount.current || !available || !changed || reduced) return;
+      const pulse = gsap.fromTo(
+        amount.current,
+        { filter: "brightness(1.8)" },
+        {
+          filter: "brightness(1)",
+          duration: 0.3,
+          ease: "power2.out",
+          clearProps: "filter",
+        },
+      );
+      return () => {
+        pulse.kill();
+      };
+    },
+    { dependencies: [value, available, reduced], revertOnUpdate: true },
+  );
+
   return (
     <button
       type="button"
@@ -60,6 +90,7 @@ export function ResourceReadout({
       />
       <span
         aria-hidden="true"
+        ref={amount}
         className="text-xs leading-tight font-semibold lining-nums tabular-nums sm:text-sm"
       >
         {available ? fullFormat.format(value) : "—"}

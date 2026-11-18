@@ -80,5 +80,5 @@ pause at the exit position and resume the same lap. Profile attention orbits
 its glint without adding a turn rim. Reduced motion retains static shine. The
 optional action callbacks are reserved for future resource/profile features.
 Static interface text uses an arrow cursor without selection; actual editable
-fields retain text cursors and selection. The additional-animation audit lives
-in the shared [component motion notes](../../../src/components/README.md).
+fields retain text cursors and selection. Shared surface exits, resource-value feedback, progression and control motion
+are implemented by their owners in `src/components`.

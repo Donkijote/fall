@@ -90,3 +90,8 @@ Quick-start steps use `NumberMedallion`; card-play diagrams use `BronzeArrow`.
 Scoring rank panels and the semantic quota table reuse `ParchmentArtwork`, with
 artwork rules between quota rows. Content, quotas, search, and game rules remain
 owned by the existing application/domain model.
+
+The mobile chapter disclosure owns a 200ms GSAP height/opacity reveal and chevron
+turn. Closing makes its links inert immediately; completion closes the native
+`details`. Repeated toggles replace the live animation, and reduced motion applies
+the target state immediately. Article motion remains separate.

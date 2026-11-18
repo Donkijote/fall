@@ -36,3 +36,13 @@
       no-repeat;
   content: "";
 }
+
+.bronze-slider [data-slot="slider-thumb"]::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: var(--slider-settle, 0);
+  box-shadow: 0 0 8px 3px var(--gold);
+}

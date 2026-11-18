@@ -33,3 +33,24 @@ test.each([undefined, -1, 0, Number.NaN, Number.POSITIVE_INFINITY, 1.5])(
     expect(screen.getByRole("img", { name: "Experience unavailable" })).toBeVisible();
   },
 );
+
+test("progression exposes the new meter immediately and does not replay unchanged XP", async () => {
+  const { default: gsap } = await import("gsap");
+  const { rerender, unmount } = render(
+    <PlayerIdentity name="Player" level={4} experience={{ value: 60, maximum: 100 }} />,
+  );
+  const meter = screen.getByRole("meter");
+  const fill = meter.firstElementChild as HTMLElement;
+  expect(fill.style.width).toBe("60%");
+  rerender(<PlayerIdentity name="Player" level={4} experience={{ value: 85, maximum: 100 }} />);
+  expect(meter).toHaveAttribute("aria-valuenow", "85");
+  const tween = gsap.getTweensOf(fill).find((entry) => entry.vars.width === "85%");
+  expect(tween).toBeDefined();
+  rerender(<PlayerIdentity name="Renamed" level={4} experience={{ value: 85, maximum: 100 }} />);
+  expect(gsap.getTweensOf(fill)).toContain(tween);
+  rerender(<PlayerIdentity name="Player" level={5} experience={{ value: 10, maximum: 100 }} />);
+  expect(fill.style.width).toBe("0%");
+  expect(meter).toHaveAttribute("aria-valuenow", "10");
+  unmount();
+  expect(gsap.getTweensOf(fill)).toHaveLength(0);
+});
