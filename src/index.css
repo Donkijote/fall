@@ -176,6 +176,11 @@ body {
   html {
     @apply font-sans;
   }
+  :where(img, picture, svg, canvas, video, object, embed) {
+    @apply select-none;
+    -webkit-user-drag: none;
+    -webkit-touch-callout: none;
+  }
   :where(
     a[href]:not([aria-disabled="true"]),
     button:not(:disabled, [aria-disabled="true"]),
@@ -200,5 +205,6 @@ body {
     [contenteditable]:not([contenteditable="false"])
   ) {
     @apply cursor-text select-text;
+    -webkit-touch-callout: default;
   }
 }

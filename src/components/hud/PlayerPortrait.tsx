@@ -49,6 +49,7 @@ export function PlayerPortrait({
         {source ? (
           <img
             src={source}
+            draggable={false}
             className="size-full object-cover"
             alt=""
             referrerPolicy="no-referrer"

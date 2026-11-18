@@ -162,3 +162,13 @@ the brass rim and nameplate; keyboard profile focus receives the same shine. Nei
 render. Navigation extends the existing action reveal with one outer-frame light
 pass. `BronzeSlider` adds a 160ms decorative halo on committed changes; native
 values and callbacks remain immediate. All effects honor reduced motion.
+
+## Native artwork interactions
+
+Global base styles disable mobile artwork callouts, artwork selection and native
+image dragging. `useAssetInteractions` mounts once with the router and cancels native
+artwork context menus and drag starts, including lazy-loaded assets and portal
+content. Image, picture, SVG, canvas, video, object and embed elements share this
+policy; future assets inherit it automatically. The portrait also explicitly opts
+out of native dragging. Taps, keyboard activation, scrolling and pinch gestures
+remain native. Inputs, textareas and editable content retain their editing menus.
