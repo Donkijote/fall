@@ -1,14 +1,16 @@
 # Cross-platform distribution investigation (#126)
 
-Date: 2026-11-18. Status: proposed; packaging validation pending.
+Date: 2026-11-18. Status: research complete; Tauri-first experiment agreed;
+packaging validation delegated to [#140](https://github.com/Donkijote/fall/issues/140).
 Owner: [issue #126](https://github.com/Donkijote/fall/issues/126).
 Coordinates with [authoritative backend #129](https://github.com/Donkijote/fall/issues/129)
 and the existing [preview lifecycle #130](https://github.com/Donkijote/fall/issues/130).
 
 This is a documentation-only investigation and setup plan. It introduces no
 wrapper, native project, dependencies, or runtime changes. No native platform
-has been measured. The issue's reproducible mobile/desktop spike remains open;
-merging this plan must not close #126. No artwork was generated or adopted, so
+has been measured. The owner agreed to close #126 as the research phase and
+transfer the reproducible packaging spike to #140 without claiming it passed.
+No artwork was generated or adopted, so
 there are no mockups, background masters, or prompt manifests for this feature.
 
 ## Proposed decision
@@ -176,9 +178,14 @@ presentation, but cannot award trusted XP/coins or resolve online matches.
 
 ## Representative packaging spike (planned, not executed)
 
-First pair: **macOS desktop and a physical Android device**, with iOS next to
-expose WebKit/mobile constraints. A simulator is useful for integration, not GPU,
-thermal or audio-interruption sign-off. Reconfirm available hardware first.
+First pair: **macOS desktop and iOS**, matching the owner's development equipment.
+Confirm Mac architecture, physical iOS device/model and SDK availability during
+setup. Next test Windows on the owner's computer after installing its toolchain,
+then Linux in the owner's VirtualBox VM, and lastly Android using an emulator
+on the Mac. Record VirtualBox graphics acceleration and Android emulator image,
+architecture and acceleration. VM/emulator results do not establish physical
+GPU, thermal or audio-interruption behavior; retain those release checks as
+pending. This order and its implementation are tracked in #140.
 
 1. Pin Tauri CLI/API/Rust dependencies and Rust toolchain; record SDK, NDK,
    JDK, Xcode and WebView versions. Use the repository Node/pnpm pins. Install
@@ -368,8 +375,9 @@ remain undecided; do not assume external checkout or real-money gameplay is allo
 
 ## Ordered implementation plan and remaining decisions
 
-These are proposed follow-up tasks within #126, not newly created GitHub issues.
-Each can be split into a linked issue when implementation is scheduled.
+[#140](https://github.com/Donkijote/fall/issues/140) owns the packaging experiment,
+environment setup and validation below. Production release work can be split
+into additional linked tasks as implementation establishes its requirements.
 
 1. **Confirm release scope and toolchain.** Choose minimum OS/hardware, phone/tablet
    orientation, desktop architectures/distros, controller requirement, initial
@@ -378,12 +386,14 @@ Each can be split into a linked issue when implementation is scheduled.
    support matrix and pinned SDK/Rust/shell versions.
 2. **Package and measure the representative spike.** Add only the minimal shell,
    production-like deterministic fixture and measurement hooks. Execute macOS +
-   physical Android, then iOS. Exit: reproducible commands/artifacts and measured
+   iOS first. Exit: reproducible commands/artifacts and measured
    budgets or named failures; replace this provisional decision with evidence.
 3. **Resolve rendering/input gaps and complete desktop coverage.** Tune asset decode,
    DPR/particle budgets, safe areas and focus; compare Capacitor/Electron only for
-   demonstrated gaps. Execute Windows/Linux and claimed Apple architectures.
-   Exit: all five targets measured, chosen fallbacks documented, web regression checked.
+   demonstrated gaps. Execute Windows after setup, Linux in VirtualBox, then
+   Android in the Mac emulator, plus claimed Apple architectures.
+   Exit: available five-platform environments measured, VM/emulator limitations
+   and physical-device gaps explicit, chosen fallbacks documented, web regression checked.
 4. **Integrate lifecycle/auth/backend adapters with #129.** Implement real session,
    link, transport and revision-reconciliation boundaries. Exit: two clients survive
    suspend/kill/reconnect without state/reward duplication or hidden-state leaks.
@@ -412,7 +422,8 @@ The issue's wording is retained here and in the draft PR:
 - [x] Migration/setup work and release prerequisites are scoped into an ordered implementation plan.
 
 Checked items denote documented proposals, not native execution or release
-readiness. The spike criterion remains unchecked. Review decision: retain the
-current UI and web pipeline, test Tauri first, and keep #126 open until real
-mobile/desktop validation is recorded. No production provider selection has
-been approved by this investigation.
+readiness. The spike criterion remains unchecked because its execution was
+transferred to #140 by the owner; it is not a missing research decision. Review
+decision: close #126 as the documentation investigation, retain the current UI
+and web pipeline, and test Tauri first through #140 using the agreed device order.
+No final production provider selection or store readiness is implied.
