@@ -272,8 +272,9 @@ performed by the local regression suite.
   for seven days, instead of rebuilding a potentially different branch.
 - Production deployments are serialized independently of Preview deployments.
 
-Disable GitHub Pages in the repository's **Settings → Pages** after migration.
-The old remote `deployment` branch is not updated or deleted by this change.
+GitHub Pages was disabled on 2026-11-18 and the remote `deployment` branch
+was deleted. The legacy publishing workflow is already absent from `develop`;
+the next release merge into `main` will remove its remaining copy there.
 
 ## UI Components
 
