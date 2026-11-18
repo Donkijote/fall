@@ -19,6 +19,10 @@ running app to check current controls and behavior.
 | Choice button        | [Choice button artwork](choice-button/README.md)       |
 | Text input           | [Text input artwork](text-input/README.md)             |
 
+Technical investigations: [Cross-platform distribution (#126)](platform-distribution/README.md)
+records the proposed delivery strategy, validation gates and implementation plan.
+It introduces no artwork references.
+
 ## Feature folder standard
 
 Use a flat, lowercase kebab-case feature folder named for the screen or feature.

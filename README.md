@@ -9,6 +9,10 @@ the user chose to keep its current visibility on 2026-11-18.
 
 ## Development
 
+Cross-platform delivery planning for iOS, Android, Windows, Linux and macOS lives
+in the [distribution investigation](docs/design/platform-distribution/README.md).
+The recommendation is provisional pending native packaging measurements.
+
 Use Node **26.12.1** (`nvm use`) and pnpm **12.15.0**, as pinned in `.nvmrc` and `package.json`. CI reads the same version pins.
 
 ```sh
