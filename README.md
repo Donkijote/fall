@@ -39,6 +39,17 @@ Issue branches follow the issue's single `kind/*` label: for example,
 `kind/feature` → `feature/ghi#105`, or `kind/bugfix` → `bugfix/ghi#109`.
 Resolve missing or conflicting type labels before creating a branch.
 
+Before beginning implementation, move the issue's existing item in the
+[Fall project](https://github.com/users/Donkijote/projects/5) to **In progress**:
+
+```sh
+node scripts/project-status.mjs start <issue-number>
+```
+
+The command uses your GitHub CLI login, which needs project write access
+(`gh auth refresh -s project` for a classic OAuth login if necessary). It skips
+issues outside the Fall project and does not create new project items.
+
 Use `bash scripts/ghi-pr.sh <issue-number>` to create the branch and draft PR.
 The PR targets `develop`, uses `[GHI#<issue>] <issue title>`, is assigned to
 its creator, and inherits the issue's labels, including its `kind/*` type.
@@ -50,6 +61,46 @@ partial work. GitHub closes linked issues when the PR merges into the default
 branch, currently `develop`; closing keywords are ignored for other targets.
 Verify the target, assignee, labels and closing lines before handing off a PR.
 See [GitHub's issue linking rules](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue).
+
+Review acceptance-criteria and task checklists in the issue and PR before
+starting work. Check off each item in the corresponding issue and PR when its
+implementation and applicable verification are complete. Keep overlapping
+checklists consistent and preserve existing wording and unrelated edits. Leave
+partial, incomplete or unverified items unchecked. Before handing off the work,
+reconcile both checklists and report any remaining tasks or verification gaps.
+
+#### Project status automation
+
+**Sync Project Status** uses trusted default-branch code to maintain Fall's
+`Status` field. It is independent of the ready-only build workflow:
+
+- A successful **Deploy Cloudflare Preview** run moves open issues linked by
+  closing keywords (`Closes`, `Fixes`, `Resolves`) to **In review**, after checking
+  that the `/login` probe succeeded and the PR is still open, opted in,
+  same-repository, and on the deployed head. Manual deployments, skipped previews,
+  failed/canceled runs, stale commits and `Refs`-only issues do not advance status.
+- When an issue is closed as completed, its latest closing event must identify a
+  merged PR in this repository before it moves to **Done**. Closing an issue
+  manually or as not planned does not trigger this transition. The issue closure
+  event is used because merging a PR and automatic issue closure can arrive in
+  different orders. Reopened/closed issues are rechecked before each update.
+- Updates target only existing items in project 5; other projects and fields are
+  untouched. A shared queue serializes updates, and closed issues cannot be moved
+  back to In review by a delayed deployment event. The CLI and workflow share
+  `scripts/project-status.mjs`, with tests in `scripts/project-status.test.mjs`.
+
+Configure a repository secret **PROJECTS_TOKEN** with write access to Fall's
+user-owned Project and read access to this repository (issues, PRs and Actions).
+A classic PAT needs `project` and, for this private repository, `repo` scopes;
+a fine-grained PAT must explicitly permit the user Project and repository reads.
+The existing **TOKEN** secret is used as a fallback; its Project permission must
+be verified separately. The default `GITHUB_TOKEN` cannot update Projects v2.
+Project credentials are exposed only to the trusted status-sync step, never to
+PR checkout/build code or downloaded workflow artifacts. The workflow must exist
+on the default branch before automatic events can trigger it. If access or a
+project option is missing, the run fails with diagnostics; fix permissions or
+field configuration and rerun it from Actions. For a queue overflow, retry the
+canceled run after the queue drains.
 
 ### Theme colours
 
@@ -126,33 +177,81 @@ Both paths check formatting, lint, tests, and the build before uploading assets.
 
 #### PR and manual branch Previews
 
-- **Deploy Cloudflare Preview** runs for non-draft, same-repository PRs targeting
-  `develop` or `main` when opened, updated, reopened, or marked ready for review.
-  Fork PRs do not receive deployment secrets.
-- Each PR uses a readable title-based name such as `add-login-screen`, without
-  the issue prefix or a PR-number suffix. PRs with the same normalized title
-  update the same Preview; use distinct titles when separate Previews are needed.
-  Long names are shortened at a word boundary. Renaming a PR can
-  create a new Preview on its next deployment. Its URL appears in the workflow
-  summary and the GitHub `preview` deployment.
-- Manual runs accept a trusted `branch` input and always use `wrangler preview`,
-  even if the selected branch is `main`. Names default to readable branch slugs
-  (`feature/login` becomes `feature-login`), not opaque hashes.
-- Set the optional `preview-name` input for a descriptive name such as
-  `cloudflare-previews`, `new-feature`, or `fix-button`. Reusing a name updates
-  that Preview; choose distinct names for branches whose normalized names would
-  otherwise collide. Names use lowercase letters, numbers, and hyphens.
-- Once the workflow exists on `develop`, run it from the Actions UI or use
-  `gh workflow run deploy-cloudflare.yml -f 'branch=develop'`.
-  To choose a name, add `-f 'preview-name=cloudflare-previews'`.
-- Only select trusted branches: their build scripts run in the deployment job.
-  Preview isolation protects the production deployment, not the API token from
-  malicious code. Consider a more restricted token for the `preview` environment.
-- Previews are public by default and remain available after a PR closes. Remove
-  one when no longer needed with
-  `pnpm exec wrangler preview delete --name cloudflare-previews`.
-  Preview settings belong in `wrangler.jsonc`'s `previews` block; static assets
-  and SPA handling stay at the top level. No runtime bindings are currently used.
+- **Deploy Cloudflare Preview** automatically deploys same-repository PRs targeting
+  `develop` or `main` only when they carry the `autodeploy` label. Draft and ready
+  PRs behave identically. Opening, reopening, pushing commits, or adding that
+  label starts a run; draft/ready conversions and unrelated labels do not redeploy.
+  Fork PRs cannot opt in to deployment secrets.
+- Every PR owns one stable Preview named `pr-<repository-id>-<PR-number>` under
+  Worker `fall`. Titles and branches cannot change the identity or collide with
+  another PR. This workflow introduces that naming scheme; any older title-named
+  previews must be removed manually after checking ownership.
+- Runs check formatting/lint, tests and build, then deploy and probe `/login`.
+  Success appends a fresh bot comment with the verified URL, deployed SHA and run
+  link. Failures (including installation/check/build failures) append a fresh
+  failure comment with the failing stage and diagnostics, without reusing an old
+  URL. Previous comments bearing this workflow's marker AND owned by
+  `github-actions[bot]` are deleted; human and unrelated bot comments stay intact.
+- Deployment and cleanup share a per-repository/PR concurrency group with
+  cancellation disabled and `queue: max` so pending runs cannot displace cleanup.
+  Running uploads settle before cleanup. Runs re-read PR state, labels, repository and head before
+  provisioning and each comment mutation. Superseded same-head runs also skip.
+  Intentional cancellations do not report failure. Removing `autodeploy` or
+  closing a PR suppresses subsequent provisioning/reporting; an upload already
+  in progress may finish. Existing previews are retained on opt-out or an
+  unmerged close (and the last status is historical). Reopen/re-add the label to
+  deploy the current head. There is no automatic deletion on an unmerged close.
+- **Cleanup Cloudflare Preview** runs on merge, regardless of current labels.
+  It waits for the same lock, checks the PR is merged, and deletes only that
+  PR's named Preview and all its deployments. Production, other PRs and manual
+  previews are untouched. Deleting an absent Preview is successful. Its fresh
+  status comment replaces the live link with a removed notice; cleanup errors
+  replace it with a failure notice and fail the workflow with diagnostic details.
+  GitHub queues at most 100 runs per group; if cleanup is canceled because that
+  queue is full, retry it after the queue drains. Retry a failed run in Actions, or run
+  `gh workflow run cleanup-cloudflare-preview.yml -f 'pr-number=130'`.
+  This uses trusted workflow code through `pull_request_target`; it never checks
+  out or executes PR head code. Automatic runs require the workflow on the base
+  branch. Preview deployments continue using `pull_request`, never privileged
+  execution of fork code.
+- Manual deployment accepts a trusted `branch` input and an optional
+  `preview-name`, always using `wrangler preview` even for `main`. Names use
+  `manual-<slug>-<source-hash>` so manual resources cannot collide with PR
+  cleanup. Reusing a source name updates its Preview. The resulting name and URL
+  appear in the job summary; manual runs do not write PR comments or auto-delete.
+  Once the workflow exists on `develop`, run
+  `gh workflow run deploy-cloudflare.yml -f 'branch=develop'` (optionally add
+  `-f 'preview-name=my-preview'`). Remove a manual Preview using its exact summary
+  name: `pnpm exec wrangler preview delete --name manual-my-preview-<hash>`.
+- Only select trusted same-repository code: build scripts execute in the deploy
+  job. Preview isolation protects production, not the API token from malicious
+  trusted-branch code. Cloudflare credentials are step-scoped and use the
+  `preview` environment. GitHub permissions are read-only by default; only the
+  preview/cleanup jobs receive PR comment write access, and deployment receives
+  Actions read access for stale-run checks.
+- **Report Build Status / report-build-status** runs only for ready-for-review
+  PRs, when marked ready or when new commits arrive. Draft PRs skip this job.
+  The check is independent of `autodeploy` and also supports fork PRs.
+  It is the independent build check to require in branch protection. Do not
+  require optional deployment/cleanup jobs: intentionally skipped previews must
+  not gate unrelated PRs. Deployment supports both `develop` and `main`; the
+  existing independent PR build workflow targets `develop`.
+- Preview settings belong in `wrangler.jsonc`'s `previews` block; static assets
+  and SPA handling stay at the top level. There are currently no runtime bindings
+  requiring separate resource cleanup. If bindings are introduced, extend the
+  ownership/cleanup contract before enabling them in previews.
+
+Lifecycle regression tests live in `scripts/preview-lifecycle.test.mjs` and run
+with `pnpm test run scripts/preview-lifecycle.test.mjs`. They exercise draft/ready,
+opt-in/out, stale/concurrent runs, comment ownership, failures and safe/idempotent
+cleanup using mocked GitHub/Cloudflare APIs. Live deployment validation requires
+GitHub/Cloudflare credentials: label a draft PR, verify its SHA/URL and `/login`,
+push twice rapidly, convert draft/ready (no new deploy), remove/re-add the label,
+and merge with the label removed to verify cleanup. On a disposable trusted PR,
+introduce an install/build failure and verify the fresh failure comment, then fix
+it and verify replacement. Retry cleanup after deletion and inspect that another
+PR, a manual Preview and production are unchanged. These live checks are not
+performed by the local regression suite.
 
 #### Main and release production deployments
 
@@ -180,8 +279,9 @@ Both paths check formatting, lint, tests, and the build before uploading assets.
   for seven days, instead of rebuilding a potentially different branch.
 - Production deployments are serialized independently of Preview deployments.
 
-Disable GitHub Pages in the repository's **Settings → Pages** after migration.
-The old remote `deployment` branch is not updated or deleted by this change.
+GitHub Pages was disabled on 2026-11-18 and the remote `deployment` branch
+was deleted. The legacy publishing workflow is already absent from `develop`;
+the next release merge into `main` will remove its remaining copy there.
 
 ## UI Components
 

@@ -1,0 +1,69 @@
+name: Cleanup Cloudflare Preview
+
+on:
+  pull_request_target:
+    branches: [develop, main]
+    types: [closed]
+  workflow_dispatch:
+    inputs:
+      pr-number:
+        description: Merged PR number to retry cleanup for
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+# Same lock as deployment: never cancel an upload and race its completion.
+concurrency:
+  group: preview-fall-${{ github.repository_id }}-${{ github.event.pull_request.number || inputs.pr-number }}
+  cancel-in-progress: false
+  queue: max
+
+jobs:
+  cleanup:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: preview
+    permissions:
+      contents: read
+      pull-requests: write
+    env:
+      PR_NUMBER: ${{ github.event.pull_request.number || inputs.pr-number }}
+    steps:
+      # Never check out PR head code in this privileged workflow.
+      - name: Checkout trusted lifecycle code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.workflow_sha }}
+          persist-credentials: false
+
+      - name: Delete merged PR Preview and retire status
+        uses: actions/github-script@v7
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        with:
+          script: |
+            const m = await import(`${process.env.GITHUB_WORKSPACE}/scripts/preview-lifecycle.mjs`);
+            const valid = () => m.current({github, context, cleanup: true});
+            const pr = await valid();
+            if (!pr) throw new Error('Cleanup requires a closed, merged PR');
+            const name = m.previewName(context.payload.repository.id, pr.number);
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            let error;
+            try {
+              await m.deletePreview({name, accountId: process.env.CLOUDFLARE_ACCOUNT_ID,
+                token: process.env.CLOUDFLARE_API_TOKEN});
+            } catch (failure) {
+              error = failure;
+            }
+            const status = error ? 'cleanup-failed' : 'removed';
+            await core.summary.addHeading(`Cloudflare preview: ${status}`)
+              .addRaw(`Preview: ${name}\n\n[Run diagnostics](${runUrl})\n\n`)
+              .addRaw(error ? `Cleanup failed: ${error.message}\n\nRetry this run, or dispatch this workflow with pr-number=${pr.number}.` : 'All deployments of this PR Preview were removed (or already absent).')
+              .write();
+            await m.replaceStatus({github, context, valid, body: m.statusBody({status,
+              sha: pr.head.sha, runUrl})});
+            if (error) throw error;
