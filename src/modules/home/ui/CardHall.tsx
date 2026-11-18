@@ -206,7 +206,7 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
         <div className="absolute inset-x-0 top-0 hidden h-[calc(var(--safe-area-top)+1.5rem)] bg-linear-to-b from-artwork-shadow via-artwork-shadow/55 to-transparent standalone:portrait:block" />
       </div>
       <header
-        className="card-hall-header grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-start gap-4 pt-[calc(var(--hall-header-top)+var(--safe-area-top))] pr-[calc(var(--hall-gutter)+var(--safe-area-right))] pb-3 pl-[calc(var(--hall-gutter)+var(--safe-area-left))] text-artwork-foreground [--hall-header-top:1rem] [text-shadow:0_1px_4px_var(--artwork-shadow)] max-[480px]:grid-cols-[minmax(0,1fr)_auto] portrait:gap-1.5 portrait:pb-2 portrait:[--hall-header-top:0.7rem] compact-landscape:items-center compact-landscape:gap-2 compact-landscape:pb-0 compact-landscape:[--hall-header-top:0.25rem]"
+        className="card-hall-header grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-start gap-4 pt-[calc(var(--hall-header-top)+var(--safe-area-top))] pr-[calc(var(--hall-gutter)+var(--safe-area-right))] pb-3 pl-[calc(var(--hall-gutter)+var(--safe-area-left))] text-artwork-foreground [--hall-header-top:1rem] [text-shadow:0_1px_4px_var(--artwork-shadow)] max-[480px]:grid-cols-[minmax(0,1fr)_auto] portrait:gap-1.5 portrait:pb-2 portrait:[--hall-header-top:0.7rem] compact-landscape:grid-cols-[minmax(0,1fr)_auto_minmax(max-content,1fr)] compact-landscape:items-center compact-landscape:gap-x-6 compact-landscape:pb-0 compact-landscape:[--hall-header-top:0.25rem]"
         aria-label="Player HUD"
       >
         <PlayerIdentity
@@ -224,7 +224,7 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
         <div
           role="group"
           aria-label="Resources"
-          className="flex justify-end gap-1.5 self-center max-[480px]:col-start-2 max-[480px]:row-start-1 sm:gap-4"
+          className="flex justify-end gap-1.5 self-center max-[480px]:col-start-2 max-[480px]:row-start-1 sm:gap-4 compact-landscape:gap-1"
         >
           <ResourceReadout
             label="Energy"

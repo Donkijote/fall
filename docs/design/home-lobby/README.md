@@ -66,3 +66,10 @@ Resource-frame correction was reviewed in the running app at 1280×800,
 768×1024 in the standalone gallery. Both gallery themes were checked. The end
 ornaments keep their source proportions and the 320px HUD has no horizontal
 overflow. The broader app-wide motion/device acceptance matrix remains pending.
+
+In compact landscape, resources use a 4px gap rather than the wider 16px spacing.
+The header reserves at least 24px between its columns and gives resources their
+intrinsic minimum width. It keeps the title centered when there is room, allowing
+the player column to yield space on narrower phones. Reviewed at 568×320,
+667×375 and 844×390: title-to-resource clearance is at least 24px, with no
+horizontal overflow. Portrait and non-compact desktop spacing are unchanged.
