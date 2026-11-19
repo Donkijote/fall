@@ -61,8 +61,11 @@ concept; it is a research proposal, not implemented or visually approved UI.
 The [backend research](../authoritative-backend/README.md) owns the proposed clock,
 server deadline and reconnect interaction. Automatic server-controlled legal play
 at turn expiry is agreed; five consecutive inactive turns count as abandonment.
-Move selection and counter details remain open. The owner suggested notifying the
-teammate in team mode; notification timing and visual treatment remain undecided.
+Move selection and server counter details remain open. A future enhancement after
+Tavern multiplayer would show only the teammate a popup with the inactivity count
+(1/5, 2/5, 3/5), adding a forfeit warning at 3/5. This counter/notification UI is
+outside the first release; final visual treatment and wording remain undecided.
+Copy must reflect automatic legal play at expiry rather than a skipped turn.
 
 Future implementation in #144 should extend the shared ring motion owner, preserving
 GSAP, reduced motion and cleanup behavior. The server owns the deadline; local

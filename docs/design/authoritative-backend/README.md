@@ -253,9 +253,16 @@ once; duplicate jobs or retries cannot add misses. Confirm counter reset/return
 semantics and whether the fifth automatic move precedes abandonment or abandonment
 replaces that move. Coordinate this with the still-open reconnect grace policy.
 
-Owner suggestion: notify the teammate in a team match about inactivity or
-abandonment. Notification timing, warning threshold, wording and presentation
-remain open; this suggestion is not yet an approved notification design.
+Deferred team-mode enhancement, after the Tavern multiplayer foundation: show a
+popup only to the inactive player's teammate when a turn expires, with a consecutive
+inactivity counter such as 1/5, 2/5 and 3/5. At 3/5, show an additional warning that
+reaching five consecutive inactive turns causes abandonment and a team loss.
+Suggested copy: “Your teammate is inactive. An automatic move was played (1/5).”
+At 3/5: “Five consecutive inactive turns will forfeit the match for your team.”
+These are draft strings; final wording, dismissal, accessibility and presentation
+need later design. The timeout still plays a legal move, so “skip turn” would be
+misleading copy. These notifications and counter UI are outside the first Tavern
+release; server inactivity enforcement remains part of the foundation.
 
 Implementation proposal: make expiry resolution idempotent for the turn identity;
 if a human move was accepted first, the stale timeout must not add another play.
@@ -321,8 +328,8 @@ They connect the product vision to questions the architecture evaluation must an
 3. Review the proposed 30-second turn clock and draining profile ring; choose the
    auto-play selection policy, inactivity counter reset/fifth-turn ordering, other
    timed decisions and turn-start/presentation semantics. Automatic legal play and
-   abandonment after five consecutive inactive turns are agreed. Decide teammate
-   notification timing and treatment.
+   abandonment after five consecutive inactive turns are agreed. Teammate-only
+   counter popups and the 3/5 warning are deferred until after the foundation.
    Choose exact reconnect duration within 60–90 seconds, pause behavior, repeated-
    disconnect budget, bot/result policy and server-outage recovery.
 4. Confirm whether later offline bot practice grants no persistent rewards and costs
@@ -643,3 +650,9 @@ abandonment, replacing the proposed three-turn threshold. Owner also suggested
 notifying the teammate in team mode. Notification timing remains open. Counter
 reset after manual play is a working interpretation; fifth-turn ordering and
 interaction with reconnect grace require confirmation before implementation.
+
+2026-11-19, teammate notification scope: owner proposed a teammate-only popup on
+inactive turns with a 1/5, 2/5, 3/5 counter, plus an additional warning at 3/5 that
+five consecutive inactive turns lead to abandonment. This is a future enhancement
+after Tavern multiplayer, not a first-release requirement. Draft copy describes an
+automatic legal move rather than skipping a turn; final UI design remains open.
