@@ -33,8 +33,14 @@ mockups or background master.
   is a possible later feature. Energy is spent when starting a match or stage.
 - Confirmed abandonment: explicit 1v1 departure gives the opponent a win; explicit
   team departure ends the match as a loss for that team and a win for the other.
-- Open: provider, exact login providers, account linking/recovery, reconnect policy,
-  three-player abandonment, economy values, operating budget and later rollout.
+- Confirmed: a bot replaces an abandoned free-for-all seat. Temporary disconnects
+  receive a waiting/reconnect period in the 60–90 second range; choose the exact
+  default and repeated-disconnect policy before implementation.
+- Confirmed operating budget: $0/month for the backend at this stage. Owner knows
+  Convex from an unused hobby project with no real-world usage; no project deletion
+  or paid plan change has been requested.
+- Open: provider, exact login providers, account linking/recovery, detailed reconnect
+  and bot policies, economy values, launch audience/regions and later rollout.
 - Convex, Cloudflare Durable Objects and Nakama are candidates from the original
   brief. Familiarity with Convex is context, not a selection decision.
 
@@ -155,7 +161,7 @@ Use one accepted assignment per player, with an explicit admission/start boundar
 | Format                    | Agreed outcome                                                        |
 | ------------------------- | --------------------------------------------------------------------- |
 | 1v1                       | End the match; the remaining player wins.                             |
-| Three-player free-for-all | Unresolved. Owner considered cancellation or continuing as 1v1.       |
+| Three-player free-for-all | A bot takes the abandoned seat; the match remains three-player.       |
 | 2v2                       | End the match; the abandoning team loses and the remaining team wins. |
 
 For 2v2, ending the match with a forfeit outcome is distinct from voiding the match:
@@ -164,22 +170,23 @@ how the non-abandoning teammate is treated; no individual penalty is specified y
 If several players leave simultaneously, finalization ordering and the resulting
 outcome still need a deterministic policy.
 
-### Temporary connection loss — unresolved policy
+### Temporary connection loss — agreed direction and remaining details
 
 The owner explicitly wants support for losing connection and returning. Do not
 interpret an absent socket as an explicit surrender command or assume the server
 can establish why a client stopped responding.
 
-Research proposal: reserve the player's seat for a bounded grace period and allow
-re-authentication/rejoin to that same match with a recipient-private snapshot.
-Specify how turn deadlines run during absence, whether play pauses or a bot covers
-turns, the reconnection deadline, repeat-disconnect handling and expiry outcomes.
+Owner accepted a waiting/reconnect period of 60 or 90 seconds. Exact duration is
+not finalized. Working proposal: pause play, reserve the seat and permit authenticated
+rejoin with a recipient-private snapshot; 90 seconds is a candidate default within
+the accepted range, not a separately approved value. Specify turn-clock behavior,
+repeated-disconnect limits and expiry outcomes before implementation.
 An explicit authenticated abandon command can finalize immediately; an expired
 connection-loss grace period can enter the eventual format-specific forfeit policy.
 Server outages require their own recovery/void policy rather than player penalties.
-These proposals are not yet approved gameplay rules.
+The waiting-period direction is agreed; these remaining mechanics are open.
 
-### Free-for-all options — research proposal
+### Free-for-all abandonment — decision and alternatives considered
 
 - Cancel/void: straightforward outcome semantics, but an abandoning player can erase
   the other players' session. Decide whether any partial result is retained.
@@ -189,9 +196,12 @@ These proposals are not yet approved gameplay rules.
   match format and let the remaining humans finish. Decide whether the leaver can
   return, whether their seat can win and how the remaining humans' results count.
 
-Current recommendation for discussion: assess bot replacement for free-for-all;
-keep the original three-player rules throughout the match. This is not an approved
-choice or proof that the current bot implementation is suitable for server use.
+Owner selected bot replacement. Preserve the three-player format. The cancellation
+and 1v1 options above are rejected alternatives retained as decision context.
+This decision does not prove that the current local bot is suitable for server use.
+Still specify bot access to hidden information, result eligibility, all-humans-gone
+cleanup and whether an explicitly departing player may return; temporary disconnects
+first follow the reconnection waiting policy.
 
 ## Working architecture hypotheses to investigate
 
@@ -226,14 +236,14 @@ They connect the product vision to questions the architecture evaluation must an
 
 ## Next discovery decisions
 
-1. Confirm free-for-all abandonment behavior and connection-loss grace/turn policy.
-2. Confirm whether offline bot practice grants no persistent rewards and costs no
-   online energy; decide later whether it is accessible without login.
-3. Establish operating constraints for provider comparison: expected initial audience
-   and regions, budget ceiling, managed versus self-hosted operations, and owner's
-   existing Convex experience/preferences.
-4. Finalize initial social login providers, verification/recovery and account linking.
-   Later specify energy charging/refunds and paid-resource/competitive policies.
+1. Estimate the first audience, expected simultaneous players and player regions;
+   use assumptions explicitly if no estimate exists yet.
+2. Complete backend/auth comparison and agree the experiment/selection gates below.
+   Finalize initial social login providers, verification/recovery and account linking.
+3. Choose exact reconnect duration within the accepted 60–90 second range, turn
+   clocks, repeated-disconnect budget, bot/result policy and server-outage recovery.
+4. Confirm whether later offline bot practice grants no persistent rewards and costs
+   no online energy; defer economy values and paid-resource rules to later scopes.
 
 ## Discovery agenda
 
@@ -262,8 +272,9 @@ views, realtime subscriptions, timers, auth, matchmaking/presence, native sessio
 local testing, deployment, recovery, observability, scaling and cost.
 
 Record sources and access dates alongside claims. Separate documented guarantees,
-our assumptions and measured results. No current price or Fall-specific performance result has been measured. Initial documentation findings
-below establish only specific capabilities; the full provider comparison is pending.
+our assumptions and measured results. Current public pricing/limits were reviewed on 2026-11-19; no account-specific usage,
+Fall capacity, performance or bill has been measured. Initial findings and a budget
+shortlist follow; the full architecture/auth comparison is still in progress.
 
 Before a recommendation becomes final, specify the account and match data models,
 command/event contracts, privacy boundaries, lifecycle, reward policy and rollout.
@@ -298,6 +309,101 @@ These narrow findings support follow-up research; they do not select a provider.
   is not proof of player reconnect or a complete multiplayer backend.
 
 No accounts, servers, purchases or provider deployments were created in this review.
+
+## Zero-budget shortlist — 2026-11-19
+
+Budget is **$0/month now**, not permission to enable metered paid services. Owner
+familiarity with Convex is relevant to maintenance effort; a YouTuber recommendation
+is discovery context, not technical evidence. The owner reports that the other
+Convex hobby project has no real-world usage and could be deleted. No deletion is
+needed to proceed with research and no deletion has been authorized. Check actual
+team usage/plan later; an unused project's existence alone proves no quota shortage.
+
+### Published free paths and limitations
+
+- [Convex limits](https://docs.convex.dev/production/state/limits): Free has hard
+  caps; Starter can exceed included allocations with usage billing. Limits normally
+  apply per team. Free lists 1,000,000 function calls/month, 0.5 GB database storage
+  and 1 GB database I/O/month. Subscription updates and scheduled executions count
+  toward calls. The documented query/mutation user-code execution limit is one
+  second. New writes can fail after free limits are reached. These are published
+  limits, not an estimate of supported Fall players. Check the actual plan and
+  aggregate usage before deploying Fall alongside another project.
+- [Cloudflare Durable Objects pricing](https://developers.cloudflare.com/durable-objects/platform/pricing/):
+  Workers Free supports SQLite-backed objects with 100,000 requests/day and
+  13,000 GB-s duration/day; SQLite includes 5 million row reads/day, 100,000 row
+  writes/day and 5 GB stored data. Exceeding a free dimension causes operations of
+  that type to fail; daily limits reset at midnight UTC. Other services need their
+  own budget review. These units are not directly comparable with Convex calls.
+- [Nakama Docker setup](https://heroiclabs.com/docs/nakama/getting-started/install/docker/)
+  provides a self-hosted route. [Heroic Cloud pricing](https://heroiclabs.com/pricing/)
+  advertises managed hosting, but its returned Nakama price is an unresolved dynamic
+  template; no exact monthly quote or $0 managed tier was verified. Research judgment:
+  retain Nakama as a game-focused comparator, with no demonstrated zero-cost public
+  hosting route for this project. Running software locally does not validate a
+  maintained public backend, database and backup deployment at $0.
+
+### Fit and investigation order
+
+| Candidate                                        | Proposed Fall design                                                                            | Why evaluate it                                                                       | Main gaps before selection                                                                                                              |
+| ------------------------------------------------ | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| Convex Free                                      | Commands as mutations; persisted matches; private subscription queries; scheduled deadlines.    | Owner familiarity and one initial backend for match state and accounts.               | Measure quota consumption, queue contention, private projections, timers, auth/email/native flows and recovery.                         |
+| Cloudflare Workers Free + SQLite Durable Objects | A match object owns commands, state and deadlines; separate identity/queue/account integration. | An alternative free managed path alongside Fall's existing Cloudflare frontend setup. | Specify cross-object coordination and result delivery, auth, recovery and combined service limits; validate hibernation with deadlines. |
+| Nakama                                           | Authoritative matches with game-service integrations and persisted state strategy.              | Game-focused comparison for long-term multiplayer/social scope.                       | Establish $0 public hosting/operations, domain-runtime compatibility, recovery and database setup.                                      |
+
+**Provisional recommendation: test Convex Free first**, retain Cloudflare as the
+main alternative, and do not choose production infrastructure before the gates
+below pass. This is our research recommendation, not an owner-approved provider
+selection or proof of capacity. No paid plan, free-trial dependence or paid external
+auth/email service is assumed.
+
+Supporting Convex mechanics, distinct from our proposed architecture:
+
+- [Mutations](https://docs.convex.dev/functions/mutation-functions) provide
+  transactional reads/writes; our command validator must still enforce player
+  authorization, revisions, legal rules and deduplication.
+- [Realtime queries](https://docs.convex.dev/realtime) update subscribed clients
+  when dependencies change. A recipient-specific safe match projection remains
+  Fall's responsibility; never expose the internal all-hands state.
+- [Scheduled functions](https://docs.convex.dev/scheduling/scheduled-functions)
+  are stored durably and survive restarts. Proposal: persist deadlines and schedule
+  version-checked handlers instead of per-second writes or a permanent match loop.
+  Measure execution delay and quota cost; scheduling is not a strict latency promise.
+- [Convex Auth passwords](https://labs.convex.dev/auth/config/passwords) documents
+  sign-up/sign-in and email-provider configuration for reset/verification. Auth email
+  delivery, sender/domain requirements and cost still need review. Social providers,
+  secure account linking and native callbacks need their own integration validation.
+
+### Proposed bounded experiment and selection gates
+
+The eventual follow-up issue should test the actual Tavern foundation before any
+Adventure, currency, energy, purchase, ranking or social implementation:
+
+1. Run authenticated independent clients through real server-owned matches in all
+   three formats; reuse the shared rules and use server-owned random/bot inputs.
+2. Exercise public queue contention, cancellation, duplicate entry, starts and team
+   seating without double assignments or partial matches.
+3. Prove private snapshots/events and rejection of unauthorized, illegal, duplicate
+   and stale commands. Commands carry IDs and expected revisions; state transitions
+   commit atomically with a stable event/result identity.
+4. Test the accepted 60–90 second reconnect policy, all format-specific abandonments,
+   free-for-all bot replacement and restart/timeout races. Keep server outages
+   distinct from player forfeits. Reconnect must not replay presentation as rewards.
+5. Measure representative per-match calls (including subscription fan-out and jobs),
+   reads/writes, retained bytes and network traffic; include idle lobby, reconnection,
+   abandoned/all-bot sessions and abusive retries. Calculate capacity only from
+   measured workload assumptions and the actual remaining free team allowance.
+6. Verify email/password recovery and selected social sign-in at $0 end to end,
+   including the web/native callback boundary required by distribution planning.
+7. Document retention/export/restore, quota visibility and what happens near/exceeding
+   caps. Proposed admission limits/headroom reduce risk but cannot guarantee that
+   active matches finish if provider hard caps block operations.
+
+A free-tier cap may interrupt service; zero spend does not imply unlimited capacity
+or paid availability guarantees. Later traffic growth requires an explicit choice
+between limiting access, a reviewed budget change or a different deployment.
+No paid change is authorized by this research. Commercial-use terms and any auth,
+email, observability or backup dependencies remain review gates before release.
 
 ## Requirements carried forward from the original implementation brief
 
@@ -360,3 +466,11 @@ Online users must log in/register with email/password or social login (Google/Fa
 examples). Tavern groups waiting players by format. Explicit departure loses 1v1
 or 2v2 for the departing side; three-player handling and reconnect timing remain open.
 Initial first-party provider documentation was reviewed without a selection decision.
+
+2026-11-19, bot/reconnect/budget clarification: owner accepted free-for-all bot
+replacement and 60–90 seconds of waiting for reconnection. Backend budget is $0
+at present. Owner has prior Convex experience and an unused hobby project with
+no real-world usage; willingness to delete it is not a deletion instruction.
+Published free plans and technical primitives were reviewed. Convex Free is the
+proposed first experiment; Cloudflare remains the main alternative. No provider
+has been selected and no account/deployment/billing settings were changed.
