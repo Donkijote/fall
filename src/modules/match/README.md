@@ -178,8 +178,8 @@ The gallery's MatchPointsLayer example covers each source, all recipients, large
 winning amounts, explicit reconnects, and 1v1 / free-for-all / teams. Focused tests
 cover domain totals through complete matches in all formats, duplicate and stale
 events, snapshots, ordered arrivals, result handoff timing, GSAP cleanup, and live
-retargeting at phone portrait, landscape and desktop dimensions. Manual visual
-review on real layouts and assistive-technology announcement review remain pending.
+retargeting at phone portrait, landscape and desktop dimensions. The user approved visual validation on 2026-11-19. Manual assistive-technology
+announcement review remains pending.
 
 `index.ts` also exports `ScoreAwardsPreview` for the animation playground's Points
 tab. Both development surfaces share this fixture and the live match's points
@@ -213,3 +213,10 @@ The counting fixture waits until its board ref is attached before mounting the
 motion layer. It begins directly in a count frame, unlike the live board that
 initially mounts without motion. Its preview test checks board readiness in the
 child layout effect, including format changes and replay.
+
+Points flights scale to the board's available space and shrink into the measured
+score tile. The badge owns the flight pivot; its source caption sits below it and
+fades during travel. `pointsFlight` constrains the visible badge/caption to the
+board edges, including the upward arc and entrance overshoot. Geometry tests cover
+667×320 and 844×390 landscape, portrait, desktop and orientation changes. Browser
+checks at both landscape sizes confirmed flights arrive without clipping.

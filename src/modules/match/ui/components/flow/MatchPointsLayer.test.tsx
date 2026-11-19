@@ -113,3 +113,31 @@ it("kills interrupted timelines and restores the destination without awarding", 
   expect(view.slot.style.transform).toBe("");
   expect(view.arrive).not.toHaveBeenCalled();
 });
+
+it("resizes the token during its source-reading pause without restarting the award", () => {
+  const view = mount();
+  const bounds = vi
+    .spyOn(view.root, "getBoundingClientRect")
+    .mockReturnValue({ left: 0, top: 0, width: 844, height: 390 } as DOMRect);
+  vi.spyOn(view.slot, "getBoundingClientRect").mockReturnValue({
+    left: 50,
+    top: 4,
+    width: 40,
+    height: 28,
+  } as DOMRect);
+  const timeline = timelines.at(-1)!;
+  act(() => {
+    timeline.time(0.3);
+    window.dispatchEvent(new Event("resize"));
+  });
+  const token = view.root.querySelector<HTMLElement>("[data-score-award]")!;
+  const before = Number(gsap.getProperty(token, "scale"));
+  bounds.mockReturnValue({ left: 0, top: 0, width: 667, height: 320 } as DOMRect);
+  act(() => {
+    window.dispatchEvent(new Event("resize"));
+  });
+  expect(Number(gsap.getProperty(token, "scale"))).toBeLessThan(before);
+  expect(timelines.at(-1)).toBe(timeline);
+  expect(view.arrive).not.toHaveBeenCalled();
+  view.unmount();
+});

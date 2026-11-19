@@ -5,6 +5,7 @@ import { PointsBadge } from "@/components/cards/PointsBadge";
 import type { ScoreAward } from "@/domain/entities/GameState";
 
 import { scoreAwardLabel } from "../../../application/scorePresentation";
+import { pointsFlight } from "./pointsFlight";
 
 export function MatchPointsLayer({
   board,
@@ -22,6 +23,7 @@ export function MatchPointsLayer({
   arrive: (id: string, announcement: string) => void;
 }) {
   const token = useRef<HTMLDivElement>(null);
+  const caption = useRef<HTMLSpanElement>(null);
   const callbacks = useRef({ arrive, sideName });
   callbacks.current = { arrive, sideName };
 
@@ -48,42 +50,49 @@ export function MatchPointsLayer({
       finish();
       return;
     }
-    const pose = { progress: 0 };
+    const pose = { progress: 0, reveal: 0.65 };
     // Read live rectangles during playback: resize, orientation and layout shifts
     // retarget the token without restarting the award or changing its identity.
     const position = () => {
-      const bounds = root.getBoundingClientRect();
-      const from = source?.getBoundingClientRect();
-      const to = destination.getBoundingClientRect();
-      const startX = from ? from.left + from.width / 2 : bounds.left + bounds.width / 2;
-      const startY = from ? from.top + from.height / 2 : bounds.top + bounds.height * 0.48;
-      const endX = to.left + to.width / 2;
-      const endY = to.top + to.height / 2;
-      const p = pose.progress;
-      gsap.set(element, {
-        x: startX + (endX - startX) * p - bounds.left,
-        y:
-          startY +
-          (endY - startY) * p -
-          bounds.top -
-          Math.sin(p * Math.PI) * Math.min(80, bounds.height * 0.12),
+      const flight = pointsFlight({
+        bounds: root.getBoundingClientRect(),
+        source: source?.getBoundingClientRect(),
+        destination: destination.getBoundingClientRect(),
+        badge: { width: element.offsetWidth || 56, height: element.offsetHeight || 56 },
+        caption: {
+          width: caption.current?.offsetWidth ?? 0,
+          height: caption.current?.offsetHeight ?? 0,
+        },
+        progress: pose.progress,
+        reveal: pose.reveal,
       });
+      gsap.set(element, { x: flight.x, y: flight.y, scale: flight.scale });
+      if (caption.current) gsap.set(caption.current, { opacity: flight.captionOpacity });
     };
     const context = gsap.context(() => {
-      gsap.set(element, { xPercent: -50, yPercent: -50, opacity: 0, scale: 0.65 });
+      gsap.set(element, { xPercent: -50, yPercent: -50, opacity: 0 });
       position();
       gsap
         .timeline({ onComplete: finish })
-        .to(element, { opacity: 1, scale: 1, duration: 0.18, ease: "back.out(1.4)" })
+        .to(element, { opacity: 1, duration: 0.18 })
+        .to(pose, { reveal: 1, duration: 0.18, ease: "back.out(1.4)", onUpdate: position }, 0)
         .to(
           pose,
           { progress: 1, duration: 0.65, ease: "power2.inOut", onUpdate: position },
           "+=0.35",
         )
-        .to(element, { opacity: 0, scale: 0.45, duration: 0.14 })
+        .to(element, { opacity: 0, duration: 0.14 })
         .fromTo(destination, { scale: 1.12 }, { scale: 1, duration: 0.2, ease: "sine.out" }, "<");
     }, root);
-    return () => context.revert();
+    window.addEventListener("resize", position);
+    const observer =
+      typeof ResizeObserver === "undefined" ? undefined : new ResizeObserver(position);
+    observer?.observe(root);
+    return () => {
+      window.removeEventListener("resize", position);
+      observer?.disconnect();
+      context.revert();
+    };
   }, [award, board, reducedMotion, returning]);
 
   if (!award || returning) return null;
@@ -92,10 +101,13 @@ export function MatchPointsLayer({
       <div
         ref={token}
         data-score-award={award.id}
-        className="absolute top-0 left-0 grid justify-items-center gap-1 whitespace-nowrap"
+        className="absolute top-0 left-0 grid justify-items-center whitespace-nowrap"
       >
-        <PointsBadge points={`+${award.amount}`} className="size-14" />
-        <span className="rounded-md bg-background/90 px-2 py-1 text-xs text-foreground shadow-md">
+        <PointsBadge points={`+${award.amount}`} className="size-14 @2xl:size-14" />
+        <span
+          ref={caption}
+          className="absolute top-full left-1/2 mt-1 -translate-x-1/2 rounded-md bg-background/90 px-2 py-1 text-xs text-foreground shadow-md"
+        >
           {scoreAwardLabel(award)}
         </span>
       </div>

@@ -232,10 +232,18 @@ awaits manual responsive visual review; it does not change approved art masters.
 
 ### Pocket-counting revision
 
-Trial implementation: cards now leave each player's collected pile and enter the
+Cards now leave each player's collected pile and enter the
 opening of their team's existing leather pocket. Both quota and extra cards take
 this route; extras retain the bonus coin/ribbon response. Cards size to the pocket,
 approach above its lip, and are progressively hidden behind it as they descend.
 This replaces the separate quota-card stack on the table. The animation playground's
 Table → Count cards study now uses the live counter artwork and renderer for review.
-No artwork master or runtime image changes are required. Visual approval is pending.
+No artwork master or runtime image changes are required. Visual validation was approved by the user on 2026-11-19.
+
+The earned-points badge now scales down for compact boards and docks inside the
+recipient's measured score tile. Its provenance label fades during travel; the
+flight pivots around the badge itself and stays inside the board edges. This
+addresses clipping at the top scoreboard in mobile landscape without changing
+the shared PointsBadge artwork or its appearance elsewhere.
+
+The user approved the responsive points-flight validation on 2026-11-19.
