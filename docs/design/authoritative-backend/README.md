@@ -1,6 +1,6 @@
 # Authoritative multiplayer and platform research (#129)
 
-Date: 2026-11-19. Status: discovery in progress; no provider selected.
+Date: 2026-11-19. Status: research reviewed and approved for handoff; no provider selected.
 Owner: [issue #129](https://github.com/Donkijote/fall/issues/129).
 Related: [cross-platform distribution](../platform-distribution/README.md).
 
@@ -10,7 +10,8 @@ The owner requested a collaborative brainstorming and research phase for Fall's
 future player experience, authoritative multiplayer, accounts and related services.
 This issue produces documentation and scoped follow-up issues. Implementation
 belongs in those follow-ups. The draft PR targets `develop` to preserve the research
-and decision history; creating it does not mean the research is complete.
+and decision history. The owner approved this research handoff on 2026-11-19;
+provider selection and runtime validation belong to #143, implementation to #144.
 
 No artwork is introduced, so this technical investigation has no prompt manifest,
 mockups or background master.
@@ -602,10 +603,10 @@ issue checklists track their verification; research completion does not mark the
 ## Research acceptance criteria
 
 - [x] Record the owner's product vision, launch priorities, future ideas and unresolved questions.
-- [ ] Compare backend/auth candidates against agreed requirements with sources, tradeoffs and validation gaps.
-- [ ] Document a justified architecture direction, data/command/event boundaries, progression policy and staged rollout; label provisional decisions explicitly.
+- [x] Compare backend/auth candidates against agreed requirements with sources, tradeoffs and validation gaps.
+- [x] Document a justified architecture direction, data/command/event boundaries, progression policy and staged rollout; label provisional decisions explicitly.
 - [x] Create and link scoped research/spike and implementation follow-up issues with acceptance criteria and dependencies.
-- [ ] Review the research with the owner and reconcile issue/PR checklists before handoff.
+- [x] Review the research with the owner and reconcile issue/PR checklists before handoff.
 
 ## Discussion record
 
@@ -744,3 +745,10 @@ and planned native constraints separately. Compare custom flows with any styled
 prebuilt approach only if it preserves the intended product design; do not select
 prebuilt screens or replace the current UI without a design decision. No UI or
 runtime authentication work is implemented by this research update.
+
+2026-11-19, research handoff: owner approved the research and requested ready status,
+validation and squash merge into develop. The research comparison and provisional
+architecture are complete at documentation scope. Provider selection, authentication
+flow validation, workload measurements and remaining gameplay details are carried
+into #143/#144; their unchecked implementation criteria remain unfulfilled. No
+runtime implementation, paid service or final vendor choice is approved here.
