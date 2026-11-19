@@ -22,6 +22,8 @@ running app to check current controls and behavior.
 Technical investigations: [Cross-platform distribution (#126)](platform-distribution/README.md)
 records the proposed delivery strategy, validation gates and implementation plan.
 It introduces no artwork references.
+[Authoritative multiplayer and platform research (#129)](authoritative-backend/README.md)
+records the ongoing product discovery, backend evaluation agenda and follow-up scope.
 
 ## Feature folder standard
 
