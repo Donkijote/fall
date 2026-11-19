@@ -60,7 +60,9 @@ active match portrait as remaining-time feedback. This extends the existing ring
 concept; it is a research proposal, not implemented or visually approved UI.
 The [backend research](../authoritative-backend/README.md) owns the proposed clock,
 server deadline and reconnect interaction. Automatic server-controlled legal play
-at turn expiry is agreed; repeated-inactivity and move-selection details remain open.
+at turn expiry is agreed; five consecutive inactive turns count as abandonment.
+Move selection and counter details remain open. The owner suggested notifying the
+teammate in team mode; notification timing and visual treatment remain undecided.
 
 Future implementation in #144 should extend the shared ring motion owner, preserving
 GSAP, reduced motion and cleanup behavior. The server owns the deadline; local

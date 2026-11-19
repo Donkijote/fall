@@ -34,8 +34,9 @@ mockups or background master.
 - Confirmed abandonment: explicit 1v1 departure gives the opponent a win; explicit
   team departure ends the match as a loss for that team and a win for the other.
 - Confirmed turn-timeout behavior: when a turn expires, the server automatically
-  plays a legal move for that player. Move-selection and repeated-inactivity policies
-  remain open; the proposed initial turn limit is 30 seconds.
+  plays a legal move for that player. Five consecutive inactive turns count as
+  abandonment; move selection remains open. The proposed initial turn limit is
+  30 seconds.
 - Confirmed: a bot replaces an abandoned free-for-all seat. Temporary disconnects
   receive a waiting/reconnect period in the 60–90 second range; choose the exact
   default and repeated-disconnect policy before implementation.
@@ -240,14 +241,27 @@ Research proposal for implementation:
 
 Agreed gameplay rule: when the turn expires, the server automatically plays a legal
 move on behalf of the player. A single missed turn does not immediately forfeit the
-match. The choice among legal moves, bot information access, consecutive-miss
-threshold and reset/return behavior remain open. The server chooses and validates
-the move; the client cannot select or claim an automatic move after expiry.
+match. Five consecutive inactive turns count as abandonment, applying the agreed
+format-specific outcome: opponent wins in 1v1, the inactive team loses in 2v2,
+and a bot takes the seat in free-for-all. The choice among legal moves and bot
+information access remain open. The server chooses and validates the move; the
+client cannot select or claim an automatic move after expiry.
+
+Working interpretation: count consecutive expired turns belonging to that player,
+and reset the counter after an accepted manual move. Count each resolved timeout
+once; duplicate jobs or retries cannot add misses. Confirm counter reset/return
+semantics and whether the fifth automatic move precedes abandonment or abandonment
+replaces that move. Coordinate this with the still-open reconnect grace policy.
+
+Owner suggestion: notify the teammate in a team match about inactivity or
+abandonment. Notification timing, warning threshold, wording and presentation
+remain open; this suggestion is not yet an approved notification design.
 
 Implementation proposal: make expiry resolution idempotent for the turn identity;
 if a human move was accepted first, the stale timeout must not add another play.
-Test the reverse ordering and the deadline boundary too. No automatic-move strategy
-or repeated-inactivity penalty is approved by the basic auto-play decision.
+Test the reverse ordering and the deadline boundary too. Verify four missed turns
+continue play and the fifth triggers abandonment exactly once. The automatic-move
+selection strategy remains undecided.
 
 ### Free-for-all abandonment — decision and alternatives considered
 
@@ -305,8 +319,10 @@ They connect the product vision to questions the architecture evaluation must an
 2. Complete backend/auth comparison and agree the experiment/selection gates below.
    Finalize initial social login providers, verification/recovery and account linking.
 3. Review the proposed 30-second turn clock and draining profile ring; choose the
-   auto-play selection policy, consecutive-miss threshold, other timed decisions and
-   turn-start/presentation semantics. Automatic legal play at expiry is agreed.
+   auto-play selection policy, inactivity counter reset/fifth-turn ordering, other
+   timed decisions and turn-start/presentation semantics. Automatic legal play and
+   abandonment after five consecutive inactive turns are agreed. Decide teammate
+   notification timing and treatment.
    Choose exact reconnect duration within 60–90 seconds, pause behavior, repeated-
    disconnect budget, bot/result policy and server-outage recovery.
 4. Confirm whether later offline bot practice grants no persistent rewards and costs
@@ -621,3 +637,9 @@ changed. Timeout behavior and exact presentation/server timing remain open for r
 a legal move. Recorded as agreed in this research and in #143/#144; no runtime
 implementation or completed verification is implied. Repeated-inactivity penalties
 and the choice among legal moves are still open.
+
+2026-11-19, inactivity decision: owner chose five consecutive inactive turns as
+abandonment, replacing the proposed three-turn threshold. Owner also suggested
+notifying the teammate in team mode. Notification timing remains open. Counter
+reset after manual play is a working interpretation; fifth-turn ordering and
+interaction with reconnect grace require confirmation before implementation.
