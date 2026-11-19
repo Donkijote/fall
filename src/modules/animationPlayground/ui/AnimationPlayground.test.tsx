@@ -58,6 +58,28 @@ function open() {
 }
 
 describe("Animation playground", () => {
+  it("isolates the shared points animation and resets or leaves an active flight", () => {
+    open();
+    fireEvent.click(screen.getByRole("tab", { name: "Points" }));
+    expect(screen.getByRole("heading", { name: "Earned points" })).toBeVisible();
+    expect(screen.queryByLabelText("Scene state")).not.toBeInTheDocument();
+    expect(screen.queryByRole("spinbutton", { name: "Timeline speed" })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Clear table" }));
+    expect(document.querySelector("[data-score-award]")).toHaveTextContent("+4");
+    fireEvent.click(screen.getByRole("button", { name: "Reset scene" }));
+    expect(document.querySelector("[data-score-award]")).toBeNull();
+    expect(screen.getByRole("list", { name: "Scores" })).toHaveTextContent("0");
+    fireEvent.click(screen.getByRole("button", { name: "1vs2" }));
+    expect(document.querySelectorAll("[data-score-side]")).toHaveLength(3);
+    fireEvent.click(screen.getByRole("button", { name: "2vs2" }));
+    expect(document.querySelectorAll("[data-score-side]")).toHaveLength(2);
+    fireEvent.click(screen.getByRole("button", { name: "All recipients" }));
+    expect(document.querySelector("[data-score-award]")).not.toBeNull();
+    fireEvent.click(screen.getByRole("tab", { name: /^Card/ }));
+    expect(document.querySelector("[data-score-award]")).toBeNull();
+    expect(screen.getByRole("button", { name: "Play / replay" })).toBeVisible();
+  });
+
   it("replays from fresh state rather than toggling the previous result", () => {
     open();
     expect(scene().faceUp).toBe(true);

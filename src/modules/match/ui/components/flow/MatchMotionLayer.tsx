@@ -22,8 +22,10 @@ export function MatchMotionLayer({
   reducedMotion,
   returning,
   complete,
+  countSpeed = 1,
 }: {
   board: RefObject<HTMLDivElement | null>;
+  countSpeed?: number;
   frame: MatchFrame;
   reducedMotion: boolean;
   returning: boolean;
@@ -174,6 +176,7 @@ export function MatchMotionLayer({
     };
     channel.publish({
       scene: measured.scene,
+      countSpeed,
       handoff,
       complete: finish,
       count: (side, snapshot) => counters?.update(side, snapshot),
@@ -202,7 +205,7 @@ export function MatchMotionLayer({
       for (const [element, visibility] of original) element.style.visibility = visibility;
       window.removeEventListener("resize", remeasure);
     };
-  }, [animate, audio, board, channel, frame, motion, returning]);
+  }, [animate, audio, board, channel, countSpeed, frame, motion, returning]);
 
   if (!animate || returning) return null;
   return (

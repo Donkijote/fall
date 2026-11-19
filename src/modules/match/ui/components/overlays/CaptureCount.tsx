@@ -78,6 +78,11 @@ export function CaptureCount({
                     alt=""
                     className="absolute inset-x-0 top-[15%] h-[85%] w-full"
                   />
+                  <span
+                    aria-hidden="true"
+                    data-capture-pocket={side}
+                    className="absolute inset-x-[15%] top-[31%] h-[8%]"
+                  />
                   <div className="absolute inset-x-[7%] top-0 isolate grid h-[49%] place-items-center pb-[20%]">
                     <img src={tile} alt="" className="absolute inset-0 -z-10 size-full" />
                     <span

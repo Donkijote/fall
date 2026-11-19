@@ -85,6 +85,16 @@ test.each([
       }
     }
     state = frames.at(-1)!.state;
+    // Every scoring path emits exact resolved deltas with unique match-stream IDs.
+    const awarded: Record<string, number> = {};
+    for (const award of state.scoreAwards ?? []) {
+      awarded[award.side] = (awarded[award.side] ?? 0) + award.amount;
+      expect(state.players.find(({ id }) => id === award.player)?.team).toBe(Number(award.side));
+    }
+    expect(awarded).toEqual(state.scores.values);
+    expect(new Set(state.scoreAwards?.map(({ id }) => id)).size).toBe(
+      state.scoreAwards?.length ?? 0,
+    );
   }
 
   expect(completedRounds).toBeGreaterThan(0);
@@ -154,6 +164,28 @@ test.each([
       card: "coins-3",
       targets: cascade ? ["swords-3", "cups-4"] : ["swords-3"],
     });
+    expect(frames.at(-1)!.state.scoreAwards).toEqual([
+      {
+        id: "score:1",
+        side: "1",
+        player: localPlayerId,
+        amount: 4,
+        reason: "clear",
+        source: "table",
+      },
+      ...(fall
+        ? [
+            {
+              id: "score:2",
+              side: "1",
+              player: localPlayerId,
+              amount: 1,
+              reason: "fall",
+              source: "table",
+            },
+          ]
+        : []),
+    ]);
   },
 );
 

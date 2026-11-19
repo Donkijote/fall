@@ -8,7 +8,7 @@ import {
   useRef,
   type RefObject,
 } from "react";
-import { MathUtils, type Group, type Texture } from "three";
+import { MathUtils, Plane, Vector3, type Group, type Texture } from "three";
 
 import emberTexture from "@/assets/effects/ember.svg";
 import { sampleCardCapture } from "@/components/cards/motion/cardCapture";
@@ -54,6 +54,7 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { cardPitch, viewHeight, type PlaybackChannel, type PlaybackProps } from "./matchCardScene";
 import { matchFallEffect } from "./matchFallEffect";
 import { sampleFallCascade } from "./sampleFallCascade";
+import { samplePocketCount } from "./samplePocketCount";
 
 const faceUrls = createDeck().flatMap(({ suit, rank }) => getCardFaceUrl(suit, rank) ?? []);
 
@@ -78,6 +79,7 @@ function CardSequence({
   handoff,
   count,
   pileRemaining,
+  countSpeed = 1,
   sequence,
   textures,
   shadow,
@@ -98,6 +100,10 @@ function CardSequence({
     scene.kind === "collect" && scene.capture === "fall" ? scene.targets[0] : undefined;
   const effects = useFallImpactEffects(matchFallEffect(fallTarget?.art?.rank));
   const meshes = useRef<Group[]>([]);
+  const pocketClips = useMemo(
+    () => cards.map(() => [new Plane(new Vector3(0, 1, 0), 1e6)]),
+    [sequence],
+  );
   const timelineRef = useRef<gsap.core.Timeline>(null);
   const playback = useMemo(
     () => ({
@@ -316,7 +322,8 @@ function CardSequence({
       let offset = 0;
       scene.groups.forEach((group, groupIndex) => {
         const counter = playback.count[groupIndex];
-        const progress = groupIndex === playback.side ? counter.advance(delta) : undefined;
+        const progress =
+          groupIndex === playback.side ? counter.advance(delta, countSpeed) : undefined;
         if (progress) count(group.side, progress);
         const remaining = new Map<string, number>();
         group.cards.forEach((card, index) => {
@@ -326,30 +333,24 @@ function CardSequence({
             node.visible = false;
             return;
           }
-          const pose = counter.pose(index);
-          // Translate the study's source and destination into the current viewport.
-          const travel = pose.travel;
-          remaining.set(card.player, (remaining.get(card.player) ?? 0) + Number(travel === 0));
-          const bonus = index >= group.quota;
-          const end = {
-            x: bonus ? group.target.x : group.target.x - 0.9,
-            y: group.target.y - (bonus ? 0 : 0.45),
-          };
-          pose.position[0] += MathUtils.lerp(
-            card.origin.x - 2.1,
-            end.x - (bonus ? 0 : -0.9),
-            travel,
+          const pose = samplePocketCount(
+            index,
+            progress?.seconds ?? 0,
+            group.quota,
+            card.origin,
+            group.pocket,
+            card.size,
           );
-          pose.position[1] += MathUtils.lerp(
-            card.origin.y + 0.6,
-            end.y - (bonus ? 0 : -0.45),
-            travel,
+          remaining.set(
+            card.player,
+            (remaining.get(card.player) ?? 0) + Number(pose.progress === 0),
           );
+          pocketClips[offset - 1][0].constant = pose.entering ? -group.pocket.mouth.y : 1e6;
           applyPose(node, pose, card.size);
-          node.visible = travel > 0 && pose.visible;
+          node.visible = pose.visible;
         });
         for (const [player, total] of remaining) pileRemaining(player, total);
-        if (progress?.complete) playback.rest += delta;
+        if (progress?.complete) playback.rest += delta * countSpeed;
       });
       if (playback.rest >= 0.65) {
         playback.rest = 0;
@@ -372,7 +373,7 @@ function CardSequence({
               0,
             )
           : timeline!.duration();
-      handoff(seconds);
+      handoff(scene.kind === "count" ? seconds / countSpeed : seconds);
     }
     if (!playback.finished) invalidate();
   });
@@ -396,6 +397,7 @@ function CardSequence({
         >
           <group rotation={[0, scene.kind === "count" ? 0 : Math.PI, 0]} scale={[1, 1, 0.24]}>
             <CardMesh
+              clippingPlanes={scene.kind === "count" ? pocketClips[index] : undefined}
               frost={
                 fallTarget && index === 0 && effects.effect === "ice" ? effects.frost : undefined
               }
@@ -481,7 +483,7 @@ const MatchCardCanvas = memo(function MatchCardCanvas({ channel }: { channel: Pl
       flat
       dpr={[1, 2]}
       style={{ pointerEvents: "none" }}
-      gl={{ alpha: true, antialias: true }}
+      gl={{ alpha: true, antialias: true, localClippingEnabled: true }}
       frameloop="demand"
     >
       <Scene channel={channel} />

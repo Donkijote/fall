@@ -212,3 +212,38 @@ During card-deal playback, including the table/hand deal after dealer selection,
 the dealer keeps the active ring and arrow until the deal completes. The next
 player's turn begins at the completed frame. Partial ring arcs use soft gradient
 edges for both arrival and release rather than a sharp radial cutoff.
+
+## Earned-points treatment — #127
+
+Implementation uses the existing standalone PointsBadge brass artwork: one weighted
+token displays the full resolved `+amount`, accompanied by the award reason near
+its source, then arcs into the recipient's ivory score tile. This keeps large
+awards readable and bounded. A short coin trail was considered; the single token
+was selected to avoid crowding the compact landscape scoreboard and to preserve
+an exact visible amount. No new illustration, palette, or asset export is needed.
+
+Awards start after their card/capture-count handoff and queue in resolved order.
+The destination gives a restrained pulse and the tally counts to its new value.
+A match-winning token finishes before the illustrated result. Reduced motion uses
+an immediate tally and a static recipient/amount/reason message. The component
+gallery includes deterministic controls for sources, simultaneous recipients,
+winning amounts and reconnect snapshots in every format. This implementation
+awaits manual responsive visual review; it does not change approved art masters.
+
+### Pocket-counting revision
+
+Cards now leave each player's collected pile and enter the
+opening of their team's existing leather pocket. Both quota and extra cards take
+this route; extras retain the bonus coin/ribbon response. Cards size to the pocket,
+approach above its lip, and are progressively hidden behind it as they descend.
+This replaces the separate quota-card stack on the table. The animation playground's
+Table → Count cards study now uses the live counter artwork and renderer for review.
+No artwork master or runtime image changes are required. Visual validation was approved by the user on 2026-11-19.
+
+The earned-points badge now scales down for compact boards and docks inside the
+recipient's measured score tile. Its provenance label fades during travel; the
+flight pivots around the badge itself and stays inside the board edges. This
+addresses clipping at the top scoreboard in mobile landscape without changing
+the shared PointsBadge artwork or its appearance elsewhere.
+
+The user approved the responsive points-flight validation on 2026-11-19.

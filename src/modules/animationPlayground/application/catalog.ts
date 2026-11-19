@@ -154,7 +154,7 @@ const tableLessons: Lesson[] = [
     label: "Count cards",
     libraries: "Three.js · React",
     description:
-      "Count a captured pile after the deck runs out. Set aside the quota, then turn each extra card into another point in the centre of the table.",
+      "Count each collected pile into its team's pocket on the counter artwork. Quota cards and extra cards enter the same pocket; each extra card adds a bonus point.",
   },
   {
     experiment: "reset-table",

@@ -123,13 +123,13 @@ export const finalizeAfterPlay = (
 
   // Clean table award (only if not last round)
   if (nextState.table.length === 0 && !isLastRound) {
-    nextState = awardPoints(nextState, playerId, 4);
+    nextState = awardPoints(nextState, playerId, 4, { reason: "clear", source: "table" });
   }
 
   // Fall rule scoring
   if (isFall) {
     const pts = fallPoints(card.rank);
-    nextState = awardPoints(nextState, playerId, pts);
+    nextState = awardPoints(nextState, playerId, pts, { reason: "fall", source: "table" });
   }
 
   nextState = checkGameOver(nextState, nextState.config.targetPoints);

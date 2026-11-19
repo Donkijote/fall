@@ -22,6 +22,9 @@ describe("Deal", () => {
     expect(state).toStrictEqual({
       ...stateWithDealer,
       dealer: stateWithDealer.players[0].id,
+      scoreAwards: [
+        { id: "score:1", side: "1", player: "1", amount: 10, reason: "opening", source: "table" },
+      ],
       scores: {
         type: "individual",
         values: {

@@ -84,7 +84,7 @@ export function applyTablePatternBonus(
   }
   if (total > 0) {
     const dealerId = state.dealer;
-    state = awardPoints(state, dealerId, total);
+    state = awardPoints(state, dealerId, total, { reason: "opening", source: "table" });
     state = checkGameOver(state, state.config.targetPoints);
   }
   return state;

@@ -15,6 +15,8 @@ import {
   simulatedGuests,
 } from "../../../application/matchSeats";
 import { MatchMotionLayer } from "../flow/MatchMotionLayer";
+import { MatchPointsLayer } from "../flow/MatchPointsLayer";
+import { useScorePresentation } from "../flow/useScorePresentation";
 import { MatchResult } from "../overlays/MatchResult";
 import { MatchSeatCards, MatchTableCards } from "./MatchBoardCards";
 import { MatchControls } from "./MatchControls";
@@ -46,6 +48,8 @@ export function PlayableBoard({
   close: () => void;
   leaveControl: ReactNode;
 }) {
+  const presentationRoot = useRef<HTMLDivElement>(null);
+  const points = useScorePresentation(frame, reducedMotion);
   const hud = useRef<HTMLDivElement>(null);
   const scope = useRef<HTMLDivElement>(null);
   const restoreHandFocus = useRef(false);
@@ -60,7 +64,7 @@ export function PlayableBoard({
       : undefined;
   const canPlay =
     !returning && !motion && state.phase === "play" && state.currentPlayer === localPlayerId;
-  const finished = !motion && state.phase === "gameOver";
+  const finished = !motion && !points.busy && state.phase === "gameOver";
 
   useGSAP(
     () => {
@@ -93,7 +97,7 @@ export function PlayableBoard({
 
   return (
     <>
-      <div className="absolute inset-0" inert={returning || finished}>
+      <div ref={presentationRoot} className="absolute inset-0" inert={returning || finished}>
         <h1 className="sr-only">{title}</h1>
         <div
           ref={hud}
@@ -106,7 +110,12 @@ export function PlayableBoard({
                 "compact-landscape:col-span-2 compact-landscape:col-start-1 compact-landscape:justify-self-start",
             )}
           >
-            <MatchScoreboard state={state} sideName={sideName} />
+            <MatchScoreboard
+              state={state}
+              sideName={sideName}
+              displayed={points.displayed}
+              reducedMotion={reducedMotion}
+            />
           </div>
           {leaveControl}
         </div>
@@ -173,6 +182,26 @@ export function PlayableBoard({
             complete={completeMotion}
           />
         </div>
+        <MatchPointsLayer
+          board={presentationRoot}
+          award={points.pending[0]}
+          reducedMotion={reducedMotion}
+          returning={returning}
+          sideName={sideName}
+          arrive={points.arrive}
+        />
+        <p
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+          className={cn(
+            "pointer-events-none absolute inset-x-4 top-[23%] z-30 mx-auto w-fit max-w-[calc(100%-2rem)] rounded-md bg-background/90 px-3 py-2 text-center text-sm text-foreground shadow-md",
+            !reducedMotion && "sr-only",
+            !points.announcement && "sr-only",
+          )}
+        >
+          {points.announcement}
+        </p>
       </div>
       {finished && (
         <MatchResult

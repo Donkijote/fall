@@ -134,3 +134,89 @@ from the completed play frame. This is presentation ownership only: it does not
 change domain turn order or enable card input during a deal. `matchSeats.test.ts`
 covers the deal-to-play handoff in every mode and both deal orders, including a
 playable destination state while deal playback still owns the indicator.
+
+## Earned points — GHI #127
+
+The shared `awardPoints` service emits a cumulative `ScoreAward` stream alongside
+immediate authoritative totals. Each payload contains a stable match-stream ID,
+recipient side and player, resolved amount, reason, optional Sing name, and source
+anchor kind. No scoring formula lives in presentation code. The audited paths are:
+
+| Rule owner                    | Award                                         | Anchor                     |
+| ----------------------------- | --------------------------------------------- | -------------------------- |
+| `deal.applyTablePatternBonus` | Opening pattern bonus                         | Table centre               |
+| `resolveHands.resolveHands`   | Winning Sing, including its name              | Winner's hand              |
+| `moves.finalizeAfterPlay`     | Clear table and Fall, separate ordered events | Table centre               |
+| `scoring.applyCountingRule`   | Each positive captured-card award             | Recipient's capture pocket |
+| `scoring.awardPoints` default | Other/future resolved awards                  | Table centre               |
+
+`application/scorePresentation` deduplicates event IDs, queues simultaneous awards,
+and maintains displayed totals independently of game state. IDs are scoped to one
+match stream; a future server can supply authoritative IDs through the same payload.
+Initial mount establishes a snapshot baseline. Reconnect adapters must provide a
+`MatchFrame` with `snapshot: true`; snapshot totals/corrections settle immediately,
+cancel pending presentation, and retain seen IDs. Duplicate delivery, stale retries,
+and repeated completion callbacks cannot credit or present an award twice.
+
+`useScorePresentation` observes resolved frames after card captures, deals/Sings,
+and the capture-count overlay finish. It does not defer rule resolution or server
+processing. `MatchPointsLayer` uses one weighted PointsBadge per award, shows the
+provenance at its source, follows a GSAP arc into the exact side's scoreboard slot,
+and pulses the destination before updating the displayed tally. Multiple events
+remain ordered, including teammates sharing a slot. Live rectangles are read during
+flight so responsive layout changes retarget without replay. Missing source anchors
+fall back to the table centre. Missing destinations settle immediately. DOM motion
+has no WebGL dependency. GSAP contexts and tally tweens are disposed on interruption,
+leave, snapshot, and unmount. Result presentation waits for all awards and the final
+260ms tally interpolation (with a 300ms handoff allowance).
+
+Reduced motion settles immediately, keeps the most recent recipient/amount/reason
+visible above the table, and announces it through a polite status region. Normal
+motion uses the same accessible feedback without a second visual notification.
+
+The gallery's MatchPointsLayer example covers each source, all recipients, large
+winning amounts, explicit reconnects, and 1v1 / free-for-all / teams. Focused tests
+cover domain totals through complete matches in all formats, duplicate and stale
+events, snapshots, ordered arrivals, result handoff timing, GSAP cleanup, and live
+retargeting at phone portrait, landscape and desktop dimensions. The user approved visual validation on 2026-11-19. Manual assistive-technology
+announcement review remains pending.
+
+`index.ts` also exports `ScoreAwardsPreview` for the animation playground's Points
+tab. Both development surfaces share this fixture and the live match's points
+layer/tally implementation. Reset scene remounts only the preview table, disposing
+pending flights and clearing scores while retaining the chosen format.
+
+## Pocket counting revision
+
+Counting now targets `CaptureCount`'s measured `data-capture-pocket` opening,
+separate from its bonus-coin anchor. Every quota and extra card lifts from its
+owner's collected pile, fits the pocket width, approaches above the opening,
+and slides behind the leather lip. `samplePocketCount` owns this rendered pose;
+per-card world-space clipping hides the portion below the opening during entry.
+Completed cards disappear into the pocket instead of forming a second table pile.
+The shared counting arrival schedule still updates cards/bonus values only after
+insertion. Teammates feed their own piles into their shared side's pocket.
+
+The existing scene remeasurement retargets the pocket and clip plane on resize.
+A missing/unmeasurable pocket uses the established count fallback. The shared
+CardMesh accepts optional clipping planes; ordinary cards retain `null` clipping.
+`samplePocketCount.test.ts` covers origins on every side, quota and extra-card
+entry, complete consumption and resize; `measureCardScene.test.ts` covers side,
+team and source-pile measurement in all three formats.
+
+`CaptureCountingPreview` is the public fixture used by the animation playground's
+Table → Count cards study. It composes the live seats/piles, counter artwork,
+measurement, renderer, count feedback and completion fallback. The fixture exposes
+all formats and reuses the playground's total, quota, speed, replay and reset.
+
+The counting fixture waits until its board ref is attached before mounting the
+motion layer. It begins directly in a count frame, unlike the live board that
+initially mounts without motion. Its preview test checks board readiness in the
+child layout effect, including format changes and replay.
+
+Points flights scale to the board's available space and shrink into the measured
+score tile. The badge owns the flight pivot; its source caption sits below it and
+fades during travel. `pointsFlight` constrains the visible badge/caption to the
+board edges, including the upward arc and entrance overshoot. Geometry tests cover
+667×320 and 844×390 landscape, portrait, desktop and orientation changes. Browser
+checks at both landscape sizes confirmed flights arrive without clipping.
