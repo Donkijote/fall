@@ -687,7 +687,8 @@ Current first-party evidence:
   Auth and external OIDC providers including Clerk. Convex is the backend choice;
   identity can be hosted separately.
 - [Convex Auth v2](https://docs.convex.dev/auth/convex-auth) is now documented as
-  stable for React web apps, with Google OAuth and other providers. The v2 docs
+  stable for React web apps, with Apple, Google and GitHub as its currently
+  documented OAuth providers. Facebook is not currently listed. The v2 docs
   state third-party providers are currently free and warn pricing may change.
   Convex backend quotas still apply. Production Google credentials and callback
   configuration remain setup work.
@@ -715,3 +716,31 @@ Auth keeps identity within the Convex stack but its documented verification poli
 currently conflicts with the launch requirement. Resolve that mismatch explicitly;
 do not drop email/password, enable paid services or choose a vendor without evidence.
 The earlier backend comparison and $0 validation gates still apply.
+
+### Authentication UI fit and provider scope — 2026-11-19
+
+Owner observation: Convex Auth v2 currently lists Apple, Google and GitHub for
+OAuth. The [current v2 overview](https://docs.convex.dev/auth/convex-auth) confirms
+that list, alongside separate username/password, email/password and passkey methods.
+Do not infer arbitrary OAuth-provider support from that list. Clerk is a separate
+identity service integrated with Convex, not another social provider in that list.
+Google remains the preferred first social provider; future Facebook support must
+be verified against the actual chosen integration when scoped.
+
+Owner concern: Clerk's prebuilt screens may not fit Fall's existing authentication
+artwork and components. [Clerk custom flows](https://clerk.com/docs/guides/development/custom-flows/overview)
+explicitly allow a custom UI using its SDKs. A custom flow is therefore an option,
+not a requirement to replace Fall's design. The tradeoff is owning more UI behavior
+and testing: input validation, loading/errors, OAuth redirect/callback handling,
+sign-up/sign-in transitions, session activation, recovery and any later verification
+or account-linking steps. Clerk still owns its authentication service; Fall does
+not need to implement password storage or cryptography to use a custom flow.
+
+Evaluate this later in #143 before vendor selection: use the existing Fall login
+and registration presentation to compare a minimal Google flow plus requested
+email/password and recovery. Record the SDK effort, required states, callback and
+session behavior, accessibility, test coverage and maintenance burden. Check web
+and planned native constraints separately. Compare custom flows with any styled
+prebuilt approach only if it preserves the intended product design; do not select
+prebuilt screens or replace the current UI without a design decision. No UI or
+runtime authentication work is implemented by this research update.
