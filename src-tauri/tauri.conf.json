@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "fall",
+  "productName": "The Fall",
   "version": "0.1.0",
-  "identifier": "com.tauri.dev",
+  "identifier": "com.donkijote.the-fall",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:3000",
