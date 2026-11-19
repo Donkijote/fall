@@ -52,3 +52,23 @@ forty bounded DOM sparks with bright cores, broader scatter and 480ms trails,
 emitted along the advancing edge with GSAP. On level-up,
 the previous bar finishes before the next level begins. Reduced motion sets the
 new fill immediately and suppresses sparks; accessibility values remain immediate.
+
+## Proposed turn countdown — research #129
+
+The owner suggested a 30-second card-play turn and a draining circle around the
+active match portrait as remaining-time feedback. This extends the existing ring
+concept; it is a research proposal, not implemented or visually approved UI.
+The [backend research](../authoritative-backend/README.md) owns the proposed clock,
+server deadline and reconnect interaction. Automatic server-controlled legal play
+at turn expiry is agreed; five consecutive inactive turns count as abandonment.
+Move selection and server counter details remain open. A future enhancement after
+Tavern multiplayer would show only the teammate a popup with the inactivity count
+(1/5, 2/5, 3/5), adding a forfeit warning at 3/5. This counter/notification UI is
+outside the first release; final visual treatment and wording remain undecided.
+Copy must reflect automatic legal play at expiry rather than a skipped turn.
+
+Future implementation in #144 should extend the shared ring motion owner, preserving
+GSAP, reduced motion and cleanup behavior. The server owns the deadline; local
+countdown animation only presents it. Decide how activity draw/orbit/wipe composes
+with depletion and provide remaining-time feedback that does not rely on motion or
+color alone. The existing approved active-ring behavior remains the current baseline.
