@@ -33,6 +33,9 @@ mockups or background master.
   is a possible later feature. Energy is spent when starting a match or stage.
 - Confirmed abandonment: explicit 1v1 departure gives the opponent a win; explicit
   team departure ends the match as a loss for that team and a win for the other.
+- Confirmed turn-timeout behavior: when a turn expires, the server automatically
+  plays a legal move for that player. Move-selection and repeated-inactivity policies
+  remain open; the proposed initial turn limit is 30 seconds.
 - Confirmed: a bot replaces an abandoned free-for-all seat. Temporary disconnects
   receive a waiting/reconnect period in the 60–90 second range; choose the exact
   default and repeated-disconnect policy before implementation.
@@ -196,7 +199,8 @@ Owner proposal: **30 seconds per card-play turn**, with the active player's exis
 circular profile highlight draining to communicate remaining time and warn as it
 runs out. Treat 30 seconds as an initial proposed setting, not a measured match-length
 guarantee. The 60–90 second reconnection waiting period is a separate policy.
-Dealer-choice/other decision phases and timeout consequences remain unspecified.
+Dealer-choice/other decision phases remain unspecified. Expired card-play turns
+automatically produce a server-controlled legal move, as confirmed by the owner.
 
 Existing presentation evidence:
 
@@ -234,11 +238,16 @@ Research proposal for implementation:
   on repeated disconnects, all-absent matches or backend delays. Merely hiding the
   countdown does not pause the server deadline.
 
-Open gameplay decision: when a connected player exceeds 30 seconds, what happens?
-Initial recommendation for discussion: a server-controlled legal automatic move for
-one missed turn, with repeated-inactivity handling specified separately. This has
-not been accepted. Compare it with abandonment penalties before finalizing the rule;
-do not let the client select/claim an automatic move after expiry.
+Agreed gameplay rule: when the turn expires, the server automatically plays a legal
+move on behalf of the player. A single missed turn does not immediately forfeit the
+match. The choice among legal moves, bot information access, consecutive-miss
+threshold and reset/return behavior remain open. The server chooses and validates
+the move; the client cannot select or claim an automatic move after expiry.
+
+Implementation proposal: make expiry resolution idempotent for the turn identity;
+if a human move was accepted first, the stale timeout must not add another play.
+Test the reverse ordering and the deadline boundary too. No automatic-move strategy
+or repeated-inactivity penalty is approved by the basic auto-play decision.
 
 ### Free-for-all abandonment — decision and alternatives considered
 
@@ -295,8 +304,9 @@ They connect the product vision to questions the architecture evaluation must an
    Exact launch countries and sustained usage remain assumptions to establish.
 2. Complete backend/auth comparison and agree the experiment/selection gates below.
    Finalize initial social login providers, verification/recovery and account linking.
-3. Review the proposed 30-second turn clock and draining profile ring; decide
-   timeout consequences, other timed decisions and turn-start/presentation semantics.
+3. Review the proposed 30-second turn clock and draining profile ring; choose the
+   auto-play selection policy, consecutive-miss threshold, other timed decisions and
+   turn-start/presentation semantics. Automatic legal play at expiry is agreed.
    Choose exact reconnect duration within 60–90 seconds, pause behavior, repeated-
    disconnect budget, bot/result policy and server-outage recovery.
 4. Confirm whether later offline bot practice grants no persistent rewards and costs
@@ -606,3 +616,8 @@ implementation. Both retain unresolved policies as explicit gates, not invented 
 active profile's circular animation as a draining countdown/time warning. Existing
 shared ring ownership was inspected; no component or animation implementation was
 changed. Timeout behavior and exact presentation/server timing remain open for review.
+
+2026-11-19, timeout decision: owner confirmed that expiration automatically plays
+a legal move. Recorded as agreed in this research and in #143/#144; no runtime
+implementation or completed verification is implied. Repeated-inactivity penalties
+and the choice among legal moves are still open.

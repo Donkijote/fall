@@ -59,7 +59,8 @@ The owner suggested a 30-second card-play turn and a draining circle around the
 active match portrait as remaining-time feedback. This extends the existing ring
 concept; it is a research proposal, not implemented or visually approved UI.
 The [backend research](../authoritative-backend/README.md) owns the proposed clock,
-server deadline, reconnect interaction and open timeout rules.
+server deadline and reconnect interaction. Automatic server-controlled legal play
+at turn expiry is agreed; repeated-inactivity and move-selection details remain open.
 
 Future implementation in #144 should extend the shared ring motion owner, preserving
 GSAP, reduced motion and cleanup behavior. The server owns the deadline; local
