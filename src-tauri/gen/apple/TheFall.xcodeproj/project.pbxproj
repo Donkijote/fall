@@ -266,6 +266,9 @@
 					"\".\"",
 				);
 				INFOPLIST_FILE = TheFall_iOS/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "The Fall";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.card-games";
+				IPHONEOS_DEPLOYMENT_TARGET = "$(RECOMMENDED_IPHONEOS_DEPLOYMENT_TARGET)";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -364,6 +367,9 @@
 					"\".\"",
 				);
 				INFOPLIST_FILE = TheFall_iOS/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "The Fall";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.card-games";
+				IPHONEOS_DEPLOYMENT_TARGET = "$(RECOMMENDED_IPHONEOS_DEPLOYMENT_TARGET)";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
