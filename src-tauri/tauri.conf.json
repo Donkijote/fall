@@ -12,9 +12,9 @@
   "app": {
     "windows": [
       {
-        "title": "The Fall",
-        "width": 1575,
-        "height": 984,
+        "title": "",
+        "width": 17720,
+        "height": 1233,
         "resizable": true,
         "fullscreen": false
       }
