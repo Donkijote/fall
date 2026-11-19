@@ -111,7 +111,9 @@ Localization is part of the broader vision; launch language coverage is unconfir
 The first screen is login. Players must sign in or create an account before online
 play, using email/password or a social provider. Google and Facebook are the owner's
 examples; the exact launch provider list is not finalized. No guest entry is planned
-for online play. Offline practice access before login is an independent open question.
+for online play. Email verification is a required later capability, deferred until
+after the first Tavern release; it does not gate playing in that initial release.
+Offline practice access before login is an independent open question.
 
 Research should evaluate a provider against both this small release and the future
 vision. Implementation should establish only the boundaries the Tavern release
@@ -152,6 +154,11 @@ and regeneration rate remain unchosen.
 
 - Login/registration is required for online play. Support email/password and social
   sign-in; confirm the precise initial providers before choosing an auth integration.
+- Email verification is planned after the initial Tavern release. Keep verification
+  status distinct from identity and authentication; an unverified email must not be
+  treated as proof of mailbox ownership for account linking. Later verification
+  enforcement, treatment of existing accounts and delivery/provider costs need a
+  dedicated scope. Password recovery remains a separate authentication requirement.
 - The player selects a Tavern format and enters a waiting queue/lobby. Other players
   seeking the same format fill the match: two for 1v1, three for free-for-all and
   four for teams. Public matchmaking is the confirmed baseline; private rooms,
@@ -324,7 +331,8 @@ They connect the product vision to questions the architecture evaluation must an
    agreed optimistic 20-match/80–100 connection scenario; define performance budgets.
    Exact launch countries and sustained usage remain assumptions to establish.
 2. Complete backend/auth comparison and agree the experiment/selection gates below.
-   Finalize initial social login providers, verification/recovery and account linking.
+   Finalize initial social login providers, recovery and account linking. Email
+   verification is deferred beyond the first release.
 3. Review the proposed 30-second turn clock and draining profile ring; choose the
    auto-play selection policy, inactivity counter reset/fifth-turn ordering, other
    timed decisions and turn-start/presentation semantics. Automatic legal play and
@@ -656,3 +664,9 @@ inactive turns with a 1/5, 2/5, 3/5 counter, plus an additional warning at 3/5 t
 five consecutive inactive turns lead to abandonment. This is a future enhancement
 after Tavern multiplayer, not a first-release requirement. Draft copy describes an
 automatic legal move rather than skipping a turn; final UI design remains open.
+
+2026-11-19, email verification decision: owner wants email addresses verified in a
+later release. Initial Tavern login/registration must not require verification as
+a play gate. Password recovery is a separate scope and was not deferred by this
+decision. Provider evaluation should retain a feasible future verification path;
+verification delivery and enforcement are not first-release acceptance criteria.
