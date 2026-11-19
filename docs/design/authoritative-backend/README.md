@@ -110,7 +110,8 @@ mode are later capabilities, not acceptance requirements for the first release.
 Localization is part of the broader vision; launch language coverage is unconfirmed.
 The first screen is login. Players must sign in or create an account before online
 play, using email/password or a social provider. Google and Facebook are the owner's
-examples; the exact launch provider list is not finalized. No guest entry is planned
+examples. Google is now the preferred first social provider to evaluate; Facebook
+has no first-release commitment. The auth implementation is not selected. No guest entry is planned
 for online play. Email verification is a required later capability, deferred until
 after the first Tavern release; it does not gate playing in that initial release.
 Offline practice access before login is an independent open question.
@@ -513,10 +514,13 @@ Supporting Convex mechanics, distinct from our proposed architecture:
   are stored durably and survive restarts. Proposal: persist deadlines and schedule
   version-checked handlers instead of per-second writes or a permanent match loop.
   Measure execution delay and quota cost; scheduling is not a strict latency promise.
-- [Convex Auth passwords](https://labs.convex.dev/auth/config/passwords) documents
-  sign-up/sign-in and email-provider configuration for reset/verification. Auth email
-  delivery, sender/domain requirements and cost still need review. Social providers,
-  secure account linking and native callbacks need their own integration validation.
+- Current [Convex Auth v2](https://docs.convex.dev/auth/convex-auth) documentation
+  supersedes the earlier v1 password reference used in this investigation. V2 is
+  stable for supported React web apps, supports Google OAuth, and documents an
+  email/password flow requiring email validation before sign-in. That conflicts
+  with the owner's deferred-verification first release; validate this constraint
+  before selecting it. Auth email delivery/cost, linking and native callbacks still
+  need review; documented React Native support remains experimental.
 
 ### Proposed bounded experiment and selection gates
 
@@ -670,3 +674,44 @@ later release. Initial Tavern login/registration must not require verification a
 a play gate. Password recovery is a separate scope and was not deferred by this
 decision. Provider evaluation should retain a feasible future verification path;
 verification delivery and enforcement are not first-release acceptance criteria.
+
+### Google-first authentication comparison — 2026-11-19
+
+Owner preference: begin by evaluating Google as the first social sign-in option.
+Facebook can wait. Email/password remains in the requested account scope; this is
+not a decision to make launch Google-only or to choose an auth vendor.
+
+Current first-party evidence:
+
+- [Convex authentication overview](https://docs.convex.dev/auth) supports Convex
+  Auth and external OIDC providers including Clerk. Convex is the backend choice;
+  identity can be hosted separately.
+- [Convex Auth v2](https://docs.convex.dev/auth/convex-auth) is now documented as
+  stable for React web apps, with Google OAuth and other providers. The v2 docs
+  state third-party providers are currently free and warn pricing may change.
+  Convex backend quotas still apply. Production Google credentials and callback
+  configuration remain setup work.
+- [V2 email/password](https://docs.convex.dev/auth/convex-auth/methods/email-password)
+  requires email validation before sign-in. This is a known mismatch with the
+  agreed unverified-email launch flow, not a reason to silently change that flow.
+  Experimental React Native support also requires coordination with #140.
+- [Clerk Hobby pricing](https://clerk.com/pricing) currently lists $0/month,
+  50,000 monthly retained users per application, three dashboard seats and three
+  social connections. Retained users are users returning at least one day after
+  signup; this is neither concurrent players nor Convex function capacity. The
+  listed Pro baseline is $20/month billed annually; upgrades are outside the
+  present budget. Recheck billing/limit behavior before adopting a plan.
+- [Clerk Google connection](https://clerk.com/docs/guides/configure/auth-strategies/social-connections/google)
+  uses shared credentials in development, while production requires custom Google
+  OAuth credentials. [The official Convex integration](https://clerk.com/docs/guides/development/integrations/databases/convex)
+  documents ClerkProvider, ConvexProviderWithClerk and server-side identity access.
+  This establishes an integration path, not a completed Fall implementation.
+
+Research recommendation: compare two concrete paths in #143: Convex with Convex
+Auth v2, and Convex with Clerk Hobby, both using Google first. Clerk is a reasonable
+candidate when hosted account flows are useful; first verify its exact free-plan
+email/password, deferred-verification, recovery, linking and native behavior. Convex
+Auth keeps identity within the Convex stack but its documented verification policy
+currently conflicts with the launch requirement. Resolve that mismatch explicitly;
+do not drop email/password, enable paid services or choose a vendor without evidence.
+The earlier backend comparison and $0 validation gates still apply.
