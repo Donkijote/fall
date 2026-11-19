@@ -190,6 +190,56 @@ connection-loss grace period can enter the eventual format-specific forfeit poli
 Server outages require their own recovery/void policy rather than player penalties.
 The waiting-period direction is agreed; these remaining mechanics are open.
 
+### Proposed turn clock and profile-ring countdown
+
+Owner proposal: **30 seconds per card-play turn**, with the active player's existing
+circular profile highlight draining to communicate remaining time and warn as it
+runs out. Treat 30 seconds as an initial proposed setting, not a measured match-length
+guarantee. The 60–90 second reconnection waiting period is a separate policy.
+Dealer-choice/other decision phases and timeout consequences remain unspecified.
+
+Existing presentation evidence:
+
+- [PlayerPortrait](../../../src/components/hud/PlayerPortrait.tsx) exposes active
+  highlight/attention flags, not a deadline/countdown contract.
+- [usePortraitTurnMotion](../../../src/components/hud/usePortraitTurnMotion.ts) owns
+  the GSAP ring draw, orbit, wipe and reflection. The ring currently communicates
+  activity, not remaining server-authorized turn time.
+- [MatchSeatMarker](../../../src/modules/match/ui/components/board/MatchSeatMarker.tsx)
+  composes that shared portrait and the active turn pointer.
+- [Player identity design](../player-identity/README.md) remains the canonical ring
+  visual reference. This is a proposed extension, not a change to approved artwork.
+
+Research proposal for implementation:
+
+- The server persists a turn ID/revision, authoritative opening timestamp and deadline,
+  and validates command eligibility against those values. A stale timeout job cannot
+  expire a later turn. Competing play/timeout requests resolve once under one rule.
+- Specify a bounded server-owned playable window/presentation allowance so dealing
+  and capture playback do not silently consume a player's entire decision window.
+  Never let a client's animation completion or readiness acknowledgement indefinitely
+  hold game progress. Test slow rendering, reduced motion and late snapshot arrivals.
+- The client derives remaining time from a server-time reference and deadline and
+  renders a full-to-empty profile arc locally using GSAP. No per-frame or per-second
+  server writes are needed for the proposed display. Background/resume, refresh,
+  correction and reconnect seek to the current remaining time rather than restarting.
+- Extend the shared ring's single motion owner so the countdown and existing
+  draw/orbit/wipe cannot animate the same arc in conflict. Match presentation passes
+  timing data; other portrait uses need not become timers. Preserve shared tokens,
+  artwork, native behavior and cleanup conventions.
+- Keep a legible remaining-time cue and accessible warning independent of arc motion
+  or color. Reduced motion uses immediate/discrete updates; avoid announcing every
+  second. Warning thresholds, text/placement and any sound are unchosen.
+- Define whether reconnect grace freezes a turn's remaining time, and what happens
+  on repeated disconnects, all-absent matches or backend delays. Merely hiding the
+  countdown does not pause the server deadline.
+
+Open gameplay decision: when a connected player exceeds 30 seconds, what happens?
+Initial recommendation for discussion: a server-controlled legal automatic move for
+one missed turn, with repeated-inactivity handling specified separately. This has
+not been accepted. Compare it with abandonment penalties before finalizing the rule;
+do not let the client select/claim an automatic move after expiry.
+
 ### Free-for-all abandonment — decision and alternatives considered
 
 - Cancel/void: straightforward outcome semantics, but an abandoning player can erase
@@ -245,8 +295,10 @@ They connect the product vision to questions the architecture evaluation must an
    Exact launch countries and sustained usage remain assumptions to establish.
 2. Complete backend/auth comparison and agree the experiment/selection gates below.
    Finalize initial social login providers, verification/recovery and account linking.
-3. Choose exact reconnect duration within the accepted 60–90 second range, turn
-   clocks, repeated-disconnect budget, bot/result policy and server-outage recovery.
+3. Review the proposed 30-second turn clock and draining profile ring; decide
+   timeout consequences, other timed decisions and turn-start/presentation semantics.
+   Choose exact reconnect duration within 60–90 seconds, pause behavior, repeated-
+   disconnect budget, bot/result policy and server-outage recovery.
 4. Confirm whether later offline bot practice grants no persistent rewards and costs
    no online energy; defer economy values and paid-resource rules to later scopes.
 
@@ -549,3 +601,8 @@ optimistic planning scenario; actual initial usage is unknown and may be lower.
 Region documentation was reviewed, but no latency/capacity claim was made.
 Created #143 for zero-budget backend validation and #144 for the dependent Tavern
 implementation. Both retain unresolved policies as explicit gates, not invented rules.
+
+2026-11-19, turn-clock proposal: owner suggested 30 seconds per turn and using the
+active profile's circular animation as a draining countdown/time warning. Existing
+shared ring ownership was inspected; no component or animation implementation was
+changed. Timeout behavior and exact presentation/server timing remain open for review.
