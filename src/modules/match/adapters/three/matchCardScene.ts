@@ -31,7 +31,7 @@ export type CardScene =
         side: number;
         quota: number;
         cards: (SceneCard & { player: string })[];
-        target: CardPoint;
+        pocket: { mouth: CardPoint; cardSize: number };
       }[];
     };
 
@@ -40,6 +40,7 @@ export const cardPitch = 0.0075;
 
 export type PlaybackProps = {
   scene: CardScene;
+  countSpeed?: number;
   audio: CardMotionAudio;
   complete: () => void;
   handoff: (seconds: number) => void;

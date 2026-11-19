@@ -229,3 +229,13 @@ an immediate tally and a static recipient/amount/reason message. The component
 gallery includes deterministic controls for sources, simultaneous recipients,
 winning amounts and reconnect snapshots in every format. This implementation
 awaits manual responsive visual review; it does not change approved art masters.
+
+### Pocket-counting revision
+
+Trial implementation: cards now leave each player's collected pile and enter the
+opening of their team's existing leather pocket. Both quota and extra cards take
+this route; extras retain the bonus coin/ribbon response. Cards size to the pocket,
+approach above its lip, and are progressively hidden behind it as they descend.
+This replaces the separate quota-card stack on the table. The animation playground's
+Table → Count cards study now uses the live counter artwork and renderer for review.
+No artwork master or runtime image changes are required. Visual approval is pending.

@@ -119,31 +119,40 @@ export function measureCardScene(root: Element, frame: MatchFrame) {
       if (!scene.targets.length || (scene.capture !== "sweep" && !scene.played)) return;
     }
   } else {
-    scene = {
-      kind: "count",
-      groups: motion.groups.map(({ side, quota }) => {
-        const label = find("capture-anchor", String(side));
-        const target = label ? anchor(label.getBoundingClientRect()) : { x: 0, y: 0, z: 0 };
-        return {
-          side,
-          quota,
-          target,
-          cards: motion.piles
-            .filter((pile) => pile.side === side)
-            .flatMap(({ player, cards }) => {
-              const pile = stackAt("collector", player);
-              if (!pile || !cards.length) return [];
-              const rect = pile.getBoundingClientRect();
-              return cards.map((art) => ({
-                player,
-                art,
-                origin: anchor(rect),
-                size: (rect.height * unit) / 2.88,
-              }));
-            }),
-        };
-      }),
-    };
+    const groups: Extract<CardScene, { kind: "count" }>["groups"] = [];
+    const sources = new Map<string, DOMRect>();
+    for (const { player, cards } of motion.piles) {
+      if (!cards.length) continue;
+      const rect = stackAt("collector", player)?.getBoundingClientRect();
+      if (!rect?.width || !rect.height) return;
+      sources.set(player, rect);
+    }
+    for (const { side, quota } of motion.groups) {
+      const mouth = find("capture-pocket", String(side));
+      // A missing overlay must settle through fallback rather than fly into an
+      // invented position or the bonus coin. Measure the actual leather opening.
+      if (!mouth) return;
+      const rect = mouth.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      groups.push({
+        side,
+        quota,
+        pocket: { mouth: anchor(rect), cardSize: (rect.width * unit * 0.85) / 2.06 },
+        cards: motion.piles
+          .filter((pile) => pile.side === side)
+          .flatMap(({ player, cards }) => {
+            if (!cards.length) return [];
+            const rect = sources.get(player)!;
+            return cards.map((art) => ({
+              player,
+              art,
+              origin: anchor(rect),
+              size: (rect.height * unit) / 2.88,
+            }));
+          }),
+      });
+    }
+    scene = { kind: "count", groups };
   }
   return { scene, hidden };
 }

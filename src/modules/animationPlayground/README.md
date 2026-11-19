@@ -63,3 +63,12 @@ Reset scene cancels any flight and restores zero scores. The study uses the live
 match's DOM/GSAP token, scoreboard and sequencing hook directly, without a WebGL
 scene or unrelated card-animation tuning. Returning to a card study restores its
 normal catalog and controls.
+
+Table → Count cards now embeds the match module's public
+`CaptureCountingPreview`. It shows the real counter artwork and each player's
+collected pile, including two teammates feeding a shared pocket. The previous
+study's quota pile on the table and centre-point destination have been removed.
+Play/replay and tuning reset the count; format selection persists through replay.
+The original playground canvas stays mounted but stops rendering while the live
+count preview owns the scene. Both ordinary and extra cards enter their respective
+pocket, while the existing counter and bonus-point treatment update on arrival.

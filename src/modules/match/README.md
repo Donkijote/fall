@@ -185,3 +185,31 @@ review on real layouts and assistive-technology announcement review remain pendi
 tab. Both development surfaces share this fixture and the live match's points
 layer/tally implementation. Reset scene remounts only the preview table, disposing
 pending flights and clearing scores while retaining the chosen format.
+
+## Pocket counting revision
+
+Counting now targets `CaptureCount`'s measured `data-capture-pocket` opening,
+separate from its bonus-coin anchor. Every quota and extra card lifts from its
+owner's collected pile, fits the pocket width, approaches above the opening,
+and slides behind the leather lip. `samplePocketCount` owns this rendered pose;
+per-card world-space clipping hides the portion below the opening during entry.
+Completed cards disappear into the pocket instead of forming a second table pile.
+The shared counting arrival schedule still updates cards/bonus values only after
+insertion. Teammates feed their own piles into their shared side's pocket.
+
+The existing scene remeasurement retargets the pocket and clip plane on resize.
+A missing/unmeasurable pocket uses the established count fallback. The shared
+CardMesh accepts optional clipping planes; ordinary cards retain `null` clipping.
+`samplePocketCount.test.ts` covers origins on every side, quota and extra-card
+entry, complete consumption and resize; `measureCardScene.test.ts` covers side,
+team and source-pile measurement in all three formats.
+
+`CaptureCountingPreview` is the public fixture used by the animation playground's
+Table → Count cards study. It composes the live seats/piles, counter artwork,
+measurement, renderer, count feedback and completion fallback. The fixture exposes
+all formats and reuses the playground's total, quota, speed, replay and reset.
+
+The counting fixture waits until its board ref is attached before mounting the
+motion layer. It begins directly in a count frame, unlike the live board that
+initially mounts without motion. Its preview test checks board readiness in the
+child layout effect, including format changes and replay.

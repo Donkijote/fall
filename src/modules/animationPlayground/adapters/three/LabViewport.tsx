@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 
 import emberTexture from "@/assets/effects/ember.svg";
 import { CardArtworkProvider, cardArtwork } from "@/components/cards/three/CardArtwork";
+import { CaptureCountingPreview } from "@/modules/match";
 
 import { Grid, useTexture } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
@@ -11,7 +12,6 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import type { Experiment, Lab, LabState, Study } from "../../application/lab";
 import { Card } from "./Card";
 import { CardDrop } from "./CardDrop";
-import { CountingStudy } from "./CountingStudy";
 import { DeckStack } from "./DeckStack";
 import { Fire } from "./Fire";
 import { TableStudy } from "./TableStudy";
@@ -35,6 +35,7 @@ export type SceneSettings = {
   dpr: number;
   countTotal: number;
   countQuota: number;
+  speed: number;
 };
 
 function Scene({
@@ -137,6 +138,7 @@ export function LabViewport({
 }) {
   const { dpr, perf } = settings;
   const deck = study === "deck";
+  const counting = study === "table" && state.tableCounts > 0;
   const hint = {
     card: state.cardFalls
       ? {
@@ -163,8 +165,10 @@ export function LabViewport({
       <div className="relative min-h-0 flex-1">
         <Canvas
           camera={{ position: [0, 0.22, 6.9], fov: 43 }}
+          frameloop={counting ? "never" : "always"}
           dpr={[1, dpr]}
           gl={{ antialias: true }}
+          style={{ visibility: counting ? "hidden" : "visible" }}
           fallback={
             <p className="p-8 text-center text-muted-foreground">
               WebGL is unavailable in this browser.
@@ -185,13 +189,6 @@ export function LabViewport({
                   <CardStudy lab={lab} state={state} settings={settings} revision={revision} />
                 )}
                 {deck && <DeckStack lab={lab} />}
-                {study === "table" && state.tableCounts > 0 && (
-                  <CountingStudy
-                    lab={lab}
-                    total={settings.countTotal}
-                    quota={settings.countQuota}
-                  />
-                )}
                 {study === "table" && state.tableCounts === 0 && (
                   <TableStudy
                     lab={lab}
@@ -204,6 +201,14 @@ export function LabViewport({
             </Suspense>
           </Scene>
         </Canvas>
+        {counting && (
+          <CaptureCountingPreview
+            revision={revision}
+            total={settings.countTotal}
+            quota={settings.countQuota}
+            speed={settings.speed}
+          />
+        )}
       </div>
       {perf && <PerformanceHud />}
       <div
