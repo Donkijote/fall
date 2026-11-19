@@ -21,8 +21,11 @@ mockups or background master.
   findings in the repository and a draft PR; derive future work from the findings.
 - Confirmed repository constraint: reuse framework-independent shared game rules;
   keep provider SDKs, transport and persistence in adapters.
-- Open: launch scope, longer-term product vision, provider, account model, social
-  features, progression, economy, operating budget and rollout sequence.
+- Confirmed product direction: shared accounts and progression across multiplayer,
+  solo Adventure and ranked Arena, with energy, currencies and future commercial,
+  social and content systems described below. This is a vision, not a launch commitment.
+- Open: launch scope, provider, account details, economy values, operating budget
+  and rollout sequence. Feature policies below remain open unless explicitly stated.
 - Convex, Cloudflare Durable Objects and Nakama are candidates from the original
   brief. Familiarity with Convex is context, not a selection decision.
 
@@ -44,6 +47,74 @@ Inspected `develop` commit: `47a491b`.
   client versions; coordinate those contracts with #140.
 
 These observations describe source structure, not a tested backend.
+
+## Owner product vision — 2026-11-19
+
+The following records the owner's stated intentions. Timing is unspecified except
+where the owner explicitly described a later feature. No values, purchases or
+provider integrations have been implemented or approved by this document.
+
+| Area                      | Intended experience                                                                                                       | Decisions still needed                                                                                                                       |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| Multiplayer foundation    | Play against other people; validate actions, played cards and points within each match.                                   | Matchmaking, invitations, clocks, reconnect and abandonment rules; launch formats.                                                           |
+| Accounts                  | User login and account creation.                                                                                          | Providers, guest access, linking, recovery and cross-device sessions.                                                                        |
+| Shared progression        | Retain player level, XP and earned XP, coins and gems across game modes; grant rewards for leveling up.                   | Reward sources/amounts, level curve, currency uses, eligibility and claim behavior.                                                          |
+| Adventure                 | Solo story split into many stages; play and win matches against the computer; retain stage progress.                      | Online requirement, replay rewards, stage unlocking, difficulty, narrative structure and content delivery.                                   |
+| Arena                     | Challenge other players; wins and losses move the player's rank up or down.                                               | Rating/rank model, matchmaking, seasons, rewards, ties and abandoned matches.                                                                |
+| Energy                    | Limited energy; actions consume it and time restores it.                                                                  | What counts as an action, per-mode costs, cap, refill interval, spending point, refunds and whether any play stays available at zero energy. |
+| Monetization              | Buy gems with real money; spend gems on extra energy or coins.                                                            | Packs, pricing, grants, purchase verification, restoration, refunds and platform/channel strategy.                                           |
+| Cosmetics (later)         | Multiple card and table skins, purchasable with gems.                                                                     | Ownership, selection, visibility to opponents, bundles and earned alternatives.                                                              |
+| Special-card mode (later) | Another mode involving powers tied to special cards a player can have.                                                    | Collection/acquisition model, power rules, deck construction and separation from ordinary/ranked play.                                       |
+| Localization              | Translate the whole game, including story content.                                                                        | First languages, fallback, translation workflow and versioning of narrative/configuration content.                                           |
+| Characters                | Game characters, with several profile characters players can unlock or buy.                                               | Narrative versus profile character relationship, unlock conditions, currency and character effects.                                          |
+| Clans                     | A clan mode/system and clan chat.                                                                                         | Membership, roles, shared activities, rewards and management.                                                                                |
+| Messaging                 | Direct player messaging plus clan chat.                                                                                   | Friend/contact rules, retention, blocking, reporting and moderation.                                                                         |
+| Daily quests              | Dynamic quests that can change each day, such as winning a match or completing an action; completing them grants rewards. | Shared versus personal rotation, reset timezone, assignment, expiry, eligibility, rerolls and claims.                                        |
+
+Naming clarification: the owner referred to “castle match” as the current Tavern.
+Keep this as a working name; confirm whether it means a rename or a distinct mode.
+Characters were mentioned alongside this mode and Arena; their role needs clarification.
+Future additions remain possible; the backend research must consider extensibility
+without treating unknown features as present implementation scope.
+
+## Working architecture hypotheses to investigate
+
+These are research proposals, not owner decisions or verified provider capabilities.
+They connect the product vision to questions the architecture evaluation must answer.
+
+- Use one persistent player identity across modes, linked to authentication
+  identities. Distinguish account identity, cosmetic/profile selection and match seats.
+- Give the backend ownership of retained balances, energy, progression, rank,
+  reward claims and purchase entitlements. Clients submit intents; accepted domain
+  outcomes drive durable changes and recipient-safe views.
+- Treat online Adventure with rewards as a trust question too: a computer opponent
+  does not by itself make a client-reported win trustworthy. Compare server-run
+  matches with validated command logs, including bot and random-seed ownership.
+  Offline reward-bearing Adventure needs its own explicit trust/reconciliation policy.
+- Model currency changes with durable transaction records and deduplicated sources
+  such as a completed match, quest claim, level reward or verified purchase.
+  Specify recovery across boundaries so retries never duplicate a grant or spend.
+- Investigate energy derived from server timestamps and a regeneration policy;
+  do not assume a permanently running per-player timer is necessary. Decide what
+  joining, cancelling, disconnecting and completing a match do to the energy charge.
+- Record quest assignments and rule/content versions so a daily configuration change
+  cannot reinterpret an in-progress objective or let a reward be claimed twice.
+- Keep match rules, economy/rank/quest policies and story content separately
+  versioned. Power cards must not silently change the rules of an existing match.
+- Evaluate match hosting separately from account, economy and social services,
+  while comparing an integrated deployment with a split design. Separate ownership
+  boundaries do not require separate servers or microservices.
+- Plan localization keys and versioned content references for story, quests and
+  characters; display wording must not become the identity of a reward or rule.
+
+## Next discovery decisions
+
+1. Choose the first playable online release: which modes and progression systems
+   are required, and which can follow later?
+2. Decide whether Adventure must work without an internet connection, and what
+   happens to retained rewards if it does.
+3. Define energy granularity and the competitive role of purchased resources and
+   special cards before recommending an economy or ranked architecture.
 
 ## Discovery agenda
 
@@ -128,4 +199,8 @@ to #129. Separate additional research/spikes from implementation where needed.
 
 2026-11-19: Owner narrowed #129 from backend implementation to collaborative
 research and planning. Initial question asks for the overall player experience and
-future ambitions. Product requirements and provider decisions are pending answers.
+future ambitions. The owner then described multiplayer validation, accounts, shared levels/XP/coins/gems,
+solo staged Adventure, ranked Arena, regenerating energy, real-money gem purchases,
+future card/table skins and a special-card power mode, localization, characters,
+clans, direct/clan messaging and dynamic daily quests. The vision is captured above;
+launch priorities and policy decisions remain open. No provider was selected.
