@@ -180,3 +180,8 @@ cover domain totals through complete matches in all formats, duplicate and stale
 events, snapshots, ordered arrivals, result handoff timing, GSAP cleanup, and live
 retargeting at phone portrait, landscape and desktop dimensions. Manual visual
 review on real layouts and assistive-technology announcement review remain pending.
+
+`index.ts` also exports `ScoreAwardsPreview` for the animation playground's Points
+tab. Both development surfaces share this fixture and the live match's points
+layer/tally implementation. Reset scene remounts only the preview table, disposing
+pending flights and clearing scores while retaining the chosen format.

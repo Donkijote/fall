@@ -94,6 +94,7 @@ function PreviewTable({ mode }: { mode: GameMode }) {
 
 export function ScoreAwardsPreview() {
   const [mode, setMode] = useState<GameMode>("1vs1");
+  const [revision, setRevision] = useState(0);
   return (
     <div className="grid gap-3">
       <div className="flex gap-2">
@@ -107,8 +108,11 @@ export function ScoreAwardsPreview() {
             {value}
           </ActionButton>
         ))}
+        <ActionButton tone="outline" onClick={() => setRevision((current) => current + 1)}>
+          Reset scene
+        </ActionButton>
       </div>
-      <PreviewTable key={mode} mode={mode} />
+      <PreviewTable key={`${mode}:${revision}`} mode={mode} />
     </div>
   );
 }
