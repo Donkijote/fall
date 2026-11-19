@@ -39,8 +39,12 @@ mockups or background master.
 - Confirmed operating budget: $0/month for the backend at this stage. Owner knows
   Convex from an unused hobby project with no real-world usage; no project deletion
   or paid plan change has been requested.
+- Confirmed planning audience: likely Spain and Spanish-speaking Latin America,
+  possibly several countries together; exact countries and launch order are open.
+  Optimistic planning scenario is 20 concurrent matches and roughly 80–100 connected
+  players; this is not an adoption forecast or verified capacity.
 - Open: provider, exact login providers, account linking/recovery, detailed reconnect
-  and bot policies, economy values, launch audience/regions and later rollout.
+  and bot policies, economy values, exact initial countries and later rollout.
 - Convex, Cloudflare Durable Objects and Nakama are candidates from the original
   brief. Familiarity with Convex is context, not a selection decision.
 
@@ -236,8 +240,9 @@ They connect the product vision to questions the architecture evaluation must an
 
 ## Next discovery decisions
 
-1. Estimate the first audience, expected simultaneous players and player regions;
-   use assumptions explicitly if no estimate exists yet.
+1. Select representative regional test clients and workload/test duration for the
+   agreed optimistic 20-match/80–100 connection scenario; define performance budgets.
+   Exact launch countries and sustained usage remain assumptions to establish.
 2. Complete backend/auth comparison and agree the experiment/selection gates below.
    Finalize initial social login providers, verification/recovery and account linking.
 3. Choose exact reconnect duration within the accepted 60–90 second range, turn
@@ -319,6 +324,52 @@ Convex hobby project has no real-world usage and could be deleted. No deletion i
 needed to proceed with research and no deletion has been authorized. Check actual
 team usage/plan later; an unused project's existence alone proves no quota shortage.
 
+### Audience, capacity and region plan
+
+Owner expects the game may be most familiar to Spanish-speaking players in Spain
+and Latin America. Launching in several Hispanic countries together is a possibility,
+with wider expansion later. This is a likely audience, not a confirmed country list,
+localization launch matrix, data-residency requirement or traffic split.
+
+The optimistic capacity scenario is **20 simultaneous matches**. At four players
+per team match, that means **80 seated players**. Test up to **100 total connections**
+with additional players waiting or reconnecting; do not count a reconnecting user
+as a second seat. One hundred seated players would require 25 full team matches,
+a different scenario. Actual initial traffic may be much lower.
+
+This sets a load-test envelope, not a capacity promise. Concurrent users alone do
+not establish daily/monthly calls or data usage. Record sustained play hours, match
+length and commands, subscription fan-out, lobby churn, deadline/bot jobs, retry
+traffic, retained results and headroom. Derive quota projections from measured
+consumption per scenario plus explicit duration/retention assumptions. Keep latency,
+correctness and monthly allowance as separate validation gates.
+
+[Convex regions](https://docs.convex.dev/production/regions), checked 2026-11-19,
+lists N. Virginia, Ireland, Sydney and Canada Central, with no Latin American region
+listed. A deployment's infrastructure runs in its selected region; changing regions
+requires a new deployment/project and data export/import. Non-US usage is listed at
+1.3x standard rates; verify actual Free-plan region availability and budget effects
+before creating anything rather than assuming a surcharge is a charge on free usage.
+
+Research proposal: begin with one authority region and test N. Virginia and Ireland
+as candidates for the mixed Spain/Latin America audience, subject to the actual free
+setup. Do not pick by geography alone or assume one is faster without measurements.
+Measure command-to-acknowledgement and command-to-other-client update timing from
+Spain and representative Latin American clients; choose locations as testers become
+available. State sample size, jitter, reconnect time, deadline delay and test dates.
+Set the accepted latency budgets before declaring a load test passed. Do not claim
+all Latin American countries share the same network conditions.
+
+[Cloudflare data location](https://developers.cloudflare.com/durable-objects/reference/data-location/)
+documents best-effort location hints, including Western Europe, Eastern North
+America and South America. Hints are not guaranteed placement and existing objects
+do not currently move automatically. Thus the edge frontend does not establish
+that a shared match's authoritative state runs close to every participant.
+
+These are proposed experiments; no regional client, latency or load measurements
+have been performed. Multi-region match/account coordination is outside the first
+experiment unless the measurements establish a concrete need.
+
 ### Published free paths and limitations
 
 - [Convex limits](https://docs.convex.dev/production/state/limits): Free has hard
@@ -376,7 +427,8 @@ Supporting Convex mechanics, distinct from our proposed architecture:
 
 ### Proposed bounded experiment and selection gates
 
-The eventual follow-up issue should test the actual Tavern foundation before any
+Follow-up [#143](https://github.com/Donkijote/fall/issues/143) tests the actual
+Tavern foundation before any
 Adventure, currency, energy, purchase, ranking or social implementation:
 
 1. Run authenticated independent clients through real server-owned matches in all
@@ -428,19 +480,34 @@ Keep these in follow-up scoping even if launch priorities change:
   illegal/unauthorized/stale/duplicate commands, hidden-state protection, reconnect,
   restarts and durable rewards. Document setup, migrations, deployment and diagnostics.
 
-## Follow-up issue plan
+## Follow-up issues and staged delivery
 
-No new implementation issue has been created yet: the owner discussion must define
-its scope first. For each agreed work item, record the problem, boundaries,
-dependencies, acceptance criteria and verification. Link the issues here and back
-to #129. Separate additional research/spikes from implementation where needed.
+- [#143 — Validate a zero-cost authoritative Tavern backend and authentication path](https://github.com/Donkijote/fall/issues/143)
+  owns the provider/auth comparison, representative authority spike, correctness and
+  recovery checks, regional/20-match load measurements, measured quota projections,
+  $0 dependency review and a justified selection or rejection. Convex Free is the
+  proposed first experiment; this issue is not evidence of provider selection.
+- [#144 — Implement the authenticated authoritative Tavern multiplayer foundation](https://github.com/Donkijote/fall/issues/144)
+  depends on #143's validated choice and the agreed direction from #129. It owns
+  actual accounts, public queues, authoritative matches in all formats, private
+  views, reconnect/forfeit/bot behavior, durable results, UI migration and operations.
+  It explicitly excludes progression/economy and the later product systems.
+- [#140 — Native packaging](https://github.com/Donkijote/fall/issues/140) coordinates
+  session/callback/lifecycle boundaries; web backend implementation does not wait
+  for complete native packaging.
+
+Order: finish/review #129's research direction; execute #143 and revise the decision
+record with evidence; implement/integrate #144 using the selected design; introduce
+later Adventure, progression/economy and social capabilities through separate scopes.
+No implementation or spike execution was started by creating these issues. Existing
+issue checklists track their verification; research completion does not mark them done.
 
 ## Research acceptance criteria
 
 - [x] Record the owner's product vision, launch priorities, future ideas and unresolved questions.
 - [ ] Compare backend/auth candidates against agreed requirements with sources, tradeoffs and validation gaps.
 - [ ] Document a justified architecture direction, data/command/event boundaries, progression policy and staged rollout; label provisional decisions explicitly.
-- [ ] Create and link scoped research/spike and implementation follow-up issues with acceptance criteria and dependencies.
+- [x] Create and link scoped research/spike and implementation follow-up issues with acceptance criteria and dependencies.
 - [ ] Review the research with the owner and reconcile issue/PR checklists before handoff.
 
 ## Discussion record
@@ -474,3 +541,11 @@ no real-world usage; willingness to delete it is not a deletion instruction.
 Published free plans and technical primitives were reviewed. Convex Free is the
 proposed first experiment; Cloudflare remains the main alternative. No provider
 has been selected and no account/deployment/billing settings were changed.
+
+2026-11-19, audience/capacity clarification: owner expects Spain and Latin America
+as likely first audiences and may launch in several Hispanic countries together.
+Owner offered 20 simultaneous matches, roughly 80–100 connected players, as an
+optimistic planning scenario; actual initial usage is unknown and may be lower.
+Region documentation was reviewed, but no latency/capacity claim was made.
+Created #143 for zero-budget backend validation and #144 for the dependent Tavern
+implementation. Both retain unresolved policies as explicit gates, not invented rules.
