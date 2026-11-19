@@ -450,30 +450,32 @@ describe("Game Service", () => {
 
     vi.advanceTimersByTime(1000);
 
-    expect(mockSetState).toHaveBeenCalledWith({
-      ...mockedStateWithPlayers,
-      deck: expect.any(Array),
-      players: expect.arrayContaining([
-        expect.objectContaining({
-          ...mockedStateWithPlayers.players[0],
-          hand: expect.any(Array),
-        }),
-        expect.objectContaining({
-          ...mockedStateWithPlayers.players[1],
-          hand: expect.any(Array),
-        }),
-      ]),
-      table: expect.any(Array),
-      currentPlayer: expect.any(String),
-      scores: expect.any(Object),
-      dealer: mockedStateWithPlayers.players[1].id,
-      phase: "announceSings",
-      config: {
-        ...mockedStateWithPlayers.config,
-        tablePattern: expect.any(String),
-        dealOrder: expect.any(String),
-      },
-    });
+    expect(mockSetState).toHaveBeenCalledWith(
+      expect.objectContaining({
+        ...mockedStateWithPlayers,
+        deck: expect.any(Array),
+        players: expect.arrayContaining([
+          expect.objectContaining({
+            ...mockedStateWithPlayers.players[0],
+            hand: expect.any(Array),
+          }),
+          expect.objectContaining({
+            ...mockedStateWithPlayers.players[1],
+            hand: expect.any(Array),
+          }),
+        ]),
+        table: expect.any(Array),
+        currentPlayer: expect.any(String),
+        scores: expect.any(Object),
+        dealer: mockedStateWithPlayers.players[1].id,
+        phase: "announceSings",
+        config: {
+          ...mockedStateWithPlayers.config,
+          tablePattern: expect.any(String),
+          dealOrder: expect.any(String),
+        },
+      }),
+    );
   });
 
   it("should reset game", () => {

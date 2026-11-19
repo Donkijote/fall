@@ -134,3 +134,49 @@ from the completed play frame. This is presentation ownership only: it does not
 change domain turn order or enable card input during a deal. `matchSeats.test.ts`
 covers the deal-to-play handoff in every mode and both deal orders, including a
 playable destination state while deal playback still owns the indicator.
+
+## Earned points — GHI #127
+
+The shared `awardPoints` service emits a cumulative `ScoreAward` stream alongside
+immediate authoritative totals. Each payload contains a stable match-stream ID,
+recipient side and player, resolved amount, reason, optional Sing name, and source
+anchor kind. No scoring formula lives in presentation code. The audited paths are:
+
+| Rule owner                    | Award                                         | Anchor                     |
+| ----------------------------- | --------------------------------------------- | -------------------------- |
+| `deal.applyTablePatternBonus` | Opening pattern bonus                         | Table centre               |
+| `resolveHands.resolveHands`   | Winning Sing, including its name              | Winner's hand              |
+| `moves.finalizeAfterPlay`     | Clear table and Fall, separate ordered events | Table centre               |
+| `scoring.applyCountingRule`   | Each positive captured-card award             | Recipient's capture pocket |
+| `scoring.awardPoints` default | Other/future resolved awards                  | Table centre               |
+
+`application/scorePresentation` deduplicates event IDs, queues simultaneous awards,
+and maintains displayed totals independently of game state. IDs are scoped to one
+match stream; a future server can supply authoritative IDs through the same payload.
+Initial mount establishes a snapshot baseline. Reconnect adapters must provide a
+`MatchFrame` with `snapshot: true`; snapshot totals/corrections settle immediately,
+cancel pending presentation, and retain seen IDs. Duplicate delivery, stale retries,
+and repeated completion callbacks cannot credit or present an award twice.
+
+`useScorePresentation` observes resolved frames after card captures, deals/Sings,
+and the capture-count overlay finish. It does not defer rule resolution or server
+processing. `MatchPointsLayer` uses one weighted PointsBadge per award, shows the
+provenance at its source, follows a GSAP arc into the exact side's scoreboard slot,
+and pulses the destination before updating the displayed tally. Multiple events
+remain ordered, including teammates sharing a slot. Live rectangles are read during
+flight so responsive layout changes retarget without replay. Missing source anchors
+fall back to the table centre. Missing destinations settle immediately. DOM motion
+has no WebGL dependency. GSAP contexts and tally tweens are disposed on interruption,
+leave, snapshot, and unmount. Result presentation waits for all awards and the final
+260ms tally interpolation (with a 300ms handoff allowance).
+
+Reduced motion settles immediately, keeps the most recent recipient/amount/reason
+visible above the table, and announces it through a polite status region. Normal
+motion uses the same accessible feedback without a second visual notification.
+
+The gallery's MatchPointsLayer example covers each source, all recipients, large
+winning amounts, explicit reconnects, and 1v1 / free-for-all / teams. Focused tests
+cover domain totals through complete matches in all formats, duplicate and stale
+events, snapshots, ordered arrivals, result handoff timing, GSAP cleanup, and live
+retargeting at phone portrait, landscape and desktop dimensions. Manual visual
+review on real layouts and assistive-technology announcement review remain pending.

@@ -17,6 +17,7 @@ import { MatchResult } from "../overlays/MatchResult";
 import { OpeningDeal } from "../overlays/OpeningDeal";
 import { TavernOverlayAction } from "../overlays/TavernOverlayAction";
 import { WaitingSign } from "../overlays/WaitingSign";
+import { ScoreAwardsPreview } from "./ScoreAwardsPreview";
 
 const sideName = (side: string) => ({ "1": "You", "2": "Mara", "3": "Rowan" })[side] ?? side;
 const cards: Card[] = [
@@ -210,6 +211,14 @@ export const matchGallery = {
   title: "Tavern match",
   folder: "match",
   entries: [
+    {
+      name: "MatchPointsLayer",
+      source: "src/modules/match/ui/components/flow/MatchPointsLayer.tsx",
+      variants:
+        "All award sources, multiple recipients, winning amount, snapshot and three formats",
+      usage: "Tavern match · earned points into the scoreboard",
+      Preview: ScoreAwardsPreview,
+    },
     {
       name: "WaitingSign",
       source: "src/modules/match/ui/components/overlays/WaitingSign.tsx",

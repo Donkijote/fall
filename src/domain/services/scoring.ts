@@ -1,8 +1,16 @@
-import type { GameState } from "../entities/GameState";
+import type { GameState, ScoreAward } from "../entities/GameState";
 
 export const TARGET_SCORE = 24;
 
-export function awardPoints(state: GameState, playerId: string, pts: number): GameState {
+export function awardPoints(
+  state: GameState,
+  playerId: string,
+  pts: number,
+  provenance: Pick<ScoreAward, "reason" | "source" | "detail"> = {
+    reason: "other",
+    source: "table",
+  },
+): GameState {
   if (pts <= 0) return state;
 
   const player = state.players.find((p) => p.id === playerId);
@@ -11,6 +19,16 @@ export function awardPoints(state: GameState, playerId: string, pts: number): Ga
   const teamKey = String(player.team);
   return {
     ...state,
+    scoreAwards: [
+      ...(state.scoreAwards ?? []),
+      {
+        id: `score:${(state.scoreAwards?.length ?? 0) + 1}`,
+        side: teamKey,
+        player: playerId,
+        amount: pts,
+        ...provenance,
+      },
+    ],
     scores: {
       ...state.scores,
       values: {
@@ -63,7 +81,10 @@ export function applyCountingRule(state: GameState): GameState {
 
   let next = state;
   for (const group of getCountingGroups(state)) {
-    next = awardPoints(next, group.playerId, group.cards - group.quota);
+    next = awardPoints(next, group.playerId, group.cards - group.quota, {
+      reason: "count",
+      source: "collector",
+    });
   }
   next = checkGameOver(next, state.config.targetPoints);
   return {

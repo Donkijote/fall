@@ -42,7 +42,20 @@ export interface GameConfig {
   targetPoints: number;
 }
 
+export type ScoreAward = {
+  /** Stable within a match stream; authoritative servers may supply their own IDs. */
+  id: string;
+  side: string;
+  player: string;
+  amount: number;
+  reason: "opening" | "sing" | "clear" | "fall" | "count" | "other";
+  detail?: string;
+  source: "table" | "hand" | "collector";
+};
+
 export interface GameState {
+  /** Cumulative resolved awards. Snapshots establish a baseline rather than replaying history. */
+  scoreAwards?: ScoreAward[];
   players: Player[];
   table: Card[];
   deck: Card[];

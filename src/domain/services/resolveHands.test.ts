@@ -27,7 +27,7 @@ describe("Resolve Hands", () => {
     expect(newState).toStrictEqual(state);
   });
   function announce(hands: Card[][], allowOptional = true, dealer = "1") {
-    return resolveHands({
+    const resolved = resolveHands({
       ...initialState,
       phase: "announceSings",
       dealer,
@@ -39,7 +39,12 @@ describe("Resolve Hands", () => {
         collected: [],
         score: 0,
       })),
-    }).scores.values;
+    });
+    for (const award of resolved.scoreAwards ?? []) {
+      expect(award).toMatchObject({ reason: "sing", source: "hand", detail: expect.any(String) });
+      expect(resolved.scores.values[award.side]).toBe(award.amount);
+    }
+    return resolved.scores.values;
   }
 
   function pair(rank: Rank, kicker: Rank): Card[] {

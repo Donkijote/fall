@@ -32,7 +32,7 @@ export type MatchMotion =
       piles: { player: string; side: number; cards: Card[] }[];
     };
 
-export type MatchFrame = { state: GameState; motion?: MatchMotion };
+export type MatchFrame = { state: GameState; motion?: MatchMotion; snapshot?: boolean };
 
 export function startMatch(mode: GameMode): MatchFrame[] {
   let state: GameState = {
