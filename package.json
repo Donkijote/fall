@@ -19,8 +19,8 @@
     "lint:fix": "vp lint --fix .",
     "preview:cloudflare": "wrangler dev",
     "preview": "vp preview",
-    "tauri:dev": "tauri dev",
-    "tauri:ios:dev": "tauri ios dev",
+    "desktop": "tauri dev",
+    "ios": "tauri ios dev",
     "test": "vp test",
     "test:coverage": "vp test run --coverage"
   },
