@@ -52,6 +52,9 @@ export default defineConfig({
   server: {
     open: true,
     port: 3000,
+    watch: {
+      ignored: ["**/src-tauri/**"],
+    },
   },
   test: {
     environment: "jsdom",
