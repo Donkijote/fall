@@ -1,5 +1,7 @@
 # Sings reference
 
+Landscape presentation (#137): use the small landscape layout as the unprefixed Tailwind base and standard width breakpoints for larger layouts. There are no portrait layout branches or compact-orientation variants. See [the supported viewport policy](../../../docs/design/README.md#supported-viewport-policy) for verification targets. Orientation enforcement is deferred to #140; historical portrait reviews below do not imply current support.
+
 `index.ts` exports `SingsReferenceScreen`. The one-line infrastructure adapter
 `src/infrastructure/ui/screens/SingsSheet.tsx` exposes it at `/sings`.
 
@@ -22,7 +24,7 @@
 The approved [simplified PNG](../../../docs/design/sings-reference/mockup-simplified.png)
 is the implementation reference. The [detailed PNG](../../../docs/design/sings-reference/mockup-detailed.png)
 records the more ornamental design. The [default sorting-table master](../../../docs/design/sings-reference/background.png)
-is the source reference. The page selects one of five [runtime WebPs](../../assets/sings-reference/README.md)
+is the source reference. The page selects one of three [runtime WebPs](../../assets/sings-reference/README.md)
 based on viewport shape and height.
 
 The in-match Sings modal still uses its existing list and adapter. Scoring and
@@ -33,7 +35,7 @@ keyboard filter composition, and the reset flow. The rulebook's integration test
 covers chapter and position restoration. Run `pnpm check`,
 `pnpm exec vitest run`, and `pnpm build`. For manual verification, reuse port
 3000 and check Hall and guide entry/return, both themes, touch and keyboard,
-reduced motion, narrow portrait, and notched landscape.
+reduced motion, small landscape, and notched landscape.
 
 The module entry point also exports `singsGallery` for the development-only
 Component gallery. Preview fixtures live under `ui/components/previews` and

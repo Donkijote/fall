@@ -1,5 +1,9 @@
 # Login
 
+## Supported layout — #137 (2026-11-20)
+
+Login now uses the same landscape-only presentation policy as the rest of the app. The small landscape form/social columns are the base; desktop composition is layered at `xl`. Smaller landscape layouts use unprefixed Tailwind utilities; larger layouts use standard width breakpoints. No orientation lock or rotate-device gate is implemented here; enforcement and native integration belong to #140. Earlier viewport reviews below describe historical implementations, not current portrait support.
+
 The [simplified mockup](mockup-simplified.png) and [detailed mockup](mockup-detailed.png)
 show how the Card Hall materials carry into the login card. The live layout uses
 restrained brass trim, recessed fields and the shared primary action. On narrow

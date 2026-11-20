@@ -43,17 +43,17 @@ export function TavernRoom() {
       className="[container-type:size] pointer-events-none absolute inset-0 overflow-hidden bg-background"
     >
       {/* The painting and lights share the same centered cover crop. */}
-      <div className="absolute top-1/2 left-1/2 aspect-[1672/941] w-[max(100cqw,177.6834cqh)] -translate-x-1/2 -translate-y-1/2 portrait:aspect-[852/1846] portrait:w-[max(100cqw,46.1538cqh)]">
+      <div className="absolute top-1/2 left-1/2 aspect-[1672/941] w-[max(100cqw,177.6834cqh)] -translate-x-1/2 -translate-y-1/2">
         <TavernBackdrop />
         {!reducedMotion && (
           <div className="absolute inset-0 mix-blend-screen">
             <span
               data-tavern-lantern=""
-              className="absolute top-[68.5%] left-[11%] h-[17%] w-[13%] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(ellipse,var(--gold),transparent_68%)] opacity-0 portrait:top-[77%] portrait:left-[12%] portrait:h-[9%] portrait:w-[25%]"
+              className="absolute top-[68.5%] left-[11%] h-[17%] w-[13%] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(ellipse,var(--gold),transparent_68%)] opacity-0"
             />
             <span
               data-tavern-lantern=""
-              className="absolute top-[59%] left-[95.5%] h-[25%] w-[18%] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(ellipse,var(--gold),transparent_68%)] opacity-0 portrait:top-[47%] portrait:left-[95%] portrait:h-[14%] portrait:w-[33%]"
+              className="absolute top-[59%] left-[95.5%] h-[25%] w-[18%] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(ellipse,var(--gold),transparent_68%)] opacity-0"
             />
             <TavernEmbers />
           </div>

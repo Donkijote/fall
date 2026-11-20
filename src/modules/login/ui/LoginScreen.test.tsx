@@ -25,10 +25,7 @@ describe("LoginScreen", () => {
     const { container } = render(<LoginScreen />);
     expect(screen.getByRole("main")).toHaveClass("overflow-y-auto");
     expect(container.querySelector(".login-intro")).not.toHaveClass("hidden");
-    expect(container.querySelector(".login-card")).not.toHaveClass(
-      "max-lg:landscape:overflow-y-auto",
-    );
-    expect(container.querySelector(".login-alternatives")).toHaveClass("max-xl:landscape:flex-col");
+    expect(container.querySelector(".login-alternatives")).toHaveClass("flex-col");
     expect(screen.getByRole("form", { name: "Login preview" })).toHaveClass("grid-cols-1");
     expect(screen.getByText("A new story.")).toHaveClass(
       "forced-colors:bg-none",
@@ -144,8 +141,7 @@ describe("LoginScreen", () => {
     const header = container.querySelector("[data-slot='card-header']");
     const emblem = header?.querySelector("span");
 
-    expect(header).toHaveClass("max-xl:landscape:flex");
-    expect(emblem).not.toHaveClass("max-xl:landscape:hidden");
+    expect(header).toHaveClass("flex");
     expect(emblem?.querySelector("[aria-hidden=true]")).toHaveAttribute(
       "style",
       expect.stringContaining(appEmblem),
@@ -153,7 +149,7 @@ describe("LoginScreen", () => {
     expect(header?.querySelector("img")).not.toBeInTheDocument();
     expect(screen.queryByText("Your seat at the table awaits")).not.toBeInTheDocument();
     expect(screen.getByRole("group", { name: "Social sign-in preview" })).toHaveClass(
-      "max-xl:landscape:grid-cols-[repeat(2,auto)]",
+      "grid-cols-[repeat(2,auto)]",
     );
   });
 

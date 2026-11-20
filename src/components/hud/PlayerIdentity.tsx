@@ -88,7 +88,7 @@ export function PlayerIdentity({
       onBlurCapture={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false);
       }}
-      className="game-player relative isolate flex min-w-0 items-center gap-(--player-gap) [--player-gap:0.375rem] [--player-portrait-width:clamp(44px,5vw,78px)] sm:[--player-gap:clamp(0.6rem,1vw,1rem)] portrait:[--player-portrait-width:2.75rem] compact-landscape:[--player-portrait-width:2.75rem]"
+      className="game-player relative isolate flex min-w-0 items-center gap-(--player-gap) [--player-gap:0.375rem] [--player-portrait-width:2.75rem] lg:[--player-gap:clamp(0.6rem,1vw,1rem)] lg:[--player-portrait-width:clamp(44px,5vw,78px)]"
       role="group"
       aria-label="Player identity"
     >
@@ -98,11 +98,11 @@ export function PlayerIdentity({
         fallbackAvatarUrl={fallbackAvatarUrl}
         onClick={onProfileClick}
       />
-      <span className="game-player-copy relative grid w-full max-w-40 min-w-0 gap-0.5 portrait:max-w-[17ch]">
+      <span className="game-player-copy relative grid w-full max-w-40 min-w-0 gap-0.5">
         <span className="flex min-w-0 items-center gap-1">
           <span className="grid min-w-0">
             <span
-              className="game-player-name max-w-[22ch] truncate text-[clamp(1rem,1.55vw,1.5rem)] font-semibold portrait:text-sm compact-landscape:text-sm"
+              className="game-player-name max-w-[22ch] truncate text-sm font-semibold lg:text-[clamp(1rem,1.55vw,1.5rem)]"
               title={name}
             >
               {name}
@@ -126,7 +126,7 @@ export function PlayerIdentity({
           {levelCrestUrl && (
             <span
               ref={crest}
-              className="relative isolate grid size-10 shrink-0 place-items-center text-artwork-foreground drop-shadow-[0_2px_2px_var(--artwork-shadow)] md:size-12 compact-landscape:size-9"
+              className="relative isolate grid size-9 shrink-0 place-items-center text-artwork-foreground drop-shadow-[0_2px_2px_var(--artwork-shadow)] lg:size-12"
               title={hasLevel ? `Level ${level}` : "Level unavailable"}
             >
               <span
@@ -136,7 +136,7 @@ export function PlayerIdentity({
               <Icon icon={levelCrestUrl} className="absolute inset-0 -z-10 size-full bg-gold" />
               <span
                 aria-hidden="true"
-                className="-translate-y-0.5 font-heading text-sm leading-none font-bold tabular-nums md:text-base compact-landscape:text-xs"
+                className="-translate-y-0.5 font-heading text-xs font-bold tabular-nums lg:text-base"
               >
                 {hasLevel ? level : "—"}
               </span>

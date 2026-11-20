@@ -31,7 +31,7 @@ export function MatchScoreboard({
     <ul
       aria-label="Scores"
       data-two-scores={scores.length === 2 || undefined}
-      className="match-scoreboard relative isolate flex max-w-full items-start justify-center gap-2 px-9 pt-1 pb-3 data-[two-scores]:gap-3.5 data-[two-scores]:px-10 sm:gap-3 sm:px-11 sm:pb-4 sm:data-[two-scores]:gap-5 sm:data-[two-scores]:px-13 compact-landscape:gap-1.5 compact-landscape:px-7 compact-landscape:pb-2.5 compact-landscape:data-[two-scores]:gap-3.5 compact-landscape:data-[two-scores]:px-9"
+      className="match-scoreboard relative isolate flex max-w-full items-start justify-center gap-1.5 px-7 pt-1 pb-2.5 data-[two-scores]:gap-3.5 data-[two-scores]:px-9 lg:gap-3 lg:px-11 lg:pb-4 lg:[--scoreboard-trim:calc(3.5rem*144/114)] lg:not-data-[two-scores]:px-18 lg:data-[two-scores]:gap-5 lg:data-[two-scores]:px-13"
     >
       {scores.map(({ side, label, score }) => {
         const seal = matchSideSeals.get(side);
@@ -39,7 +39,7 @@ export function MatchScoreboard({
           <li
             key={side}
             data-score-side={side}
-            className="relative isolate grid aspect-[7/5] w-11 min-w-0 place-items-center sm:w-14 compact-landscape:w-10"
+            className="relative isolate grid aspect-[7/5] w-10 min-w-0 place-items-center lg:w-14"
           >
             <span className="sr-only">
               {state.scores.type === "team" ? (scoreSideStyle(side)?.name ?? label) : label}

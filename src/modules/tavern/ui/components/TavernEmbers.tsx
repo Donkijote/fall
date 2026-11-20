@@ -37,10 +37,7 @@ export function TavernEmbers() {
   );
 
   return (
-    <div
-      ref={source}
-      className="absolute top-[59%] left-[95.5%] portrait:top-[47%] portrait:left-[95%]"
-    >
+    <div ref={source} className="absolute top-[59%] left-[95.5%]">
       {embers.map(({ delay }, index) => (
         <span
           key={delay}

@@ -31,11 +31,11 @@ export function CombinationEntry({ sing, query }: { sing: SingResult; query: str
       <BronzeArrow
         direction="down"
         tone="faded"
-        className="absolute inset-y-2 start-0 hidden w-0.5 @2xl:@max-5xl:[li:not(:nth-child(2n+1))>&]:block @min-[26rem]:@max-2xl:compact-landscape:[li:not(:nth-child(2n+1))>&]:block @5xl:[li:not(:nth-child(3n+1))>&]:block"
+        className="absolute inset-y-2 start-0 hidden w-0.5 @min-[26rem]:@max-5xl:[li:not(:nth-child(2n+1))>&]:block @5xl:[li:not(:nth-child(3n+1))>&]:block"
       />
       <BronzeArrow
         tone="faded"
-        className="absolute inset-x-2 bottom-0 h-0.5 [li:last-child>&]:hidden @2xl:@max-5xl:[li:nth-child(2n+1):nth-last-child(-n+2)>&]:hidden @min-[26rem]:@max-2xl:compact-landscape:[li:nth-child(2n+1):nth-last-child(-n+2)>&]:hidden @5xl:[li:nth-child(3n+1):nth-last-child(-n+3)>&]:hidden @5xl:[li:nth-child(3n+2):nth-last-child(-n+2)>&]:hidden"
+        className="absolute inset-x-2 bottom-0 h-0.5 [li:last-child>&]:hidden @min-[26rem]:@max-5xl:[li:nth-child(2n+1):nth-last-child(-n+2)>&]:hidden @5xl:[li:nth-child(3n+1):nth-last-child(-n+3)>&]:hidden @5xl:[li:nth-child(3n+2):nth-last-child(-n+2)>&]:hidden"
       />
       <header className="relative grid min-h-(--points-size) place-items-center px-(--points-size) [--points-size:3.5rem] @2xl:[--points-size:4rem]">
         <div className="grid min-w-0 justify-items-center gap-1 self-center text-center">

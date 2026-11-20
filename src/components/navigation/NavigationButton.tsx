@@ -18,7 +18,7 @@ export function NavigationButton({
       {...props}
       iconOnly
       className={cn(
-        "game-navigation-item p-1.5 text-artwork-foreground hover:text-artwork-foreground focus-visible:z-10 rounded-none disabled:opacity-100 disabled:[&>[aria-hidden]]:opacity-75 aria-expanded:text-artwork-foreground sm:size-12 compact-landscape:size-11",
+        "game-navigation-item p-1.5 text-artwork-foreground hover:text-artwork-foreground focus-visible:z-10 rounded-none disabled:opacity-100 disabled:[&>[aria-hidden]]:opacity-75 aria-expanded:text-artwork-foreground size-11 lg:size-12",
         className,
       )}
     >
@@ -26,7 +26,7 @@ export function NavigationButton({
       <Icon
         icon={icon}
         className={cn(
-          "size-6 drop-shadow-[0_1px_1px_var(--artwork-shadow)] sm:size-7 compact-landscape:size-6",
+          "drop-shadow-[0_1px_1px_var(--artwork-shadow)] size-6 lg:size-7",
           typeof icon === "string" ? "bg-gold" : "text-gold",
         )}
       />

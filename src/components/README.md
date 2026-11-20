@@ -1,5 +1,7 @@
 # Shared components
 
+Landscape presentation (#137): use the small landscape layout as the unprefixed Tailwind base and standard width breakpoints for larger layouts. There are no portrait layout branches or compact-orientation variants. See [the supported viewport policy](../docs/design/README.md#supported-viewport-policy) for verification targets. Orientation enforcement is deferred to #140; historical portrait reviews below do not imply current support.
+
 Generated shadcn/Base UI components live in `ui/`. Reusable app presentation is
 grouped by purpose beside that directory. Import public styled components from
 `@/components`. Component internals use direct relative imports.
@@ -57,7 +59,7 @@ outside the accessibility tree and never intercepts input.
 ## Artwork and interaction behavior
 
 `ResourceReadout` mounts live balances in the existing ActionButton outline skin;
-compact portrait layouts stack the glyph and value while wider layouts use a row.
+landscape layouts keep the glyph and value in a row.
 Its decorative size container scales intact end strips with the readout height
 rather than using a fixed end width or cutting seams through the face. The
 minimum compact width and padding keep the ornaments clear of the value. It
@@ -119,8 +121,7 @@ readouts. PlayerPortrait now has a manual turn toggle for repeated interruption
 and preference changes. Tavern's module gallery retains the real picker/cards.
 
 Focused automated coverage exercises ring/head alignment, orbital release, interrupted draws/wipes, completed-exit reactivation, preference changes during arrival, and unmount cleanup. Existing feature tests cover activity navigation,
-touch selection and dialog semantics. A visual pass on desktop, phone portrait
-and landscape, both themes and physical touch remains required before acceptance;
+touch selection and dialog semantics. A visual pass on desktop, phone landscape, both themes and physical touch remains required before acceptance;
 unit tests do not establish artwork quality or device layout. Score-award travel
 and winner celebrations remain owned by #127 and #128.
 

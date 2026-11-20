@@ -62,7 +62,7 @@ function CardStack({
       </div>
       <MatchPlaque
         aria-hidden="true"
-        className="text-[clamp(0.55rem,1.35cqmin,0.75rem)] compact-landscape:px-1.5 compact-landscape:py-0.5"
+        className="px-1.5 py-0.5 text-[clamp(0.55rem,1.35cqmin,0.75rem)]"
       >
         {label}
       </MatchPlaque>
@@ -79,7 +79,7 @@ export function MatchTableCards({ cards, landing }: { cards: readonly Card[]; la
   return (
     <ul
       aria-label="Cards on the table"
-      className="pointer-events-none absolute top-[55%] left-1/2 grid -translate-1/2 grid-cols-[repeat(var(--table-columns),var(--match-card-width))] grid-rows-[repeat(var(--table-rows),calc(var(--match-card-width)*88/63))] gap-[clamp(0.25rem,1.2cqmin,0.7rem)] [--match-card-width:clamp(1.55rem,9.6cqmin,5.75rem)] [--table-columns:4] [--table-rows:3] portrait:top-[56%] portrait:[--match-card-width:clamp(1.55rem,min(12cqw,9.5cqh),5.25rem)] compact-landscape:[--match-card-width:clamp(1.4rem,min(12cqh,9cqw),4.65rem)] compact-landscape:[--table-columns:6] compact-landscape:[--table-rows:2]"
+      className="pointer-events-none absolute top-[55%] left-1/2 grid -translate-1/2 grid-cols-[repeat(var(--table-columns),var(--match-card-width))] grid-rows-[repeat(var(--table-rows),calc(var(--match-card-width)*88/63))] gap-[clamp(0.25rem,1.2cqmin,0.7rem)] [--match-card-width:clamp(1.4rem,min(12cqh,9cqw),4.65rem)] [--table-columns:6] [--table-rows:2] lg:[--match-card-width:clamp(1.55rem,9.6cqmin,5.75rem)] lg:[--table-columns:4] lg:[--table-rows:3]"
     >
       {displayed.map((card) => {
         const key = toCardKey(card);
@@ -92,7 +92,7 @@ export function MatchTableCards({ cards, landing }: { cards: readonly Card[]; la
             data-table-slot={slot}
             aria-hidden={pending || undefined}
             className={cn(
-              "[grid-area:var(--table-row)/var(--table-column)] compact-landscape:[grid-area:var(--wide-row)/var(--wide-column)]",
+              "[grid-area:var(--wide-row)/var(--wide-column)] lg:[grid-area:var(--table-row)/var(--table-column)]",
               pending && "invisible",
             )}
             style={
@@ -156,13 +156,13 @@ export function MatchSeatCards({
           centered ? "top-1/2 right-full mr-2 -translate-y-1/2" : "bottom-full mb-2",
           align === "left" && "left-1",
           align === "right" && "right-1 flex-row-reverse",
-          centered && "compact-landscape:mr-[calc(var(--seat-size)*0.38+0.25rem)]",
+          centered && "mr-[calc(var(--seat-size)*0.38+0.25rem)] lg:mr-2",
           deck === undefined &&
             align === "left" &&
-            "compact-landscape:left-[calc(var(--seat-size)/2)] compact-landscape:-translate-x-1/2",
+            "left-[calc(var(--seat-size)/2)] -translate-x-1/2 lg:left-1 lg:translate-x-0",
           deck === undefined &&
             align === "right" &&
-            "compact-landscape:right-[calc(var(--seat-size)/2)] compact-landscape:translate-x-1/2",
+            "right-[calc(var(--seat-size)/2)] translate-x-1/2 lg:right-1 lg:translate-x-0",
         )}
       >
         <CardStack count={collected} player={player} />
@@ -178,7 +178,7 @@ export function MatchSeatCards({
           align === "right" && "top-full right-1 mt-1",
           centered && "top-1/2 left-full ml-2 -translate-y-1/2",
           local
-            ? "gap-0.5 [--match-card-width:clamp(1.55rem,min(9.6cqh,10cqw),5rem)] portrait:[--match-card-width:clamp(1.35rem,calc(12cqw-0.9rem),4.65rem)] compact-landscape:[--match-card-width:clamp(1.55rem,min(12cqh,9cqw),4.65rem)]"
+            ? "gap-0.5 [--match-card-width:clamp(1.55rem,min(12cqh,9cqw),4.65rem)] lg:[--match-card-width:clamp(1.55rem,min(9.6cqh,10cqw),5rem)]"
             : "-space-x-[calc(var(--match-card-width)*0.26)] [--match-card-width:clamp(1rem,5.6cqmin,2.85rem)]",
         )}
       >

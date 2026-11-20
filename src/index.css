@@ -7,8 +7,6 @@
 
 @custom-variant dark (&:is(.dark *));
 @custom-variant standalone (@media (display-mode: standalone));
-@custom-variant compact-landscape (@media (orientation: landscape) and (max-height: 650px));
-@custom-variant compact-portrait (@media (orientation: portrait) and (max-height: 650px));
 
 @theme {
   --breakpoint-3xl: 120rem;
@@ -16,13 +14,6 @@
 html,
 body {
   overflow: hidden;
-}
-
-@media (display-mode: standalone) and (orientation: portrait) {
-  html:has(.home-screen),
-  body:has(.home-screen) {
-    background-color: var(--artwork-shadow);
-  }
 }
 
 @theme inline {

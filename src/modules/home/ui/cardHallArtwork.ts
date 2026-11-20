@@ -1,15 +1,13 @@
 import arena from "@/assets/lobby/card-hall/arena.webp";
 import campaign from "@/assets/lobby/card-hall/campaign.webp";
 import hall from "@/assets/lobby/card-hall/hall-landscape.webp";
-import hallPhone from "@/assets/lobby/card-hall/hall-phone.webp";
-import hallTablet from "@/assets/lobby/card-hall/hall-tablet.webp";
 import tavern from "@/assets/lobby/card-hall/tavern.webp";
 import traveller from "@/assets/lobby/card-hall/traveller.webp";
 import arenaFrame from "@/assets/ui/activity-card/arena-frame.webp";
 import campaignFrame from "@/assets/ui/activity-card/campaign-frame.webp";
 import tavernFrame from "@/assets/ui/activity-card/tavern-frame.webp";
 
-export const cardHallArtwork = { hall, hallPhone, hallTablet, traveller };
+export const cardHallArtwork = { hall, traveller };
 
 export const homeActivities = [
   {

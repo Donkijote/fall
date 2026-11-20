@@ -1,5 +1,11 @@
 # Sings reference
 
+## Supported layout — #137 (2026-11-20)
+
+The sorting table keeps phone, tablet and desktop landscape exports. Portrait exports and orientation-dependent sources are retired. Smaller landscape layouts use unprefixed Tailwind utilities; larger layouts use standard width breakpoints. No orientation lock or rotate-device gate is implemented here; enforcement and native integration belong to #140. Earlier viewport reviews below describe historical implementations, not current portrait support.
+
+Retired export prompts and generation evidence are preserved in [the provenance ledger](../../artwork-provenance/retired-portrait-exports.json).
+
 The [simplified mockup](mockup-simplified.png) guides the live `/sings` page.
 It uses an open gallery of card combinations, compact filters and a Back to Hall
 action. The [detailed mockup](mockup-detailed.png) explores richer trim and surfaces.

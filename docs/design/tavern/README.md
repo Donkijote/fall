@@ -1,5 +1,11 @@
 # Tavern format picker
 
+## Supported layout — #137 (2026-11-20)
+
+The Tavern uses only `inn-landscape.webp`; mode cards stay side by side with their ribbons below the artwork. Smaller landscape layouts use unprefixed Tailwind utilities; larger layouts use standard width breakpoints. No orientation lock or rotate-device gate is implemented here; enforcement and native integration belong to #140. Earlier viewport reviews below describe historical implementations, not current portrait support.
+
+Retired export prompts and generation evidence are preserved in [the provenance ledger](../../artwork-provenance/retired-portrait-exports.json).
+
 The [simplified mockup](mockup-simplified.png) and [detailed mockup](mockup-detailed.png)
 show layout and material treatments. The [clean inn painting](background.png)
 supplies the background. Generate each mode painting as a standalone 2:3
