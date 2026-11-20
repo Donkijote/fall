@@ -70,7 +70,10 @@ and dismissal behavior.
 
 GHI #124 unifies header and footer spacing through `--hall-gutter` on CardHall;
 children add their respective safe-area inset. The responsive values and the
-interaction review live in the owning design README. Shared motion owners and
+interaction review live in the owning design README. In the iOS native host,
+UIKit supplies the live shared safe-area values after rotation; the Hall does
+not add device-specific offsets. See `src-tauri/README.md` for native bridge
+verification and the remaining physical interaction checks. Shared motion owners and
 verification boundaries are inventoried in `src/components/README.md`.
 
 `PlayerIdentity` now composes the shared `ProfileButton`; resources are native

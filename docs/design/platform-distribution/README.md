@@ -6,12 +6,105 @@ Owner: [issue #126](https://github.com/Donkijote/fall/issues/126).
 Coordinates with [authoritative backend #129](https://github.com/Donkijote/fall/issues/129)
 and the existing [preview lifecycle #130](https://github.com/Donkijote/fall/issues/130).
 
-This is a documentation-only investigation and setup plan. It introduces no
-wrapper, native project, dependencies, or runtime changes. No native platform
-has been measured. The owner agreed to close #126 as the research phase and
+The original #126 deliverable was a documentation-only investigation and setup
+plan. The #140 configuration work below now adds the native host; the historical
+research sections retain their original baseline. No native performance budgets
+have been measured in this configuration pass. The owner agreed to close #126 as the research phase and
 transfer the reproducible packaging spike to #140 without claiming it passed.
 No artwork was generated or adopted, so
 there are no mockups, background masters, or prompt manifests for this feature.
+
+## Packaging configuration review (#140, 2026-11-20)
+
+The owner reports successful initial testing on macOS, iOS, Windows and Android.
+Those results have not yet been captured as reproducible device/performance
+measurements. The branch contains a Tauri 2 host; this pass aligns configuration
+without claiming the entire packaging spike or store release is validated.
+
+Decisions and implementation:
+
+- Tauri owns the development server through `beforeDevCommand`; keep port 3000
+  and stop a separately launched web server before `pnpm desktop` / `pnpm ios`.
+- Desktop opens at 1280 × 720 logical pixels, centered, resizable and windowed,
+  with work-area overflow prevention. Future display preferences remain deferred.
+- Set iOS/iPadOS 17.0 and macOS 14.0 minimums. Align the generated Apple project,
+  XcodeGen source, plist and Podfile; Xcode resolves release deployment to 17.0.
+- Preserve the iOS hidden status bar. Declare portrait plus both landscape
+  directions consistently in the phone/tablet plist and XcodeGen source, then
+  restrict the active native controller to landscape outside Login. Login
+  permits portrait and both landscape directions. Reapply on foreground without
+  remounting screens. iPad requests full-screen operation for orientation locking;
+  newer iPadOS windowing remains a device check.
+- Keep version `0.2.0`; Tauri reads it from `package.json`. Cargo and Apple
+  marketing versions agree. Apple build number starts at `1` and must increase
+  for subsequent uploads. No tag, commit, push or deployment was created.
+- Replace Rust author/repository/license placeholders with Donkijote, this
+  repository, and the existing proprietary LICENSE. Add the Tauri frontend API
+  for the native command and regenerate its shipped third-party notice.
+
+Implementation ownership and the complete verification checklist are in
+[`src-tauri/README.md`](../../../src-tauri/README.md). Browser and Android
+orientation behavior are unchanged in this pass; web/PWA enforcement remains
+pending. The native bridge uses Tauri's UI-thread webview callback and Tao's
+controller setter, checked at runtime. Tauri is pinned to 2.12.7 and Cargo.lock
+pins Tao to 0.37.3; upgrades must recheck this bridge.
+
+Source verification on the local Apple Silicon Mac: Node 26.12.1, pnpm 12.15.0,
+Rust/Cargo 1.100.0, Xcode 27.2, iOS SDK 27.2. Focused orientation/router tests
+passed (21 tests); production web build and shipped-notice check passed; macOS
+and arm64 iOS `cargo check --locked --offline` passed; the macOS host linked
+successfully with `MACOSX_DEPLOYMENT_TARGET=14.0 cargo build --locked --offline`; the Objective-C++ bridge
+passed iOS 17 syntax checking; plist lint and Xcode release deployment setting
+inspection passed. The build retains the existing large-chunk warnings and three
+notice entries without root notice files. No new exception was added.
+
+Physical rotation, keyboard/safe areas, suspend/resume/audio, installed standalone
+packages, performance measurements, Windows DPI sizing, Linux work areas,
+production signing, CSP policy and release distribution remain unverified in
+this pass. The broad acceptance checkboxes in #140 remain incomplete. These are
+pending checks, not a finding that the owner's existing packages failed.
+
+## macOS title-bar follow-up (#140)
+
+After the configuration alignment commit, the owner requested that the macOS
+header blend into the screen artwork, keeping native rounded corners, traffic
+lights and window dragging while hiding the title. Use Tauri's overlay title bar
+with native decorations retained; reserve a transparent 2.5rem drag strip above
+page controls using the existing safe-area system. A macOS-only native flag
+enables the strip before the first React layout. Browser/iOS/Windows/Linux do
+not receive that strip. The owner confirmed the blended header appearance and
+requested more traffic-light padding, using Chrome on macOS as the closer
+reference. After an inspector screenshot showed the buttons above center and too close
+to the left edge, increase the native inset to `{ x: 20, y: 22 }`. Reserve a 40px strip
+with an 88px button exclusion. The revised spacing and native drag hit testing
+need a restart and runtime check; implementation details are in the native host
+README.
+
+## iOS landscape safe-area follow-up (#140)
+
+The owner reported a displaced Hall header and edge-hugging profile, resource,
+and footer actions after entering landscape. Keep the merged #137 landscape
+layout and its gutters authoritative. The physical iPhone investigation found
+that the Tauri window itself could retain portrait safe insets after native
+rotation; reading only CSS `env()` or the main native window was insufficient.
+
+The iOS host now publishes a UIKit safe rectangle converted to web-view
+coordinates. For the observed phone mismatch (landscape scene/window geometry
+with portrait top inset and no side insets), a transparent, non-interactive,
+non-key reference window in the same scene supplies fresh system insets. Layout
+callbacks update them and document reloads republish them. Browser `env()` remains
+the fallback. Hall layout and full-bleed artwork are preserved; the legacy bottom
+navigation also consumes the shared insets.
+
+On 2026-11-20 the physical iPhone's 874 × 402 viewport reported native landscape
+insets top/left/bottom/right 0/62/20/62. Inspection of the running Hall confirmed
+header padding top 4px and sides 68px, plus footer sides 68px and bottom 22px.
+The owner confirmed the current appearance.
+An iOS 27.0 simulator harness also reproduced stale native portrait insets and
+verified both landscapes, document replacement, portrait return, and an
+already-inset web view. Physical visual/touch sign-off across both directions,
+Login keyboard behavior and lifecycle checks remain pending. Native host
+documentation owns the implementation and verification details.
 
 ## Proposed decision
 

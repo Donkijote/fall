@@ -173,3 +173,13 @@ content. Image, picture, SVG, canvas, video, object and embed elements share thi
 policy; future assets inherit it automatically. The portrait also explicitly opts
 out of native dragging. Taps, keyboard activation, scrolling and pinch gestures
 remain native. Inputs, textareas and editable content retain their editing menus.
+
+## Native window drag strip
+
+`navigation/WindowDragRegion` is a transparent, non-focusable title-bar strip.
+The infrastructure composition enables it only for the macOS native host; it
+does not depend on Tauri or infrastructure. It uses Tauri's declarative drag
+attribute and reserves a 2.5rem native inset through `--native-titlebar-height`,
+which the global `--safe-area-top` combines with device safe areas. Traffic lights
+remain native and the strip starts after their reserved area. Its layout effect
+restores any previous inset on disable/unmount, including StrictMode replay.
