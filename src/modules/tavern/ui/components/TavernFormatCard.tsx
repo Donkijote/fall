@@ -130,12 +130,12 @@ export function TavernFormatCard({
           <span id={`${id}-title`} className="sr-only title-type text-sm">
             {title}
           </span>
-          <span id={`${id}-players`} className="text-xs font-semibold lg:text-sm">
+          <span id={`${id}-players`} className="text-xs leading-tight font-semibold lg:text-sm">
             {players}
           </span>
           <span
             id={`${id}-description`}
-            className="text-[0.7rem] text-artwork-foreground/85 lg:text-xs lg:leading-tight"
+            className="text-[0.7rem] leading-tight text-artwork-foreground/85 lg:text-xs"
           >
             {description}
           </span>

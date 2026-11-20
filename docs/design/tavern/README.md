@@ -67,3 +67,7 @@ settling over 280ms with a small 320ms lift. Reversing the existing timeline
 handles interrupted attention without stacking transforms. Reduced motion uses
 the same static brass highlight without the lift or idle reflection. Existing
 Hall-to-room travel, dismissal, lanterns and table travel retain their owners.
+
+## Mobile ribbon copy — 2026-11-20
+
+The player count and description share the small landscape ribbon. Use the shorter descriptions “Face off”, “Play solo” and “Team up” so the ribbon reads as two lines rather than three. Both text rows use tight line height to leave space inside the painted edge.
