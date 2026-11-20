@@ -2,7 +2,7 @@ name: TheFall
 options:
   bundleIdPrefix: com.donkijote.the-fall
   deploymentTarget:
-    iOS: 15.0
+    iOS: 17.0
 fileGroups: [../../src]
 configs:
   debug: debug
@@ -45,6 +45,9 @@ targets:
       path: TheFall_iOS/Info.plist
       properties:
         LSRequiresIPhoneOS: true
+        UIStatusBarHidden: true
+        UIViewControllerBasedStatusBarAppearance: false
+        UIRequiresFullScreen: true
         UILaunchStoryboardName: LaunchScreen
         UIRequiredDeviceCapabilities: [arm64, metal]
         UISupportedInterfaceOrientations:
@@ -53,11 +56,10 @@ targets:
           - UIInterfaceOrientationLandscapeRight
         UISupportedInterfaceOrientations~ipad:
           - UIInterfaceOrientationPortrait
-          - UIInterfaceOrientationPortraitUpsideDown
           - UIInterfaceOrientationLandscapeLeft
           - UIInterfaceOrientationLandscapeRight
-        CFBundleShortVersionString: 0.1.0
-        CFBundleVersion: "0.1.0"
+        CFBundleShortVersionString: 0.2.0
+        CFBundleVersion: "1"
     entitlements:
       path: TheFall_iOS/TheFall_iOS.entitlements
     scheme:
@@ -66,6 +68,7 @@ targets:
         RUST_LOG: info
     settings:
       base:
+        IPHONEOS_DEPLOYMENT_TARGET: "17.0"
         ENABLE_BITCODE: false
         ARCHS: [arm64]
         VALID_ARCHS: arm64 

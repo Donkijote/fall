@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "The Fall",
-  "version": "0.1.0",
+  "version": "../package.json",
   "identifier": "com.donkijote.the-fall",
   "build": {
     "frontendDist": "../dist",
@@ -12,11 +12,13 @@
   "app": {
     "windows": [
       {
-        "title": "",
-        "width": 17720,
-        "height": 1233,
+        "title": "The Fall",
+        "width": 1280,
+        "height": 720,
         "resizable": true,
-        "fullscreen": false
+        "fullscreen": false,
+        "center": true,
+        "preventOverflow": true
       }
     ],
     "security": {
@@ -35,6 +37,15 @@
     ],
     "android": {
       "debugApplicationIdSuffix": ".debug"
-    }
+    },
+    "iOS": {
+      "minimumSystemVersion": "17.0",
+      "bundleVersion": "1"
+    },
+    "macOS": {
+      "minimumSystemVersion": "14.0",
+      "bundleVersion": "1"
+    },
+    "copyright": "Copyright (c) 2025\u20132026 Donkijote. All rights reserved."
   }
 }

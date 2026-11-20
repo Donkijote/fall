@@ -1,12 +1,12 @@
 # Uncomment the next line to define a global platform for your project
 
 target 'TheFall_iOS' do
-platform :ios, '15.0'
+platform :ios, '17.0'
   # Pods for TheFall_iOS
 end
 
 target 'TheFall_macOS' do
-platform :osx, '11.0'
+platform :osx, '14.0'
   # Pods for TheFall_macOS
 end
 

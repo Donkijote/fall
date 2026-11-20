@@ -6,12 +6,63 @@ Owner: [issue #126](https://github.com/Donkijote/fall/issues/126).
 Coordinates with [authoritative backend #129](https://github.com/Donkijote/fall/issues/129)
 and the existing [preview lifecycle #130](https://github.com/Donkijote/fall/issues/130).
 
-This is a documentation-only investigation and setup plan. It introduces no
-wrapper, native project, dependencies, or runtime changes. No native platform
-has been measured. The owner agreed to close #126 as the research phase and
+The original #126 deliverable was a documentation-only investigation and setup
+plan. The #140 configuration work below now adds the native host; the historical
+research sections retain their original baseline. No native performance budgets
+have been measured in this configuration pass. The owner agreed to close #126 as the research phase and
 transfer the reproducible packaging spike to #140 without claiming it passed.
 No artwork was generated or adopted, so
 there are no mockups, background masters, or prompt manifests for this feature.
+
+## Packaging configuration review (#140, 2026-11-20)
+
+The owner reports successful initial testing on macOS, iOS, Windows and Android.
+Those results have not yet been captured as reproducible device/performance
+measurements. The branch contains a Tauri 2 host; this pass aligns configuration
+without claiming the entire packaging spike or store release is validated.
+
+Decisions and implementation:
+
+- Tauri owns the development server through `beforeDevCommand`; keep port 3000
+  and stop a separately launched web server before `pnpm desktop` / `pnpm ios`.
+- Desktop opens at 1280 × 720 logical pixels, centered, resizable and windowed,
+  with work-area overflow prevention. Future display preferences remain deferred.
+- Set iOS/iPadOS 17.0 and macOS 14.0 minimums. Align the generated Apple project,
+  XcodeGen source, plist and Podfile; Xcode resolves release deployment to 17.0.
+- Preserve the iOS hidden status bar. Declare portrait plus both landscape
+  directions consistently in the phone/tablet plist and XcodeGen source, then
+  restrict the active native controller to landscape outside Login. Login
+  permits portrait and both landscape directions. Reapply on foreground without
+  remounting screens. iPad requests full-screen operation for orientation locking;
+  newer iPadOS windowing remains a device check.
+- Keep version `0.2.0`; Tauri reads it from `package.json`. Cargo and Apple
+  marketing versions agree. Apple build number starts at `1` and must increase
+  for subsequent uploads. No tag, commit, push or deployment was created.
+- Replace Rust author/repository/license placeholders with Donkijote, this
+  repository, and the existing proprietary LICENSE. Add the Tauri frontend API
+  for the native command and regenerate its shipped third-party notice.
+
+Implementation ownership and the complete verification checklist are in
+[`src-tauri/README.md`](../../../src-tauri/README.md). Browser and Android
+orientation behavior are unchanged in this pass; web/PWA enforcement remains
+pending. The native bridge uses Tauri's UI-thread webview callback and Tao's
+controller setter, checked at runtime. Tauri is pinned to 2.12.7 and Cargo.lock
+pins Tao to 0.37.3; upgrades must recheck this bridge.
+
+Source verification on the local Apple Silicon Mac: Node 26.12.1, pnpm 12.15.0,
+Rust/Cargo 1.100.0, Xcode 27.2, iOS SDK 27.2. Focused orientation/router tests
+passed (21 tests); production web build and shipped-notice check passed; macOS
+and arm64 iOS `cargo check --locked --offline` passed; the macOS host linked
+successfully with `MACOSX_DEPLOYMENT_TARGET=14.0 cargo build --locked --offline`; the Objective-C++ bridge
+passed iOS 17 syntax checking; plist lint and Xcode release deployment setting
+inspection passed. The build retains the existing large-chunk warnings and three
+notice entries without root notice files. No new exception was added.
+
+Physical rotation, keyboard/safe areas, suspend/resume/audio, installed standalone
+packages, performance measurements, Windows DPI sizing, Linux work areas,
+production signing, CSP policy and release distribution remain unverified in
+this pass. The broad acceptance checkboxes in #140 remain incomplete. These are
+pending checks, not a finding that the owner's existing packages failed.
 
 ## Proposed decision
 
