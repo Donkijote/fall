@@ -40,6 +40,31 @@ notarization, and release validation are separate steps; see the
   for route orientation locking; system-controlled windowing on newer iPadOS
   still requires physical-device testing.
 
+## macOS window chrome
+
+The macOS window uses Tauri's `Overlay` title-bar style and `hiddenTitle` while
+keeping `decorations: true`. AppKit owns the rounded frame and traffic-light
+controls; the page artwork extends behind the title bar. Windows/Linux keep
+their native chrome because those configuration fields are macOS-specific.
+`trafficLightPosition: { x: 20, y: 22 }` adds left clearance and moves the
+native buttons down to center them in the 40px strip. Tao’s vertical inset
+positions the button container rather than the button center. The drag strip
+begins at 88px to leave the buttons clear.
+
+The macOS-only `window_chrome` host plugin injects a flag before the document
+loads. The platform adapter reads that flag and the app composition enables the
+shared `WindowDragRegion`, without guessing the OS from the user agent. The
+transparent 2.5rem strip leaves the traffic-light area clear, exposes the native
+drag region, and reserves space through the shared safe-area inset so page
+controls are not placed underneath it. Its capability grants start-dragging only
+to the macOS main window; double-click zoom uses the existing default permission.
+
+Restart the Tauri host to pick up title-bar configuration. Check native rounded
+corners, close/minimize/zoom, dragging and double-click zoom, then visit Login,
+Hall and a match to confirm artwork continuity and unobstructed controls. These
+interactions require a macOS runtime check; source tests alone do not validate
+AppKit hit testing.
+
 ## iOS route orientation
 
 Both phone and tablet plists declare portrait and the two landscape directions.

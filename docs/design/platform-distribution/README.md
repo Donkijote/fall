@@ -64,6 +64,22 @@ production signing, CSP policy and release distribution remain unverified in
 this pass. The broad acceptance checkboxes in #140 remain incomplete. These are
 pending checks, not a finding that the owner's existing packages failed.
 
+## macOS title-bar follow-up (#140)
+
+After the configuration alignment commit, the owner requested that the macOS
+header blend into the screen artwork, keeping native rounded corners, traffic
+lights and window dragging while hiding the title. Use Tauri's overlay title bar
+with native decorations retained; reserve a transparent 2.5rem drag strip above
+page controls using the existing safe-area system. A macOS-only native flag
+enables the strip before the first React layout. Browser/iOS/Windows/Linux do
+not receive that strip. The owner confirmed the blended header appearance and
+requested more traffic-light padding, using Chrome on macOS as the closer
+reference. After an inspector screenshot showed the buttons above center and too close
+to the left edge, increase the native inset to `{ x: 20, y: 22 }`. Reserve a 40px strip
+with an 88px button exclusion. The revised spacing and native drag hit testing
+need a restart and runtime check; implementation details are in the native host
+README.
+
 ## Proposed decision
 
 Test **Tauri 2 across all five native platforms**, preserving the current web

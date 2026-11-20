@@ -1,8 +1,14 @@
 mod orientation;
+#[cfg(target_os = "macos")]
+mod window_chrome;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    tauri::Builder::default()
+    let builder = tauri::Builder::default();
+    #[cfg(target_os = "macos")]
+    let builder = builder.plugin(window_chrome::init());
+
+    builder
         .invoke_handler(tauri::generate_handler![orientation::set_orientation])
         .setup(|app| {
             if cfg!(debug_assertions) {
