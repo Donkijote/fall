@@ -2,7 +2,7 @@
 
 ## Supported layout — #137 (2026-11-20)
 
-Gallery fixtures now preview the landscape presentation. Dedicated portrait and compact-orientation variants are retired. Smaller landscape layouts use unprefixed Tailwind utilities; larger layouts use standard width breakpoints. No orientation lock or rotate-device gate is implemented here; enforcement and native integration belong to #140. Earlier viewport reviews below describe historical implementations, not current portrait support.
+Gallery fixtures now preview the landscape presentation. Dedicated portrait and compact-orientation variants are retired outside the Login exception. Smaller landscape layouts use unprefixed Tailwind utilities; larger layouts use standard width breakpoints. No orientation lock or rotate-device gate is implemented here; enforcement and native integration belong to #140. Earlier viewport reviews below describe historical implementations, not current portrait support.
 
 [Issue #122](https://github.com/Donkijote/fall/issues/122) uses the supplied
 theme-template screenshot as a layout reference. The first pass groups

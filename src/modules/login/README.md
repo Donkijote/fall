@@ -1,6 +1,6 @@
 # Login
 
-Landscape presentation (#137): use the small landscape layout as the unprefixed Tailwind base and standard width breakpoints for larger layouts. There are no portrait layout branches or compact-orientation variants. See [the supported viewport policy](../../../docs/design/README.md#supported-viewport-policy) for verification targets. Orientation enforcement is deferred to #140; historical portrait reviews below do not imply current support.
+Login is the only portrait-capable screen (#137). Its unprefixed layout stacks the introduction, credentials and provider actions; standard width and built-in landscape variants adapt larger screens and short landscape viewports. The main screen scrolls for short viewports and the on-screen keyboard. The rest of the app supports landscape presentation. Orientation enforcement after “Take your seat” and restoration when returning to Login are deferred to #140; no lock or rotate-device gate is implemented here.
 
 The lazy-loaded `/login` route renders `LoginScreen` as a presentation preview.
 Email and password fields are editable, and the form suppresses submission.
@@ -52,7 +52,7 @@ revert when the screen unmounts or reduced motion is enabled.
 The screen, atmosphere, shader uniform, and router tests cover form behavior,
 navigation, preference changes, fallback behavior, and renderer cleanup.
 After changing the scene or layout, use the existing app to check both themes,
-short landscape viewports, reduced motion, and mask alignment.
+short portrait and landscape viewports, reduced motion, and mask alignment.
 The unit tests exercise scene behavior without rendering WebGL pixels.
 
 The module entry point exports `loginGallery` for the development-only
