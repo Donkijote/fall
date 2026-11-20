@@ -110,3 +110,53 @@ holding portrait, both landscape directions, a direct match URL, returning to
 Login, keyboard/safe areas, background/resume, and iPad windowing. Confirm match
 state/audio continuity and inspect the native console for rejected geometry
 requests. Desktop sizing needs Windows scaling and Linux work-area verification.
+
+## iOS safe areas
+
+`initializeNativeSafeArea` in the platform adapter starts the `observe_safe_area`
+command once per document. On iOS it attaches a passive, non-interactive
+`FallSafeAreaObserver` to the WKWebView. UIKit layout and safe-area callbacks
+publish the current safe rectangle in web-view coordinates to
+`--native-safe-area-{top,right,bottom,left}`. Reloads reuse the observer and
+republish the values. The observer follows the web view's lifetime, with a weak
+reference back to it; it does not install timers or intercept touches.
+
+The physical iPhone exposed a native-host mismatch: after the route requested
+landscape, both the Tauri window and WKWebView could retain portrait insets
+(top/left/bottom/right 62/0/34/0), despite landscape scene geometry and an
+874 × 402-point window. Reading the main window alone therefore did not fix it.
+When a phone has this specific mismatch, the observer creates a transparent,
+non-interactive reference window in the same scene to obtain UIKit's current
+safe rectangle. It sits below the app, never becomes key, and is owned by the
+observer. Its layout callbacks keep the reference current, including return to
+portrait Login. No device dimensions are hardcoded in the implementation.
+
+The global `--safe-area-*` properties prefer these native values and fall back
+to CSS `env()` in browsers and other hosts. The Hall's existing header, footer,
+and stage spacing consume those shared properties; its merged `develop` layout
+is unchanged. Artwork stays full bleed. The macOS title-bar inset still combines
+with the shared top property. The legacy bottom navigation also consumes the
+shared left/right/bottom properties.
+
+Verification on 2026-11-20:
+
+- A temporary WKWebView harness compiled the production `safe_area.mm` for an
+  iPhone 18 Pro Max simulator (iOS 27.0). Both landscapes, document replacement,
+  return to portrait, and an already-inset web view passed. A second harness
+  deliberately kept the host window's safe insets and layout guide in portrait
+  while rotating the scene, reproducing the physical failure. The reference
+  window still supplied landscape insets 0/62/20/62; portrait returned to
+  62/0/34/0, and an already-inset web view received zero extra inset.
+- The rebuilt Fall app on the connected physical iPhone (iOS 27.2.1 as reported
+  by CoreDevice, viewport 874 × 402 CSS pixels) published top/left/bottom/right
+  0/62/20/62. A read-only WKWebView inspection confirmed actual Hall header
+  padding top 4px, left/right 68px, and footer padding left/right 68px, bottom
+  22px. The owner confirmed the current appearance. The app was detached from
+  the debugger and left running.
+- The Objective-C++ implementation compiled against the device SDK with the
+  iOS 17 deployment target and warnings treated as errors.
+
+These measurements verify native-to-CSS propagation and the Hall's computed
+layout. Visual/touch sign-off on both physical landscape directions, Login
+keyboard behavior, and background/resume remain part of the broader #140
+interaction checks; simulator rotation does not replace those checks.

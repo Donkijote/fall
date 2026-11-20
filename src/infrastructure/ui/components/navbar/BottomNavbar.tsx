@@ -29,7 +29,7 @@ export const BottomNavbar = () => {
       />
       <nav
         aria-label="Main navigation"
-        className="fixed inset-x-0 bottom-0 z-30 border-t border-sidebar-border bg-sidebar px-2 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] text-sidebar-foreground"
+        className="fixed inset-x-0 bottom-0 z-30 border-t border-sidebar-border bg-sidebar pt-3 pr-[calc(0.5rem+var(--safe-area-right))] pb-[max(0.75rem,var(--safe-area-bottom))] pl-[calc(0.5rem+var(--safe-area-left))] text-sidebar-foreground"
       >
         <div className="mx-auto grid max-w-2xl grid-cols-[1fr_auto_1fr] items-center gap-2">
           <div className="flex items-center justify-around gap-1">

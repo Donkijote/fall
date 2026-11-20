@@ -80,6 +80,32 @@ with an 88px button exclusion. The revised spacing and native drag hit testing
 need a restart and runtime check; implementation details are in the native host
 README.
 
+## iOS landscape safe-area follow-up (#140)
+
+The owner reported a displaced Hall header and edge-hugging profile, resource,
+and footer actions after entering landscape. Keep the merged #137 landscape
+layout and its gutters authoritative. The physical iPhone investigation found
+that the Tauri window itself could retain portrait safe insets after native
+rotation; reading only CSS `env()` or the main native window was insufficient.
+
+The iOS host now publishes a UIKit safe rectangle converted to web-view
+coordinates. For the observed phone mismatch (landscape scene/window geometry
+with portrait top inset and no side insets), a transparent, non-interactive,
+non-key reference window in the same scene supplies fresh system insets. Layout
+callbacks update them and document reloads republish them. Browser `env()` remains
+the fallback. Hall layout and full-bleed artwork are preserved; the legacy bottom
+navigation also consumes the shared insets.
+
+On 2026-11-20 the physical iPhone's 874 × 402 viewport reported native landscape
+insets top/left/bottom/right 0/62/20/62. Inspection of the running Hall confirmed
+header padding top 4px and sides 68px, plus footer sides 68px and bottom 22px.
+The owner confirmed the current appearance.
+An iOS 27.0 simulator harness also reproduced stale native portrait insets and
+verified both landscapes, document replacement, portrait return, and an
+already-inset web view. Physical visual/touch sign-off across both directions,
+Login keyboard behavior and lifecycle checks remain pending. Native host
+documentation owns the implementation and verification details.
+
 ## Proposed decision
 
 Test **Tauri 2 across all five native platforms**, preserving the current web

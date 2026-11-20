@@ -1,4 +1,5 @@
 mod orientation;
+mod safe_area;
 #[cfg(target_os = "macos")]
 mod window_chrome;
 
@@ -9,7 +10,10 @@ pub fn run() {
     let builder = builder.plugin(window_chrome::init());
 
     builder
-        .invoke_handler(tauri::generate_handler![orientation::set_orientation])
+        .invoke_handler(tauri::generate_handler![
+            orientation::set_orientation,
+            safe_area::observe_safe_area
+        ])
         .setup(|app| {
             if cfg!(debug_assertions) {
                 app.handle().plugin(
