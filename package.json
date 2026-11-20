@@ -21,6 +21,7 @@
     "preview": "vp preview",
     "desktop": "tauri dev",
     "ios": "tauri ios dev",
+    "android": "tauri android dev",
     "test": "vp test",
     "test:coverage": "vp test run --coverage"
   },
