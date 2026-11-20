@@ -28,7 +28,7 @@ export function ScoreTally({ score, reducedMotion }: { score: number; reducedMot
       <strong
         ref={text}
         aria-hidden="true"
-        className="pb-[12%] title-type text-base leading-none font-normal text-artwork-shadow tabular-nums sm:text-xl compact-landscape:text-sm"
+        className="pb-[12%] title-type text-sm font-normal text-artwork-shadow tabular-nums lg:text-xl"
       >
         {Math.round(value.current.score)}
       </strong>

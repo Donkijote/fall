@@ -25,10 +25,10 @@ export function ReferenceFilters({
     <form
       role="search"
       aria-label="Filter combinations"
-      className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-x-3 gap-y-4 @xl:grid-cols-[minmax(0,1fr)_auto_auto] @min-[28rem]:compact-landscape:grid-cols-[minmax(0,1fr)_auto_auto]"
+      className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-x-3 gap-y-4 @min-[28rem]:grid-cols-[minmax(0,1fr)_auto_auto]"
       onSubmit={(event) => event.preventDefault()}
     >
-      <div className="col-span-full grid gap-2 @xl:col-span-1 @min-[28rem]:compact-landscape:col-span-1">
+      <div className="col-span-full grid gap-2 @min-[28rem]:col-span-1">
         <Label className="sr-only" htmlFor="search-sings">
           Search combinations
         </Label>

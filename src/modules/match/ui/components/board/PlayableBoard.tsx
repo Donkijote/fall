@@ -107,7 +107,7 @@ export function PlayableBoard({
             className={cn(
               "col-start-2 justify-self-center",
               mode !== "1vs2" &&
-                "compact-landscape:col-span-2 compact-landscape:col-start-1 compact-landscape:justify-self-start",
+                "col-span-2 col-start-1 justify-self-start lg:col-span-1 lg:col-start-2 lg:justify-self-center",
             )}
           >
             <MatchScoreboard

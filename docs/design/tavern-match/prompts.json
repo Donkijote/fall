@@ -24,13 +24,6 @@
       "notes": "Export the full 1672 × 941 image at WebP quality 85."
     },
     {
-      "file": "../../../src/assets/lobby/tavern-match/table-portrait.webp",
-      "method": "reconstructed",
-      "references": ["mockup-simplified.png"],
-      "prompt": "Tall phone portrait standalone painting based on the top waiting panel. Match the steep view from the local seat. Keep the far edge narrower than the near edge, with the near lip in the foreground and the oak surface occupying almost the entire frame. Leave a narrow strip of the inn above it, with a blue window and shelf candle on the left and a hearth on the right. Keep the tabletop clear and omit UI, text and furniture around the table.",
-      "notes": "Export the full 899 × 1750 image at WebP quality 85."
-    },
-    {
       "file": "../../../src/assets/lobby/tavern-match/victory-crest.webp",
       "method": "reconstructed",
       "references": ["background.png"],
@@ -223,5 +216,6 @@
       "prompt": "Create a standalone perfectly round aged bronze seat token with a raised softly rounded rim. Stamp a bold dark silhouette of a medieval traveller seated on a stool at a tavern table with a tankard. Use neutral lighting and a transparent exterior, with no lettering. Ensure the silhouette reads at 32–36 pixels.",
       "notes": "Trim transparent margins and export at 144 × 144 WebP."
     }
-  ]
+  ],
+  "retired_export_evidence": "../../artwork-provenance/retired-portrait-exports.json"
 }

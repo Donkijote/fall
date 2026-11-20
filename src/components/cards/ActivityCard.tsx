@@ -347,12 +347,12 @@ export function ActivityCard({
             {caption && (
               <span
                 id={captionId}
-                className="game-activity-caption absolute inset-x-2 top-2.5 mx-auto w-fit max-w-[calc(100%-1rem)] rounded-sm bg-artwork-shadow/90 px-2 py-1 text-[clamp(0.75rem,1.05vw,1rem)] text-artwork-foreground compact-landscape:text-xs"
+                className="game-activity-caption absolute inset-x-2 top-2.5 mx-auto w-fit max-w-[calc(100%-1rem)] rounded-sm bg-artwork-shadow/90 px-2 py-1 text-xs text-artwork-foreground lg:text-[clamp(0.75rem,1.05vw,1rem)]"
               >
                 {caption}
               </span>
             )}
-            <span className="game-activity-title absolute inset-x-2 bottom-[9%] artwork-title text-[clamp(1rem,1.85vw,1.85rem)] portrait:text-[clamp(1rem,4.4vw,1.6rem)] compact-landscape:text-[clamp(0.85rem,2vw,1.1rem)]">
+            <span className="game-activity-title absolute inset-x-2 bottom-[9%] artwork-title text-[clamp(0.85rem,2vw,1.1rem)] lg:text-[clamp(1rem,1.85vw,1.85rem)]">
               {title}
             </span>
           </span>

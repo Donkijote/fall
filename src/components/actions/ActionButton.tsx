@@ -96,13 +96,13 @@ export function ActionButton({
       data-glint={glint ? "" : undefined}
       data-frame={!iconOnly ? "" : undefined}
       className={cn(
-        "game-button h-auto min-h-11 min-w-11 gap-2.5 rounded-md px-4 py-2.5 text-sm transition-none active:not-aria-[haspopup]:translate-y-0 compact-landscape:text-sm",
+        "game-button h-auto min-h-11 min-w-11 gap-2.5 rounded-md px-4 py-2.5 transition-none active:not-aria-[haspopup]:translate-y-0 text-sm",
         !iconOnly &&
           "relative border-transparent px-6 bg-transparent hover:bg-transparent aria-expanded:bg-transparent dark:bg-transparent dark:hover:bg-transparent",
         !iconOnly &&
           tone === "primary" &&
-          "title-type text-base text-primary-foreground uppercase tracking-wide hover:text-primary-foreground compact-landscape:text-sm",
-        tone === "primary" && "min-h-12 compact-landscape:min-h-11",
+          "title-type text-primary-foreground uppercase tracking-wide hover:text-primary-foreground text-sm lg:text-base",
+        tone === "primary" && "min-h-11 lg:min-h-12",
         !iconOnly &&
           tone === "outline" &&
           "text-artwork-foreground hover:text-artwork-foreground aria-expanded:text-artwork-foreground",

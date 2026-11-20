@@ -1,5 +1,7 @@
 # Credits
 
+Landscape presentation (#137): use the small landscape layout as the unprefixed Tailwind base and standard width breakpoints for larger layouts. There are no portrait layout branches or compact-orientation variants. See [the supported viewport policy](../../../docs/design/README.md#supported-viewport-policy) for verification targets. Orientation enforcement is deferred to #140; historical portrait reviews below do not imply current support.
+
 `index.ts` exports `CreditsScreen`, lazy-loaded at `/credits`. Settings links to
 it; its fixed return action opens Settings and restores focus to the credits
 link. Direct entry is public and requires no player session.

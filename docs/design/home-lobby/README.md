@@ -1,11 +1,17 @@
 # Home lobby: Card Hall
 
+## Supported layout — #137 (2026-11-20)
+
+The Hall now uses only `hall-landscape.webp`, with all three activities in one row. Portrait scrolling and phone/tablet portrait exports are retired. Smaller landscape layouts use unprefixed Tailwind utilities; larger layouts use standard width breakpoints. No orientation lock or rotate-device gate is implemented here; enforcement and native integration belong to #140. Earlier viewport reviews below describe historical implementations, not current portrait support.
+
+Retired export prompts and generation evidence are preserved in [the provenance ledger](../../artwork-provenance/retired-portrait-exports.json).
+
 The [simplified mockup](mockup-simplified.png) is the implementation and
 activity artwork reference. The [detailed mockup](mockup-detailed.png) shows the
 same composition with richer ornament. The [clean Hall master](background.png)
 supplies the stone arches, window light, banner and oak table for responsive
 paintings. [Prompts](prompts.json) record both treatments, the clean plate, and
-its landscape, tablet and phone edits.
+its landscape export.
 
 The live lobby uses three activity cards above compact navigation. Tavern opens
 the match format picker; Campaign and Arena are previews. The identity, resource

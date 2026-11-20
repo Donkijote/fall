@@ -33,7 +33,7 @@ test("the Play action opens the Tavern picker and Escape restores focus", async 
   await user.click(play);
   expect(screen.getByRole("dialog", { name: "Tavern" })).toBeVisible();
   expect(screen.getByRole("button", { name: "Duel" })).toHaveAccessibleDescription(
-    "2 players Face one opponent.",
+    "2 players Face off",
   );
   await user.keyboard("{Escape}");
   await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());

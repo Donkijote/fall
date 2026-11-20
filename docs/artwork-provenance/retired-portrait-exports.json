@@ -1,0 +1,125 @@
+{
+  "issue": 137,
+  "retired_on": "2026-11-20",
+  "note": "Historical generation evidence only. Files were removed from runtime; paths and references are resolved against each original manifest directory. These are not approved runtime outputs. Original source masters remain in Git history. Provider/permission review is unchanged.",
+  "features": [
+    {
+      "manifest": "docs/design/tavern-match/prompts.json",
+      "path_base": "docs/design/tavern-match",
+      "outputs": [
+        {
+          "file": "../../../src/assets/lobby/tavern-match/table-portrait.webp",
+          "method": "reconstructed",
+          "references": ["mockup-simplified.png"],
+          "prompt": "Tall phone portrait standalone painting based on the top waiting panel. Match the steep view from the local seat. Keep the far edge narrower than the near edge, with the near lip in the foreground and the oak surface occupying almost the entire frame. Leave a narrow strip of the inn above it, with a blue window and shelf candle on the left and a hearth on the right. Keep the tabletop clear and omit UI, text and furniture around the table.",
+          "notes": "Export the full 899 × 1750 image at WebP quality 85.",
+          "retired": "2026-11-20: portrait-only runtime export removed for #137; generation evidence retained."
+        }
+      ]
+    },
+    {
+      "manifest": "docs/design/sings-reference/prompts.json",
+      "path_base": "docs/design/sings-reference",
+      "outputs": [
+        {
+          "file": "../../../src/assets/sings-reference/phone-portrait.webp",
+          "method": "reconstructed",
+          "references": ["background.png"],
+          "prompt": "Recompose the approved sorting table for phone portrait. Preserve its angle, wood, lighting and quiet central card area. Keep artwork free of text and UI; reframe the same table without stretching the scene.",
+          "retired": "2026-11-20: portrait-only runtime export removed for #137; generation evidence retained."
+        },
+        {
+          "file": "../../../src/assets/sings-reference/tablet-portrait.webp",
+          "method": "reconstructed",
+          "references": ["background.png"],
+          "prompt": "Recompose the approved sorting table for tablet portrait. Preserve its angle, wood, lighting and quiet central card area. Keep artwork free of text and UI; reframe the same table without stretching the scene.",
+          "retired": "2026-11-20: portrait-only runtime export removed for #137; generation evidence retained."
+        }
+      ]
+    },
+    {
+      "manifest": "docs/design/credits-licenses/prompts.json",
+      "path_base": "docs/design/credits-licenses",
+      "outputs": [
+        {
+          "file": "../../../src/assets/credits/atelier-tablet.webp",
+          "method": "recorded",
+          "references": ["background.png"],
+          "prompt": "Create a standalone tablet-portrait painting for Fall's Credits & licenses, intended aspect ratio 4:5 (1120x1400). Use the attached landscape atelier as the exact scene identity and palette reference. Recompose the SAME medieval illuminator's atelier for a tablet, not a crop or stretched landscape. Keep the cool slate arch and soft morning daylight from the window on the left. Place the weathered oak desk low-left with its open BLANK ledger, quill in an inkwell, tiny red wax seal and rolled parchment. Keep a modest bookcase at the far right with hand-bound books and an unlit candleholder. Broad quiet mid-dark slate space in the center for live reading text; no flat dark rectangle. Painterly matte materials and selective detail, same restrained balance as Card Hall. No UI, letters, text, logos, card designs, people or watermarks. Avoid orange wash, glossy bevels or strong black vignette. This is a dedicated runtime tablet illustration.",
+          "notes": "Generated 2026-11-18 with the OpenAI built-in ImageGen tool; model identifier not exposed. Standalone tablet artwork, not extracted from a UI mockup. PNG output exported to WebP quality 83, effort 6, preserving the original dimensions.",
+          "retired": "2026-11-20: portrait-only runtime export removed for #137; generation evidence retained."
+        },
+        {
+          "file": "../../../src/assets/credits/atelier-phone.webp",
+          "method": "recorded",
+          "references": ["background.png"],
+          "prompt": "Create a standalone tall phone-portrait painting for Fall's Credits & licenses, intended aspect ratio 9:19.5 (900x1950). Use the attached landscape atelier as the exact scene identity and palette reference. Recompose the SAME medieval illuminator's atelier vertically, not a crop or stretched landscape. Keep cool slate stone, gentle cool daylight, and matte painterly oak. A narrow edge of the window at upper left, stone arch high above; a low corner of the writing desk with open BLANK ledger, quill, inkwell, red wax seal and rolled parchment near the bottom left; a slim bookcase at the far right. Preserve a broad quiet mid-dark slate reading area through the middle 70% of the frame, with naturally soft illumination rather than a black panel. Keep the recognizable props low or along the edges so credits remain readable. No UI, text, letters, logos, cards, people, watermarks or painted frame. Avoid orange wash, glossy materials or heavy black vignette. This is a dedicated runtime phone illustration.",
+          "notes": "Generated 2026-11-18 with the OpenAI built-in ImageGen tool; model identifier not exposed. Standalone phone artwork, not extracted from a UI mockup. PNG output exported to WebP quality 83, effort 6, preserving the original dimensions.",
+          "retired": "2026-11-20: portrait-only runtime export removed for #137; generation evidence retained."
+        }
+      ]
+    },
+    {
+      "manifest": "docs/design/home-lobby/prompts.json",
+      "path_base": "docs/design/home-lobby",
+      "outputs": [
+        {
+          "file": "../../../src/assets/lobby/card-hall/hall-tablet.webp",
+          "method": "recorded",
+          "references": ["background.png"],
+          "prompt": "Use the attached source as the edit and identity reference for a clean full-bleed painted video game lobby backdrop. Same medieval stone hall, painterly textured realism and muted charcoal stone, cold diffuse daylight from ivy mullioned windows on the left, central receding dark Gothic arch, muted red and gold quartered banner on the right (coin, sword, cup, club motifs), oak chair with gold lion at left, two leather books and parchment map on the right side of the broad worn oak table. Single coherent interior perspective, level camera, straight natural verticals, real architectural scale, no lens distortion. Quiet middle for overlaid cards, darker top corners for cream HUD text. Artwork only, no text, UI, game cards, people, borders, inset frames or blank areas. Maintain consistent style and materials. Reframe as a full-bleed portrait tablet image, approximately 3:4 or 4:5. Keep the banner, window, chair, books and map all clearly in frame, within the central 78% of width and central 84% of height. Tall vault above, strong central arch and floor perspective, table beginning about 72% down, its props toward the right. Pull the viewpoint back enough to show both sides, and give the props space around the edge.",
+          "refinements": [
+            "Keep exactly the same 4:5 portrait tablet painting. Raise only the quartered red-and-gold banner on the right so its main motifs are all in the upper quarter, and bring it just inward so there is 12% of the image width to its right. Hang its rod around 12% down, its lower tip at around 29% down. Remove it from its old position and restore exposed stone. Preserve the architecture, window lighting, perspective, lion chair, books, map and tabletop. Artwork only, no graphics or text."
+          ],
+          "retired": "2026-11-20: portrait-only runtime export removed for #137; generation evidence retained."
+        },
+        {
+          "file": "../../../src/assets/lobby/card-hall/hall-phone.webp",
+          "method": "recorded",
+          "references": ["background.png"],
+          "prompt": "Use the attached source as the edit and identity reference for a clean full-bleed painted video game lobby backdrop. Same medieval stone hall, painterly textured realism and muted charcoal stone, cold diffuse daylight from ivy mullioned windows on the left, central receding dark Gothic arch, muted red and gold quartered banner on the right (coin, sword, cup, club motifs), oak chair with gold lion at left, two leather books and parchment map on the right side of the broad worn oak table. Single coherent interior perspective, level camera, straight natural verticals, real architectural scale, no lens distortion. Quiet middle for overlaid cards, darker top corners for cream HUD text. Artwork only, no text, UI, game cards, people, borders, inset frames or blank areas. Maintain consistent style and materials. Create a very tall portrait composition approximately 9:19.5 (roughly 1:2.17). Recompose the architecture for a narrow field: the window and banner are both legible beside the central arch and within the middle 76% of the width, with their tops visible above the central card zone. Keep the books and map together at the lower right, between 73% and 88% image height and within 78% of width, away from the very bottom, and chair visible at left if possible. Fill top with vaulted stonework, bottom with continuous richly painted tabletop. Do not merely crop the reference.",
+          "refinements": [
+            "Keep exactly the same very tall 9:19.5 painting. Move only the quartered red-and-gold banner on the right into the upper quarter, where its silhouette and four motifs will be readable above the UI. Hang it from the upper right wall or pillar, with its rod around 14% down and tip around 28% down. It should sit around 77% of the image width, with clear space to its right. Remove it from its previous lower position and restore the exposed stone there. Preserve the windows, arches, chair, lighting, books, map, table and muted colors as closely as possible. Artwork only, no graphics or text."
+          ],
+          "retired": "2026-11-20: portrait-only runtime export removed for #137; generation evidence retained."
+        }
+      ]
+    },
+    {
+      "manifest": "docs/design/tavern/prompts.json",
+      "path_base": "docs/design/tavern",
+      "outputs": [
+        {
+          "file": "../../../src/assets/lobby/tavern/inn-portrait.webp",
+          "method": "recorded",
+          "references": ["background.png"],
+          "prompt": "Create a 9:19.5 portrait reframe of this exact clean Fall tavern background for phone screens. Same low timber ceiling, low oak tabletop, soft background patrons in their original group, same slate-blue window at left and small amber hearth at right. Bring the window and hearth into the narrow frame, keep the center dark and quiet behind three stacked live UI rows. Keep a candle and pewter mug in the bottom corners. Match the painting style, light direction and visual identity. No text, no UI, no additional foreground people.",
+          "refinements": [
+            "Export the portrait edit at 852 × 1846 as WebP at quality 84, method 6."
+          ],
+          "retired": "2026-11-20: portrait-only runtime export removed for #137; generation evidence retained."
+        }
+      ]
+    },
+    {
+      "manifest": "docs/design/how-to-play/prompts.json",
+      "path_base": "docs/design/how-to-play",
+      "outputs": [
+        {
+          "file": "../../../src/assets/rulebook/archive-phone.webp",
+          "method": "recorded",
+          "references": ["background.png"],
+          "prompt": "Use case: stylized-concept\nAsset type: responsive phone artwork master for the approved Fall How to Play archive page.\nInput image: the approved clean landscape archive, art and room identity reference.\nRecompose this exact archive room for narrow phone portrait, approximately 9:19.5. Produce a full-bleed portrait painting, around 1024x2048. Preserve the same stone arches, oak shelves, leather-bound books, lantern and desk, ivy and cool doorway daylight as recognizable landmarks, but reframe vertically. Place a slim bookshelf and lantern grouping along lower-left and left edge; desk in bottom sixth. Keep upper half and central reading area quiet shadowed slate stone so mobile page title, chapter disclosure and article can fit as live controls. Bring a suggestion of cool window light to the far right edge. Preserve painterly material quality. Do not squeeze or letterbox the landscape scene.\nNo UI, labels, lettering, cards, people, borders, watermark, logos or baked controls. The background is decorative. Do not add new scene landmarks or change the palette.",
+          "retired": "2026-11-20: portrait-only runtime export removed for #137; generation evidence retained."
+        },
+        {
+          "file": "../../../src/assets/rulebook/archive-tablet.webp",
+          "method": "recorded",
+          "references": ["background.png"],
+          "prompt": "Use case: stylized-concept\nAsset type: responsive tablet artwork master for the approved Fall How to Play archive page.\nInput image: the approved clean landscape archive, art and room identity reference.\nRecompose this exact archive room for tablet portrait approximately 4:5, around 1120x1400. Pull back slightly to show shelves at left and cool daylight at right, desk and books low in the bottom fifth. Keep a large quiet central stone area and upper title zone. Preserve the room identity, stone arches, oak, leather books, low warm lantern and cool light; extend the vault upward rather than stretching. Do not squeeze or letterbox the original.\nNo UI, labels, lettering, cards, people, borders, watermark, logos or baked controls. The background is decorative. Do not add new scene landmarks or change the palette.",
+          "retired": "2026-11-20: portrait-only runtime export removed for #137; generation evidence retained."
+        }
+      ]
+    }
+  ]
+}

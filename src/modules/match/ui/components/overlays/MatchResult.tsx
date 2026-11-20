@@ -63,21 +63,21 @@ export function MatchResult({
     >
       <div
         ref={result}
-        className="grid w-[min(100%,28rem)] justify-items-center gap-2 text-center compact-landscape:gap-1"
+        className="grid w-[min(100%,28rem)] justify-items-center gap-1 text-center lg:gap-2"
       >
-        <div className="relative grid w-[min(100%,27rem)] place-items-center compact-landscape:w-[min(100%,45dvh)]">
+        <div className="relative grid w-[min(100%,45dvh)] place-items-center lg:w-[min(100%,27rem)]">
           <img src={won ? victory : defeat} alt="" className="w-full" />
           <h2
             ref={title}
             tabIndex={-1}
-            className="absolute top-[67%] -translate-y-1/2 artwork-title text-[clamp(2rem,8vmin,3.75rem)] leading-none outline-none compact-landscape:text-[clamp(1.25rem,6dvh,2rem)]"
+            className="absolute top-[67%] -translate-y-1/2 artwork-title text-[clamp(1.25rem,6dvh,2rem)] outline-none lg:text-[clamp(2rem,8vmin,3.75rem)] lg:leading-none"
           >
             {outcome}
           </h2>
         </div>
         <ol
           aria-label="Final standings"
-          className="match-result-standings relative isolate grid w-[min(100%,22rem)] gap-2 px-7 py-5 compact-landscape:w-[min(100%,19rem)] compact-landscape:gap-1 compact-landscape:px-6 compact-landscape:py-3.5"
+          className="match-result-standings relative isolate grid w-[min(100%,19rem)] gap-1 px-6 py-3.5 lg:w-[min(100%,22rem)] lg:gap-2 lg:px-7 lg:py-5"
         >
           {standings.map(({ side, label, score }) => {
             const team = scoreSideStyle(side);
@@ -86,7 +86,7 @@ export function MatchResult({
                 key={side}
                 className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-3"
               >
-                <MatchPlaque className="min-h-8 w-[clamp(7rem,34vw,11rem)] max-w-full justify-self-start px-4 text-sm compact-landscape:min-h-7 compact-landscape:w-[clamp(7rem,20vw,9.5rem)]">
+                <MatchPlaque className="min-h-7 w-[clamp(7rem,20vw,9.5rem)] max-w-full justify-self-start px-4 text-sm lg:min-h-8 lg:w-[clamp(7rem,34vw,11rem)]">
                   {team && (
                     <span
                       aria-hidden="true"
@@ -101,7 +101,7 @@ export function MatchResult({
                 <PointsBadge
                   points={score}
                   label={`${score} ${score === 1 ? "point" : "points"}`}
-                  className="size-13 compact-landscape:size-11"
+                  className="size-11 lg:size-13"
                 />
               </li>
             );

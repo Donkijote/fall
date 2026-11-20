@@ -37,7 +37,7 @@ export function CaptureCount({
   return (
     <section
       aria-labelledby={title}
-      className="[container-type:inline-size] pointer-events-none absolute top-1/2 left-1/2 isolate z-10 aspect-[960/410] min-h-36 w-[min(calc(100%-0.5rem),40rem)] -translate-1/2 text-center text-artwork-foreground compact-landscape:max-w-120"
+      className="[container-type:inline-size] pointer-events-none absolute top-1/2 left-1/2 isolate z-10 aspect-[960/410] min-h-36 w-[min(calc(100%-0.5rem),40rem)] max-w-120 -translate-1/2 text-center text-artwork-foreground lg:max-w-none"
     >
       <img src={tray} alt="" className="absolute inset-0 -z-10 size-full" />
       <div className="absolute inset-x-[11.5%] top-[21%] bottom-[10%] flex flex-col gap-[clamp(0.375rem,1.7cqw,0.625rem)]">
@@ -101,7 +101,7 @@ export function CaptureCount({
                     />
                     <div
                       data-capture-anchor={side}
-                      className="absolute bottom-[calc(13%+2px)] left-[46%] isolate inline-flex aspect-square w-[38%] -translate-x-1/2 items-center justify-center pb-[0.18em] font-serif text-[clamp(0.625rem,3.35cqw,1.125rem)] leading-none font-normal text-artwork-shadow tabular-nums sm:left-[47%] compact-landscape:bottom-[calc(10%-1px)] compact-landscape:w-[34%]"
+                      className="absolute bottom-[calc(10%-1px)] left-[46%] isolate inline-flex aspect-square w-[34%] -translate-x-1/2 items-center justify-center pb-[0.18em] font-serif text-[clamp(0.625rem,3.35cqw,1.125rem)] leading-none font-normal text-artwork-shadow tabular-nums lg:bottom-[calc(13%+2px)] lg:left-[47%] lg:w-[38%]"
                     >
                       <img src={bonusCoin} alt="" className="absolute inset-0 -z-10 size-full" />
                       <span aria-hidden="true">+</span>
@@ -115,7 +115,7 @@ export function CaptureCount({
                       aria-hidden="true"
                       data-capture-burst
                       className={cn(
-                        "absolute top-[22%] left-1/2 isolate z-10 sm:top-[calc(22%-3px)] compact-landscape:top-[22%]! compact-landscape:top-[calc(22%-2px)] grid h-[20%] min-h-[1.3em] w-[83%] -translate-x-1/2 -translate-y-[2px] place-items-center font-serif text-[clamp(0.5rem,2.1cqw,0.75rem)] leading-[1.1] font-semibold whitespace-nowrap text-artwork-shadow italic",
+                        "absolute left-1/2 isolate z-10 grid h-[20%] min-h-[1.3em] w-[83%] -translate-x-1/2 -translate-y-[2px] place-items-center font-serif text-[clamp(0.5rem,2.1cqw,0.75rem)] leading-[1.1] font-semibold whitespace-nowrap text-artwork-shadow italic top-[22%] lg:top-[calc(22%-3px)]",
                         !tally?.extraCard && "invisible",
                       )}
                     >

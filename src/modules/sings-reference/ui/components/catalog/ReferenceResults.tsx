@@ -25,7 +25,7 @@ export function ReferenceResults({
       {count ? (
         <ul
           aria-label="Combinations"
-          className="grid grid-cols-1 @2xl:grid-cols-2 @5xl:grid-cols-3 @min-[26rem]:@max-2xl:compact-landscape:grid-cols-2"
+          className="grid grid-cols-1 @min-[26rem]:grid-cols-2 @5xl:grid-cols-3"
         >
           {results.map((sing) => (
             <CombinationEntry key={sing.id} sing={sing} query={query} />
