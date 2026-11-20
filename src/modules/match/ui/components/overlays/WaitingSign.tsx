@@ -49,7 +49,7 @@ export function WaitingSign({
   );
 
   return (
-    <section className="relative grid w-[min(100%,21rem)] justify-items-center gap-2 px-6 pt-12 pb-6 text-center text-artwork-foreground compact-landscape:gap-1 compact-landscape:pt-10 compact-landscape:pb-4">
+    <section className="relative grid w-[min(100%,21rem)] justify-items-center gap-1 px-6 pt-10 pb-4 text-center text-artwork-foreground lg:gap-2 lg:pt-12 lg:pb-6">
       <img src={sign} alt="" className="pointer-events-none absolute inset-0 size-full" />
       <h1 className="relative artwork-title text-[clamp(1.25rem,5vmin,2rem)]">{title}</h1>
       <div className="relative grid justify-items-center gap-2 text-sm" role="status">
@@ -58,7 +58,7 @@ export function WaitingSign({
             <span
               key={index}
               className={cn(
-                "grid size-9 shrink-0 place-items-center rounded-full text-gold compact-landscape:size-8",
+                "grid shrink-0 place-items-center rounded-full text-gold size-8 lg:size-9",
                 index >= filled && "border border-gold/70 bg-artwork-shadow",
               )}
               data-filled={index < filled}

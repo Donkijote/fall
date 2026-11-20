@@ -159,7 +159,7 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
 
   return (
     <div
-      className="card-hall relative isolate grid min-h-dvh grid-rows-[auto_1fr_auto] bg-background text-foreground [--hall-card-height:min(44dvh,440px,calc((var(--hall-safe-width)_-_8rem)/2))] [--hall-gutter:0.25rem] [--hall-safe-width:calc(100vw_-_var(--safe-area-left)_-_var(--safe-area-right))] min-[360px]:[--hall-gutter:0.75rem] sm:[--hall-gutter:1rem] lg:[--hall-gutter:clamp(1rem,2.6vw,3rem)] portrait:[--hall-card-height:min(46dvh,390px,calc((var(--hall-safe-width)_-_4rem)*1.5))] compact-landscape:[--hall-card-height:min(55dvh,calc(100dvh_-_9.85rem_-_var(--safe-area-top)_-_var(--safe-area-bottom)),calc((var(--hall-safe-width)_-_7rem)/2))] compact-landscape:[--hall-gutter:0.375rem] compact-portrait:[--hall-card-height:min(42dvh,275px,calc((var(--hall-safe-width)_-_4rem)*1.5))]"
+      className="card-hall relative isolate grid min-h-dvh grid-rows-[auto_1fr_auto] bg-background text-foreground [--hall-card-height:min(55dvh,calc(100dvh_-_9.85rem_-_var(--safe-area-top)_-_var(--safe-area-bottom)),calc((var(--hall-safe-width)_-_7rem)/2))] [--hall-gutter:0.375rem] [--hall-safe-width:calc(100vw_-_var(--safe-area-left)_-_var(--safe-area-right))] lg:[--hall-card-height:min(44dvh,440px,calc((var(--hall-safe-width)_-_8rem)/2))] lg:[--hall-gutter:clamp(1rem,2.6vw,3rem)]"
       data-slot="card-hall"
       onPointerDown={(event) => {
         touchPointer.current =
@@ -178,9 +178,7 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
         aria-hidden="true"
       >
         <div data-hall-painting="" className="absolute inset-0 isolate">
-          <picture className="absolute inset-0">
-            <source media="(max-aspect-ratio: 3/5)" srcSet={cardHallArtwork.hallPhone} />
-            <source media="(max-aspect-ratio: 5/4)" srcSet={cardHallArtwork.hallTablet} />
+          <div className="absolute inset-0">
             <img
               className="card-hall-backdrop block size-full object-cover object-[center_54%]"
               aria-hidden="true"
@@ -189,7 +187,7 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
               height={935}
               alt=""
             />
-          </picture>
+          </div>
           <div data-hall-light-plane="" className="absolute inset-0 mix-blend-screen">
             <span
               data-hall-light=""
@@ -203,10 +201,9 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
             />
           </div>
         </div>
-        <div className="absolute inset-x-0 top-0 hidden h-[calc(var(--safe-area-top)+1.5rem)] bg-linear-to-b from-artwork-shadow via-artwork-shadow/55 to-transparent standalone:portrait:block" />
       </div>
       <header
-        className="card-hall-header grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-start gap-4 pt-[calc(var(--hall-header-top)+var(--safe-area-top))] pr-[calc(var(--hall-gutter)+var(--safe-area-right))] pb-3 pl-[calc(var(--hall-gutter)+var(--safe-area-left))] text-artwork-foreground [--hall-header-top:1rem] [text-shadow:0_1px_4px_var(--artwork-shadow)] max-[480px]:grid-cols-[minmax(0,1fr)_auto] portrait:gap-1.5 portrait:pb-2 portrait:[--hall-header-top:0.7rem] compact-landscape:grid-cols-[minmax(0,1fr)_auto_minmax(max-content,1fr)] compact-landscape:items-center compact-landscape:gap-x-6 compact-landscape:pb-0 compact-landscape:[--hall-header-top:0.25rem]"
+        className="card-hall-header grid grid-cols-[minmax(0,1fr)_auto_minmax(max-content,1fr)] items-center gap-4 gap-x-6 pt-[calc(var(--hall-header-top)+var(--safe-area-top))] pr-[calc(var(--hall-gutter)+var(--safe-area-right))] pb-0 pl-[calc(var(--hall-gutter)+var(--safe-area-left))] text-artwork-foreground [--hall-header-top:0.25rem] [text-shadow:0_1px_4px_var(--artwork-shadow)] lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] lg:items-start lg:pb-3 lg:[--hall-header-top:1rem]"
         aria-label="Player HUD"
       >
         <PlayerIdentity
@@ -214,7 +211,7 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
           fallbackAvatarUrl={cardHallArtwork.traveller}
           levelCrestUrl={cardHallIcons.level}
         />
-        <h1 className="card-hall-wordmark m-0 flex items-center gap-[0.3em] artwork-title text-[clamp(2rem,3.5vw,3.4rem)] whitespace-nowrap max-[480px]:col-span-2 max-[480px]:row-start-2 max-[480px]:justify-self-center portrait:text-[1.65rem] compact-landscape:text-[clamp(1.25rem,3.4vw,1.8rem)]">
+        <h1 className="card-hall-wordmark m-0 flex items-center gap-[0.3em] artwork-title text-[clamp(1.25rem,3.4vw,1.8rem)] whitespace-nowrap lg:text-[clamp(2rem,3.5vw,3.4rem)]">
           <Icon
             icon={appEmblem}
             className="size-[0.8em] text-gold drop-shadow-sm drop-shadow-artwork-shadow"
@@ -224,7 +221,7 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
         <div
           role="group"
           aria-label="Resources"
-          className="flex justify-end gap-1.5 self-center max-[480px]:col-start-2 max-[480px]:row-start-1 sm:gap-4 compact-landscape:gap-1"
+          className="flex justify-end gap-1 self-center lg:gap-4"
         >
           <ResourceReadout
             label="Energy"
@@ -242,9 +239,9 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
           />
         </div>
       </header>
-      <div className="card-hall-stage grid min-w-0 content-center py-3 pr-(--safe-area-right) pl-(--safe-area-left) compact-landscape:py-0.5">
+      <div className="card-hall-stage grid min-w-0 content-center py-0.5 pr-(--safe-area-right) pl-(--safe-area-left) lg:py-3">
         <div
-          className="card-hall-activities mx-auto grid min-h-[calc(var(--hall-card-height)*1.1+4rem)] w-fit max-w-full [scrollbar-width:none] grid-cols-[repeat(3,calc(var(--hall-card-height)*2/3))] items-center gap-[clamp(1.2rem,2.4vw,2.6rem)] p-8 portrait:w-full portrait:snap-x portrait:snap-proximity portrait:scroll-px-10 portrait:auto-cols-[calc(var(--hall-card-height)*2/3)] portrait:grid-flow-col portrait:grid-cols-none portrait:justify-start portrait:gap-6 portrait:overflow-x-auto portrait:overscroll-x-contain portrait:px-10 compact-landscape:min-h-[calc(var(--hall-card-height)*1.1+1.5rem)] compact-landscape:py-3 compact-portrait:min-h-[calc(var(--hall-card-height)*1.1+2rem)] compact-portrait:py-4 [&::-webkit-scrollbar]:hidden [&>.game-activity-card]:h-(--hall-card-height) [&>.game-activity-card]:snap-center"
+          className="card-hall-activities mx-auto grid min-h-[calc(var(--hall-card-height)*1.1+1.5rem)] w-fit max-w-full [scrollbar-width:none] grid-cols-[repeat(3,calc(var(--hall-card-height)*2/3))] items-center gap-[clamp(1.2rem,2.4vw,2.6rem)] p-8 py-3 lg:min-h-[calc(var(--hall-card-height)*1.1+4rem)] [&::-webkit-scrollbar]:hidden [&>.game-activity-card]:h-(--hall-card-height)"
           role="group"
           aria-label="Activities"
           aria-describedby="card-hall-selection-help"
@@ -287,7 +284,7 @@ export function CardHall({ player, resources, canPlay, onPlay, onSettings }: Car
       <p role="status" className="sr-only">
         {touchFocusedId === "tavern" ? "Tavern focused." : ""}
       </p>
-      <footer className="flex flex-wrap items-end justify-between gap-1 pt-1 pr-[calc(var(--hall-gutter)+var(--safe-area-right))] pb-[calc(var(--hall-footer-bottom)+var(--safe-area-bottom))] pl-[calc(var(--hall-gutter)+var(--safe-area-left))] [--hall-footer-bottom:0.625rem] sm:[--hall-footer-bottom:0.75rem] compact-landscape:[--hall-footer-bottom:0.125rem] [&>nav:last-child]:ml-auto">
+      <footer className="flex flex-wrap items-end justify-between gap-1 pt-1 pr-[calc(var(--hall-gutter)+var(--safe-area-right))] pb-[calc(var(--hall-footer-bottom)+var(--safe-area-bottom))] pl-[calc(var(--hall-gutter)+var(--safe-area-left))] [--hall-footer-bottom:0.125rem] lg:[--hall-footer-bottom:0.75rem] [&>nav:last-child]:ml-auto">
         <PlayerSystemsDock />
         <HomeUtilities onSettings={onSettings} />
       </footer>

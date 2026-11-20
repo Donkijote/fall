@@ -3,7 +3,6 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import woodenDoor from "@/assets/icons/wooden-door.svg";
 import landscape from "@/assets/lobby/tavern-match/table-landscape.webp";
-import portrait from "@/assets/lobby/tavern-match/table-portrait.webp";
 import { ActionButton } from "@/components/actions/ActionButton";
 import { Icon } from "@/components/icons/Icon";
 import type { GameMode } from "@/domain/entities/GameState";
@@ -22,8 +21,7 @@ import { TavernMatchAtmosphere } from "./TavernMatchAtmosphere";
 export function TavernMatchArtworkPreload() {
   return (
     <>
-      <link rel="preload" as="image" href={landscape} media="(orientation: landscape)" />
-      <link rel="preload" as="image" href={portrait} media="(orientation: portrait)" />
+      <link rel="preload" as="image" href={landscape} />
     </>
   );
 }
@@ -115,7 +113,6 @@ export function TavernMatch({
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 block"
         >
-          <source media="(orientation: portrait)" srcSet={portrait} />
           <img src={landscape} alt="" className="size-full object-fill" />
         </picture>
         <TavernMatchAtmosphere playing={!reducedMotion && !returning} />
@@ -172,7 +169,7 @@ export function TavernMatch({
         <div
           ref={waitingOverlay}
           data-tavern-match-detail=""
-          className="absolute inset-[var(--safe-area-top)_var(--safe-area-right)_var(--safe-area-bottom)_var(--safe-area-left)] z-10 grid place-items-center px-4 portrait:pt-[12dvh]"
+          className="absolute inset-[var(--safe-area-top)_var(--safe-area-right)_var(--safe-area-bottom)_var(--safe-area-left)] z-10 grid place-items-center px-4"
         >
           <WaitingSign
             title={title}

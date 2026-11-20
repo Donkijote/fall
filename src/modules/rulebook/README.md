@@ -1,5 +1,7 @@
 # Rulebook
 
+Landscape presentation (#137): use the small landscape layout as the unprefixed Tailwind base and standard width breakpoints for larger layouts. There are no portrait layout branches or compact-orientation variants. See [the supported viewport policy](../../../docs/design/README.md#supported-viewport-policy) for verification targets. Orientation enforcement is deferred to #140; historical portrait reviews below do not imply current support.
+
 Public entry: `index.ts` exports `RulebookScreen`. The thin infrastructure screen
 at `src/infrastructure/ui/screens/Rules.tsx` connects it to `/rules`.
 

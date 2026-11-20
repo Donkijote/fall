@@ -17,7 +17,7 @@ export function DeclarationBadge({
     <span
       className={cn(
         "relative isolate inline-grid min-h-6 w-[clamp(4.5rem,17cqw,6rem)] place-items-center px-2 font-serif text-xs leading-none font-semibold",
-        mandatory ? "text-artwork-shadow portrait:min-w-24" : "text-artwork-foreground italic",
+        mandatory ? "text-artwork-shadow" : "text-artwork-foreground italic",
         className,
       )}
     >

@@ -1,5 +1,11 @@
 # Credits and licenses
 
+## Supported layout — #137 (2026-11-20)
+
+The atelier uses only `atelier-landscape.webp`; portrait phone/tablet exports are retired. The credits and return control retain their scrolling behavior. Smaller landscape layouts use unprefixed Tailwind utilities; larger layouts use standard width breakpoints. No orientation lock or rotate-device gate is implemented here; enforcement and native integration belong to #140. Earlier viewport reviews below describe historical implementations, not current portrait support.
+
+Retired export prompts and generation evidence are preserved in [the provenance ledger](../../artwork-provenance/retired-portrait-exports.json).
+
 Tracking [issue #105](https://github.com/Donkijote/fall/issues/105).
 
 ## Review status

@@ -1,5 +1,7 @@
 # Login
 
+Login is the only portrait-capable screen (#137). Its unprefixed layout stacks the introduction, credentials and provider actions; standard width and built-in landscape variants adapt larger screens and short landscape viewports. The main screen scrolls for short viewports and the on-screen keyboard. The rest of the app supports landscape presentation. Orientation enforcement after “Take your seat” and restoration when returning to Login are deferred to #140; no lock or rotate-device gate is implemented here.
+
 The lazy-loaded `/login` route renders `LoginScreen` as a presentation preview.
 Email and password fields are editable, and the form suppresses submission.
 Provider, recovery, and account creation actions are placeholders.

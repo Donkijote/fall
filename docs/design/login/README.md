@@ -1,5 +1,9 @@
 # Login
 
+## Supported layout — #137 (2026-11-20)
+
+Login is the only screen that supports both portrait and landscape. The mobile-first portrait layout stacks the introduction, credentials and provider actions and preserves vertical scrolling when the keyboard opens. Built-in Tailwind landscape and width variants provide the short landscape and desktop compositions; no compact custom variants are restored. “Take your seat” opens the landscape-only Hall. Orientation enforcement on leaving Login and unlocking on return belong to #140; no orientation lock or gate is added here.
+
 The [simplified mockup](mockup-simplified.png) and [detailed mockup](mockup-detailed.png)
 show how the Card Hall materials carry into the login card. The live layout uses
 restrained brass trim, recessed fields and the shared primary action. On narrow

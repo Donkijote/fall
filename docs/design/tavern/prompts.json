@@ -35,13 +35,6 @@
       "prompt": "Export the clean landscape master as WebP at quality 85, method 6, at its native resolution."
     },
     {
-      "file": "../../../src/assets/lobby/tavern/inn-portrait.webp",
-      "method": "recorded",
-      "references": ["background.png"],
-      "prompt": "Create a 9:19.5 portrait reframe of this exact clean Fall tavern background for phone screens. Same low timber ceiling, low oak tabletop, soft background patrons in their original group, same slate-blue window at left and small amber hearth at right. Bring the window and hearth into the narrow frame, keep the center dark and quiet behind three stacked live UI rows. Keep a candle and pewter mug in the bottom corners. Match the painting style, light direction and visual identity. No text, no UI, no additional foreground people.",
-      "refinements": ["Export the portrait edit at 852 × 1846 as WebP at quality 84, method 6."]
-    },
-    {
       "file": "../../../src/assets/lobby/tavern/duel.webp",
       "method": "recorded",
       "references": ["mockup-simplified.png"],
@@ -96,5 +89,6 @@
       "prompt": "Standalone text-free medieval UI nameplate ribbon for a fantasy tavern format card, straight-on elongated 4:1 rectangle with short tapered ends, subtly folded leather tabs, dark warm brown worn leather blank center, very fine aged brass stitching and beveled trim. Restrained low contrast, warm antique brass matching medieval card frames. True transparency outside, no text, symbols, scene or shadow. Uniform center, designed for nine-slice.",
       "notes": "Trim to alpha bounds and export at 640 × 132 WebP."
     }
-  ]
+  ],
+  "retired_export_evidence": "../../artwork-provenance/retired-portrait-exports.json"
 }

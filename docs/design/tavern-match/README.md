@@ -1,5 +1,11 @@
 # Tavern match lobby and board
 
+## Supported layout — #137 (2026-11-20)
+
+The match uses only `table-landscape.webp`. Table, seats and overlays use the smaller landscape presentation by default, with larger viewport overrides. Smaller landscape layouts use unprefixed Tailwind utilities; larger layouts use standard width breakpoints. No orientation lock or rotate-device gate is implemented here; enforcement and native integration belong to #140. Earlier viewport reviews below describe historical implementations, not current portrait support.
+
+Retired export prompts and generation evidence are preserved in [the provenance ledger](../../artwork-provenance/retired-portrait-exports.json).
+
 The match table continues the [Tavern format picker's inn](../tavern/README.md).
 The first concept is under review in the working chat. [Issue #116](https://github.com/Donkijote/fall/issues/116)
 tracks the intended flow.

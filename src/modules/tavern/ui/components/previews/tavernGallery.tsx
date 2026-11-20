@@ -7,7 +7,7 @@ import { TavernRoom } from "../TavernRoom";
 function FormatPreview() {
   const [selected, setSelected] = useState<string | null>(null);
   return (
-    <div className="mx-auto grid w-full max-w-2xl gap-3 [--tavern-card-height:14rem] landscape:grid-cols-3">
+    <div className="mx-auto grid w-full max-w-2xl grid-cols-3 gap-3 [--tavern-card-height:14rem]">
       {tavernFormats.map((format) => (
         <TavernFormatCard
           key={format.mode}

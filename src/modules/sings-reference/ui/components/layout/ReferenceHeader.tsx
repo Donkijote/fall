@@ -11,8 +11,8 @@ export function ReferenceHeader({ children }: { children: ReactNode }) {
   const guideReturn = useGuideReturn();
 
   return (
-    <header className="relative grid items-end gap-x-6 gap-y-3 pb-4 @5xl:grid-cols-[minmax(0,1fr)_minmax(30rem,0.95fr)] @5xl:pb-6 compact-landscape:gap-y-2 compact-landscape:pb-3">
-      <div className="min-w-0 @min-[26rem]:compact-landscape:flex @min-[26rem]:compact-landscape:items-center @min-[26rem]:compact-landscape:gap-2">
+    <header className="relative grid items-end gap-x-6 gap-y-2 pb-3 lg:gap-y-3 lg:pb-4 @5xl:grid-cols-[minmax(0,1fr)_minmax(30rem,0.95fr)] @5xl:pb-6">
+      <div className="min-w-0 @min-[26rem]:flex @min-[26rem]:items-center @min-[26rem]:gap-2">
         {guideReturn ? (
           <ActionButton
             tone="quiet"
@@ -25,7 +25,7 @@ export function ReferenceHeader({ children }: { children: ReactNode }) {
         ) : (
           <HallReturnAction overArtwork />
         )}
-        <h1 className="artwork-title text-[clamp(1.65rem,3.7vw,3.5rem)] compact-landscape:text-[clamp(1.4rem,3.7vw,2.2rem)]">
+        <h1 className="artwork-title text-[clamp(1.4rem,3.7vw,2.2rem)] lg:text-[clamp(1.65rem,3.7vw,3.5rem)]">
           Sings reference
         </h1>
       </div>

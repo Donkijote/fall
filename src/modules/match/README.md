@@ -1,5 +1,7 @@
 # Local Tavern match
 
+Landscape presentation (#137): use the small landscape layout as the unprefixed Tailwind base and standard width breakpoints for larger layouts. There are no portrait layout branches or compact-orientation variants. See [the supported viewport policy](../../../docs/design/README.md#supported-viewport-policy) for verification targets. Orientation enforcement is deferred to #140; historical portrait reviews below do not imply current support.
+
 `index.ts` exports `MatchScreen` at `/game/:matchId`. The local table uses
 `tavern-7f3a` and reads the selected format from the `mode` query. Opening
 the URL directly or refreshing starts a fresh session. Cancel matchmaking and

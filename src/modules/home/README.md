@@ -1,5 +1,7 @@
 # Home: Card Hall
 
+Landscape presentation (#137): use the small landscape layout as the unprefixed Tailwind base and standard width breakpoints for larger layouts. There are no portrait layout branches or compact-orientation variants. See [the supported viewport policy](../../../docs/design/README.md#supported-viewport-policy) for verification targets. Orientation enforcement is deferred to #140; historical portrait reviews below do not imply current support.
+
 The lobby implements the [Card Hall design](../../../docs/design/home-lobby/README.md)
 using live controls and responsive artwork. [Settings](../../../docs/design/settings/README.md)
 uses the same backdrop.
@@ -27,12 +29,10 @@ Journal, Guild and Market are also unavailable. Help sits next to Settings and l
 disabled Messages shortcut sits in its own group to their left.
 
 Keyboard arrows, Home and End move focus between cards. Modal dismissal returns
-focus to its trigger. Portrait uses a native horizontal activity list with a
-hidden scrollbar. GSAP animates the active card's rim, artwork and embers while
+focus to its trigger. Activities remain in one landscape row. GSAP animates the active card's rim, artwork and embers while
 respecting the system reduced-motion preference.
 
-The hall uses separate phone, tablet and landscape paintings selected by viewport
-aspect ratio. Each fills the lobby, with a small margin for pointer parallax. Shared semantic tokens in `src/index.css` adapt the interface to
+The hall uses the landscape painting at every viewport size. It fills the lobby, with a small margin for pointer parallax. Shared semantic tokens in `src/index.css` adapt the interface to
 light and dark appearance. Card artwork failures fall back to a readable title
 over a themed surface.
 
@@ -40,7 +40,7 @@ over a themed surface.
 
 Run `pnpm check`, `pnpm exec vp test run`, `pnpm run build` and `git diff --check`.
 Use the existing development app for layout review; do not start a second server.
-Check all activity states, native portrait scrolling, visible activity cards and footer,
+Check all activity states, landscape sizing and scrolling, visible activity cards and footer,
 keyboard navigation, image failures, onboarding and the existing three game formats.
 
 The global theme preserves the proportional shadcn radius scale. Reusable app
@@ -64,8 +64,7 @@ render this module’s styled components with sample props.
 ## HUD and Help artwork
 
 Resources reuse `ResourceReadout`'s outline artwork in both Hall and gallery.
-Compact portrait counters stack their contents; desktop and short-landscape
-counters use horizontal content. Help rows use the shared `GuideLink` bookmark
+Counters use horizontal content at every supported viewport size. Help rows use the shared `GuideLink` bookmark
 and a BronzeArrow, keeping native link activation and the existing popover focus
 and dismissal behavior.
 

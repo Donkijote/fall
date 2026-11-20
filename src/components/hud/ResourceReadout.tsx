@@ -75,19 +75,13 @@ export function ResourceReadout({
       onClick={onClick}
       aria-label={`${label}: ${description}`}
       title={`${label}: ${description}`}
-      className="resource-readout relative isolate flex min-h-12 min-w-14 cursor-pointer flex-col items-center justify-center gap-0.5 rounded-md px-3 py-2 text-artwork-foreground outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:px-4 lg:min-h-12 lg:min-w-22 lg:flex-row lg:gap-2 lg:px-4 compact-landscape:min-h-9 compact-landscape:min-w-16 compact-landscape:flex-row compact-landscape:gap-1 compact-landscape:px-3 compact-landscape:py-1"
+      className="resource-readout relative isolate flex min-h-9 min-w-16 cursor-pointer flex-row items-center justify-center gap-1 rounded-md px-3 py-1 text-artwork-foreground outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring lg:min-h-12 lg:min-w-22 lg:flex-row lg:gap-2 lg:px-4 lg:py-2"
     >
       <span
         aria-hidden="true"
         className="resource-readout-frame [container-type:size] pointer-events-none absolute inset-0 -z-10"
       />
-      <Icon
-        icon={icon}
-        className={cn(
-          "size-5 shrink-0 text-gold sm:size-6 compact-landscape:size-4",
-          iconClassName,
-        )}
-      />
+      <Icon icon={icon} className={cn("shrink-0 text-gold size-4 lg:size-6", iconClassName)} />
       <span
         aria-hidden="true"
         ref={amount}

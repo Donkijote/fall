@@ -115,10 +115,13 @@ const artworkRecords: ArtworkRecord[] = [
     creator: "Generated with OpenAI ImageGen for Fall",
     evidence:
       "Generated 2026-11-18 with built-in ImageGen. The Card Hall and rulebook archive were palette/material references; the atelier landscape and dedicated phone/tablet recompositions were generated as standalone backgrounds. Provider model ID is not exposed by the tool. Prompts and exports: docs/design/credits-licenses/prompts.json.",
-    modifications: "Prepared as standalone landscape, tablet and phone backgrounds.",
+    modifications:
+      "Landscape export retained for #137; obsolete portrait phone/tablet exports removed 2026-11-20. Original generation evidence: docs/artwork-provenance/retired-portrait-exports.json.",
   },
   {
     id: "hall",
+    modifications:
+      "Portrait-only runtime backgrounds retired in #137 on 2026-11-20. Historical prompts and edits: docs/artwork-provenance/retired-portrait-exports.json. Retained landscape artwork and permission status are unchanged.",
     name: "Card Hall paintings and Traveller portrait",
     files: ["src/assets/lobby/card-hall/*.webp"],
     evidence: "docs/design/home-lobby/prompts.json; src/assets/lobby/card-hall/README.md",
@@ -126,6 +129,8 @@ const artworkRecords: ArtworkRecord[] = [
   },
   {
     id: "tavern",
+    modifications:
+      "Portrait-only runtime backgrounds retired in #137 on 2026-11-20. Historical prompts and edits: docs/artwork-provenance/retired-portrait-exports.json. Retained landscape artwork and permission status are unchanged.",
     name: "Tavern paintings, table and match props",
     files: ["src/assets/lobby/tavern/*", "src/assets/lobby/tavern-match/*.{webp,png}"],
     evidence:
@@ -134,6 +139,8 @@ const artworkRecords: ArtworkRecord[] = [
   },
   {
     id: "archive",
+    modifications:
+      "Portrait-only runtime backgrounds retired in #137 on 2026-11-20. Historical prompts and edits: docs/artwork-provenance/retired-portrait-exports.json. Retained landscape artwork and permission status are unchanged.",
     name: "Rulebook archive",
     files: ["src/assets/rulebook/*"],
     evidence: "docs/design/how-to-play/prompts.json; src/assets/rulebook/README.md",
@@ -141,6 +148,8 @@ const artworkRecords: ArtworkRecord[] = [
   },
   {
     id: "sings",
+    modifications:
+      "Portrait-only runtime backgrounds retired in #137 on 2026-11-20. Historical prompts and edits: docs/artwork-provenance/retired-portrait-exports.json. Retained landscape artwork and permission status are unchanged.",
     name: "Sings sorting table and props",
     files: ["src/assets/sings-reference/*"],
     evidence: "docs/design/sings-reference/prompts.json",

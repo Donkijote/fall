@@ -1,5 +1,11 @@
 # How to Play: Rulebook
 
+## Supported layout — #137 (2026-11-20)
+
+The archive uses only `archive-landscape.webp`; portrait phone/tablet exports are retired. Reading content still scrolls normally. Smaller landscape layouts use unprefixed Tailwind utilities; larger layouts use standard width breakpoints. No orientation lock or rotate-device gate is implemented here; enforcement and native integration belong to #140. Earlier viewport reviews below describe historical implementations, not current portrait support.
+
+Retired export prompts and generation evidence are preserved in [the provenance ledger](../../artwork-provenance/retired-portrait-exports.json).
+
 The approved [simplified mockup](mockup-simplified.png) guides the live
 `/rules` route. The [detailed mockup](mockup-detailed.png) adds ornament
 to the same layout. The [clean archive master](background.png) establishes a
@@ -18,7 +24,7 @@ The [rulebook module](../../../src/modules/rulebook/README.md) documents behavio
 and verification. Its [content audit](../../../src/modules/rulebook/content-plan.md)
 maps the guide back to the rules and tracks engine discrepancies separately.
 See the [runtime artwork inventory](../../../src/assets/rulebook/README.md)
-for the landscape, tablet and phone exports.
+for the landscape export; retired export evidence is in the provenance ledger.
 
 The contents menu uses an illustrated leather bookmark tab with a bronze rail
 and an oak engraving. Hover and keyboard focus reveal the tab, and the active

@@ -92,7 +92,7 @@ export function TavernPicker({ open, canPlay, origin, onClose }: TavernPickerPro
             inert={departing}
             className="relative size-full overflow-y-auto overscroll-contain"
           >
-            <div className="mx-auto flex min-h-full max-w-7xl flex-col px-[calc(1rem+var(--safe-area-left))] pt-[calc(0.75rem+var(--safe-area-top))] pr-[calc(1rem+var(--safe-area-right))] pb-[calc(1rem+var(--safe-area-bottom))] compact-landscape:pt-[calc(0.25rem+var(--safe-area-top))] compact-landscape:pb-[calc(0.5rem+var(--safe-area-bottom))]">
+            <div className="mx-auto flex min-h-full max-w-7xl flex-col px-[calc(1rem+var(--safe-area-left))] pt-[calc(0.25rem+var(--safe-area-top))] pr-[calc(1rem+var(--safe-area-right))] pb-[calc(0.5rem+var(--safe-area-bottom))] lg:pt-[calc(0.75rem+var(--safe-area-top))] lg:pb-[calc(1rem+var(--safe-area-bottom))]">
               <header
                 data-tavern-chrome=""
                 className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2"
@@ -100,14 +100,14 @@ export function TavernPicker({ open, canPlay, origin, onClose }: TavernPickerPro
                 <HallReturnAction
                   overArtwork
                   render={<DialogClose />}
-                  className="justify-self-start max-[420px]:px-2.5 compact-landscape:py-1 max-[375px]:[&_[data-hall-return-label]]:sr-only"
+                  className="justify-self-start py-1 max-[420px]:px-2.5 max-[375px]:[&_[data-hall-return-label]]:sr-only"
                 />
-                <DialogTitle className="artwork-title text-[clamp(1.5rem,4vw,3.35rem)] font-normal compact-landscape:text-2xl">
+                <DialogTitle className="artwork-title text-2xl font-normal lg:text-[clamp(1.5rem,4vw,3.35rem)]">
                   Tavern
                 </DialogTitle>
                 <DialogDescription className="sr-only">Choose a match format.</DialogDescription>
               </header>
-              <div className="mx-auto my-auto grid w-full max-w-95 gap-3 py-4 landscape:max-w-[min(100%,calc(var(--tavern-card-height)*2.2))] landscape:grid-cols-3 landscape:items-start landscape:gap-[clamp(0.75rem,2vw,2rem)] landscape:[--tavern-card-height:clamp(9rem,44dvh,27rem)] compact-landscape:py-1 compact-landscape:[--tavern-card-height:clamp(6.5rem,calc(100dvh_-_9.25rem_-_var(--safe-area-top)_-_var(--safe-area-bottom)),13rem)]">
+              <div className="mx-auto my-auto grid w-full max-w-[min(100%,calc(var(--tavern-card-height)*2.2))] grid-cols-3 items-start gap-[clamp(0.75rem,2vw,2rem)] py-1 [--tavern-card-height:clamp(6.5rem,calc(100dvh_-_9.25rem_-_var(--safe-area-top)_-_var(--safe-area-bottom)),13rem)] lg:py-4 lg:[--tavern-card-height:clamp(9rem,44dvh,27rem)]">
                 {tavernFormats.map((format) => (
                   <TavernFormatCard
                     key={format.title}

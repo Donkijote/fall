@@ -15,7 +15,7 @@ import { useGSAP } from "@gsap/react";
 
 function PreviewHeading({ children }: { children: string }) {
   return (
-    <p className="flex min-w-0 items-center justify-center gap-2 title-type text-sm compact-landscape:text-xs">
+    <p className="flex min-w-0 items-center justify-center gap-2 title-type text-xs lg:text-sm">
       <BronzeArrow tone="faded" className="h-0.5 min-w-0 flex-1 opacity-60" />
       <span className="shrink-0">{children}</span>
       <BronzeArrow tone="faded" direction="left" className="h-0.5 min-w-0 flex-1 opacity-60" />
@@ -61,7 +61,7 @@ export function OpeningDealPreview({
     <div
       ref={scope}
       aria-hidden="true"
-      className="relative isolate grid min-w-0 content-center gap-3 px-4 py-4 text-artwork-shadow compact-landscape:gap-2 compact-landscape:px-3 compact-landscape:py-3"
+      className="relative isolate grid min-w-0 content-center gap-2 px-3 py-3 text-artwork-shadow lg:gap-3 lg:px-4 lg:py-4"
     >
       <img
         src={parchment}
@@ -79,7 +79,7 @@ export function OpeningDealPreview({
           >
             <Icon
               icon={destination === "hands" ? hands : table}
-              className="h-9 w-12 bg-artwork-shadow compact-landscape:h-7 compact-landscape:w-10"
+              className="h-7 w-10 bg-artwork-shadow lg:h-9 lg:w-12"
             />
             <span className="text-xs font-semibold">
               {destination === "hands" ? "Hands" : "Table"}
@@ -97,7 +97,7 @@ export function OpeningDealPreview({
           <span
             key={rank}
             data-deal-preview-piece={String(rank)}
-            className="relative isolate grid aspect-[7/6] place-items-center font-[family-name:Times_New_Roman,Times,serif] text-[1.75rem] leading-none lining-nums tabular-nums compact-landscape:text-2xl"
+            className="relative isolate grid aspect-[7/6] place-items-center font-[family-name:Times_New_Roman,Times,serif] text-2xl lining-nums tabular-nums lg:text-[1.75rem] lg:leading-none"
           >
             <img
               src={tile}

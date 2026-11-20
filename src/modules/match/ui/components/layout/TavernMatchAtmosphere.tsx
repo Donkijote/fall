@@ -43,13 +43,13 @@ export function TavernMatchAtmosphere({ playing }: { playing: boolean }) {
       className="pointer-events-none absolute inset-0 overflow-hidden"
     >
       {/* Percentages use the same frame as the orientation-specific paintings. */}
-      <div className="absolute top-[4.9%] left-[16%] portrait:top-[3.8%] portrait:left-[23.2%]">
+      <div className="absolute top-[4.9%] left-[16%]">
         <span
           data-table-candle=""
           className="absolute size-[9cqmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,var(--gold),transparent_70%)] opacity-10 mix-blend-screen"
         />
       </div>
-      <div className="absolute top-[11%] left-[97.5%] portrait:top-[7%] portrait:left-[96%]">
+      <div className="absolute top-[11%] left-[97.5%]">
         <span
           data-table-hearth=""
           className="absolute h-[13cqmin] w-[9cqmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,var(--gold),transparent_70%)] opacity-[0.12] mix-blend-screen"

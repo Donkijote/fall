@@ -14,12 +14,9 @@ const modeFrames: Record<GameMode, string> = {
   "2vs2": teamMatchFrame,
 };
 
-const layout =
-  "grid grid-cols-[minmax(4rem,0.47fr)_minmax(0,1fr)] items-center landscape:grid-cols-1 landscape:content-start";
-const artBox =
-  "relative block aspect-2/3 w-full landscape:aspect-auto landscape:h-(--tavern-card-height)";
-const ribbonBox =
-  "relative -ml-px h-20 w-[92%] min-w-0 landscape:mx-auto landscape:-mt-px landscape:h-14 landscape:w-[84%] compact-landscape:h-12";
+const layout = "grid items-center grid-cols-1 content-start";
+const artBox = "relative block w-full aspect-auto h-(--tavern-card-height)";
+const ribbonBox = "relative min-w-0 mx-auto -mt-px w-[84%] h-12 lg:h-14";
 
 type TavernFormatCardProps = {
   mode: GameMode;
@@ -112,7 +109,7 @@ export function TavernFormatCard({
                 />
                 <span
                   aria-hidden="true"
-                  className="absolute inset-x-0 bottom-0 hidden bg-linear-to-t from-artwork-shadow/85 via-artwork-shadow/60 to-transparent px-1 pt-5 pb-[7%] artwork-title text-[clamp(0.85rem,1.75vw,1.55rem)] leading-tight landscape:block compact-landscape:pt-4 compact-landscape:pb-[6%]"
+                  className="absolute inset-x-0 bottom-0 block bg-linear-to-t from-artwork-shadow/85 via-artwork-shadow/60 to-transparent px-1 pt-4 pb-[6%] artwork-title text-[clamp(0.85rem,1.75vw,1.55rem)] leading-tight lg:pt-5 lg:pb-[7%]"
                 >
                   {title}
                 </span>
@@ -128,17 +125,17 @@ export function TavernFormatCard({
           </span>
         </span>
         <span
-          className={`${ribbonBox} tavern-format-ribbon isolate grid content-center gap-0.5 px-4 text-left text-artwork-foreground landscape:justify-items-center landscape:px-4 landscape:text-center compact-landscape:gap-0`}
+          className={`${ribbonBox} tavern-format-ribbon isolate grid content-center justify-items-center gap-0 px-4 text-center text-artwork-foreground lg:gap-0.5`}
         >
-          <span id={`${id}-title`} className="title-type text-sm landscape:sr-only">
+          <span id={`${id}-title`} className="sr-only title-type text-sm">
             {title}
           </span>
-          <span id={`${id}-players`} className="text-sm font-semibold compact-landscape:text-xs">
+          <span id={`${id}-players`} className="text-xs leading-tight font-semibold lg:text-sm">
             {players}
           </span>
           <span
             id={`${id}-description`}
-            className="text-xs leading-tight text-artwork-foreground/85 compact-landscape:text-[0.7rem]"
+            className="text-[0.7rem] leading-tight text-artwork-foreground/85 lg:text-xs"
           >
             {description}
           </span>

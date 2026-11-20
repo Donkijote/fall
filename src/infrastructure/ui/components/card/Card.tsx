@@ -50,8 +50,8 @@ export const Card = ({
         "overflow-hidden",
         className,
         {
-          "w-16 landscape:w-14 landscape:lg:w-22": faceDown && !size,
-          "w-18 landscape:w-16 landscape:lg:w-24": !faceDown && !size,
+          "w-14 lg:w-22": faceDown && !size,
+          "w-16 lg:w-24": !faceDown && !size,
           "md:max-lg:w-22 lg:w-24": !size,
           [sizeClass[size as keyof typeof sizeClass]]: Boolean(size),
         },
@@ -69,7 +69,7 @@ export const Card = ({
           }}
         />
       ) : (
-        <div className="h-full w-full p-2 landscape:p-1.5 landscape:lg:p-2 [&_img]:h-full">
+        <div className="h-full w-full p-1.5 lg:p-2 [&_img]:h-full">
           <SuitGlyph suit={suit} rank={rank} />
         </div>
       )}

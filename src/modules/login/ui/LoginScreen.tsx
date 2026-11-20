@@ -163,7 +163,7 @@ export function LoginScreen() {
                 </ActionButton>
               </form>
 
-              <div className="login-alternatives flow-root min-w-0 max-xl:landscape:flex max-xl:landscape:flex-col max-xl:landscape:justify-center max-xl:landscape:rounded-2xl max-xl:landscape:bg-muted/30 max-xl:landscape:p-4">
+              <div className="login-alternatives flow-root min-w-0 max-xl:landscape:flex max-xl:landscape:flex-col max-xl:landscape:justify-center max-xl:landscape:rounded-md max-xl:landscape:bg-muted/30 max-xl:landscape:p-4">
                 <ArrowDivider className="my-4 sm:my-5 xl:my-7 max-xl:landscape:mt-0 max-xl:landscape:mb-3 max-xl:landscape:justify-center max-xl:landscape:[&>span[aria-hidden]]:hidden">
                   <span className="shrink-0 text-xs text-muted-foreground">Or continue with</span>
                 </ArrowDivider>
