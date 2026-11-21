@@ -9,6 +9,8 @@ const host = process.env.TAURI_DEV_HOST;
 // https://viteplus.dev/config/
 export default defineConfig({
   fmt: {
+    // Native tooling and the notice generator own these files' serialization.
+    ignorePatterns: ["src-tauri/**", "src/modules/credits/domain/software-notices.json"],
     sortTailwindcss: {
       stylesheet: "./src/index.css",
     },
@@ -38,6 +40,7 @@ export default defineConfig({
     },
   },
   lint: {
+    ignorePatterns: ["src-tauri/**"],
     env: {
       browser: true,
     },
@@ -57,12 +60,12 @@ export default defineConfig({
     strictPort: true,
     host: host || false,
     hmr: host
-        ? {
-          protocol: 'ws',
+      ? {
+          protocol: "ws",
           host,
           port: 1421,
         }
-        : undefined,
+      : undefined,
     watch: {
       ignored: ["**/src-tauri/**"],
     },
