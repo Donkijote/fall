@@ -139,8 +139,12 @@ test.each([
 test("touch previews one Tavern format and clears selection on the second tap", async () => {
   const user = userEvent.setup();
   renderLobby("/?bottomSidebar=true");
-  // Let the dialog's initial focus settle before sending touch input.
+  // Base UI queues initial focus in rAF. Observing focus alone can resolve before
+  // its queued work finishes, so let the opening frame commit before touching a card.
   await waitFor(() => expect(screen.getByRole("dialog", { name: "Tavern" })).toHaveFocus());
+  await act(async () => {
+    await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+  });
   const duel = screen.getByRole("button", { name: "Duel" });
   const team = screen.getByRole("button", { name: "Team Match" });
   const tap = (target: HTMLElement) => user.pointer({ keys: "[TouchA]", target });
