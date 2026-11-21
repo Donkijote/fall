@@ -43,6 +43,7 @@ export function PackagingCaptureFixture() {
     const audio = createMotionAudio();
     audio.prepare();
     let started = 0;
+    let armed = params.get("manual") !== "1";
     let cancelled = false;
     let sequence = 0;
     let iteration = 0;
@@ -134,7 +135,7 @@ export function PackagingCaptureFixture() {
     };
     const onVisibility = () => {
       if (cancelled) return;
-      if (!started && document.visibilityState === "visible") {
+      if (armed && !started && document.visibilityState === "visible") {
         started = performance.now();
         report({ kind: "started" });
         // Defer until after React's development-only effect replay.
@@ -149,12 +150,22 @@ export function PackagingCaptureFixture() {
         setStatus("Rendering interrupted: window became hidden");
       }
     };
-    setStatus("Waiting for the app window to become visible");
+    const onStart = () => {
+      armed = true;
+      onVisibility();
+    };
+    setStatus(
+      armed
+        ? "Waiting for the app window to become visible"
+        : "Tap anywhere to start measurements and enable audio",
+    );
+    if (!armed) document.addEventListener("pointerup", onStart, { once: true });
     document.addEventListener("visibilitychange", onVisibility);
     onVisibility();
     return () => {
       cancelled = true;
       document.removeEventListener("visibilitychange", onVisibility);
+      document.removeEventListener("pointerup", onStart);
       clearTimeout(timer);
       cancelAnimationFrame(raf);
       channel.publish();

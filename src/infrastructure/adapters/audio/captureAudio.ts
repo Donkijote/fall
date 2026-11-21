@@ -1,4 +1,4 @@
-import { Howl, Howler } from "howler";
+import { Howl } from "howler";
 
 import shatter from "@/assets/audio/captures/break-frozen-card.mp3";
 import flight from "@/assets/audio/captures/capture-flight.mp3";
@@ -12,6 +12,8 @@ import {
   readGamePreferences,
   subscribeGamePreferences,
 } from "@/infrastructure/preferences/gamePreferences";
+
+import { resumeAudioContext } from "./resumeAudioContext";
 
 const clips = {
   flight: { src: flight, gain: 0.55 },
@@ -69,7 +71,7 @@ export function createCaptureAudio() {
       if (!disposed) for (const cue of Object.keys(clips) as CaptureCue[]) get(cue);
     },
     unlock() {
-      if (!disposed && Howler.ctx?.state === "suspended") void Howler.ctx.resume().catch(() => {});
+      if (!disposed) resumeAudioContext();
     },
     playCapture(cue: CaptureCue) {
       if (disposed) return;

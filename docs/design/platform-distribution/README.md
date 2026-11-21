@@ -14,6 +14,26 @@ transfer the reproducible packaging spike to #140 without claiming it passed.
 No artwork was generated or adopted, so
 there are no mockups, background masters, or prompt manifests for this feature.
 
+## Current validation ownership (2026-11-21)
+
+The owner narrowed #140 to macOS and iOS, completing remaining macOS checks
+before proceeding to iOS. Windows validation belongs to
+[#147](https://github.com/Donkijote/fall/issues/147), Linux VirtualBox to
+[#148](https://github.com/Donkijote/fall/issues/148), and Android to
+[#149](https://github.com/Donkijote/fall/issues/149). The five-platform matrix
+below remains useful context; those platform executions no longer block #140.
+In-game reduced-motion presentation improvement belongs to
+[#150](https://github.com/Donkijote/fall/issues/150).
+
+The Apple spike decides whether to continue development on the measured reference
+devices. Actual older/floor hardware, iPad/windowing, additional architectures,
+clean-machine signing/notarization/store distribution and comprehensive
+interruption coverage remain explicit production follow-ups. VoiceOver and
+comprehensive keyboard-only usability are excluded by owner decision, not marked
+as passed. External OS deep links and controllers are unsupported by this spike;
+packaged local routes are tested separately. Broader web/PWA orientation
+enforcement remains a follow-up; Android orientation is owned by #149.
+
 ## Packaging configuration review (#140, 2026-11-20)
 
 The owner reports successful initial testing on macOS, iOS, Windows and Android.
@@ -106,13 +126,52 @@ already-inset web view. Physical visual/touch sign-off across both directions,
 Login keyboard behavior and lifecycle checks remain pending. Native host
 documentation owns the implementation and verification details.
 
+## Remaining Apple checks (2026-11-21)
+
+After the scope split, the production web build and shipped-notice check passed
+again, along with 42 focused native-orientation/router/motion-deadline/fallback
+and audio lifecycle tests. `pnpm exec wrangler deploy --dry-run --outdir
+/tmp/fall-macos-validation/final-cloudflare-dry-run` passed against that output.
+This is packaging validation, not a new deployed Cloudflare preview probe; the
+latest local source has not been pushed. Normal output excludes the opt-in
+fixture. Native calls remain in platform adapters; domain/application rules did
+not acquire Tauri dependencies. Proprietary metadata and third-party notices
+remain intact.
+
+### Additional macOS checks
+
+A local document-start probe disabled all WebGL context creation in the optimized
+standalone Mac app. The owner dealt and tried card plays and reported no frozen
+deal, missing cards or stuck turn. This verifies graceful non-3D fallback on the
+reference Mac, not visual equivalence with the rendered effects.
+
+A separate probe used `WEBGL_lose_context` on the live card-flight canvas, then
+requested restoration after one second. Native reports recorded loss/restoration
+and an enabled local hand afterward, with no reported runtime error. The owner
+observed sound but cards appearing directly in their dealt positions, rather than
+a preserved deal animation. This is degraded recovery evidence; seamless visual
+recovery is not marked passed. The owner confirmed that later plays/captures, turns and audio behaved normally.
+A context interruption may settle the current deal without its normal animation;
+it did not permanently disable subsequent animations. The owner then hid the
+same app for approximately three minutes (not the requested five), returned and
+played, then put the Mac to sleep for approximately 30 seconds and played again.
+Both returns retained match continuity, animation and audio without freezing or
+missing/duplicated playback. These durations are owner estimates; native power
+logs corroborated software sleep with intervening dark wakes. This is not a
+five-minute timed suspension pass or a guarantee across every interruption.
+An
+earlier injection hit the decorative atmosphere canvas and is not counted as
+card-renderer recovery. Diagnostic scripts/results stay local under the existing
+exclusions; no production global test API was added.
+
 ## macOS validation pass (#140, 2026-11-21)
 
 **Continue developing with Tauri on macOS.** The standalone arm64 build, packaged
 routes, offline assets and representative live renderer passed the checks below.
-This is a positive development decision on one reference Mac, with interaction,
-lifecycle, accessibility and release checks still required before production.
-Additional iOS validation is deferred to the owner’s next device session.
+This is a positive development decision on one reference Mac. Owner-reported
+interaction checks and scope decisions are recorded below; remaining native
+resilience and release checks are separate.
+iOS validation was initially deferred; the later physical-device pass is recorded below.
 
 The reference host was an Apple M4 Pro MacBook Pro with 24GB RAM, macOS 27.2.1,
 WebKit 22625.2.8.11.9 and Xcode 27.2. The native deployment floor is macOS 14;
@@ -159,14 +218,231 @@ interruptions rather than counted as passes. The fixture now waits for initial
 visibility before starting its clock and aborts if the document becomes hidden.
 The successful run kept the test window visible and the Mac unlocked throughout.
 
-Native keyboard/focus/window controls, VoiceOver, theme/resize/zoom behavior,
-audible synchronization and device changes, reduced motion, actual WebGL context
-loss, background/sleep/resume, GPU memory and low-tier hardware checks remain
-pending. UI automation attachment timed out; the owner’s earlier window-chrome
-appearance approval is retained. Source inspection also identified visibility
-handling in motion/audio as a lifecycle risk to test. Authoritative reconnect,
-auth and session continuity remain blocked by #129. Signing/notarization, a
-tested CSP and clean-machine distribution remain release work.
+### Owner verification and scope decisions (2026-11-21)
+
+The owner manually verified the following on macOS. These are owner-reported
+results, separate from the automated rendering measurements:
+
+- Existing keyboard navigation, visible focus, Escape dismissing dialogs,
+  window dragging/resizing, traffic lights and themes work.
+- Enlarged text is readable. The reduced-motion preference is respected and
+  the UI/HUD behavior is acceptable. The in-game reduced-motion presentation
+  needs design/animation improvement in a separate follow-up; respecting the
+  preference does not mean its current game presentation is approved.
+- Audio was audible and played appropriately during the rendering run. Switching
+  speaker/output devices, disconnecting a device, mute and volume work.
+- Minimizing/hiding and switching away work, and the owner reports lifecycle
+  behavior is otherwise okay. Specific controlled sleep/wake, forced process
+  termination and timed background trials were not separately documented.
+
+VoiceOver support/testing and comprehensive keyboard-only usability are not
+planned for this packaging scope by the owner's decision. Existing keyboard
+behavior is retained; these exclusions are scope decisions, not passing
+accessibility tests or a claim of full accessibility compliance. Do not spend
+implementation time expanding those areas for #140.
+
+Actual WebGL context-loss recovery, GPU memory and low-tier hardware remain
+unverified. Source inspection identified visibility handling in motion/audio as
+an area for future controlled lifecycle testing; the owner reports no observed
+issue in ordinary background use. Authoritative reconnect, auth and session
+continuity remain blocked by #129. Signing/notarization, a tested CSP and
+clean-machine distribution remain release work. This macOS sign-off does not
+substitute for the deferred iOS/device checks.
+
+Additional optimized normal-package measurements used 30 fresh processes with
+OS/WebKit caches retained. Time from process request to the first actionable
+match state was recorded separately for the randomized dealer paths: 12 runs
+reached an enabled opening-deal control (median 1,613.5ms; p95/max 1,645ms), while
+18 runs reached a playable three-card hand after the simulated opponent's lobby
+and deal (median 5,371ms; p95/max 5,789ms). All documents were visible by the first polling observation within
+69ms of document navigation and had no reported runtime errors. This visibility
+observation is not a paint timestamp. These are separate
+small samples, not 30 repetitions of each path; the measurement excludes human
+input delay and does not measure onboarding. The earlier Hall p95 remains below
+the proposed three-second desktop Hall budget. There is no approved match-entry
+budget; the simulated lobby/deal intentionally contributes to the longer path.
+
+A controlled SIGKILL of the isolated test host followed by relaunch reached an
+actionable match again. Existing preferences and user-presence markers matched
+before/after; no synthetic storage was written. The local match is in-memory and
+restarts after process loss by design; this does not verify authoritative match
+restoration. The freshly rebuilt normal macOS `.app` passed its production
+build/notice checks. Shared GPU/network memory remains excluded from the earlier
+RSS figures; full-GPU attribution and older hardware remain release coverage.
+
+The first-use ice stall remains a named performance limitation: the existing
+warmup compiles the base card/shadow path, while ice introduces additional effect
+materials. That source review suggests a targeted ice/effect prewarm experiment,
+but does not establish the cause of the measured stall. Profile shader compilation,
+texture upload and effect allocation separately before changing prewarm behavior;
+do not hide the stall inside the steady-state frame-budget result. The original
+post-warmup samples pass the proposed scheduling budget, while the initial ice
+frame exceeds it. No speculative renderer change was made for this spike.
+
+### Additional physical iOS checks
+
+The same physical iPhone received an optimized diagnostic upgrade with existing
+development signing; app data was preserved. With all WebGL context creation
+blocked, the owner confirmed cards, touch/turns and audio remained usable, with
+cards appearing in their final positions and the usual audio sequence continuing.
+This is the intended non-3D fallback, not an animation pass.
+
+Targeted one-second context loss on the live card canvas recorded loss at
+16,335ms, restoration at 17,343ms and an enabled three-card local hand at 21,089ms
+from document navigation. The time before injection included owner input and is
+not startup timing. The owner saw the interrupted table deal settle directly,
+then normal animated hand dealing and subsequent plays, with correct continued
+gameplay. There were no reported runtime errors. Seamless replay of the interrupted
+deal is not claimed.
+
+The longer background check exposed an audio failure: after approximately three
+minutes backgrounded, local play and visuals continued but all sound was lost.
+Connecting Bluetooth headphones, changing volume, disconnecting and returning to
+speakers did not restore it; silence began before the output change. This was a reproduced iOS lifecycle defect. Earlier 30-second
+background/lock checks did not expose it; the fix and verified standalone retests
+below supersede this failure without removing it from the evidence history.
+
+A second normal-renderer diagnostic run reproduced silence after about 60
+seconds backgrounded. Telemetry showed WebKit `ctx.state = interrupted`, a
+non-advancing audio clock, Howler `state = suspending`, and a later play request
+setting `_resumeAfterSuspend` without recovering. Mute and master gain were not
+responsible. The source now resumes both suspended and interrupted contexts,
+retries from foreground and real gestures, and stops active sounds while hidden.
+It uses the public AudioContext resume operation rather than replacing the
+shared context or replaying game actions. Fifty-nine focused audio/hook/motion/
+orientation/router tests, changed-source lint and the updated macOS package
+build passed. The candidate iOS build also compiled/exported. An initial retest was inconclusive because a resumed iOS dev session replaced
+the diagnostic installation. After the owner stopped that native dev session,
+the preserved standalone candidate was reinstalled and its native telemetry
+verified. The owner confirmed audible recovery after the 60-second background
+case (native visibility reports measured 74.0 seconds), then after another
+approximately three-minute background, lock/unlock, earphones, speaker return
+and a brief Siri/system audio interruption. No duplicated playback or remaining
+audio failure was reported. The longer manual duration is an owner estimate;
+other recorded hidden intervals were 48.9 and 118.3 seconds, not a controlled
+five-minute suspension trial. Recovery telemetry showed both context and Howler
+running again and an advancing audio clock. A phone-call-specific scenario was
+not separately identified. Keep extended suspension and broader interruption/
+device coverage as release follow-ups. These measurements preceded publication of the validation follow-up.
+
+A fresh all-process Activity Monitor recording succeeded with the physical device
+connected. An additional 20-second recording during the real match yielded 21
+host/WebContent observations. WebContent RSS peaked at **333.1MiB** (median
+315.9MiB), while its separately reported physical footprint peaked at
+**542.1MiB** (median 519.7MiB). Host RSS peaked at **67.9MiB**. These are different
+OS memory metrics: do not add footprint to RSS or treat this short recording as a
+20-minute memory soak, a leak-free guarantee, or total app/GPU memory. GPU/network
+service processes were visible, but their responsibility field was launchd and
+reliable per-app GPU allocation attribution was not established. Earlier failed
+profiler attempts remain historical evidence; renderer RSS is no longer wholly
+unmeasured. Set a memory budget and validate older hardware before release.
+
+A later all-process Time Profiler recording captured the shared five-effect
+workload and **5,966 WebContent CPU samples**. The renderer PID was present in
+the trace; this overcomes the earlier attach-by-PID limitation. Most exported
+frames remain raw/JIT addresses, so no precise stall attribution is claimed.
+The cached diagnostic run completed one warmup plus one measured repetition of
+every effect with running audio contexts, no reported runtime errors, and warmup
+maximum intervals 22/23/17/18/18ms (plain/ice/heat/flame/cascade). This profiled,
+small, cached run is not a replacement frame-budget sample and does not negate
+the original 121ms first-use ice stall. Next profiling step: obtain matching OS
+symbols and correlate first-effect shader/texture/allocation work in a controlled
+cold/warm comparison before changing prewarming.
+
+Startup-harness failures are retained separately: the first six actionable-match
+launches succeeded, then CoreDevice could not determine the next launched PID.
+No contemporaneous Fall crash or jetsam report was present. A retry was rejected
+because native report filenames reused earlier rows. The corrected local runner
+uses a unique run token, verifies the report PID against the launch result and
+waits two seconds between relaunches. Do not mix rejected/stale rows into timing
+statistics or silently count a CoreDevice launch failure as a pass.
+
+An earlier debugger-inspection session also produced a diagnostic-host crash:
+a cyclic inspection payload reached the local recorder's JSON serializer and
+exhausted its stack. This was a harness defect; current audio telemetry contains
+only primitive snapshots. The recorder is absent from the normal package. Keep
+that raw crash report local alongside the failed inspection history.
+
+The accepted, corrected startup run completed **30 paced fresh processes** with
+no reported runtime errors. Native-constructor-to-first-actionable-state timing
+was kept separate for randomized dealer paths: 13 runs reached an enabled
+opening-deal control (median/p95 **1,534/1,574ms**); 17 reached a playable local
+hand after the opponent's lobby/deal (median/p95 **5,286/5,340ms**). Launches were
+spaced by two seconds; that delay is outside the measured clock. These are not
+30 repetitions of each path, full OS-launch/dyld timing, or human-input-response
+measurements. Caches were retained; no match-entry budget is approved.
+
+An isolated SIGKILL followed by fresh launch reached an actionable match again,
+with existing preferences and user-presence markers unchanged. In-memory local
+matches restart; authoritative restoration remains blocked by #129. The normal
+optimized developer-signed package was then installed/launched, with the native
+probe absent from its binary and the opt-in fixture absent from normal frontend
+output. No app data was erased. The owner confirmed the normal app honors reduced motion: audible playback
+continues while cards settle directly without animation. UI/HUD preference behavior
+and a short local match remained usable; visual polish remains #150. Normal
+animations require restoring Motion to System.
+
+### Scoped Apple decision and release follow-ups
+
+Continue development with **Tauri 2 on the measured macOS and iPhone reference
+devices**. The sustained renderer, packaged/offline routes, scoped input/layout,
+audio and lifecycle evidence support this decision. The longer iOS audio failure
+was reproduced and corrected in the shared Web Audio adapter; it did not require
+a different native shell. No Capacitor/Electron fallback experiment is justified
+by the observed results. This is a development decision, not a universal device,
+minimum-OS or public-store release sign-off.
+
+Before production distribution:
+
+- Profile the original first-use ice stall with matching symbols and controlled
+  cold/warm conditions; compare effect prewarming without hiding the startup cost.
+  Establish first-playable-match and memory budgets on lower hardware. Attribute
+  GPU allocations separately from host/WebContent RSS and physical footprint.
+- Cover actual macOS 14/iOS 17 and older hardware, iPad/windowing and any additional
+  claimed Mac architecture. Run controlled five-minute/extended suspension,
+  incoming-call-specific and additional audio-route interruption cases; investigate
+  the retained CoreDevice rapid-relaunch failure without assuming an app crash.
+- Configure protected Apple release CI/signing, macOS Developer ID/hardened runtime,
+  notarization/stapling and clean-machine Gatekeeper/install/upgrade checks. Finish
+  iOS store provisioning/TestFlight/App Store requirements and increment upload
+  build numbers. Paid enrollment and public release are outside this spike.
+- Replace the current null CSP with a tested production policy and review native
+  capabilities/entitlements. Coordinate PKCE/secure session storage and authoritative
+  reconnect/revisions/rewards with #129; local simulation is not backend evidence.
+- Run the current source through the opted-in Cloudflare preview/deep-link probe
+  after publishing the branch with the `autodeploy` label. Local web/native builds, focused tests, notice
+  checks and deployment dry-run passed; the live current-source preview must pass its deep-link probe before
+  completing that acceptance check. Preserve browser/PWA orientation enforcement as a separate
+  follow-up. Windows/Linux/Android execution and reduced-motion polish remain
+  #147/#148/#149 and #150 respectively.
+
+### Repeat fault and lifecycle checks
+
+Use an isolated copy of the normal optimized `.app` and the same local native
+probe described below. In a document-start diagnostic script, override canvas
+`getContext` to return `null` for WebGL to test unavailable graphics. Separately,
+observe the canvas inside `[data-card-flights]`, obtain `WEBGL_lose_context`,
+request loss during a live deal, and request restoration after one second.
+Record native `webglcontextlost`/`webglcontextrestored` events, subsequent enabled
+local cards, later visible animations and actual audible output. Do not count a
+loss on the atmosphere canvas as a live-card test or aggregate draw calls as proof
+that a particular canvas recovered. Do not replay moves/cues through a test-only
+game API. The owner supplies actual clicks when native UI automation is unavailable.
+
+For first-actionable-match timing, launch the normal package at the existing
+local-match route and observe the first visible enabled opening-deal button or
+local playable hand after the simulated opponent's deal. Report these separate
+paths and exclude human waiting time; this is not completed onboarding or a human
+input-response measurement. Retain process-request and document timestamps,
+visibility, errors and cache conditions. To test forced termination, kill only
+the isolated test host with SIGKILL and relaunch; compare existing preferences
+without writing synthetic data. Local simulation is in-memory and starts a new
+match after process loss; authoritative restoration remains blocked by #129.
+
+Manually hide/return and sleep/wake during a normal match, recording the actual
+or estimated durations, state and audio/animation behavior. Never count background
+or sleep time as active-rendering soak time. Restore a non-instrumented normal
+app after diagnostics; keep all scripts and raw reports local.
 
 ### Repeat the macOS measurements
 
@@ -228,6 +504,125 @@ caffeinate -di python3 scripts/tauri-validation/run-macos.py \
 The runner’s local README covers launch/reload/offline modes and summarization.
 For a new machine, retain a separate report with that environment’s results;
 update this decision only when the new evidence changes it.
+
+## iOS validation pass (#140, 2026-11-21)
+
+**Continue developing with Tauri on iOS on the tested reference device.** The
+optimized standalone build, representative renderer, packaged assets and
+owner-verified orientation/audio behavior passed. This is not App Store readiness
+or validation of every device capable of running the iOS 17 minimum.
+
+The physical device was an iPhone 17 Pro (iPhone18,1), iOS 27.2.1 (24B156),
+WebKit 8625.2.8.10.7, connected by cable to the Mac. Xcode/SDK 27.2 built an arm64
+release configuration, exported with existing development signing using
+`pnpm exec tauri ios build --ci --export-method debugging`. The 874×402 landscape
+viewport had DPR 3; the live capture canvas was capped at DPR 2 (1748×804 pixels).
+The screen advertises up to 120Hz; measured capture scheduling was approximately
+60Hz. Low Power Mode was off. Measurements use `f5a6357` plus the local optional
+tap-to-start fixture change; native probe code and reports remain local only.
+
+- The 20m01.0s workload completed **383 post-warmup captures**, all with real
+  WebGL draws, expected cue sequences, running audio contexts and no reported
+  runtime errors. All 391 native thermal reports were nominal. Across 66,427
+  post-warmup frame intervals, median/p95 were **17/17ms**, maximum **30ms**,
+  and none exceeded 33.3ms. Every effect passed its first 30 repetitions at
+  17ms p95. The initial ice warmup separately contained a **121ms** interval;
+  first-use rendering deserves further profiling/tuning.
+- All capture reports had a visible document. UIKit reported 380 captures as
+  foreground-active and three as foreground-inactive during the audio checks;
+  two of those were in the first 30-per-effect sample. No background capture
+  reports or document-visibility interruptions occurred. Treat this as a
+  continuous rendering run with brief system-interaction conditions, not proof
+  that no system overlay appeared throughout the test.
+- Thirty fresh processes reached the Hall shell/fonts/images in **220ms median /
+  228ms p95 from the native probe constructor**, or 105/109ms from document
+  navigation. Thirty same-process document reloads measured **61.5/68ms**.
+  The constructor marker excludes OS launch/dispatch and earlier dyld work;
+  USB command/file-copy time is not counted. OS caches were retained. These are
+  not true cold launches, full OS-to-input latency, completed onboarding or
+  first-playable-match measurements.
+- Login, Rules, Credits and the local-match route loaded and survived document
+  reloads without reported errors. A nonpersistent WebKit store with HTTP/HTTPS
+  blocked loaded the Hall, both bundled font families and artwork without
+  errors (132ms document readiness). These are packaged path/resource tests,
+  not registered OS deep links or authoritative reconnect tests.
+- The 391 event-driven native-host RSS samples peaked at **67.0MiB**. This
+  excludes WebContent, GPU and networking processes and is not total app
+  footprint. Activity Monitor recordings timed out waiting for the device;
+  Time Profiler/VM Tracker could not select the reported WebContent PID.
+  Renderer/GPU memory and full native-renderer profiling remain unmeasured.
+- The normal exported app bundle was **17,084,073 bytes** and the developer-signed
+  IPA **14,219,024 bytes**. These are exported artifact sizes, not the device’s
+  filesystem allocation or an App Store-thinned download size.
+- The diagnostic probe was linked through temporary Xcode linker settings.
+  Those settings were restored, and the normal package was rebuilt, installed
+  and launched after measurements. Its native binary excludes the probe; normal
+  production output excludes the capture fixture. Read-only inspection of the
+  restored app confirmed `tauri://localhost`, loaded fonts and CSS safe insets
+  top/left/bottom/right **0/62/20/62**, despite stale native-window portrait insets.
+
+Owner-reported physical-device checks:
+
+- Portrait Login with the keyboard open, leaving Login into landscape, both
+  landscape directions, returning to Login and safe-area/control placement work.
+- Speaker audio is audible and aligned with the effects. Initial silence was
+  traced to iPhone Silent Mode; the owner confirmed correct output after
+  disabling it. Do not count that device setting as a Tauri audio failure.
+- In the restored normal standalone app, the owner completed a short local
+  match, touch controls, menus/settings including mute/volume, approximately
+  30 seconds in the background, and lock/unlock followed by return. Match state,
+  animations and audio remained correct, without freezing or duplicated playback.
+  This is owner-reported manual evidence, separate from the scripted soak.
+
+Actual WebGL context loss, reduced-motion presentation on this phone, long
+background/process-termination resilience, output-device changes, GPU/renderer
+memory, older/iOS 17 hardware, iPad windowing and production signing/store
+validation remain separate. VoiceOver and comprehensive keyboard-only coverage
+remain excluded from this packaging scope by owner decision. In-game
+reduced-motion design improvement is a separate follow-up. Backend-dependent
+auth/session/reconnect acceptance remains blocked by #129.
+
+### Repeat the iOS measurements
+
+The shared fixture supports `?runs=30&soak=1200&manual=1`. The optional manual
+flag waits for a real pointer release before beginning, so iOS audio can unlock
+from touch; the workload clock still waits for visibility and aborts on document
+visibility loss. Record the actual audio output and Silent Mode state, rather
+than treating a running Web Audio context as proof of audible playback.
+
+Keep optional local tools under `scripts/tauri-validation/ios/` and per-device
+JSON reports excluded through `.git/info/exclude`; these are not in a fresh clone.
+Use unique native report names for each run/launch and verify each row's PID
+against the launch result before accepting readiness. The local recorder appends
+to existing files; reused names can return stale rows. Validate/clone diagnostic
+payloads through JSON serialization in JavaScript before posting to WKWebView so
+cyclic inspection objects never reach the native JSON writer.
+
+Raw evidence for this pass is under `/tmp/fall-ios-validation` and should be
+preserved to a durable local location if needed. Do not commit UDIDs, serials,
+provisioning profiles or unfiltered profiler data. Other machines/devices require
+fresh measurements; the figures above are a dated reference only.
+
+Use the macOS probe protocol above with a UIKit recorder: embed the document-start
+JS in an Objective-C++ object compiled for `arm64-apple-ios17.0`, install the
+WKWebView script/message handler, and record thermal state, app/scene visibility,
+WebContent attribution and explicitly scoped host RSS. A constructor uptime marker
+can measure native-initialization-to-readiness; label its missing OS/dyld portion.
+For a local diagnostic build, temporarily add the object to Xcode `OTHER_LDFLAGS`,
+build with `VITE_PACKAGING_SPIKE=1`, preserve the exported package, then restore
+the project settings and build the normal app. Use `try/finally` restoration and
+verify the normal binary does not contain the probe. Do not commit the linker
+setting or ship the instrumented package.
+
+Install/launch the copied diagnostic package with `xcrun devicectl`, supplying
+`FALL_VALIDATION_CONFIG` and a unique report filename through launch environment
+variables. The probe writes JSONL into the app’s temporary directory; copy it
+using the app-data-container file service. Run captures on the physical device
+with an initial touch and keep it visible/unlocked. Run launch/reload/offline and
+route checks separately, retain failed/partial results, and restore the normal
+package afterward. Restore by installing the normal app over the diagnostic
+build; do not uninstall or clear the owner’s app data. See the optional local
+runner README for concrete commands on this checkout.
 
 ## Proposed decision
 
@@ -488,13 +883,13 @@ Agree the device/OS floor before using them to accept a release.
 
 ### Evidence register
 
-| Target  | Current evidence                                                                                                                                             | Required next evidence                                                                                                                                                     |
-| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| macOS   | Measured Apple Silicon standalone app/DMG, route reloads, launch timings and deterministic capture fixture on the physical M4 Pro Mac; current results below | Manual native controls/keyboard/VoiceOver/audio/lifecycle checks, low-tier Mac and actual macOS 14 runtime, signed/notarized clean-machine install; Intel remains untested |
-| iOS     | Measured safe-area propagation and Hall padding on a physical iPhone; simulator rotation/native bridge checks documented above                               | Owner-requested next session: physical iPhone/iPad release-build capture/audio/lifecycle/keyboard tests and performance measurements                                       |
-| Windows | Owner-reported initial run; toolchain, WebView2, hardware and timings not captured                                                                           | Reproducible Windows setup, installed build, DPI/GPU/input checks and exact environment                                                                                    |
-| Linux   | Untested; no VM evidence collected                                                                                                                           | Owner's VirtualBox guest: OS, guest additions, graphics acceleration, WebKitGTK and traces; VM results must remain distinct from physical GPU validation                   |
-| Android | Owner-reported initial run; physical/emulator environment and timings not captured                                                                           | Reproducible SDK/NDK/emulator image and acceleration evidence; physical Android GPU, thermal and audio checks remain untested                                              |
+| Target  | Current evidence                                                                                                                                                                                  | Required next evidence                                                                                                                                                        |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| macOS   | Measured Apple Silicon standalone app/DMG, routes, startup and capture soak; owner-verified controls, readable text, preference handling, audio/output changes and ordinary background use        | Context loss, controlled lifecycle, GPU/low-tier Mac, macOS 14/Intel runtime and signed distribution. VoiceOver/full keyboard-only coverage excluded from this scope by owner |
+| iOS     | Measured physical iPhone 17 Pro standalone package, startup/routes/offline assets and capture soak; owner-verified orientation, touch/match/settings, audio, 30-second background and lock return | Context loss, renderer/GPU memory, longer suspension/forced termination, older hardware/iOS 17, iPad/windowing, output-device changes and production signing                  |
+| Windows | Owner-reported initial run; toolchain, WebView2, hardware and timings not captured                                                                                                                | Reproducible Windows setup, installed build, DPI/GPU/input checks and exact environment                                                                                       |
+| Linux   | Untested; no VM evidence collected                                                                                                                                                                | Owner's VirtualBox guest: OS, guest additions, graphics acceleration, WebKitGTK and traces; VM results must remain distinct from physical GPU validation                      |
+| Android | Owner-reported initial run; physical/emulator environment and timings not captured                                                                                                                | Reproducible SDK/NDK/emulator image and acceleration evidence; physical Android GPU, thermal and audio checks remain untested                                                 |
 
 Record exact commands, fixture seed/config, artifacts/checksums and raw timings
 alongside the final decision in this folder. Mark failures and inferred targets

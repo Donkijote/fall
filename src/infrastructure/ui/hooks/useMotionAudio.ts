@@ -11,11 +11,17 @@ export function useMotionAudio(enabled = true) {
     audio.current = session;
     session.preload();
     const unlock = () => session.prepare();
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") unlock();
+      else session.stop();
+    };
     document.addEventListener("pointerdown", unlock, true);
     document.addEventListener("keydown", unlock, true);
+    document.addEventListener("visibilitychange", onVisibility);
     return () => {
       document.removeEventListener("pointerdown", unlock, true);
       document.removeEventListener("keydown", unlock, true);
+      document.removeEventListener("visibilitychange", onVisibility);
       audio.current = null;
       session.dispose();
     };

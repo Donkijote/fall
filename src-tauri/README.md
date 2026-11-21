@@ -89,7 +89,8 @@ geometry refusals are reported to the native console. A successful IPC response
 means the policy was submitted, not that the OS completed rotation.
 
 No document reload, match reset, or audio playback is triggered by this hook.
-Web/PWA orientation enforcement is still a separate pending part of #140.
+Web/PWA orientation enforcement remains a separate follow-up outside the narrowed
+Apple-only #140; Android orientation and validation belong to #149.
 
 ## Verification
 
@@ -170,8 +171,13 @@ proposed frame-scheduling threshold. The initial soak was interrupted by screen
 lock at 18m27s. A later owner-assisted foreground run completed 20m00.8s with
 384 measured captures, nominal thermal state, and host+WebContent RSS sampling
 (337.9MiB peak, 325.5MiB final). It used the 100Hz external display at DPR 1;
-GPU memory remains unmeasured. Native interaction, VoiceOver, audible
-output, device changes, sleep/resume, and release signing remain pending.
+GPU memory remains unmeasured. The owner subsequently verified native controls,
+focus/Escape, themes, readable enlarged text, reduced-motion preference handling,
+audible playback/output changes, mute/volume and ordinary minimizing/hiding or
+switching away. In-game reduced-motion presentation needs a separate improvement.
+VoiceOver and comprehensive keyboard-only coverage are excluded from this scope
+by owner decision. Controlled lifecycle/context-loss and release-signing work
+remain separate; see the canonical report for evidence limits.
 
 The offline check found a remote-font dependency; Cinzel and Spline Sans are now
 bundled with the existing OFL notices. A fresh-store HTTP/HTTPS-blocked resource
@@ -181,3 +187,57 @@ for results, measurement limits, retesting instructions and remaining manual
 checks. Machine-specific scripts and raw JSON reports are local only, excluded
 from Git; they are not required to build the app.
 Never distribute an app built with `VITE_PACKAGING_SPIKE=1`.
+
+## Physical iOS packaging validation (#140)
+
+On 2026-11-21, an optimized developer-signed standalone build passed the capture
+fixture on a physical iPhone 17 Pro/iOS 27.2.1: 20m01s, 383 measured captures,
+17ms frame-interval median/p95 and no measured intervals above 33.3ms. The initial
+ice warmup separately had a 121ms interval. Three reports were UIKit
+foreground-inactive during audio checks, while WebKit remained visible and
+drawing; the detailed report preserves that condition. Thermal state was nominal.
+Thirty launches/reloads, local route reloads and a fresh-store HTTP/HTTPS-blocked
+resource check passed. Launch timing starts at the diagnostic native constructor,
+not the OS launch request. Host RSS excludes WebContent/GPU memory.
+
+The owner verified Login keyboard/orientation/safe areas and audible synchronized
+speaker playback after disabling iPhone Silent Mode. In the restored normal app,
+the owner also verified touch/local match, menus/settings, mute/volume, a roughly
+30-second background return and lock/unlock: state, animations and audio stayed
+correct, without freezing or duplicate playback. The normal
+non-instrumented app was rebuilt and restored afterward. The optional
+`manual=1` fixture parameter starts after a touch for mobile audio unlock. Native
+probe code, scripts, raw JSON and temporary linker settings remain local only.
+See the [iOS report and retesting protocol](../docs/design/platform-distribution/README.md#ios-validation-pass-140-2026-11-21)
+for exact measurement scope, remaining gaps and local harness reconstruction.
+
+## Apple-only validation follow-up (#140)
+
+Windows/Linux/Android execution moved to #147/#148/#149; reduced-motion
+presentation to #150. On macOS, owner-assisted unavailable-WebGL, targeted
+card-renderer context interruption, approximately three-minute hide/return and
+30-second sleep/wake checks passed for continued play. The interrupted deal
+settled without its normal animation; later animations/audio recovered. This is
+graceful degradation, not seamless replay. Thirty first-actionable-match launches
+and an isolated SIGKILL/relaunch check are recorded with their limits in the
+canonical report. Local simulation restarts after process loss; backend match
+restoration remains blocked by #129. Raw harnesses/results remain local.
+
+The longer physical iOS pass found an audio lifecycle bug: WebKit remained
+interrupted while Howler waited in suspending. The shared audio adapter now
+explicitly resumes interrupted as well as suspended contexts; audio hooks retry
+on foreground/gestures and stop sounds while hidden. The owner verified recovery
+on the correctly installed standalone candidate after backgrounding, lock/unlock,
+earphones/speakers and a brief system audio interruption. Incoming-call-specific
+and extended timed suspension coverage remain release follow-ups. See the
+canonical report for initial failures, telemetry and retest duration limits.
+
+The final corrected iPhone timing harness completed 30 paced launches (unique
+report names and expected-PID validation): opening control n=13 median/p95
+1,534/1,574ms; opponent deal to playable hand n=17 5,286/5,340ms, measured from
+the native constructor. An isolated SIGKILL/relaunch preserved existing
+preferences and reached an actionable match; local simulation restarts. The
+normal probe-free app was restored and owner-tested with reduced motion and
+sound. The earlier rapid-launch failure and stale-report retry remain separately
+documented. Live current-source Cloudflare preview validation remains pending until the
+opted-in deployment and deep-link probe pass; local builds/tests/notices and deployment dry-run passed.

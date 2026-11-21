@@ -91,7 +91,13 @@ compressed lift (0.42 seconds to contact) without replaying the prior target pla
 | Deal / count                        | Existing deal/count clips                                                                                                   |
 
 `useMotionAudio` preloads before the motion layout effect and unlocks on pointer
-or keyboard gestures. Master mute/volume, per-layer gains and wind looping are
+or keyboard gestures. Hiding the document stops active sounds; foregrounding
+retries preparation without replaying a cue. The shared audio-context adapter
+resumes both suspended and WebKit-interrupted contexts. The physical iOS longer
+background check exposed Howler stuck suspending while WebKit remained
+interrupted; the recovery change passed standalone physical background, lock, output-change
+and system-interruption retests, recorded with duration limits in the
+platform-distribution report. Master mute/volume, per-layer gains and wind looping are
 owned by the shared adapters. Leaving or restarting disposes both card and
 capture sounds. Interrupted scenes stop audio; a completed scene may finish its
 bounded tail. Reduced motion, missing measurements and unavailable WebGL run
@@ -107,7 +113,8 @@ playback was approved on 2026-11-18; live-match playback was also approved on 20
 Verification: `MatchMotionLayer.test.tsx` covers rendered-port wiring, resolved
 Fall effects, cascade/follow-through, ordinary capture and sweep, reduced-motion
 and no-WebGL playback, deadlines, renderer failure and interruption.
-`useMotionAudio.test.tsx` covers first-layout readiness, gesture unlock, leave,
+`useMotionAudio.test.tsx` covers first-layout readiness, gesture/foreground unlock,
+hidden playback stop, listener cleanup, leave,
 restart and Strict Mode cleanup. `motionAudio.test.ts` verifies the shared session
 preloads once and owns both adapters. Existing shared timeline and capture-audio
 tests retain timing, preference, layering, disposal and volume coverage.
@@ -239,9 +246,13 @@ flame, and a four-card cascade. An optional soak continues cycling for 20 minute
 The workload clock starts only once the document is visible. Becoming hidden
 after starting aborts the active-rendering run instead of counting background
 time as a pass.
+An optional `manual=1` query flag additionally waits for a pointer release before
+starting, allowing the physical iOS test to unlock audio through a real touch.
 Cleanup stops audio, timers, frame sampling and playback. This fixture deliberately
 exercises full motion independently of preferences; reduced-motion and WebGL
-fallback remain separate live-match checks. See
+fallback remain separate live-match checks. The owner verified the restored
+normal iPhone app honors the reduced-motion preference with usable cards and
+sound; improving that presentation belongs to #150. See
 the [macOS validation protocol](../../../docs/design/platform-distribution/README.md#repeat-the-macos-measurements)
 for measurement limits and native verification. Probe/runner scripts and raw
 machine-specific JSON remain local and are not included in a fresh clone.
