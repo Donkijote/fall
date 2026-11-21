@@ -106,6 +106,129 @@ already-inset web view. Physical visual/touch sign-off across both directions,
 Login keyboard behavior and lifecycle checks remain pending. Native host
 documentation owns the implementation and verification details.
 
+## macOS validation pass (#140, 2026-11-21)
+
+**Continue developing with Tauri on macOS.** The standalone arm64 build, packaged
+routes, offline assets and representative live renderer passed the checks below.
+This is a positive development decision on one reference Mac, with interaction,
+lifecycle, accessibility and release checks still required before production.
+Additional iOS validation is deferred to the owner’s next device session.
+
+The reference host was an Apple M4 Pro MacBook Pro with 24GB RAM, macOS 27.2.1,
+WebKit 22625.2.8.11.9 and Xcode 27.2. The native deployment floor is macOS 14;
+macOS 14 runtime and Intel hardware were not tested. The completed soak used a
+3440×1440 external display at 100Hz, a 1280×720 CSS-pixel viewport and DPR 1.
+Earlier Retina samples used different display conditions. Results are specific
+to these environments and must be measured again on other machines.
+
+- The optimized standalone `.app` loaded without a development server. Login,
+  Rules, Credits and the local-match path loaded and survived document reloads
+  without reported errors. These are route/asset checks, not registered external
+  deep links or a complete match playthrough.
+- Thirty launches of the final bundled-font app reached the Hall shell, fonts
+  and images in 412ms median / 422ms p95; thirty same-process document reloads
+  measured 62ms median / 79ms p95. OS caches were retained. These markers do not
+  measure completed onboarding, first playable match, or warm app reactivation.
+- The 20m00.8s foreground soak completed 384 post-warmup captures through the
+  existing GSAP/Three.js/Quarks renderer, with no reported runtime errors or
+  visibility interruptions. All thermal reports were nominal. Every effect’s
+  first 30 post-warmup repetitions measured 10ms median / 11ms p95, maxima
+  13–14ms, and no intervals above 33.3ms. Across the entire soak there was one
+  37ms cascade interval; the initial ice warmup separately had an 87ms interval.
+  Real WebGL draws, expected audio cue sequences and a running audio context
+  were observed; these do not prove GPU execution time or audible alignment.
+- Approximate one-second sampling saved 1,133 paired native-host/WebContent RSS
+  observations: median 321.7MiB, p95 337.6MiB, peak 337.9MiB, final 325.5MiB.
+  Shared GPU/network services and peak GPU memory are excluded. This is a local
+  baseline, not a memory budget or proof that the app has no leaks.
+- A fresh WebKit store with HTTP/HTTPS blocked loaded both font families and
+  Hall artwork without errors. The initial test exposed the remote Google
+  Fonts dependency; Cinzel and Spline Sans are now bundled with pinned sources
+  and their existing OFL notices.
+- The app was about 21.56MiB installed; its unsigned headless DMG was 14.61MiB.
+  The normal DMG build’s Finder styling timed out (`-1712`); the generated
+  `bundle_dmg.sh --skip-jenkins` workaround produced an integrity-checked image.
+  Ad-hoc signing does not satisfy Gatekeeper distribution requirements.
+- Focused audio/motion/local-match tests (61), credits tests (7), the production
+  build/notice check and Cloudflare deploy dry-run passed. Normal production
+  output excludes the diagnostic route and fixture.
+
+An earlier soak was interrupted by screen lock at 18m27s. Later hidden-window
+attempts could not start rendering. Those attempts were retained locally as
+interruptions rather than counted as passes. The fixture now waits for initial
+visibility before starting its clock and aborts if the document becomes hidden.
+The successful run kept the test window visible and the Mac unlocked throughout.
+
+Native keyboard/focus/window controls, VoiceOver, theme/resize/zoom behavior,
+audible synchronization and device changes, reduced motion, actual WebGL context
+loss, background/sleep/resume, GPU memory and low-tier hardware checks remain
+pending. UI automation attachment timed out; the owner’s earlier window-chrome
+appearance approval is retained. Source inspection also identified visibility
+handling in motion/audio as a lifecycle risk to test. Authoritative reconnect,
+auth and session continuity remain blocked by #129. Signing/notarization, a
+tested CSP and clean-machine distribution remain release work.
+
+### Repeat the macOS measurements
+
+The reusable fixture is versioned; machine-specific diagnostic scripts, JSON,
+logs, traces and generated apps are local only. On this checkout, optional tools
+live in `scripts/tauri-validation/`, and the dated JSON report remains under
+`docs/design/platform-distribution/`; both are excluded through `.git/info/exclude`.
+They are not included in a fresh clone. Preserve useful raw evidence outside the
+checkout in a durable local directory; `/tmp` is temporary. Never commit device
+serials, hardware UUIDs or raw profiler metadata.
+
+On another machine, use the following protocol to recreate the local harness or
+use equivalent native profiling tools:
+
+1. Record the source revision and local changes, build/tool versions, hardware,
+   OS/WebKit, display refresh rate, viewport and DPR. Build a normal optimized
+   app with `pnpm exec tauri build --bundles app` and preserve a separate copy.
+2. Build a diagnostic copy with `VITE_PACKAGING_SPIKE=1 pnpm exec tauri build
+   --bundles app`. Open `/packaging-spike?runs=30&soak=1200` in that app, then
+   restore the normal generated app before measuring. Never distribute the
+   diagnostic build. Do not start another development server.
+3. For the local probe, compile an Objective-C++ dylib linked with AppKit/WebKit.
+   Intercept `WKWebView` initialization to install a document-start `WKUserScript`
+   and a script message handler. Set the initial history path before React
+   starts, count actual WebGL draw calls, collect JS errors and listen for
+   `fall:packaging` events. The fixture reports `started`, per-capture frame
+   intervals/cues/duration, warmup status, `complete`, or interruption/error.
+   Write JSONL with native timestamps, process IDs, window occlusion and thermal
+   state. This injection is diagnostic-only and does not test hardened signing.
+4. Launch the copied app executable with `DYLD_INSERT_LIBRARIES` pointing to
+   that local probe. Sample native-host and attributed WebContent RSS/CPU about
+   once per second and save partial evidence on failure. WebContent attribution
+   in the local harness uses WebKit diagnostic SPI; recheck it after OS upgrades
+   or use a native profiler. Keep the window unoccluded and the Mac unlocked.
+   Use a scoped `caffeinate -di` assertion to prevent idle sleep during the run.
+5. Exclude one warmup per case; summarize the first 30 repetitions of plain Fall,
+   ice, heat, flame and cascade, then retain all later captures for the soak.
+   Report median/p95/max intervals, counts above 33.3ms, errors, visibility,
+   thermal state, RSS scope and outliers. Do not count hidden/locked time as
+   active rendering or infer audible output from scheduled cue calls.
+6. For startup, run 30 fresh processes and 30 same-process reloads, recording
+   readiness only after the Hall header, fonts, decoded images and a frame.
+   Distinguish retained OS caches from true cold launches. For offline assets,
+   use a nonpersistent WebKit store with an HTTP/HTTPS-blocking content rule;
+   leave system networking alone. A timer-only resource check is not a visible
+   startup measurement.
+
+With the optional local tools present, the foreground soak command is:
+
+```sh
+xcrun clang++ -dynamiclib -fobjc-arc -framework AppKit -framework WebKit \
+  scripts/tauri-validation/macos-probe.mm -o /tmp/fall-probe.dylib
+caffeinate -di python3 scripts/tauri-validation/run-macos.py \
+  /path/to/diagnostic.app /path/to/local-results \
+  --probe /tmp/fall-probe.dylib --mode fixture --count 30 --soak 1200 \
+  --startup-timeout 240
+```
+
+The runner’s local README covers launch/reload/offline modes and summarization.
+For a new machine, retain a separate report with that environment’s results;
+update this decision only when the new evidence changes it.
+
 ## Proposed decision
 
 Test **Tauri 2 across all five native platforms**, preserving the current web
@@ -269,7 +392,7 @@ through the same path. #129 owns hidden hands, deck order, legal moves, match
 results and reward ledger. Offline clients may display local practice and cached
 presentation, but cannot award trusted XP/coins or resolve online matches.
 
-## Representative packaging spike (planned, not executed)
+## Representative packaging spike protocol
 
 First pair: **macOS desktop and iOS**, matching the owner's development equipment.
 Confirm Mac architecture, physical iOS device/model and SDK availability during
@@ -301,9 +424,9 @@ pending. This order and its implementation are tracked in #140.
    If Tauri mobile integration fails, run the same fixture in Capacitor; if the
    problem is GPU/WebKit, investigate rendering/fallbacks before changing shells.
 
-Illustrative commands **for the future spike**; they require generated config
-and installed SDKs and have not been executed here. Select and pin exact
-dependency patch versions in its lockfiles before taking measurements:
+The following is the original planning sequence, not the recorded macOS run.
+Use the checked-in dependency pins and the reproduction commands in the macOS
+validation section above for the actual experiment:
 
 ```sh
 pnpm add -D @tauri-apps/cli@2
@@ -365,13 +488,13 @@ Agree the device/OS floor before using them to accept a release.
 
 ### Evidence register
 
-| Target  | Current evidence                       | Required next evidence                                                                      |
-| ------- | -------------------------------------- | ------------------------------------------------------------------------------------------- |
-| iOS     | Documentation inference only           | Simulator integration plus physical iPhone/iPad release-build capture/audio/lifecycle tests |
-| Android | Documentation inference only           | Physical low/mid-tier Android release APK, WebView version and profiler traces              |
-| Windows | Documentation inference only           | Installed signed-candidate build on Windows 11, WebView2 and GPU/input checks               |
-| Linux   | Documentation inference only           | AppImage/deb on selected distro floor and newer distro, WebKitGTK/GPU traces                |
-| macOS   | Host/tool inventory and web build only | Packaged Apple Silicon run; Intel run if Intel distribution is selected                     |
+| Target  | Current evidence                                                                                                                                             | Required next evidence                                                                                                                                                     |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| macOS   | Measured Apple Silicon standalone app/DMG, route reloads, launch timings and deterministic capture fixture on the physical M4 Pro Mac; current results below | Manual native controls/keyboard/VoiceOver/audio/lifecycle checks, low-tier Mac and actual macOS 14 runtime, signed/notarized clean-machine install; Intel remains untested |
+| iOS     | Measured safe-area propagation and Hall padding on a physical iPhone; simulator rotation/native bridge checks documented above                               | Owner-requested next session: physical iPhone/iPad release-build capture/audio/lifecycle/keyboard tests and performance measurements                                       |
+| Windows | Owner-reported initial run; toolchain, WebView2, hardware and timings not captured                                                                           | Reproducible Windows setup, installed build, DPI/GPU/input checks and exact environment                                                                                    |
+| Linux   | Untested; no VM evidence collected                                                                                                                           | Owner's VirtualBox guest: OS, guest additions, graphics acceleration, WebKitGTK and traces; VM results must remain distinct from physical GPU validation                   |
+| Android | Owner-reported initial run; physical/emulator environment and timings not captured                                                                           | Reproducible SDK/NDK/emulator image and acceleration evidence; physical Android GPU, thermal and audio checks remain untested                                              |
 
 Record exact commands, fixture seed/config, artifacts/checksums and raw timings
 alongside the final decision in this folder. Mark failures and inferred targets

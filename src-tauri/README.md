@@ -160,3 +160,24 @@ These measurements verify native-to-CSS propagation and the Hall's computed
 layout. Visual/touch sign-off on both physical landscape directions, Login
 keyboard behavior, and background/resume remain part of the broader #140
 interaction checks; simulator rotation does not replace those checks.
+
+## macOS validation evidence (#140)
+
+The 2026-11-21 macOS pass built a standalone arm64 app and unsigned headless DMG,
+checked packaged route reloads and offline resources, and measured the live
+renderer with an opt-in capture fixture. The 30-repetition samples passed the
+proposed frame-scheduling threshold. The initial soak was interrupted by screen
+lock at 18m27s. A later owner-assisted foreground run completed 20m00.8s with
+384 measured captures, nominal thermal state, and host+WebContent RSS sampling
+(337.9MiB peak, 325.5MiB final). It used the 100Hz external display at DPR 1;
+GPU memory remains unmeasured. Native interaction, VoiceOver, audible
+output, device changes, sleep/resume, and release signing remain pending.
+
+The offline check found a remote-font dependency; Cinzel and Spline Sans are now
+bundled with the existing OFL notices. A fresh-store HTTP/HTTPS-blocked resource
+check of the rebuilt app loaded both families and Hall artwork without errors.
+See the [measured report](../docs/design/platform-distribution/README.md#macos-validation-pass-140-2026-11-21)
+for results, measurement limits, retesting instructions and remaining manual
+checks. Machine-specific scripts and raw JSON reports are local only, excluded
+from Git; they are not required to build the app.
+Never distribute an app built with `VITE_PACKAGING_SPIKE=1`.

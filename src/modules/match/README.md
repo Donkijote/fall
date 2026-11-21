@@ -222,3 +222,26 @@ fades during travel. `pointsFlight` constrains the visible badge/caption to the
 board edges, including the upward arc and entrance overshoot. Geometry tests cover
 667×320 and 844×390 landscape, portrait, desktop and orientation changes. Browser
 checks at both landscape sizes confirmed flights arrive without clipping.
+
+## Native packaging fixture (#140)
+
+`packaging.ts` is a separate, opt-in public entry for `ui/PackagingSpike.tsx`.
+Only a build with `VITE_PACKAGING_SPIKE=1` registers `/packaging-spike`; ordinary
+production builds remove the route and fixture. Supporting UI lives in
+`ui/components/previews/PackagingCaptureFixture.tsx`. It uses fixed presentation
+scenes and the existing live `MatchCardCanvas`, shared GSAP timelines, effects,
+and infrastructure audio adapter; it does not resolve or duplicate game rules.
+The fixture emits measurements through a DOM event consumed by local diagnostic
+instrumentation, without adding a native API or production global test interface.
+
+One warmup and 30 repetitions cover plain Fall, rank-10 ice, rank-11 heat, rank-12
+flame, and a four-card cascade. An optional soak continues cycling for 20 minutes.
+The workload clock starts only once the document is visible. Becoming hidden
+after starting aborts the active-rendering run instead of counting background
+time as a pass.
+Cleanup stops audio, timers, frame sampling and playback. This fixture deliberately
+exercises full motion independently of preferences; reduced-motion and WebGL
+fallback remain separate live-match checks. See
+the [macOS validation protocol](../../../docs/design/platform-distribution/README.md#repeat-the-macos-measurements)
+for measurement limits and native verification. Probe/runner scripts and raw
+machine-specific JSON remain local and are not included in a fresh clone.

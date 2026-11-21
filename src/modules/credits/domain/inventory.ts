@@ -79,27 +79,31 @@ export const fontAttributions: Attribution[] = [
     id: "cinzel",
     name: "Cinzel",
     creator: "Natanael Gama · The Cinzel Project Authors",
-    files: ["src/index.css (Google Fonts import)"],
+    files: ["src/assets/fonts/Cinzel-Variable.ttf"],
     source: "https://github.com/NDISCOVER/Cinzel",
     license: "SIL Open Font License 1.1",
     licenseUrl: "https://github.com/google/fonts/blob/main/ofl/cinzel/OFL.txt",
     notice: cinzelNotice,
-    modifications: "Used through Google Fonts; Fall does not modify the font sources.",
+    modifications:
+      "Self-hosted official Google Fonts variable TTF; Fall does not modify the font sources.",
     provenance: "third-party",
-    evidence: "Official google/fonts Cinzel METADATA.pb and OFL.txt, retrieved 2026-11-17.",
+    evidence:
+      "Official google/fonts Cinzel METADATA.pb and OFL.txt verified 2026-11-17. Pinned binary and unchanged OFL notice verified 2026-11-21; src/assets/fonts/sources.json and README.md.",
   },
   {
     id: "spline-sans",
     name: "Spline Sans",
     creator: "Eben Sorkin · Mirko Velimirović · The Spline Sans Project Authors",
-    files: ["src/index.css (Google Fonts import)"],
+    files: ["src/assets/fonts/SplineSans-Variable.ttf"],
     source: "https://github.com/SorkinType/SplineSans",
     license: "SIL Open Font License 1.1",
     licenseUrl: "https://github.com/google/fonts/blob/main/ofl/splinesans/OFL.txt",
     notice: splineNotice,
-    modifications: "Used through Google Fonts; Fall does not modify the font sources.",
+    modifications:
+      "Self-hosted official Google Fonts variable TTF; Fall does not modify the font sources.",
     provenance: "third-party",
-    evidence: "Official google/fonts Spline Sans METADATA.pb and OFL.txt, retrieved 2026-11-17.",
+    evidence:
+      "Official google/fonts Spline Sans METADATA.pb and OFL.txt verified 2026-11-17. Pinned binary and unchanged OFL notice verified 2026-11-21; src/assets/fonts/sources.json and README.md.",
   },
 ];
 

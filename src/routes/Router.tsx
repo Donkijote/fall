@@ -35,6 +35,17 @@ const router = createBrowserRouter([
       return { Component: LoginScreen };
     },
   },
+  ...(import.meta.env.VITE_PACKAGING_SPIKE === "1"
+    ? [
+        {
+          path: "/packaging-spike",
+          lazy: async () => {
+            const { PackagingSpike } = await import("@/modules/match/packaging");
+            return { Component: PackagingSpike };
+          },
+        },
+      ]
+    : []),
   ...(import.meta.env.DEV
     ? [
         {

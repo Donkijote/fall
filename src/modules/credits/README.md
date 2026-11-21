@@ -150,3 +150,14 @@ presentation still need physical-device review. No second server was started.
 Automated verification on 2026-11-18: all 315 repository tests passed; formatting,
 lint, notice freshness and production build passed. The build retains its bundle
 size advisory; complete license text is lazy-loaded with the Credits route.
+
+## Offline font packaging (#140)
+
+Cinzel and Spline Sans are bundled as unmodified variable TTF files under
+`src/assets/fonts`, replacing the runtime Google Fonts stylesheet request.
+The authoritative font records identify their local files and retain the same
+OFL notices and authors. `src/assets/fonts/sources.json` pins official upstream
+commits, binary hashes and retrieval evidence; its README explains adoption.
+The runtime-asset inventory coverage test now includes font files alongside
+artwork, icons and audio. Offline native validation must use a fresh WebKit
+store and verify that both font families load with HTTP/HTTPS blocked.
