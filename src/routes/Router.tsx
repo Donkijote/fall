@@ -3,6 +3,7 @@ import { RouterProvider } from "react-router/dom";
 
 import { CardList } from "@/infrastructure/ui/components/card/CardList";
 import { useAssetInteractions } from "@/infrastructure/ui/hooks/useAssetInteractions";
+import { useNativeOrientation } from "@/infrastructure/ui/hooks/useNativeOrientation";
 import { HomeScreen } from "@/infrastructure/ui/screens/Home";
 import { RulesScreen } from "@/infrastructure/ui/screens/Rules";
 import { SingsSheetScreen } from "@/infrastructure/ui/screens/SingsSheet";
@@ -34,6 +35,17 @@ const router = createBrowserRouter([
       return { Component: LoginScreen };
     },
   },
+  ...(import.meta.env.VITE_PACKAGING_SPIKE === "1"
+    ? [
+        {
+          path: "/packaging-spike",
+          lazy: async () => {
+            const { PackagingSpike } = await import("@/modules/match/packaging");
+            return { Component: PackagingSpike };
+          },
+        },
+      ]
+    : []),
   ...(import.meta.env.DEV
     ? [
         {
@@ -80,5 +92,6 @@ const router = createBrowserRouter([
 
 export const AppRouter = () => {
   useAssetInteractions();
+  useNativeOrientation(router);
   return <RouterProvider router={router} />;
 };

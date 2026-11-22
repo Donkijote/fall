@@ -4,9 +4,13 @@ import { defineConfig, lazyPlugins } from "vite-plus";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 
+const host = process.env.TAURI_DEV_HOST;
+
 // https://viteplus.dev/config/
 export default defineConfig({
   fmt: {
+    // Native tooling and the notice generator own these files' serialization.
+    ignorePatterns: ["src-tauri/**", "src/modules/credits/domain/software-notices.json"],
     sortTailwindcss: {
       stylesheet: "./src/index.css",
     },
@@ -36,6 +40,7 @@ export default defineConfig({
     },
   },
   lint: {
+    ignorePatterns: ["src-tauri/**"],
     env: {
       browser: true,
     },
@@ -52,6 +57,18 @@ export default defineConfig({
   server: {
     open: true,
     port: 3000,
+    strictPort: true,
+    host: host || false,
+    hmr: host
+      ? {
+          protocol: "ws",
+          host,
+          port: 1421,
+        }
+      : undefined,
+    watch: {
+      ignored: ["**/src-tauri/**"],
+    },
   },
   test: {
     environment: "jsdom",

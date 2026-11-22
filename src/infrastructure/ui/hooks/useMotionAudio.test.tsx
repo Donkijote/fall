@@ -10,7 +10,13 @@ vi.mock("@/infrastructure/adapters/audio/motionAudio", () => ({
 }));
 
 function session() {
-  return { preload: vi.fn(), prepare: vi.fn(), dispose: vi.fn(), playCapture: vi.fn() };
+  return {
+    preload: vi.fn(),
+    prepare: vi.fn(),
+    stop: vi.fn(),
+    dispose: vi.fn(),
+    playCapture: vi.fn(),
+  };
 }
 beforeEach(() => vi.clearAllMocks());
 
@@ -58,6 +64,29 @@ it("disposes on leave and opens a fresh session on restart", () => {
   expect(second.prepare).toHaveBeenCalledOnce();
   view.unmount();
   expect(second.dispose).toHaveBeenCalledOnce();
+});
+
+it("stops hidden playback and retries unlock on return without replaying a cue", () => {
+  const audio = session();
+  factory.create.mockReturnValue(audio);
+  const visibility = vi.spyOn(document, "visibilityState", "get");
+  function Motion() {
+    useMotionAudio();
+    return null;
+  }
+  const view = render(<Motion />);
+  visibility.mockReturnValue("hidden");
+  fireEvent(document, new Event("visibilitychange"));
+  expect(audio.stop).toHaveBeenCalledOnce();
+  expect(audio.prepare).not.toHaveBeenCalled();
+  visibility.mockReturnValue("visible");
+  fireEvent(document, new Event("visibilitychange"));
+  expect(audio.prepare).toHaveBeenCalledOnce();
+  expect(audio.playCapture).not.toHaveBeenCalled();
+  view.unmount();
+  fireEvent(document, new Event("visibilitychange"));
+  expect(audio.prepare).toHaveBeenCalledOnce();
+  visibility.mockRestore();
 });
 
 it("cleans up Strict Mode's first session and retains only the active unlock listener", () => {

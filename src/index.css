@@ -1,9 +1,22 @@
-@import url("https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&family=Cinzel:wght@400;700;900&display=swap");
-
 @import "tailwindcss";
-
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+
+@font-face {
+  font-family: "Cinzel";
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url("./assets/fonts/Cinzel-Variable.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Spline Sans";
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url("./assets/fonts/SplineSans-Variable.ttf") format("truetype");
+}
 
 @custom-variant dark (&:is(.dark *));
 @custom-variant standalone (@media (display-mode: standalone));
@@ -76,10 +89,13 @@ body {
 }
 
 :root {
-  --safe-area-top: env(safe-area-inset-top, 0px);
-  --safe-area-right: env(safe-area-inset-right, 0px);
-  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
-  --safe-area-left: env(safe-area-inset-left, 0px);
+  --safe-area-top: max(
+    var(--native-safe-area-top, env(safe-area-inset-top, 0px)),
+    var(--native-titlebar-height, 0px)
+  );
+  --safe-area-right: var(--native-safe-area-right, env(safe-area-inset-right, 0px));
+  --safe-area-bottom: var(--native-safe-area-bottom, env(safe-area-inset-bottom, 0px));
+  --safe-area-left: var(--native-safe-area-left, env(safe-area-inset-left, 0px));
   --gold: oklch(0.7185 0.1076 79.31);
   --artwork-foreground: oklch(0.9223 0.0332 83.71);
   --artwork-shadow: oklch(0.1898 0.0094 255.63);

@@ -1,4 +1,4 @@
-import { Howl, Howler } from "howler";
+import { Howl } from "howler";
 
 import dealCardSound from "@/assets/cards/deal-card.mp3";
 import playCardSound from "@/assets/cards/play-card.mp3";
@@ -6,6 +6,8 @@ import {
   readGamePreferences,
   subscribeGamePreferences,
 } from "@/infrastructure/preferences/gamePreferences";
+
+import { resumeAudioContext } from "./resumeAudioContext";
 
 export function createCardAudio() {
   let deal: Howl | undefined;
@@ -41,7 +43,7 @@ export function createCardAudio() {
     },
     unlock() {
       getDeal();
-      if (Howler.ctx?.state === "suspended") void Howler.ctx.resume().catch(() => {});
+      resumeAudioContext();
     },
     playDealCard() {
       getDeal().play();

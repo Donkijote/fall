@@ -39,6 +39,10 @@ over a themed surface.
 ## Validation
 
 Run `pnpm check`, `pnpm exec vp test run`, `pnpm run build` and `git diff --check`.
+Both the required build-status workflow and Cloudflare preview run
+`pnpm run test:coverage`; use that command to reproduce CI validation.
+The Tavern touch-preview test waits for the staggered card reveal to finish
+before tapping. Initial dialog focus occurs earlier and is not an entrance-complete signal.
 Use the existing development app for layout review; do not start a second server.
 Check all activity states, landscape sizing and scrolling, visible activity cards and footer,
 keyboard navigation, image failures, onboarding and the existing three game formats.
@@ -70,7 +74,10 @@ and dismissal behavior.
 
 GHI #124 unifies header and footer spacing through `--hall-gutter` on CardHall;
 children add their respective safe-area inset. The responsive values and the
-interaction review live in the owning design README. Shared motion owners and
+interaction review live in the owning design README. In the iOS native host,
+UIKit supplies the live shared safe-area values after rotation; the Hall does
+not add device-specific offsets. See `src-tauri/README.md` for native bridge
+verification and the remaining physical interaction checks. Shared motion owners and
 verification boundaries are inventoried in `src/components/README.md`.
 
 `PlayerIdentity` now composes the shared `ProfileButton`; resources are native

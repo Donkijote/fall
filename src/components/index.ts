@@ -25,3 +25,5 @@ export { BronzeArrow } from "./dividers/BronzeArrow";
 export { BrassCheckbox } from "./controls/BrassCheckbox";
 export { GuideLink } from "./navigation/GuideLink";
 export { NumberMedallion } from "./hud/NumberMedallion";
+
+export { WindowDragRegion } from "./navigation/WindowDragRegion";

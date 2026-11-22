@@ -7,12 +7,16 @@ import { resolve } from "node:path";
 import { creditsInventory } from "./inventory";
 
 test("every runtime asset has an inventory owner, including unresolved provenance", () => {
-  const groups = [...creditsInventory.artwork, ...creditsInventory.icons];
+  const groups = [
+    ...creditsInventory.artwork,
+    ...creditsInventory.icons,
+    ...creditsInventory.fonts,
+  ];
   const covered = new Set(
     groups.flatMap((entry) => entry.files.flatMap((pattern) => globSync(pattern))),
   );
   const files = [...globSync("src/assets/**/*"), ...globSync("public/*")].filter((file) =>
-    /\.(svg|png|webp|jpg|mp3|wav|ico)$/.test(file),
+    /\.(svg|png|webp|jpg|mp3|wav|ico|ttf|woff|woff2)$/.test(file),
   );
   expect(files.filter((file) => !covered.has(file))).toEqual([]);
   expect(new Set(groups.map((entry) => entry.id)).size).toBe(groups.length);

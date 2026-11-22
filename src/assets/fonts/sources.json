@@ -1,0 +1,21 @@
+{
+  "retrieved": "2026-11-21",
+  "fonts": [
+    {
+      "family": "Cinzel",
+      "commit": "3dd78844021e948ceb633d1dcee3f7885561b5d9",
+      "source": "https://raw.githubusercontent.com/google/fonts/3dd78844021e948ceb633d1dcee3f7885561b5d9/ofl/cinzel/Cinzel%5Bwght%5D.ttf",
+      "file": "src/assets/fonts/Cinzel-Variable.ttf",
+      "bytes": 125468,
+      "sha256": "f4d83d34d1f6c741193e4acf4b3dff9531e5a67b6aa65228d00a7db72a4e0f34"
+    },
+    {
+      "family": "SplineSans",
+      "commit": "8b0a1d0f5983c89bc2b93f1b5fb55f9e252744b5",
+      "source": "https://raw.githubusercontent.com/google/fonts/8b0a1d0f5983c89bc2b93f1b5fb55f9e252744b5/ofl/splinesans/SplineSans%5Bwght%5D.ttf",
+      "file": "src/assets/fonts/SplineSans-Variable.ttf",
+      "bytes": 146896,
+      "sha256": "65250939de0ab412d2b2349c9cb85304a5919fc3c5d4e74713a2d8a1f45f2947"
+    }
+  ]
+}
