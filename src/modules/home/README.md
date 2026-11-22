@@ -39,6 +39,10 @@ over a themed surface.
 ## Validation
 
 Run `pnpm check`, `pnpm exec vp test run`, `pnpm run build` and `git diff --check`.
+Both the required build-status workflow and Cloudflare preview run
+`pnpm run test:coverage`; use that command to reproduce CI validation.
+The Tavern touch-preview test waits for the staggered card reveal to finish
+before tapping. Initial dialog focus occurs earlier and is not an entrance-complete signal.
 Use the existing development app for layout review; do not start a second server.
 Check all activity states, landscape sizing and scrolling, visible activity cards and footer,
 keyboard navigation, image failures, onboarding and the existing three game formats.
