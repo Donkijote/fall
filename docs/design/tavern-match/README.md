@@ -412,3 +412,28 @@ The diamond revision was checked in the desktop playground: both bright bursts
 remain inside the plaque, and no player caption appears under the coin. Focused
 timeline tests verify both peaks, outward motion, final fade and interruption
 rollback; existing live/preview handoff and reduced-motion tests still pass.
+
+### Perfect-table artwork and progressive highlights — 2026-11-23
+
+The perfect-table award reuses the approved clean-table plaque with live title
+and points, without a recipient caption. Its distinct GSAP sequence reveals the
+plaque with an upward ease and gradual unmasking, sweeps ivory light across the
+actual artwork alpha, pulses the points coin and emits sixteen round gold motes.
+This replaces the incomplete rectangular rim trace and avoids repeating the
+clean-table diamonds. It retains the 1.55-second source window and existing
+points flight; clean-table diamonds and the full-width sweep remain unchanged.
+
+Card feedback now builds from a prominent gold-and-ivory face shine on the first
+match to an illustrated brass frame on the second, heat distortion on the third,
+and flames on the fourth. Frame artwork gradually reveals upward over half a
+second, with light masked to its illustrated rails and corners. No spreading
+card halo or CSS outline substitutes for the artwork. All card effects clear
+when the awarded points arrive, and reduced motion skips decorative movement.
+The approved standalone [matching-card frame](matching-card-frame.png) was
+generated against the shipped brass frame and bonus plaque, then exported in
+full to a transparent 504×704 runtime WebP. Exact prompts, references and export
+settings are retained in the prompt manifest and credits inventory.
+
+Automated verification passed 527 tests, lint and the production build. The
+latest browser recheck could not run because the existing port-3000 app was no
+longer reachable; a separate server was not started.

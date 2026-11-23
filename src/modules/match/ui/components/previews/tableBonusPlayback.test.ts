@@ -9,7 +9,7 @@ function setup(example: "perfect" | "partial" | "broken" | "none", reduced = fal
   const root = document.createElement("div");
   root.innerHTML = '<span data-dealer-deck></span><div data-perfect-award style="opacity:0"></div>';
   for (const card of resolved.table)
-    root.innerHTML += `<div data-bonus-card="${card.suit}-${card.rank}" style="opacity:0"><span data-bonus-glow style="opacity:0"></span><span data-bonus-sheen style="opacity:0"></span><span data-bonus-burst style="opacity:0"></span></div>`;
+    root.innerHTML += `<div data-bonus-card="${card.suit}-${card.rank}" style="opacity:0"><span data-bonus-frame style="opacity:0"></span><span data-bonus-card-shine style="opacity:0"></span><span data-bonus-sheen style="opacity:0"></span></div>`;
   for (const player of resolved.players)
     for (let round = 0; round < 3; round++)
       root.innerHTML += `<div data-deal-hand="${player.id}:${round}" style="opacity:0"></div>`;
@@ -37,22 +37,27 @@ afterEach(() => {
 it("lands table cards slowly, builds consecutive intensity and celebrates before handoff", () => {
   const view = setup("perfect");
   const timeline = view.timeline!;
-  const glows = view.root.querySelectorAll<HTMLElement>("[data-bonus-glow]");
+  const frames = view.root.querySelectorAll<HTMLElement>("[data-bonus-frame]");
+  timeline.time(timeline.labels["match-0"] + 0.28);
   expect(
-    [...view.root.querySelectorAll("[data-bonus-burst]")].every(
-      (node) => Number(gsap.getProperty(node, "opacity")) === 0,
-    ),
-  ).toBe(true);
+    Number(gsap.getProperty(view.root.querySelector("[data-bonus-card-shine]")!, "opacity")),
+  ).toBeGreaterThan(0);
+  expect(Number(gsap.getProperty(frames[0], "opacity"))).toBe(0);
   timeline.seek("match-settled-0");
-  const first = Number(gsap.getProperty(glows[0], "opacity"));
-  expect(first).toBeGreaterThan(0);
-  expect(Number(gsap.getProperty(glows[1], "opacity"))).toBe(0);
+  const first = Number(gsap.getProperty(frames[0], "opacity"));
+  expect(first).toBe(0);
+  expect(Number(gsap.getProperty(frames[1], "opacity"))).toBe(0);
   timeline.seek("match-settled-1");
-  expect(Number(gsap.getProperty(glows[0], "opacity"))).toBe(first);
-  expect(Number(gsap.getProperty(glows[1], "opacity"))).toBeGreaterThan(first);
+  expect(Number(gsap.getProperty(frames[0], "opacity"))).toBe(first);
+  expect(Number(gsap.getProperty(frames[1], "opacity"))).toBeGreaterThan(first);
   timeline.seek("match-settled-3");
-  const intensities = [...glows].map((node) => Number(gsap.getProperty(node, "opacity")));
-  expect(intensities).toEqual([0.42, 0.59, 0.76, 0.93]);
+  const intensities = [...frames].map((node) => Number(gsap.getProperty(node, "opacity")));
+  expect(intensities).toEqual([0, 0.9, 0.95, 1]);
+  expect(
+    [...view.root.querySelectorAll("[data-bonus-frame]")].map((node) =>
+      Number(gsap.getProperty(node, "opacity")),
+    ),
+  ).toEqual([0, 0.9, 0.95, 1]);
   timeline.time(timeline.duration() - 0.5);
   expect(
     Number(gsap.getProperty(view.root.querySelector("[data-perfect-award]")!, "opacity")),
@@ -69,12 +74,12 @@ it.each(["partial", "broken", "none"] as const)(
   (example) => {
     const view = setup(example);
     view.timeline!.progress(1);
-    const glows = view.root.querySelectorAll<HTMLElement>("[data-bonus-glow]");
+    const frames = view.root.querySelectorAll<HTMLElement>("[data-bonus-frame]");
     if (example === "none")
-      expect([...glows].every((node) => Number(gsap.getProperty(node, "opacity")) === 0)).toBe(
+      expect([...frames].every((node) => Number(gsap.getProperty(node, "opacity")) === 0)).toBe(
         true,
       );
-    else expect(Number(gsap.getProperty(glows[example === "partial" ? 3 : 1], "opacity"))).toBe(0);
+    else expect(Number(gsap.getProperty(frames[example === "partial" ? 3 : 1], "opacity"))).toBe(0);
     expect(
       Number(gsap.getProperty(view.root.querySelector("[data-perfect-award]")!, "opacity")),
     ).toBe(0);
@@ -83,21 +88,26 @@ it.each(["partial", "broken", "none"] as const)(
   },
 );
 
-it("gives each consecutive match a stronger lift, burst and sheen", () => {
+it("keeps the first shine bright and builds stronger lifts on later matches", () => {
   const view = setup("perfect");
   const cards = view.root.querySelectorAll<HTMLElement>("[data-bonus-card]");
   const peaks = [...cards].map((card, index) => {
     view.timeline!.time(view.timeline!.labels[`match-${index}`] + 0.22);
     return {
       lift: -Number(gsap.getProperty(card, "y")),
-      burst: Number(gsap.getProperty(card.querySelector("[data-bonus-burst]")!, "scale")),
-      sheen: Number(gsap.getProperty(card.querySelector("[data-bonus-sheen]")!, "opacity")),
+      sheen: Number(
+        gsap.getProperty(
+          card.querySelector(index === 0 ? "[data-bonus-card-shine]" : "[data-bonus-sheen]")!,
+          "opacity",
+        ),
+      ),
     };
   });
+  expect(peaks[0].lift).toBeCloseTo(0);
+  expect(peaks[0].sheen).toBe(1);
   for (let index = 1; index < peaks.length; index++) {
     expect(peaks[index].lift).toBeGreaterThan(peaks[index - 1].lift);
-    expect(peaks[index].burst).toBeGreaterThan(peaks[index - 1].burst);
-    expect(peaks[index].sheen).toBeGreaterThan(peaks[index - 1].sheen);
+    expect(peaks[index].sheen).toBeGreaterThan(0.5);
   }
   view.context.revert();
   for (const card of cards) {
@@ -110,9 +120,9 @@ it("shows reduced-motion sources immediately without a timeline", () => {
   const view = setup("broken", true);
   expect(view.timeline).toBeUndefined();
   expect(view.complete).toHaveBeenCalledOnce();
-  const glows = view.root.querySelectorAll<HTMLElement>("[data-bonus-glow]");
-  expect([...glows].map((node) => Number(gsap.getProperty(node, "opacity")))).toEqual([
-    0.42, 0, 0.42, 0.59,
+  const frames = view.root.querySelectorAll<HTMLElement>("[data-bonus-frame]");
+  expect([...frames].map((node) => Number(gsap.getProperty(node, "opacity")))).toEqual([
+    0, 0, 0, 0.9,
   ]);
   view.context.revert();
 });

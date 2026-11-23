@@ -1,0 +1,4 @@
+.award-plaque-shine {
+  mask: url("../../../../../../assets/lobby/tavern-match/clean-table-plaque.webp") center / 100%
+    100% no-repeat;
+}

@@ -15,7 +15,9 @@ function setup(reduced = false, example: "capture" | "last-round" = "capture") {
   });
   return { root, complete, timeline, context };
 }
-afterEach(() => gsap.globalTimeline.clear());
+afterEach(() => {
+  gsap.globalTimeline.clear();
+});
 
 it("sweeps the emptied table, reveals the award, then hands off after one second", () => {
   const view = setup();

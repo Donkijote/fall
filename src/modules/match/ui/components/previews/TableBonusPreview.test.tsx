@@ -46,7 +46,7 @@ it("hands off to the existing points flight exactly once after the source celebr
   expect(document.querySelectorAll("[data-score-award]")).toHaveLength(1);
   expect(document.querySelector("[data-score-award]")).toHaveTextContent("+10");
   expect(
-    [...document.querySelectorAll("[data-bonus-glow]")].some(
+    [...document.querySelectorAll("[data-bonus-frame]")].some(
       (node) => Number(gsap.getProperty(node, "opacity")) > 0,
     ),
   ).toBe(true);
@@ -55,7 +55,9 @@ it("hands off to the existing points flight exactly once after the source celebr
   });
   expect(
     [
-      ...document.querySelectorAll("[data-bonus-glow], [data-bonus-sheen], [data-bonus-burst]"),
+      ...document.querySelectorAll(
+        "[data-bonus-frame], [data-bonus-card-shine], [data-bonus-sheen]",
+      ),
     ].every((node) => Number(gsap.getProperty(node, "opacity")) === 0),
   ).toBe(true);
   expect(
@@ -96,7 +98,7 @@ it("shows source and recipient feedback immediately with reduced motion", () => 
   expect(screen.getByRole("status")).toHaveTextContent("Side 1 +10 points");
   expect(screen.getByRole("list", { name: "Scores" })).toHaveTextContent("10");
   expect(
-    [...document.querySelectorAll("[data-bonus-glow]")].map((node) =>
+    [...document.querySelectorAll("[data-bonus-frame]")].map((node) =>
       Number(gsap.getProperty(node, "opacity")),
     ),
   ).toEqual([0, 0, 0, 0]);

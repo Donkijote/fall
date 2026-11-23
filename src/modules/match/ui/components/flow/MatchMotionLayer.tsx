@@ -183,7 +183,12 @@ export function MatchMotionLayer({
           const element = root.querySelector<HTMLElement>(`[data-table-card="${key}"]`);
           // Each landed opening card returns to DOM ownership for the shared lift,
           // sheen and persistent heat/flames while the next card is still in flight.
-          if (element) timeline.set(element, { visibility: "visible" });
+          if (element)
+            timeline.call(() => {
+              // Visibility belongs to this DOM owner. A later R3F context revert
+              // must not restore a hidden card after fallback/unmount revealed it.
+              if (active) element.style.visibility = "visible";
+            });
           openingTable.land(timeline, key);
         },
         celebrate: openingTable.celebrate,

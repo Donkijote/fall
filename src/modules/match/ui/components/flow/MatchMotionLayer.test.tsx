@@ -351,14 +351,14 @@ it("reveals each opening source at its landing and restores visibility on interr
     playback.openingTable!.land(timeline, "coins-1");
     playback.openingTable!.celebrate(timeline);
   });
-  timeline.time(0.7);
+  timeline.time(0.7, false);
   expect(card.style.visibility).toBe("hidden");
-  timeline.time(0.73);
+  timeline.time(0.73, false);
   expect(card.style.visibility).toBe("visible");
   expect(openingTable.land).toHaveBeenCalledOnce();
   expect(openingTable.celebrate).toHaveBeenCalledOnce();
-  context.revert();
   view.unmount();
+  context.revert();
   expect(card.style.visibility).toBe("");
   expect(complete).not.toHaveBeenCalled();
 });

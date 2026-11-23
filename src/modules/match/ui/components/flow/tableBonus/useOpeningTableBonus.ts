@@ -5,7 +5,12 @@ import type { Card } from "@/domain/entities/Card";
 
 import type { OpeningTablePlayback } from "../../../../adapters/three/matchCardScene";
 import type { MatchFrame, MatchMotion } from "../../../../application/localMatch";
-import { appendPerfectTableAward, appendTableBonusHighlight } from "./tableBonusChoreography";
+import {
+  appendPerfectTableAward,
+  appendTableBonusHighlight,
+  tableBonusFrameOpacity,
+  tableBonusFrameFilter,
+} from "./tableBonusChoreography";
 import { createTableBonusEffects } from "./tableBonusEffects";
 
 type OpeningDeal = NonNullable<Extract<MatchMotion, { kind: "deal" }>["openingTable"]>;
@@ -72,9 +77,21 @@ export function useOpeningTableBonus(
         const effect = session.effects[index];
         effect.stage = streak;
         const card = root.querySelector(`[data-bonus-card="${key}"]`);
-        const glow = card?.querySelector("[data-bonus-glow]");
-        if (glow)
-          gsap.set(glow, { opacity: !session.cleared && streak ? 0.25 + streak * 0.17 : 0 });
+        const frame = card?.querySelector("[data-bonus-frame]");
+        if (frame)
+          gsap.set(frame, {
+            opacity: !session.cleared && streak ? tableBonusFrameOpacity(streak) : 0,
+            filter: tableBonusFrameFilter(streak),
+            y: 0,
+            scale: 1,
+            clipPath: "inset(0% 0% 0% 0%)",
+          });
+        const firstShine = card?.querySelector("[data-bonus-card-shine]");
+        if (firstShine)
+          gsap.set(firstShine, {
+            opacity: !session.cleared && reducedMotion && streak === 1 ? 0.22 : 0,
+            xPercent: 0,
+          });
         gsap.set(effect.heat.current.strength, {
           value: !session.cleared && !reducedMotion && streak === 3 ? 1 : 0,
         });

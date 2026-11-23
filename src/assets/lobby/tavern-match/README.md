@@ -13,3 +13,11 @@ master, original generation prompt, final edit instructions and export settings
 are recorded in [the Tavern match prompt manifest](../../../../docs/design/tavern-match/prompts.json).
 The model identifier is not exposed by the generation tool. Generation provenance
 and approval are recorded separately from the pending provider-term review.
+
+The same approved plaque is reused for perfect-table awards. The matching-card
+frame (`matching-card-frame.webp`) was generated with OpenAI image_gen on
+2026-11-23 using the shipped brass frame and approved plaque as references.
+Its transparent standalone master is exported in full at 504×704; the tool did
+not expose a model identifier. Prompt, reference and export provenance is in
+the same manifest, with a separate credits-inventory record and pending
+provider-term review.

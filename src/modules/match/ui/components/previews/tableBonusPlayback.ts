@@ -6,6 +6,8 @@ import { orderFromDealerRight } from "@/domain/services/resolveHands";
 import {
   appendPerfectTableAward,
   appendTableBonusHighlight,
+  tableBonusFrameOpacity,
+  tableBonusFrameFilter,
 } from "../flow/tableBonus/tableBonusChoreography";
 import type { TableBonusEffects } from "../flow/tableBonus/tableBonusEffects";
 
@@ -33,8 +35,19 @@ export function tableBonusPlayback(
     for (const card of cards) {
       const qualifies = sourceCards.has(card.dataset.bonusCard!);
       streak = qualifies ? streak + 1 : 0;
-      if (qualifies)
-        gsap.set(card.querySelector("[data-bonus-glow]"), { opacity: 0.25 + streak * 0.17 });
+      if (qualifies) {
+        const firstShine = card.querySelector("[data-bonus-card-shine]");
+        if (firstShine && streak === 1) gsap.set(firstShine, { opacity: 0.22, xPercent: 0 });
+        const frame = card.querySelector("[data-bonus-frame]");
+        if (frame)
+          gsap.set(frame, {
+            opacity: tableBonusFrameOpacity(streak),
+            filter: tableBonusFrameFilter(streak),
+            y: 0,
+            scale: 1,
+            clipPath: "inset(0% 0% 0% 0%)",
+          });
+      }
     }
     if (perfect && matches.length === 4) gsap.set(perfect, { opacity: 1 });
     announce(finalMessage);

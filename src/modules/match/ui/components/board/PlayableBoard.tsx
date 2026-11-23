@@ -14,10 +14,8 @@ import {
   getMatchSeats,
   simulatedGuests,
 } from "../../../application/matchSeats";
-import {
-  CleanTableArtworkPreload,
-  CleanTableCelebration,
-} from "../flow/cleanTable/CleanTableCelebration";
+import { BonusArtworkPreload } from "../flow/awards/BonusArtworkPreload";
+import { CleanTableCelebration } from "../flow/cleanTable/CleanTableCelebration";
 import { useCleanTableFeedback } from "../flow/cleanTable/useCleanTableFeedback";
 import { MatchMotionLayer } from "../flow/MatchMotionLayer";
 import { MatchPointsLayer } from "../flow/MatchPointsLayer";
@@ -125,7 +123,7 @@ export function PlayableBoard({
   return (
     <>
       <div ref={presentationRoot} className="absolute inset-0" inert={returning || finished}>
-        <CleanTableArtworkPreload />
+        <BonusArtworkPreload />
         <h1 className="sr-only">{title}</h1>
         <div
           ref={hud}
@@ -215,7 +213,7 @@ export function PlayableBoard({
                   cards={bonus.session.cards}
                 />
               )}
-              <PerfectTableAward award={bonus.session.deal.award} reducedMotion={reducedMotion} />
+              <PerfectTableAward award={bonus.session.deal.award} />
             </>
           )}
           {!returning && clean.award && <CleanTableCelebration award={clean.award} />}

@@ -88,7 +88,7 @@ export function MatchTableCards({
   return (
     <ul
       aria-label="Cards on the table"
-      className="pointer-events-none absolute top-[55%] left-1/2 grid -translate-1/2 grid-cols-[repeat(var(--table-columns),var(--match-card-width))] grid-rows-[repeat(var(--table-rows),calc(var(--match-card-width)*88/63))] gap-[clamp(0.25rem,1.2cqmin,0.7rem)] [--match-card-width:clamp(1.4rem,min(12cqh,9cqw),4.65rem)] [--table-columns:6] [--table-rows:2] lg:[--match-card-width:clamp(1.55rem,9.6cqmin,5.75rem)] lg:[--table-columns:4] lg:[--table-rows:3]"
+      className="pointer-events-none absolute top-[55%] left-1/2 grid -translate-1/2 grid-cols-[repeat(var(--table-columns),var(--match-card-width))] grid-rows-[repeat(var(--table-rows),calc(var(--match-card-width)*88/63))] gap-[clamp(0.625rem,2.8cqmin,1.5rem)] [--match-card-width:clamp(1.4rem,min(12cqh,9cqw),4.65rem)] [--table-columns:6] [--table-rows:2] lg:[--match-card-width:clamp(1.55rem,9.6cqmin,5.75rem)] lg:[--table-columns:4] lg:[--table-rows:3]"
     >
       {displayed.map((card) => {
         const key = toCardKey(card);

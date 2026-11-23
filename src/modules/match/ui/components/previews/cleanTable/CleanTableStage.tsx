@@ -8,10 +8,8 @@ import { getMatchSeats } from "../../../../application/matchSeats";
 import { MatchSeatCards, MatchTableCards } from "../../board/MatchBoardCards";
 import { MatchScoreboard } from "../../board/MatchScoreboard";
 import { MatchSeatMarker } from "../../board/MatchSeatMarker";
-import {
-  CleanTableArtworkPreload,
-  CleanTableCelebration,
-} from "../../flow/cleanTable/CleanTableCelebration";
+import { BonusArtworkPreload } from "../../flow/awards/BonusArtworkPreload";
+import { CleanTableCelebration } from "../../flow/cleanTable/CleanTableCelebration";
 import { cleanTablePlayback } from "../../flow/cleanTable/cleanTablePlayback";
 import { MatchMotionLayer } from "../../flow/MatchMotionLayer";
 import { MatchPointsLayer } from "../../flow/MatchPointsLayer";
@@ -89,7 +87,7 @@ export function CleanTableStage({
       data-clean-phase={phase}
       className="[container-type:size] relative isolate h-[clamp(20rem,62vh,44rem)] overflow-hidden rounded-md border bg-card text-card-foreground [&_*]:transition-none"
     >
-      <CleanTableArtworkPreload />
+      <BonusArtworkPreload />
       <div className="pointer-events-none absolute inset-x-2 top-1 z-10 flex justify-center">
         <MatchScoreboard
           state={resolved}

@@ -441,3 +441,19 @@ The two diamonds are now larger, with ivory cores and a gold halo. GSAP staggers
 an outward rotating burst, a smaller rebound, and a second bright twinkle before
 both fade. They remain anchored to the PointsBadge and clear before the unchanged
 one-second handoff. Reduced motion still skips decorative movement entirely.
+
+The shared `ui/components/flow/awards` presentation owns `AwardPlaque`, bonus
+artwork preloads and clean-table glints. Feature choreography remains with its
+respective clean-table or table-bonus flow. Perfect-table feedback reuses the
+plaque with an alpha-masked sweep, a coin pulse and sixteen GSAP round motes;
+clean-table retains its existing diamonds. The perfect-table source window is
+still 1.55 seconds, followed by the normal queued points flight.
+
+Table highlights build from a bright face shine to the illustrated brass frame,
+then heat and flames. Frame entry uses a gradual upward reveal; its shine is
+masked to the runtime artwork. Source-card membership remains domain-owned.
+Decoration images are excluded from face measurement so enlarged frame corners
+do not change flying-card targets. The parent board owns fallback visibility;
+late motion-context cleanup cannot hide a landed card. Reduced motion restores
+static frame geometry, and score arrival clears persistent decoration. Focused
+measurement, motion, playback and interruption tests cover these boundaries.

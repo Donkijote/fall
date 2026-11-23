@@ -7,6 +7,7 @@ import { useReducedMotion } from "@/infrastructure/ui/hooks/useGamePreferences";
 import type { MatchFrame } from "../../../application/localMatch";
 import { tableBonusPreview } from "../../../application/tableBonusPreview";
 import { MatchScoreboard } from "../board/MatchScoreboard";
+import { BonusArtworkPreload } from "../flow/awards/BonusArtworkPreload";
 import { MatchPointsLayer } from "../flow/MatchPointsLayer";
 import { PerfectTableAward } from "../flow/tableBonus/PerfectTableAward";
 import { TableBonusDecoration } from "../flow/tableBonus/TableBonusDecoration";
@@ -67,9 +68,12 @@ export function TableBonusTable({
   useLayoutEffect(() => {
     if (!effectsCleared || !board.current) return;
     const context = gsap.context(() => {
-      gsap.set("[data-bonus-glow], [data-bonus-sheen], [data-bonus-burst], [data-perfect-award]", {
-        opacity: 0,
-      });
+      gsap.set(
+        "[data-bonus-frame], [data-bonus-card-shine], [data-bonus-sheen], [data-perfect-award]",
+        {
+          opacity: 0,
+        },
+      );
       for (const effect of effects) {
         gsap.set(effect.heat.current.strength, { value: 0 });
         gsap.set(effect.flame.current, { value: 0 });
@@ -82,8 +86,9 @@ export function TableBonusTable({
   return (
     <div
       ref={board}
-      className="relative isolate grid min-h-[26rem] grid-rows-[auto_auto_1fr_auto] gap-6 overflow-hidden rounded-md border bg-card p-4 text-card-foreground sm:p-6 [&_*]:transition-none"
+      className="[container-type:inline-size] relative isolate grid min-h-[26rem] grid-rows-[auto_auto_1fr_auto] gap-6 overflow-hidden rounded-md border bg-card p-4 text-card-foreground sm:p-6 [&_*]:transition-none"
     >
+      <BonusArtworkPreload />
       <div className="flex justify-center">
         <MatchScoreboard
           state={resolved}
@@ -100,7 +105,7 @@ export function TableBonusTable({
       </div>
       <ol
         aria-label="Opening table pattern"
-        className="mx-auto grid w-full max-w-lg grid-cols-4 items-center gap-3 sm:gap-6"
+        className="mx-auto grid w-full max-w-lg grid-cols-4 items-center gap-6"
       >
         {resolved.table.map((card, index) => {
           const key = `${card.suit}-${card.rank}`;
@@ -145,7 +150,7 @@ export function TableBonusTable({
       {playing && !reducedMotion && !effectsCleared && (
         <TableBonusFlames board={board} effects={effects} cards={resolved.table} />
       )}
-      <PerfectTableAward award={award} reducedMotion={reducedMotion} />
+      <PerfectTableAward award={award} />
       <MatchPointsLayer
         board={board}
         award={points.pending[0]}

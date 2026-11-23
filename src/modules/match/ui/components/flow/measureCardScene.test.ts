@@ -65,3 +65,27 @@ it.each(["1vs1", "1vs2", "2vs2"] as const)(
     expect(measureCardScene(root, frame)).toBeUndefined();
   },
 );
+
+it("measures the card face instead of its larger illustrated decoration", () => {
+  const state = createMatchState("local", "1vs1");
+  state.players[0].hand = [{ suit: "coins", rank: 3 }];
+  const frame: MatchFrame = { state, motion: { kind: "play", player: "local", card: "coins-3" } };
+  const root = document.createElement("div");
+  root.getBoundingClientRect = () => rect(0, 0, 568, 320);
+  const hand = element(root, "hand-card", "coins-3", rect(320, 200, 40, 56));
+  const handArt = document.createElement("img");
+  handArt.alt = "ThreeOfCoins";
+  handArt.getBoundingClientRect = () => rect(320, 200, 40, 56);
+  hand.append(handArt);
+  const landing = element(root, "table-card", "coins-3", rect(200, 100, 40, 56));
+  const decoration = document.createElement("img");
+  decoration.dataset.cardDecoration = "";
+  decoration.getBoundingClientRect = () => rect(195, 93, 50, 70);
+  const face = document.createElement("img");
+  face.getBoundingClientRect = () => rect(200, 100, 40, 56);
+  landing.append(decoration, face);
+  const measured = measureCardScene(root, frame)!;
+  if (measured.scene.kind !== "play") throw new Error("Expected play scene");
+  expect(measured.scene.targetSize).toBeCloseTo((56 * viewHeight) / 320 / 2.88);
+  expect(measured.scene.target.x).toBeCloseTo(((220 - 284) * viewHeight) / 320);
+});

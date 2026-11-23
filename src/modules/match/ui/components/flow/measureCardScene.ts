@@ -42,7 +42,9 @@ export function measureCardScene(root: Element, frame: MatchFrame) {
     key: Parameters<typeof cards.get>[0],
     faceUp: boolean,
   ): SceneCard => {
-    const rect = (element.querySelector("img") ?? element).getBoundingClientRect();
+    const rect = (
+      element.querySelector("img:not([data-card-decoration])") ?? element
+    ).getBoundingClientRect();
     const angle = measureAngle(element);
     // A rotated card's bounding box is taller than the card itself.
     const height =

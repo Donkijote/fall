@@ -81,10 +81,10 @@ it.each(["1vs1", "1vs2", "2vs2"] as const)(
     view.rerender(tree(frames[1]));
     expect(document.querySelectorAll("[data-score-award]")).toHaveLength(1);
     expect(
-      [...document.querySelectorAll("[data-bonus-glow]")].map((node) =>
+      [...document.querySelectorAll("[data-bonus-frame]")].map((node) =>
         Number(gsap.getProperty(node, "opacity")),
       ),
-    ).toEqual([0.42, 0.59, 0.76, 0.93]);
+    ).toEqual([0, 0.9, 0.95, 1]);
     expect(busy).toHaveBeenLastCalledWith(true);
     act(() => {
       timelines.at(-1)!.progress(1);
@@ -97,7 +97,7 @@ it.each(["1vs1", "1vs2", "2vs2"] as const)(
       });
     }
     expect(
-      [...document.querySelectorAll("[data-bonus-glow]")].every(
+      [...document.querySelectorAll("[data-bonus-frame]")].every(
         (node) => Number(gsap.getProperty(node, "opacity")) === 0,
       ),
     ).toBe(true);
@@ -110,7 +110,7 @@ it.each(["1vs1", "1vs2", "2vs2"] as const)(
       tree({ state: frames[1].state, motion: { kind: "play", player: "local", card: "coins-7" } }),
     );
     expect(
-      [...document.querySelectorAll("[data-bonus-glow]")].every(
+      [...document.querySelectorAll("[data-bonus-frame]")].every(
         (node) => Number(gsap.getProperty(node, "opacity")) === 0,
       ),
     ).toBe(true);
@@ -143,7 +143,7 @@ it.each(["winning", "none", "broken"] as const)(
     expect(busy).toHaveBeenLastCalledWith(false);
     expect(document.querySelector("[data-perfect-award]")).toBeNull();
     expect(
-      [...document.querySelectorAll("[data-bonus-glow]")].every(
+      [...document.querySelectorAll("[data-bonus-frame]")].every(
         (node) => Number(gsap.getProperty(node, "opacity")) === 0,
       ),
     ).toBe(true);
