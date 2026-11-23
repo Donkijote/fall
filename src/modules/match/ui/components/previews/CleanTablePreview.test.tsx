@@ -53,6 +53,7 @@ it("waits for capture and celebration before sending exactly one clean-table awa
   act(() => motion.complete!());
   expect(document.querySelectorAll("[data-table-card]")).toHaveLength(0);
   expect(document.querySelector("[data-clean-award]")).toHaveTextContent("+4");
+  expect(document.querySelector("[data-clean-award]")).not.toHaveTextContent("You");
   const celebration = timelines.at(-1)!;
   act(() => {
     celebration.time(0.5);

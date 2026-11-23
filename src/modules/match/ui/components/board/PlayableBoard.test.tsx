@@ -1,9 +1,10 @@
 import gsap from "gsap";
 import { StrictMode } from "react";
 
-import { act, cleanup, render } from "@testing-library/react";
+import { act, cleanup, fireEvent, render } from "@testing-library/react";
 
 import type { OpeningTablePlayback } from "../../../adapters/three/matchCardScene";
+import { cleanTablePreview } from "../../../application/cleanTablePreview";
 import { openDeal, type MatchFrame } from "../../../application/localMatch";
 import { tableBonusPreview } from "../../../application/tableBonusPreview";
 import { PlayableBoard } from "./PlayableBoard";
@@ -29,6 +30,7 @@ afterEach(() => {
   cleanup();
   gsap.globalTimeline.clear();
   vi.restoreAllMocks();
+  vi.useRealTimers();
 });
 
 it.each(["1vs1", "1vs2", "2vs2"] as const)(
@@ -48,7 +50,7 @@ it.each(["1vs1", "1vs2", "2vs2"] as const)(
       paused: false,
       close: vi.fn(),
       leaveControl: null,
-      openingFeedbackBusy: busy,
+      bonusFeedbackBusy: busy,
     };
     const tree = (frame: MatchFrame) => (
       <StrictMode>
@@ -132,7 +134,7 @@ it.each(["winning", "none", "broken"] as const)(
       paused: false,
       close: vi.fn(),
       leaveControl: null,
-      openingFeedbackBusy: busy,
+      bonusFeedbackBusy: busy,
     };
     const view = render(<PlayableBoard {...props} frame={{ state: before }} />);
     view.rerender(<PlayableBoard {...props} frame={frames[0]} />);
@@ -147,3 +149,144 @@ it.each(["winning", "none", "broken"] as const)(
     ).toBe(true);
   },
 );
+
+it.each(["1vs1", "1vs2", "2vs2"] as const)(
+  "celebrates real clean-table and compound Fall awards once after capture (%s)",
+  (mode) => {
+    vi.useFakeTimers();
+    const fixture = cleanTablePreview({ mode, example: "fall", player: 1 });
+    const busy = vi.fn();
+    const submit = vi.fn();
+    const props = {
+      mode,
+      title: "Table",
+      player: { name: "Traveller" },
+      act: submit,
+      completeMotion: vi.fn(),
+      reducedMotion: false,
+      returning: false,
+      paused: false,
+      close: vi.fn(),
+      leaveControl: null,
+      bonusFeedbackBusy: busy,
+    };
+    const tree = (frame: MatchFrame) => (
+      <StrictMode>
+        <PlayableBoard {...props} frame={frame} />
+      </StrictMode>
+    );
+    const view = render(tree({ state: fixture.before }));
+    view.rerender(tree(fixture.capture));
+    expect(document.querySelector("[data-clean-award]")).toBeNull();
+    expect(document.querySelector("[data-score-award]")).toBeNull();
+    view.rerender(tree({ state: fixture.resolved }));
+    expect(document.querySelector("[data-clean-award]")).toHaveTextContent("+4");
+    expect(document.querySelectorAll("[data-table-card]")).toHaveLength(0);
+    expect(document.querySelector("[data-score-award]")).toBeNull();
+    expect(busy).toHaveBeenLastCalledWith(true);
+    const hand = document.querySelector<HTMLButtonElement>('[data-match-hand="local"] button')!;
+    expect(hand).toHaveAttribute("aria-disabled", "true");
+    fireEvent.click(hand);
+    expect(submit).not.toHaveBeenCalled();
+    const celebration = timelines.at(-1)!;
+    act(() => {
+      celebration.time(0.65);
+    });
+    expect(document.querySelector("[data-score-award]")).toBeNull();
+    act(() => {
+      celebration.progress(1);
+    });
+    expect(document.querySelector("[data-clean-award]")).toBeNull();
+    expect(document.querySelector("[data-score-award]")).toHaveTextContent("+4");
+    view.rerender(tree({ state: { ...fixture.resolved } }));
+    expect(document.querySelector("[data-clean-award]")).toBeNull();
+    act(() => {
+      timelines.at(-1)!.progress(1);
+    });
+    expect(document.querySelector("[data-score-award]")).toHaveTextContent("+1");
+    expect(busy).toHaveBeenLastCalledWith(true);
+    act(() => {
+      timelines.at(-1)!.progress(1);
+    });
+    expect(document.querySelector("[data-score-award]")).toBeNull();
+    expect(busy).toHaveBeenLastCalledWith(true);
+    act(() => {
+      vi.advanceTimersByTime(300);
+    });
+    expect(busy).toHaveBeenLastCalledWith(false);
+    expect(document.querySelector("[data-clean-sweep]")).toBeNull();
+  },
+);
+
+it.each(["last-round", "no-clear", "winning"] as const)(
+  "keeps excluded and winning live feedback authoritative (%s)",
+  (example) => {
+    vi.useFakeTimers();
+    const fixture = cleanTablePreview({ mode: "1vs1", example, player: 0 });
+    const props = {
+      mode: "1vs1" as const,
+      title: "Table",
+      player: { name: "Traveller" },
+      act: vi.fn(),
+      completeMotion: vi.fn(),
+      reducedMotion: false,
+      returning: false,
+      paused: false,
+      close: vi.fn(),
+      leaveControl: null,
+    };
+    const view = render(<PlayableBoard {...props} frame={{ state: fixture.before }} />);
+    view.rerender(<PlayableBoard {...props} frame={fixture.capture} />);
+    view.rerender(<PlayableBoard {...props} frame={{ state: fixture.resolved }} />);
+    expect(document.querySelector("[data-match-result]")).toBeNull();
+    if (example !== "winning") {
+      expect(document.querySelector("[data-clean-award]")).toBeNull();
+      expect(document.querySelector("[data-score-award]")).toBeNull();
+      return;
+    }
+    expect(document.querySelector("[data-clean-award]")).toHaveTextContent("+4");
+    act(() => {
+      timelines.at(-1)!.progress(1);
+    });
+    expect(document.querySelector("[data-match-result]")).toBeNull();
+    act(() => {
+      timelines.at(-1)!.progress(1);
+    });
+    act(() => {
+      vi.advanceTimersByTime(300);
+    });
+    expect(document.querySelector("[data-match-result]")).not.toBeNull();
+  },
+);
+
+it("cancels clean-table feedback on a reconnect snapshot without replay or a late score", () => {
+  const fixture = cleanTablePreview({ mode: "1vs1", example: "capture", player: 0 });
+  const busy = vi.fn();
+  const props = {
+    mode: "1vs1" as const,
+    title: "Table",
+    player: { name: "Traveller" },
+    act: vi.fn(),
+    completeMotion: vi.fn(),
+    reducedMotion: false,
+    returning: false,
+    paused: false,
+    close: vi.fn(),
+    leaveControl: null,
+    bonusFeedbackBusy: busy,
+  };
+  const view = render(<PlayableBoard {...props} frame={{ state: fixture.before }} />);
+  view.rerender(<PlayableBoard {...props} frame={{ state: fixture.resolved }} />);
+  const celebration = timelines.at(-1)!;
+  act(() => {
+    celebration.time(0.4);
+  });
+  view.rerender(<PlayableBoard {...props} frame={{ state: fixture.resolved, snapshot: true }} />);
+  expect(celebration.parent).toBeNull();
+  expect(document.querySelector("[data-clean-award]")).toBeNull();
+  expect(document.querySelector("[data-score-award]")).toBeNull();
+  expect(busy).toHaveBeenLastCalledWith(false);
+  view.rerender(<PlayableBoard {...props} frame={{ state: fixture.resolved }} />);
+  expect(document.querySelector("[data-clean-award]")).toBeNull();
+  expect(document.querySelector("[data-score-award]")).toBeNull();
+});

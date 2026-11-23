@@ -9,6 +9,7 @@ const sourceRoot = "https://github.com/Donkijote/fall/blob/develop/";
 const evidencePages: Record<string, string> = {
   hall: "docs/design/home-lobby/prompts.json",
   tavern: "docs/design/tavern-match/prompts.json",
+  "clean-table-plaque": "docs/design/tavern-match/prompts.json",
   archive: "docs/design/how-to-play/prompts.json",
   sings: "docs/design/sings-reference/prompts.json",
   controls: "src/components/README.md",
@@ -140,6 +141,18 @@ const artworkRecords: ArtworkRecord[] = [
     evidence:
       "docs/design/tavern/prompts.json; docs/design/tavern-match/prompts.json (includes supplied references)",
     provenance: "generated",
+  },
+  {
+    id: "clean-table-plaque",
+    name: "Clean-table bonus plaque",
+    creator: "Generated with OpenAI image_gen for Fall",
+    files: ["src/assets/lobby/tavern-match/clean-table-plaque.webp"],
+    provenance: "generated",
+    licenseStatus: "provider-terms-pending",
+    evidence:
+      "Generated and approved 2026-11-23 using built-in image_gen; model ID is not exposed. The edit used the shipped brass frame, seat plaque and primary-button artwork as direct style references. Original prompt, final refinement, references, selected master and export: docs/design/tavern-match/prompts.json. The rejected first draft is not shipped. Provider-term review is separate and pending.",
+    modifications:
+      "Resized the selected standalone 1536 × 1024 master to 768 × 512 WebP at quality 87 with alpha quality 100; preserved the full composition and transparency without cropping, recoloring or painted labels.",
   },
   {
     id: "archive",

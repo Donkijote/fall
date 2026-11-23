@@ -101,8 +101,9 @@ settings, `TableBonusTable` composes the board and score handoff, and
 Verification: fixture tests cover format/pattern/order/dealer combinations and
 winning results; playback tests cover per-card intensity, escalating lift/burst/sheen, nonwinners, reduced
 motion and interruption; preview integration tests cover Strict Mode, score
-handoff, reset and unmount. Manual theme/responsive review and approval remain
-pending, as do the clean-table study and live-match integration under #136.
+handoff, reset and unmount. Theme/responsive reviews and user approval are
+recorded in the match/design notes; the clean-table study and both live bonus
+treatments are now implemented under #136.
 
 `TableBonusFlames` is a decorative orthographic R3F overlay, aligned with live
 card rectangles each frame. GSAP owns its mutable channels alongside DOM playback,
@@ -131,10 +132,18 @@ It uses the live capture renderer/audio and resolved play service before a propo
 one-second gold clearing sweep and “Clean table!” PointsBadge reveal. The ordinary
 points flight then credits the scoreboard. Fall points remain a separate queued
 award. Excluded final-round clears and captures leaving cards behind show no
-clean-table celebration. This is a playground proposal awaiting visual review;
-live-match celebration adoption remains pending.
+clean-table celebration. The approved treatment is shared with the live match
+under `match/ui/components/flow/cleanTable`; timing and artwork stay identical.
 
 The catalog adds this composed preview without adding a command to the shared
 3D lab state machine. Its capture, reward and points owners dispose on settings
 changes or leaving the study. Tests and browser verification are recorded in the
 [match module notes](../match/README.md#clean-table-playground-prototype-136).
+
+The clean-table preview also uses the approved dark bonus plaque from the live
+match, with a preloaded runtime image, live ivory title and points.
+The gold sweep and one-second points handoff retain the approved timing.
+
+The plaque omits a bottom player caption in the turn-based presentation. Its two
+diamonds now use a brighter, larger GSAP burst and second twinkle around the coin;
+recipient attribution remains available through the existing score announcement.

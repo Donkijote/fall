@@ -347,12 +347,15 @@ bonus amounts, exclusions or winners. Examples cover single capture, cascade,
 Fall plus clear, excluded last-round clear, a capture leaving cards behind, and
 a match-winning clear, in all formats and from every seat.
 
-Supporting UI lives in `ui/components/previews/cleanTable`: controls, stage,
-celebration markup and its GSAP timeline. `CleanTableStage` mounts the existing
+Preview controls and stage live in `ui/components/previews/cleanTable`; shared
+celebration markup and its GSAP timeline live in `ui/components/flow/cleanTable`.
+`CleanTableStage` mounts the existing
 `MatchMotionLayer` after its board ref is attached, preserving the live measured
 capture, card artwork and audio. Once capture finishes it displays the resolved
-empty table, holds score presentation with a motion frame, and runs a gold sweep across the full board width followed by the existing PointsBadge with “Clean table!” and recipient.
-The proposed celebration lasts one second. The existing `MatchPointsLayer` then
+empty table, holds score presentation with a motion frame, and runs a gold sweep
+across the full board width followed by the existing PointsBadge with “Clean table!”
+and recipient.
+The approved celebration lasts one second. The existing `MatchPointsLayer` then
 owns flight and scoreboard arrival. Compound clear/Fall events remain separate
 and ordered; the preview does not invent another score-flight system.
 
@@ -360,8 +363,7 @@ Settings changes, reset, replay and leaving the study unmount the scene and
 revert its GSAP context. The reduce-motion control combines with the persisted
 motion preference, settling source celebration immediately and retaining the
 standard recipient/score announcement. Last-round and non-clearing cases skip
-bonus decoration. This choreography is playground-only pending visual approval;
-the live game still uses its existing clean-table points feedback.
+bonus decoration. The approved choreography is now shared with the live match.
 
 Verification: `cleanTablePreview.test.ts` checks full-deck accounting, real capture
 kinds, award ownership, exclusions, simultaneous Fall points and winner resolution
@@ -374,3 +376,68 @@ on the existing port 3000 covered a single capture at 1440×900, team Fall + cle
 at 844×390 in dark theme, free-for-all cascade at 568×320, excluded last-round
 clear at 1180×820 in dark theme, and a winning clear at 1440×900. No page errors
 were reported; every completed preview removed its celebration decoration.
+
+## Live clean-table feedback (#136)
+
+`PlayableBoard` consumes the existing authoritative points queue after capture,
+deal and count motion settle. A queued `clear` award first mounts the same full-width
+0.55-second gold sweep and one-second badge celebration as the playground. Its
+amount and recipient come directly from the award. `useCleanTableFeedback` gates
+the ordinary points flight until this source celebration finishes and retains
+feedback ownership until compound awards and the scoreboard tally settle.
+
+`TavernMatch` receives the shared `bonusFeedbackBusy` callback for opening and
+clean-table feedback, pausing simulated turns. Hand actions and winning-result
+presentation honor that same ownership. A clear at the end of a deal waits for
+the queued hand refill before its source/points feedback; refill and celebration
+never overlap. Underlying domain totals, turns and winner resolution remain
+immediate and unchanged. An excluded final-round clear or capture leaving cards
+behind cannot create feedback because there is no queued clear award.
+
+Award IDs are recorded once. Unrelated frame refreshes do not replay a celebration.
+New motion, reconnect snapshots, route leave and unmount cancel and revert GSAP
+contexts; interrupted awards proceed through the existing points owner without
+replaying source feedback. Reduced motion skips the sweep/pop and retains the
+existing immediate recipient/amount/reason announcement. The source celebration
+is DOM-only and has no WebGL dependency; capture retains its existing rendered
+or audio-only fallback before handing off.
+
+`useCleanTableFeedback.test.tsx` covers the source gate, score-settle ownership,
+duplicate delivery, interrupted resume, reduced motion and cleanup.
+`PlayableBoard.test.tsx` verifies all formats, blocked hand actions, capture →
+celebration → clear/Fall flight order, no extra credit on frame refresh, excluded
+clears, winning-result handoff and snapshot cancellation. The shared timeline
+and playground tests remain authoritative for sweep timing, appearance and reset.
+
+Browser checks on port 3000 exercised live capture/source/points playback at
+1440×900 (duel), 844×390 dark (team Fall plus clear), 568×320 (free-for-all cascade),
+1180×820 dark (excluded final-round clear), 932×430 dark (non-clearing capture),
+1440×900 (winning team clear), 667×375 dark (reduced motion), and 1024×768
+(clear followed by hand refill and a separately queued Sing). Sweep width matched
+the viewport in every visible celebration, award IDs appeared once, effects and
+input locks cleared, and no browser page errors were reported. Physical-device
+and native lifecycle certification remains separate.
+
+Supplemental live browser checks covered the remaining standard 1280×720,
+1366×1024 and 1920×1080 layouts with free-for-all, team and duel captures.
+An 844×390 run with WebGL explicitly unavailable retained the audio-only capture
+handoff followed by the full-width DOM celebration and a single points arrival.
+All completed without page errors or retained input locks.
+
+The approved clean-table contrast revision adds a standalone dark plaque behind
+live content in `CleanTableCelebration`. The shared preload component fetches its
+30 KB WebP before capture completes in both the game and preview. The image sits
+behind artwork-title ivory text and the existing PointsBadge; the coin
+remains at the normal flight source (50% horizontal, 48% vertical). Container
+width/height clamps keep the 3:2 artwork inside small landscape boards. The sweep and playback channels are
+unchanged. Artwork master, generation/edit prompts and reference roles are in
+`docs/design/tavern-match`; generated provenance is in the credits inventory.
+Browser checks on the actual wood background covered 568×320, 844×390 dark,
+1180×820 and 1440×900, verifying containment, preload, source alignment and cleanup.
+
+The turn-based feedback refinement removes the recipient caption from the plaque;
+award metadata and accessible scoreboard announcements still identify the owner.
+The two diamonds are now larger, with ivory cores and a gold halo. GSAP staggers
+an outward rotating burst, a smaller rebound, and a second bright twinkle before
+both fade. They remain anchored to the PointsBadge and clear before the unchanged
+one-second handoff. Reduced motion still skips decorative movement entirely.

@@ -14,6 +14,11 @@ import {
   getMatchSeats,
   simulatedGuests,
 } from "../../../application/matchSeats";
+import {
+  CleanTableArtworkPreload,
+  CleanTableCelebration,
+} from "../flow/cleanTable/CleanTableCelebration";
+import { useCleanTableFeedback } from "../flow/cleanTable/useCleanTableFeedback";
 import { MatchMotionLayer } from "../flow/MatchMotionLayer";
 import { MatchPointsLayer } from "../flow/MatchPointsLayer";
 import { PerfectTableAward } from "../flow/tableBonus/PerfectTableAward";
@@ -38,7 +43,7 @@ export function PlayableBoard({
   paused,
   close,
   leaveControl,
-  openingFeedbackBusy,
+  bonusFeedbackBusy,
 }: {
   mode: GameMode;
   title: string;
@@ -51,7 +56,7 @@ export function PlayableBoard({
   paused: boolean;
   close: () => void;
   leaveControl: ReactNode;
-  openingFeedbackBusy?: (busy: boolean) => void;
+  bonusFeedbackBusy?: (busy: boolean) => void;
 }) {
   const presentationRoot = useRef<HTMLDivElement>(null);
   const points = useScorePresentation(frame, reducedMotion);
@@ -59,10 +64,18 @@ export function PlayableBoard({
   const scope = useRef<HTMLDivElement>(null);
   const restoreHandFocus = useRef(false);
   const bonus = useOpeningTableBonus(frame, scope, reducedMotion, returning);
-  useLayoutEffect(() => {
-    openingFeedbackBusy?.(bonus.busy);
-  }, [bonus.busy, openingFeedbackBusy]);
   const { state, motion } = frame;
+  const clean = useCleanTableFeedback(
+    points.pending[0],
+    points.busy,
+    scope,
+    reducedMotion,
+    returning || Boolean(motion) || Boolean(frame.snapshot),
+  );
+  const feedbackBusy = bonus.busy || clean.busy;
+  useLayoutEffect(() => {
+    bonusFeedbackBusy?.(feedbackBusy);
+  }, [feedbackBusy, bonusFeedbackBusy]);
   const seats = getMatchSeats(mode);
   const activePlayer = getActiveSeatPlayer(frame);
   const landing =
@@ -74,11 +87,11 @@ export function PlayableBoard({
   const canPlay =
     !returning &&
     !motion &&
-    !bonus.busy &&
+    !feedbackBusy &&
     !paused &&
     state.phase === "play" &&
     state.currentPlayer === localPlayerId;
-  const finished = !motion && !points.busy && state.phase === "gameOver";
+  const finished = !motion && !points.busy && !clean.busy && state.phase === "gameOver";
 
   useGSAP(
     () => {
@@ -112,6 +125,7 @@ export function PlayableBoard({
   return (
     <>
       <div ref={presentationRoot} className="absolute inset-0" inert={returning || finished}>
+        <CleanTableArtworkPreload />
         <h1 className="sr-only">{title}</h1>
         <div
           ref={hud}
@@ -204,6 +218,7 @@ export function PlayableBoard({
               <PerfectTableAward award={bonus.session.deal.award} reducedMotion={reducedMotion} />
             </>
           )}
+          {!returning && clean.award && <CleanTableCelebration award={clean.award} />}
           <MatchMotionLayer
             board={scope}
             frame={frame}
@@ -217,7 +232,7 @@ export function PlayableBoard({
         </div>
         <MatchPointsLayer
           board={presentationRoot}
-          award={points.pending[0]}
+          award={clean.hold ? undefined : points.pending[0]}
           reducedMotion={reducedMotion}
           returning={returning}
           sideName={sideName}
@@ -234,10 +249,12 @@ export function PlayableBoard({
           className={cn(
             "pointer-events-none absolute inset-x-4 top-[23%] z-30 mx-auto w-fit max-w-[calc(100%-2rem)] rounded-md bg-background/90 px-3 py-2 text-center text-sm text-foreground shadow-md",
             !reducedMotion && "sr-only",
-            !points.announcement && "sr-only",
+            !points.announcement && !clean.award && "sr-only",
           )}
         >
-          {points.announcement}
+          {clean.award
+            ? `Clean table! ${sideName(clean.award.side)} +${clean.award.amount} points.`
+            : points.announcement}
         </p>
       </div>
       {finished && (

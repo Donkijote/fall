@@ -352,3 +352,63 @@ The subsequent 2026-11-23 pacing review lengthens the gold sweep from 0.32 to
 celebration now lasts one second before points travel. The subsequent width revision expands the sweep from edge to edge across the
 preview board while retaining its central vertical band. The badge stays centred,
 and the sweep remains independent of the table-slot grid.
+
+### Live clean-table adoption — 2026-11-23
+
+The user approved the wider, slower gold sweep and requested live adoption. The
+actual game now uses the same full-screen-width central sweep, “Clean table!”
+badge/recipient reveal and two brass glints as the playground. The sweep lasts
+0.55 seconds; the whole source celebration lasts one second before the existing
+points flight. It appears after capture/queued deal motion, and clean-table/Fall
+awards remain separate flights. Player and bot input waits through feedback and
+score settling; winning results appear after arrival. Final-round excluded clears
+and non-clearing captures produce no new feedback. Reduced motion retains the
+immediate points announcement. Reconnect/leave/unmount cancel decoration.
+
+Live browser checks covered 568×320, 667×375, 844×390, 932×430, 1024×768,
+1180×820 and 1440×900 across all formats, both themes, compound Fall points,
+excluded clears, winning clears, reduced motion and hand refill with a Sing.
+The sweep spanned each tested viewport; effects and input locks cleared after
+scoring, with no page errors. No new assets or palette tokens were introduced.
+
+Supplemental verification covered 1280×720, 1366×1024 and 1920×1080, completing
+the supported browser viewport targets. An explicit no-WebGL run at 844×390
+also preserved capture audio, the gold sweep and exactly one points flight.
+
+### Clean-table contrast artwork — 2026-11-23
+
+The user found that the bare heading and coin did not read clearly against the
+wooden table. The initial yellow-gold plaque draft was rejected because its
+broad hammered frame differed from Fall's shipped borders. The user approved
+the revised dark charcoal plaque with slimmer bronze/brass rails, fine corner
+leaves and a small blank-card crest, generated with the existing brass frame,
+seat plaque and primary-button artwork as direct image references.
+
+The approved [standalone master](clean-table-plaque.png) is retained at 1536×1024;
+the runtime WebP is 768×512 with alpha and is about 30 KB. The game and playground
+share the same artwork-backed celebration. Heading and recipient now use the
+existing artwork-foreground token; the Cinzel title, PointsBadge and real award
+values remain live DOM content. The coin stays anchored at the existing points
+flight source. Width and height clamps keep the plaque inside small landscape
+boards, and the image preloads before feedback starts. The full-width gold sweep,
+its 0.55-second duration, one-second handoff, reduced motion and award queue are
+unchanged. No global palette or frame token was added.
+
+Browser checks against the actual wooden table at 568×320, 844×390 dark,
+1180×820 and 1440×900 verified readable text, contained content, a decoded image
+before reveal, points-source alignment, successful arrival and effect/input-lock
+cleanup without page errors. Generation and export details are in
+[prompts.json](prompts.json), with a matching credits-inventory record. The
+rejected draft is not part of the approved design tree or shipped credits.
+
+The subsequent 2026-11-23 turn-based review removes the bottom recipient name from
+the clean-table plaque. The title and earned points remain the visual focus;
+accessible score announcements retain award ownership. The two diamonds around
+the coin are larger, with ivory cores, soft gold halos, and staggered GSAP motion:
+an outward rotating burst, rebound, second bright twinkle and fade. The gold
+sweep and one-second points handoff are unchanged. No new artwork was generated.
+
+The diamond revision was checked in the desktop playground: both bright bursts
+remain inside the plaque, and no player caption appears under the coin. Focused
+timeline tests verify both peaks, outward motion, final fade and interruption
+rollback; existing live/preview handoff and reduced-motion tests still pass.
