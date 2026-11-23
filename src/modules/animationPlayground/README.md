@@ -116,3 +116,9 @@ final points-flight arrival clears all source halos, sheen, bursts, heat and fla
 and unmounts the decorative canvas while leaving dealt cards and scores visible.
 Reduced motion clears decorations immediately after its immediate score arrival.
 The preview integration test checks highlights survive until arrival and then clear.
+
+The approved source treatment is now shared with the live match under
+`match/ui/components/flow/tableBonus`: decoration, highlight timeline,
+perfect-table award and heat/flame renderer. The playground keeps its deterministic
+settings and DOM-deal fixture; the game uses its existing rendered-card, audio and
+input-lock owner for the opening deal. Both call the same highlight choreography.

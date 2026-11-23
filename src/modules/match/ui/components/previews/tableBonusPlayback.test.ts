@@ -1,7 +1,7 @@
 import gsap from "gsap";
 
 import { tableBonusPreview } from "../../../application/tableBonusPreview";
-import { createTableBonusEffects } from "./tableBonusEffects";
+import { createTableBonusEffects } from "../flow/tableBonus/tableBonusEffects";
 import { tableBonusPlayback } from "./tableBonusPlayback";
 
 function setup(example: "perfect" | "partial" | "broken" | "none", reduced = false) {

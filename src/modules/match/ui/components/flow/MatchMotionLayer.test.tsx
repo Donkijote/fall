@@ -309,3 +309,56 @@ it("stops a started but stalled sequence without replaying its sounds", async ()
   expect(mocks.audio.stop).toHaveBeenCalledOnce();
   expect(view.complete).toHaveBeenCalledOnce();
 });
+
+it("reveals each opening source at its landing and restores visibility on interruption", async () => {
+  vi.stubGlobal("WebGL2RenderingContext", class {});
+  const board = { current: document.createElement("div") };
+  const card = document.createElement("div");
+  card.dataset.tableCard = "coins-1";
+  board.current.append(card);
+  const scene: CardScene = { kind: "deal", deck: { x: 0, y: 0, z: 0 }, deckSize: 1, cards: [] };
+  mocks.measure.mockReturnValue({ scene, hidden: [card] });
+  const complete = vi.fn();
+  const openingTable = {
+    land: vi.fn((timeline: gsap.core.Timeline) => timeline.to({}, { duration: 0.6 })),
+    celebrate: vi.fn(),
+  };
+  const current: MatchFrame = {
+    state,
+    motion: {
+      kind: "deal",
+      dealer: "local",
+      cards: ["coins-1"],
+      openingTable: { cards: ["coins-1"] },
+    },
+  };
+  const view = render(
+    <MatchMotionLayer
+      board={board}
+      frame={current}
+      reducedMotion={false}
+      returning={false}
+      complete={complete}
+      openingTable={openingTable}
+    />,
+  );
+  await act(async () => {});
+  expect(card.style.visibility).toBe("hidden");
+  const playback = mocks.channel!.getSnapshot()!;
+  const timeline = gsap.timeline({ paused: true });
+  const context = gsap.context(() => {
+    timeline.to({}, { duration: 0.72 });
+    playback.openingTable!.land(timeline, "coins-1");
+    playback.openingTable!.celebrate(timeline);
+  });
+  timeline.time(0.7);
+  expect(card.style.visibility).toBe("hidden");
+  timeline.time(0.73);
+  expect(card.style.visibility).toBe("visible");
+  expect(openingTable.land).toHaveBeenCalledOnce();
+  expect(openingTable.celebrate).toHaveBeenCalledOnce();
+  context.revert();
+  view.unmount();
+  expect(card.style.visibility).toBe("");
+  expect(complete).not.toHaveBeenCalled();
+});

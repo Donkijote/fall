@@ -9,7 +9,11 @@ function cardHash(key: CardKey) {
   return hash >>> 0;
 }
 
-export function placeTableCards(previous: TableSlots, keys: readonly CardKey[]): TableSlots {
+export function placeTableCards(
+  previous: TableSlots,
+  keys: readonly CardKey[],
+  opening = false,
+): TableSlots {
   if (previous.size === keys.length && keys.every((key) => previous.has(key))) return previous;
 
   const next = new Map<CardKey, number>();
@@ -18,6 +22,10 @@ export function placeTableCards(previous: TableSlots, keys: readonly CardKey[]):
     if (slot !== undefined) next.set(key, slot);
   }
 
+  if (opening) {
+    const openingSlots = [1, 2, 5, 6];
+    keys.slice(0, 4).forEach((key, index) => next.set(key, openingSlots[index]));
+  }
   const taken = new Set(next.values());
   for (const key of keys) {
     if (next.has(key)) continue;
@@ -31,4 +39,10 @@ export function placeTableCards(previous: TableSlots, keys: readonly CardKey[]):
     }
   }
   return next;
+}
+
+// Preserve one logical slot map across both responsive grid shapes. The centre
+// four slots form the same reading-order 2×2 block in 4×3 and 6×2 layouts.
+export function wideTableSlot(slot: number) {
+  return [0, 2, 3, 1, 4, 8, 9, 5, 6, 7, 10, 11][slot];
 }

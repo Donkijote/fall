@@ -1,7 +1,7 @@
 import type { CountingSnapshot } from "@/components/cards/motion/cardCounting";
 import type { CardAnchor, CardPoint } from "@/components/cards/motion/cardFlights";
 import type { CardMotionAudio, CaptureKind } from "@/components/cards/motion/cardTimelines";
-import type { Card } from "@/domain/entities/Card";
+import type { Card, CardKey } from "@/domain/entities/Card";
 
 export type SceneCard = {
   art?: Card;
@@ -38,7 +38,13 @@ export type CardScene =
 export const viewHeight = 6.1;
 export const cardPitch = 0.0075;
 
+export type OpeningTablePlayback = {
+  land: (timeline: gsap.core.Timeline, key: CardKey) => void;
+  celebrate: (timeline: gsap.core.Timeline) => void;
+};
+
 export type PlaybackProps = {
+  openingTable?: OpeningTablePlayback;
   scene: CardScene;
   countSpeed?: number;
   audio: CardMotionAudio;

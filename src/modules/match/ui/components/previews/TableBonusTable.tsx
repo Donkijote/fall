@@ -1,7 +1,6 @@
 import gsap from "gsap";
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 
-import { PointsBadge } from "@/components/cards/PointsBadge";
 import { SuitGlyph } from "@/components/cards/SuitGlyph";
 import { useReducedMotion } from "@/infrastructure/ui/hooks/useGamePreferences";
 
@@ -9,10 +8,12 @@ import type { MatchFrame } from "../../../application/localMatch";
 import { tableBonusPreview } from "../../../application/tableBonusPreview";
 import { MatchScoreboard } from "../board/MatchScoreboard";
 import { MatchPointsLayer } from "../flow/MatchPointsLayer";
+import { PerfectTableAward } from "../flow/tableBonus/PerfectTableAward";
+import { TableBonusDecoration } from "../flow/tableBonus/TableBonusDecoration";
+import { createTableBonusEffects } from "../flow/tableBonus/tableBonusEffects";
+import { TableBonusFlames } from "../flow/tableBonus/TableBonusFlames";
 import { useScorePresentation } from "../flow/useScorePresentation";
 import type { TableBonusSettings } from "./TableBonusControls";
-import { createTableBonusEffects } from "./tableBonusEffects";
-import { TableBonusFlames } from "./TableBonusFlames";
 import { tableBonusPlayback } from "./tableBonusPlayback";
 
 const sideName = (side: string) => `Side ${side}`;
@@ -110,30 +111,12 @@ export function TableBonusTable({
                 data-bonus-card={key}
                 className="relative isolate mx-auto aspect-[63/88] w-full max-w-24 rounded-md bg-stone-50 p-1 opacity-0 shadow-md"
               >
-                <span
-                  data-bonus-glow
-                  aria-hidden="true"
-                  className="pointer-events-none absolute -inset-1 -z-10 rounded-md bg-gold/15 opacity-0 shadow-[0_0_14px_2px_var(--gold)] blur-sm"
-                />
+                <TableBonusDecoration />
                 <SuitGlyph
                   suit={card.suit}
                   rank={card.rank}
                   className="size-full object-contain"
                   imgProps={{ loading: "eager" }}
-                />
-                <span
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-0 overflow-hidden rounded-md"
-                >
-                  <span
-                    data-bonus-sheen
-                    className="absolute inset-y-0 left-1/4 w-1/2 -skew-x-12 bg-linear-to-r from-transparent via-gold/70 to-transparent opacity-0"
-                  />
-                </span>
-                <span
-                  data-bonus-burst
-                  aria-hidden="true"
-                  className="pointer-events-none absolute -inset-1 rounded-md border border-gold/80 opacity-0 shadow-[0_0_16px_var(--gold)]"
                 />
               </div>
             </li>
@@ -162,25 +145,7 @@ export function TableBonusTable({
       {playing && !reducedMotion && !effectsCleared && (
         <TableBonusFlames board={board} effects={effects} cards={resolved.table} />
       )}
-      {award?.sourceCards?.length === 4 && (
-        <div
-          data-perfect-award
-          aria-hidden="true"
-          className={
-            reducedMotion
-              ? "pointer-events-none grid justify-items-center gap-5 p-4 text-center opacity-0"
-              : "pointer-events-none absolute inset-0 z-20 grid content-center justify-items-center gap-5 bg-background/90 p-4 text-center opacity-0"
-          }
-        >
-          <h3 className="text-2xl text-primary sm:text-4xl">Perfect table!</h3>
-          <div className="scale-[1.8]">
-            <PointsBadge points={`+${award.amount}`} />
-          </div>
-          <p className="mt-2 text-sm">
-            Dealer {award.player} · Side {award.side}
-          </p>
-        </div>
-      )}
+      <PerfectTableAward award={award} reducedMotion={reducedMotion} />
       <MatchPointsLayer
         board={board}
         award={points.pending[0]}

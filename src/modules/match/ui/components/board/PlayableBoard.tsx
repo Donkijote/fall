@@ -16,6 +16,9 @@ import {
 } from "../../../application/matchSeats";
 import { MatchMotionLayer } from "../flow/MatchMotionLayer";
 import { MatchPointsLayer } from "../flow/MatchPointsLayer";
+import { PerfectTableAward } from "../flow/tableBonus/PerfectTableAward";
+import { TableBonusFlames } from "../flow/tableBonus/TableBonusFlames";
+import { useOpeningTableBonus } from "../flow/tableBonus/useOpeningTableBonus";
 import { useScorePresentation } from "../flow/useScorePresentation";
 import { MatchResult } from "../overlays/MatchResult";
 import { MatchSeatCards, MatchTableCards } from "./MatchBoardCards";
@@ -35,6 +38,7 @@ export function PlayableBoard({
   paused,
   close,
   leaveControl,
+  openingFeedbackBusy,
 }: {
   mode: GameMode;
   title: string;
@@ -47,12 +51,17 @@ export function PlayableBoard({
   paused: boolean;
   close: () => void;
   leaveControl: ReactNode;
+  openingFeedbackBusy?: (busy: boolean) => void;
 }) {
   const presentationRoot = useRef<HTMLDivElement>(null);
   const points = useScorePresentation(frame, reducedMotion);
   const hud = useRef<HTMLDivElement>(null);
   const scope = useRef<HTMLDivElement>(null);
   const restoreHandFocus = useRef(false);
+  const bonus = useOpeningTableBonus(frame, scope, reducedMotion, returning);
+  useLayoutEffect(() => {
+    openingFeedbackBusy?.(bonus.busy);
+  }, [bonus.busy, openingFeedbackBusy]);
   const { state, motion } = frame;
   const seats = getMatchSeats(mode);
   const activePlayer = getActiveSeatPlayer(frame);
@@ -63,7 +72,12 @@ export function PlayableBoard({
           ?.hand.find((card) => toCardKey(card) === motion.card)
       : undefined;
   const canPlay =
-    !returning && !motion && state.phase === "play" && state.currentPlayer === localPlayerId;
+    !returning &&
+    !motion &&
+    !bonus.busy &&
+    !paused &&
+    state.phase === "play" &&
+    state.currentPlayer === localPlayerId;
   const finished = !motion && !points.busy && state.phase === "gameOver";
 
   useGSAP(
@@ -120,7 +134,11 @@ export function PlayableBoard({
           {leaveControl}
         </div>
         <div ref={scope} className="[container-type:size] absolute inset-0">
-          <MatchTableCards cards={state.table} landing={landing} />
+          <MatchTableCards
+            cards={state.table}
+            landing={landing}
+            opening={Boolean(motion?.kind === "deal" && motion.openingTable)}
+          />
           <ul
             aria-label="Table seats"
             className="pointer-events-none absolute inset-[var(--safe-area-top)_var(--safe-area-right)_var(--safe-area-bottom)_var(--safe-area-left)]"
@@ -174,12 +192,27 @@ export function PlayableBoard({
             returning={returning}
             paused={paused}
           />
+          {bonus.session?.deal.award && !bonus.session.cleared && !returning && (
+            <>
+              {!reducedMotion && (
+                <TableBonusFlames
+                  board={scope}
+                  effects={bonus.session.effects}
+                  cards={bonus.session.cards}
+                />
+              )}
+              <PerfectTableAward award={bonus.session.deal.award} reducedMotion={reducedMotion} />
+            </>
+          )}
           <MatchMotionLayer
             board={scope}
             frame={frame}
             reducedMotion={reducedMotion}
             returning={returning}
             complete={completeMotion}
+            openingTable={
+              motion?.kind === "deal" && motion.openingTable ? bonus.playback : undefined
+            }
           />
         </div>
         <MatchPointsLayer
@@ -188,7 +221,11 @@ export function PlayableBoard({
           reducedMotion={reducedMotion}
           returning={returning}
           sideName={sideName}
-          arrive={points.arrive}
+          arrive={(id, message) => {
+            if (points.pending[0]?.id !== id) return;
+            points.arrive(id, message);
+            bonus.clearAward(id);
+          }}
         />
         <p
           role="status"

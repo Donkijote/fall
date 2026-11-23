@@ -1,5 +1,11 @@
 import type { Card, CardKey } from "@/domain/entities/Card";
-import type { DealOrder, GameMode, GameState, TablePattern } from "@/domain/entities/GameState";
+import type {
+  DealOrder,
+  GameMode,
+  GameState,
+  ScoreAward,
+  TablePattern,
+} from "@/domain/entities/GameState";
 import { toCardKey } from "@/domain/helpers/card";
 import { dealRound } from "@/domain/services/deal";
 import { dealerCardSelection, setUpDealerSelection } from "@/domain/services/dealer";
@@ -16,7 +22,12 @@ import { applyCountingRule, getCountingGroups } from "@/domain/services/scoring"
 export const localPlayerId = "local";
 
 export type MatchMotion =
-  | { kind: "deal"; cards: CardKey[]; dealer: string }
+  | {
+      kind: "deal";
+      cards: CardKey[];
+      dealer: string;
+      openingTable?: { cards: CardKey[]; award?: ScoreAward };
+    }
   | { kind: "play"; card: CardKey; player: string }
   | {
       kind: "collect";
@@ -49,7 +60,7 @@ export function startMatch(mode: GameMode): MatchFrame[] {
   return [{ state }];
 }
 
-function dealFrames(state: GameState, table: Card[] = []): MatchFrame[] {
+function dealFrames(state: GameState, table: Card[] = [], award?: ScoreAward): MatchFrame[] {
   const orderedHands = orderFromDealerRight(state).map(
     (id) => state.players.find((player) => player.id === id)!.hand,
   );
@@ -61,7 +72,15 @@ function dealFrames(state: GameState, table: Card[] = []): MatchFrame[] {
   ).map(toCardKey);
   const announced = resolveHands(state);
   return [
-    { state, motion: { kind: "deal", cards, dealer: state.dealer } },
+    {
+      state,
+      motion: {
+        kind: "deal",
+        cards,
+        dealer: state.dealer,
+        ...(table.length ? { openingTable: { cards: table.map(toCardKey), award } } : {}),
+      },
+    },
     { state: { ...announced, phase: announced.phase === "gameOver" ? "gameOver" : "play" } },
   ];
 }
@@ -73,7 +92,10 @@ export function openDeal(
 ): MatchFrame[] {
   if (state.phase !== "dealerChoice") return [];
   const dealt = dealRound(state, { dealOrder, tablePattern, isDealerFirstDeal: true });
-  return dealFrames(dealt, dealt.table);
+  const award = dealt.scoreAwards
+    ?.slice(state.scoreAwards?.length ?? 0)
+    .find((award) => award.reason === "opening");
+  return dealFrames(dealt, dealt.table, award);
 }
 
 export function playMatchCard(state: GameState, player: string, card: Card): MatchFrame[] {

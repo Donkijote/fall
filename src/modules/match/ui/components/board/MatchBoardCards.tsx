@@ -7,9 +7,10 @@ import { SuitGlyph } from "@/components/cards/SuitGlyph";
 import type { Card } from "@/domain/entities/Card";
 import { toCardKey } from "@/domain/helpers/card";
 
+import { TableBonusDecoration } from "../flow/tableBonus/TableBonusDecoration";
 import { MatchHandCard } from "./MatchHandCard";
 import { MatchPlaque } from "./MatchPlaque";
-import { placeTableCards, type TableSlots } from "./tableSlots";
+import { placeTableCards, wideTableSlot, type TableSlots } from "./tableSlots";
 import { useHandReflow } from "./useHandReflow";
 
 const cardStyle =
@@ -70,10 +71,18 @@ function CardStack({
   );
 }
 
-export function MatchTableCards({ cards, landing }: { cards: readonly Card[]; landing?: Card }) {
+export function MatchTableCards({
+  cards,
+  landing,
+  opening = false,
+}: {
+  cards: readonly Card[];
+  landing?: Card;
+  opening?: boolean;
+}) {
   const [previous, setPrevious] = useState<TableSlots>(() => new Map());
   const displayed = landing ? [...cards, landing] : cards;
-  const slots = placeTableCards(previous, displayed.map(toCardKey));
+  const slots = placeTableCards(previous, displayed.map(toCardKey), opening);
   if (slots !== previous) setPrevious(slots);
 
   return (
@@ -85,25 +94,28 @@ export function MatchTableCards({ cards, landing }: { cards: readonly Card[]; la
         const key = toCardKey(card);
         const slot = slots.get(key)!;
         const pending = card === landing;
+        const wideSlot = wideTableSlot(slot);
         return (
           <li
             key={key}
             data-table-card={key}
+            data-bonus-card={key}
             data-table-slot={slot}
             aria-hidden={pending || undefined}
             className={cn(
-              "[grid-area:var(--wide-row)/var(--wide-column)] lg:[grid-area:var(--table-row)/var(--table-column)]",
+              "relative isolate [grid-area:var(--wide-row)/var(--wide-column)] lg:[grid-area:var(--table-row)/var(--table-column)]",
               pending && "invisible",
             )}
             style={
               {
                 "--table-column": (slot % 4) + 1,
                 "--table-row": Math.floor(slot / 4) + 1,
-                "--wide-column": (slot % 6) + 1,
-                "--wide-row": Math.floor(slot / 6) + 1,
+                "--wide-column": (wideSlot % 6) + 1,
+                "--wide-row": Math.floor(wideSlot / 6) + 1,
               } as React.CSSProperties
             }
           >
+            <TableBonusDecoration />
             <CardImage card={card} />
           </li>
         );

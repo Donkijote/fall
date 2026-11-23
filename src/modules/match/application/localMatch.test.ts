@@ -11,6 +11,7 @@ import {
   startMatch,
   type MatchFrame,
 } from "./localMatch";
+import { tableBonusPreview } from "./tableBonusPreview";
 
 function assertFullDeck(state: GameState) {
   const cards = [
@@ -213,3 +214,23 @@ test("a non-capture holds its hand and table state until the card has landed", (
   expect(frames[1].state.table).toEqual([...table, card]);
   expect(frames[1].state.players[0].hand).not.toContainEqual(card);
 });
+
+test.each(["1vs1", "1vs2", "2vs2"] as const)(
+  "opening deal carries only its own resolved bonus (%s)",
+  (mode) => {
+    for (const pattern of ["inc", "dec"] as const)
+      for (const order of ["playersThenTable", "tableThenPlayers"] as const) {
+        const { before } = tableBonusPreview(mode, pattern, order, "perfect", 1);
+        const [frame] = openDeal(before, order, pattern);
+        if (frame.motion?.kind !== "deal") throw new Error("Expected deal");
+        expect(frame.motion.openingTable?.cards).toEqual(frame.state.table.map(toCardKey));
+        expect(frame.motion.openingTable?.award).toBe(frame.state.scoreAwards?.at(-1));
+        expect(frame.motion.openingTable?.award?.player).toBe(before.dealer);
+        const none = tableBonusPreview(mode, pattern, order, "none", 0).before;
+        none.scoreAwards = frame.state.scoreAwards;
+        const [unawarded] = openDeal(none, order, pattern);
+        if (unawarded.motion?.kind !== "deal") throw new Error("Expected deal");
+        expect(unawarded.motion.openingTable?.award).toBeUndefined();
+      }
+  },
+);

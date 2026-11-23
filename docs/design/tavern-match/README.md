@@ -301,3 +301,28 @@ footprint, lower background opacity and reduced shadow spread. All source-card
 effects now clear after the rewarded points finish their scoreboard arrival,
 including persistent heat/flames; the cards remain dealt and visible. This
 supersedes persistence until reset. Reduced-motion arrival clears immediately.
+
+### Live opening-table adoption — 2026-11-23
+
+The reviewed playground treatment is now applied to the four cards in each
+opening table deal. They land individually over 0.72 seconds each and retain the
+same glint, stronger pulse, heat-transfer-only and flame-only progression for
+consecutive resolved matches. There is no flame-impact table circle. Perfect
+patterns show the shared large award before the ordinary points travel; partial
+patterns use only ordinary points. Softer halos, heat and flames clear on the
+opening bonus’s scoreboard arrival. Existing hand deals and later plays retain
+their movement, sounds and general grid allocation.
+
+The four opening cards form a centred, reading-order 2×2 block in both responsive
+grid shapes, retaining their slots when later cards arrive or captures remove
+neighbours. Browser checks exercised normal rendered deals at 568×320 and
+1440×900, and reduced-motion layouts at 844×390, 1180×820 and 1440×900, across all
+formats and both themes. Source effects, perfect award, compound opening/Sing
+points and final effect cleanup were observed without page errors. Physical
+mobile/native lifecycle verification remains separate. No artwork or palette
+tokens were added. Clean-table capture choreography is still pending under #136.
+
+The 2026-11-23 landing refinement removes a brief visibility gap in the opening
+deal. Animated cards now hand off to their DOM replacements at one explicit
+landing boundary, rather than hiding when eased progress rounds up early.
+Timing, source highlights and the 2×2 layout are unchanged.

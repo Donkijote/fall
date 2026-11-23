@@ -272,7 +272,7 @@ landings and the optional perfect-table celebration finish. The regular
 scene and revert its GSAP context. Reduced motion settles immediately with static
 source and recipient feedback. The fixture tests cover authoritative resolution;
 playback and preview tests cover sequencing, cancellation and Strict Mode.
-The live match does not yet adopt this source-highlight choreography.
+The live match now adopts this choreography for each dealer’s opening table deal.
 
 The four consecutive source stages are glint, double pulse, the shared card
 heat-transfer shader, and only the shared flame envelope. There are no table
@@ -283,3 +283,57 @@ or renderer failure retains DOM highlights, while reduced motion uses static
 halos. Heat and flames persist through points travel. The final points arrival clears
 all card decorations and disposes the canvas; reset/replay/unmount also revert
 all channels. Reduced motion clears decorations with its immediate score arrival.
+
+## Live opening-table choreography (#136)
+
+`openDeal` attaches an optional `motion.openingTable` payload containing the four
+cards in deal order and only the opening award emitted by that deal. Later hand
+refills omit it. Existing award history cannot create source highlights for a
+no-bonus opening; authoritative scores and winners still resolve immediately.
+
+`adapters/three/matchDealPlayback` retains the existing hand stagger/fan and sound
+cues. The opening table cards each travel for 0.72 seconds, then return to their
+DOM owner for the same source feedback as the playground before the next card
+starts. `flow/tableBonus` owns shared decoration, GSAP choreography, perfect-table
+award, heat/flame channels and rendering. The rendered timeline advances on the
+existing R3F frame clock and includes all reading pauses in the motion deadline.
+Interrupted contexts revert. Completed opening contexts preserve their source
+feedback across the handoff to the existing ordered points queue. Score arrival
+clears the source feedback and unmounts its canvas. No table-impact circles are
+introduced. Reduced motion or unavailable WebGL settles the deal and provides
+static source/recipient feedback through the same points owner.
+
+`useOpeningTableBonus` retains this presentation session across frame changes;
+`PlayableBoard` disables hand input and reports opening-feedback ownership to
+`TavernMatch`, which pauses simulated turns until the opening points arrive.
+Sing awards resolved by the same deal retain their separate ordered flights.
+`tableSlots` seeds the four opening cards in a reading-order 2×2 centre block,
+using the same logical slots in both the 6×2 small layout and 4×3 large layout.
+Subsequent plays reserve other slots with the existing allocation; captures do
+not move remaining cards. `wideTableSlot` is a bijection, preserving collision-free
+placement across responsive layout changes.
+
+Verification: `localMatch.test.ts` covers current-award ownership in all formats,
+both directions and deal orders, including stale history in no-bonus deals.
+`matchDealPlayback.test.ts` checks serial table arrivals, feedback pauses, sound
+counts and unchanged hand timing/fan. `PlayableBoard.test.tsx` covers the real
+source-to-points handoff in Strict Mode, simultaneous Sing awards, effect cleanup,
+subsequent motion, reduced motion, no-bonus and match-winning openings.
+`MatchMotionLayer.test.tsx` covers the per-card rendered-to-DOM handoff and
+interruption; existing fallback/deadline tests remain in force. `tableSlots.test.ts`
+checks 2×2 geometry, responsive mapping and stable later slots.
+
+Browser verification on the existing port 3000: normal rendered perfect openings
+at 1440×900 (duel) and 568×320 (teams), including source progression, perfect-table
+award, opening/Sing point order and cleared effects. Reduced-motion checks at
+844×390 (free-for-all, dark), 1180×820 (teams, light), and 1440×900 (duel, dark)
+confirmed 2×2 alignment and cleared decorations without a retained input lock.
+The browser fixtures reported no page errors. This is browser verification, not
+physical-device or native lifecycle certification.
+
+Opening-card landing visibility uses an explicit `DealFlight.landed` channel,
+set at the same timeline position as the DOM reveal. It must not be inferred from
+`progress === 1`: GSAP rounds the cubic eased value to 1 before the 0.72-second
+flight ends, which previously hid the rendered card for a frame while its DOM
+replacement was still hidden. The deal playback regression test samples that
+rounding interval, the exact landing boundary and cancellation rollback.
