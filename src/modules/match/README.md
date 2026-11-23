@@ -256,3 +256,30 @@ sound; improving that presentation belongs to #150. See
 the [macOS validation protocol](../../../docs/design/platform-distribution/README.md#repeat-the-macos-measurements)
 for measurement limits and native verification. Probe/runner scripts and raw
 machine-specific JSON remain local and are not included in a fresh clone.
+
+## Opening-table bonus prototype (#136)
+
+The public `TableBonusPreview` is a playground-only composition. Its application
+fixture builds deterministic decks and calls `dealRound`; it does not own rules.
+`applyTablePatternBonus` attaches optional `ScoreAward.sourceCards` in deal order,
+so source feedback uses the same resolution as the score. Existing awards and
+consumers remain compatible when source-card metadata is absent.
+
+Supporting preview UI separates settings, board/score orchestration and GSAP
+playback. A deal motion frame holds the existing score-presentation handoff until
+landings and the optional perfect-table celebration finish. The regular
+`MatchPointsLayer` then owns score travel and arrival. Reset/replay replace the
+scene and revert its GSAP context. Reduced motion settles immediately with static
+source and recipient feedback. The fixture tests cover authoritative resolution;
+playback and preview tests cover sequencing, cancellation and Strict Mode.
+The live match does not yet adopt this source-highlight choreography.
+
+The four consecutive source stages are glint, double pulse, the shared card
+heat-transfer shader, and only the shared flame envelope. There are no table
+waves or impact circles. `TableBonusFlames` owns only a decorative R3F
+overlay; `tableBonusEffects` supplies mutable channels animated by the same GSAP
+playback. Measured card rectangles keep effects aligned on resize. Missing WebGL
+or renderer failure retains DOM highlights, while reduced motion uses static
+halos. Heat and flames persist through points travel. The final points arrival clears
+all card decorations and disposes the canvas; reset/replay/unmount also revert
+all channels. Reduced motion clears decorations with its immediate score arrival.

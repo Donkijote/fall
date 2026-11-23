@@ -80,6 +80,23 @@ describe("Animation playground", () => {
     expect(screen.getByRole("button", { name: "Play / replay" })).toBeVisible();
   });
 
+  it("opens the bonus from Table and restores the other table studies on leave", () => {
+    open();
+    expect(screen.queryByRole("tab", { name: "Table bonus" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Table bonus" })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("tab", { name: /^Table\s*\d/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Table bonus" }));
+    expect(screen.getByRole("heading", { name: "Table build bonus" })).toBeVisible();
+    expect(screen.queryByRole("spinbutton", { name: "Timeline speed" })).not.toBeInTheDocument();
+    expect(screen.getByRole("combobox", { name: "Playback speed" })).toBeVisible();
+    fireEvent.click(screen.getByRole("button", { name: "Play / replay" }));
+    fireEvent.click(screen.getByRole("button", { name: "Deal cards" }));
+    expect(screen.queryByRole("heading", { name: "Table build bonus" })).not.toBeInTheDocument();
+    expect(document.querySelector("[data-bonus-card]")).toBeNull();
+    expect(screen.getByLabelText("Scene state")).toBeVisible();
+    expect(screen.getByRole("spinbutton", { name: "Timeline speed" })).toBeVisible();
+  });
+
   it("replays from fresh state rather than toggling the previous result", () => {
     open();
     expect(scene().faceUp).toBe(true);
@@ -100,7 +117,7 @@ describe("Animation playground", () => {
       target: { value: "0.5" },
     });
     fireEvent.click(screen.getByRole("button", { name: "Reset scene" }));
-    const tableTab = screen.getByRole("tab", { name: /Table/ });
+    const tableTab = screen.getByRole("tab", { name: /^Table\s*\d/ });
     fireEvent.click(tableTab);
     expect(tableTab).toHaveAttribute("aria-selected", "true");
     expect(screen.getByRole("tabpanel")).toContainElement(canvasHost);
@@ -122,7 +139,7 @@ describe("Animation playground", () => {
 
   it("prepares the same dealt hand for standalone capture replays", () => {
     open();
-    fireEvent.click(screen.getByRole("tab", { name: /Table/ }));
+    fireEvent.click(screen.getByRole("tab", { name: /^Table\s*\d/ }));
     fireEvent.click(screen.getByRole("button", { name: "Fall capture" }));
     fireEvent.click(screen.getByRole("button", { name: "Play / replay" }));
     expect(scene()).toMatchObject({ tableDeals: 1, tableCaptures: 1, tablePlays: 0 });
@@ -132,7 +149,7 @@ describe("Animation playground", () => {
 
   it("prepares an existing table card for ordinary capture and keeps replay mounted", () => {
     open();
-    fireEvent.click(screen.getByRole("tab", { name: /Table/ }));
+    fireEvent.click(screen.getByRole("tab", { name: /^Table\s*\d/ }));
     expect(screen.getByRole("button", { name: "Fall capture" })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Capture card" }));
     expect(screen.queryByRole("combobox", { name: "Capture impact" })).not.toBeInTheDocument();
@@ -151,7 +168,7 @@ describe("Animation playground", () => {
 
   it("prepares the cascade board and replays without remounting the viewport", () => {
     open();
-    fireEvent.click(screen.getByRole("tab", { name: /Table/ }));
+    fireEvent.click(screen.getByRole("tab", { name: /^Table\s*\d/ }));
     fireEvent.click(screen.getByRole("button", { name: "Cascade capture" }));
     fireEvent.click(screen.getByRole("button", { name: "Play / replay" }));
     expect(scene()).toMatchObject({
@@ -168,7 +185,7 @@ describe("Animation playground", () => {
 
   it("starts counting with an exhausted deck and replays or tunes without remounting", () => {
     open();
-    fireEvent.click(screen.getByRole("tab", { name: /Table/ }));
+    fireEvent.click(screen.getByRole("tab", { name: /^Table\s*\d/ }));
     fireEvent.click(screen.getByRole("button", { name: "Count cards" }));
     expect(screen.getByRole("spinbutton", { name: "Captured cards" })).toHaveValue(26);
     expect(screen.getByRole("combobox", { name: "Counting quota" })).toHaveTextContent("20");
@@ -213,7 +230,7 @@ describe("Animation playground", () => {
     expect(audio.stop).toHaveBeenCalledTimes(2);
     fireEvent.click(screen.getByRole("button", { name: "Reset scene" }));
     expect(audio.stop).toHaveBeenCalledTimes(3);
-    fireEvent.click(screen.getByRole("tab", { name: /Table/ }));
+    fireEvent.click(screen.getByRole("tab", { name: /^Table\s*\d/ }));
     expect(audio.stop).toHaveBeenCalledTimes(4);
     view.unmount();
     expect(audio.dispose).toHaveBeenCalledOnce();

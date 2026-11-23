@@ -1,6 +1,6 @@
 import type { User } from "@/domain/entities/User";
 
-import type { Card, CardWithKey } from "./Card";
+import type { Card, CardKey, CardWithKey } from "./Card";
 
 export type Phase =
   | "init"
@@ -51,6 +51,8 @@ export type ScoreAward = {
   reason: "opening" | "sing" | "clear" | "fall" | "count" | "other";
   detail?: string;
   source: "table" | "hand" | "collector";
+  /** Resolved source cards, in deal order. Presentation must not infer winners. */
+  sourceCards?: CardKey[];
 };
 
 export interface GameState {

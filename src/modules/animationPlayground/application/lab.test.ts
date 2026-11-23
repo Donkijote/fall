@@ -14,7 +14,8 @@ describe("ported animation engine", () => {
   it("exposes each of the 21 commands exactly once in the catalog", () => {
     const commands = Object.values(lessonsByStudy)
       .flat()
-      .map((lesson) => lesson.experiment);
+      .map((lesson) => lesson.experiment)
+      .filter((experiment) => experiment !== "table-bonus");
     expect(commands).toHaveLength(21);
     expect(new Set(commands).size).toBe(commands.length);
     for (const experiment of commands) {

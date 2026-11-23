@@ -1,7 +1,9 @@
 import type { Experiment, Study } from "./lab";
 
+export type PlaygroundExperiment = Experiment | "table-bonus";
+
 type Lesson = {
-  experiment: Experiment;
+  experiment: PlaygroundExperiment;
   label: string;
   libraries: string;
   description: string;
@@ -121,6 +123,13 @@ const tableLessons: Lesson[] = [
     label: "Deal center cards",
     libraries: "GSAP · Zustand",
     description: "Deal four cards into a 2×2 grid and turn them face up as they travel.",
+  },
+  {
+    experiment: "table-bonus",
+    label: "Table bonus",
+    libraries: "GSAP · React",
+    description:
+      "Slow table landings highlight qualifying pattern cards before the opening bonus reaches the scoreboard.",
   },
   {
     experiment: "play-card",

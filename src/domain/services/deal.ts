@@ -1,4 +1,4 @@
-import type { Card } from "@/domain/entities/Card";
+import type { Card, CardKey } from "@/domain/entities/Card";
 import { orderFromDealerRight } from "@/domain/services/resolveHands";
 import { awardPoints, checkGameOver } from "@/domain/services/scoring";
 
@@ -79,12 +79,20 @@ export function applyTablePatternBonus(
 ): GameState {
   const expected = pattern === "inc" ? [1, 2, 3, 4] : [4, 3, 2, 1];
   let total = 0;
+  const sourceCards: CardKey[] = [];
   for (let i = 0; i < 4; i++) {
-    if (table[i]?.rank === expected[i]) total += table[i].rank;
+    if (table[i]?.rank === expected[i]) {
+      total += table[i].rank;
+      sourceCards.push(`${table[i].suit}-${table[i].rank}`);
+    }
   }
   if (total > 0) {
     const dealerId = state.dealer;
-    state = awardPoints(state, dealerId, total, { reason: "opening", source: "table" });
+    state = awardPoints(state, dealerId, total, {
+      reason: "opening",
+      source: "table",
+      sourceCards,
+    });
     state = checkGameOver(state, state.config.targetPoints);
   }
   return state;

@@ -253,3 +253,51 @@ addresses clipping at the top scoreboard in mobile landscape without changing
 the shared PointsBadge artwork or its appearance elsewhere.
 
 The user approved the responsive points-flight validation on 2026-11-19.
+
+### Table build bonus playground proposal (#136)
+
+Requested on 2026-11-23: prototype the table build bonus before the clean-table
+animation, and review both in the animation playground before live-match adoption.
+The Table → Table bonus study slows the four table landings, highlights only resolved
+qualifying cards and strengthens feedback for consecutive matches. A perfect
+four-card pattern gets a large central award before the existing score token;
+partial patterns use the ordinary points token after source feedback. No-bonus
+patterns receive neither winner highlights nor points. A gap breaks the visual
+streak without removing any independently earned points.
+
+The study includes both directions/orders, every format and dealer seat, and
+perfect, partial, broken, absent and match-winning awards. Reduced motion keeps
+static source and recipient feedback. It reuses existing card and points artwork
+with existing semantic tokens; no new images, masters or palette tokens are introduced.
+This proposal awaits visual review. Clean-table choreography and adoption in the
+live match remain pending under #136.
+
+The 2026-11-23 highlight revision replaces the red focus-like outline with the
+existing gold decorative token. Each qualifying landing uses GSAP to lift and
+settle the card, sweep light across its face and expand a short glow around it.
+Each consecutive success has a brighter, broader halo and stronger lift, sheen
+and burst than the previous card. Earlier cards keep their individual intensity;
+a gap resets the next card’s streak. Reduced motion keeps the graduated gold
+halos without the lift, sweep or burst. This treatment remains a playground
+proposal awaiting visual review.
+
+The next 2026-11-23 playground revision follows the requested mixed progression:
+one small gold glint, one stronger double pulse, then the existing flame envelope
+and heat wave, and finally the existing overhead flame impact plus envelope.
+All four retain graduated gold highlights. A nonmatch resets the stages. The
+shared Three.js effects track card rectangles, finish before the perfect-table
+award/ordinary points handoff and are omitted with reduced motion. This is still
+a playground proposal awaiting visual approval, with no new artwork or tokens.
+
+The following 2026-11-23 revision isolates the last two stages as requested:
+the third consecutive match uses only the actual shared card heat-transfer shader,
+and the fourth uses only the flame envelope. Table waves and flame-impact circles
+are removed. Both treatments remain active through the award and points travel
+until reset/replay or leaving the preview. Reduced motion retains static halos.
+This supersedes the transient mixed effects above and awaits visual review.
+
+The latest 2026-11-23 preview revision softens the card halos with a smaller
+footprint, lower background opacity and reduced shadow spread. All source-card
+effects now clear after the rewarded points finish their scoreboard arrival,
+including persistent heat/flames; the cards remain dealt and visible. This
+supersedes persistence until reset. Reduced-motion arrival clears immediately.

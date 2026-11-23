@@ -10,14 +10,14 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RULES } from "@/domain/constants/rules";
-import { ScoreAwardsPreview } from "@/modules/match";
+import { ScoreAwardsPreview, TableBonusPreview } from "@/modules/match";
 import { HOME_PATH } from "@/routes/Routes";
 
 import { createHowlerAudio } from "../adapters/audio/howlerAudio";
 import { createZustandLabState } from "../adapters/state/zustandLabState";
 import { LabViewport } from "../adapters/three/LabViewport";
 import { MotionContext } from "../adapters/three/MotionSettings";
-import { lessonsByStudy, studies } from "../application/catalog";
+import { lessonsByStudy, studies, type PlaygroundExperiment } from "../application/catalog";
 import { createLab } from "../application/lab";
 import type { CardDropEffect, Experiment, Study } from "../application/lab";
 
@@ -88,7 +88,7 @@ function createPreview(
 export function AnimationPlayground() {
   const [audio] = useState(createHowlerAudio);
   const [study, setStudy] = useState<Study | "points">("card");
-  const [selected, setSelected] = useState<Experiment>("flip");
+  const [selected, setSelected] = useState<PlaygroundExperiment>("flip");
   const [settings, setSettings] = useState(defaults);
   const [preview, setPreview] = useState(() => createPreview(audio, 0, settings.effect));
   const { lab } = preview;
@@ -112,6 +112,7 @@ export function AnimationPlayground() {
   }
 
   function play() {
+    if (selected === "table-bonus") return;
     audio.stop();
     audio.prepare();
     setPreview((current) => createPreview(audio, current.revision + 1, settings.effect, selected));
@@ -199,138 +200,163 @@ export function AnimationPlayground() {
                     ))}
                   </CardContent>
                 </Card>
-                <div className="min-w-0">
-                  <MotionContext value={settings}>
-                    <LabViewport
-                      revision={preview.revision}
-                      lab={lab}
-                      state={state}
-                      settings={settings}
-                      study={study}
-                      experiment={preview.autoplay}
-                      footerActions={
-                        <>
-                          <Button onClick={play}>
-                            <Play /> Play / replay
-                          </Button>
-                          <Button
-                            variant="outline"
-                            onClick={() => {
-                              audio.stop();
-                              setPreview((current) =>
-                                createPreview(audio, current.revision + 1, settings.effect),
-                              );
-                            }}
-                          >
-                            <RotateCcw /> Reset scene
-                          </Button>
-                        </>
-                      }
-                    />
-                  </MotionContext>
-                </div>
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="title-type font-normal">Live tuning</CardTitle>
-                    <p className="text-xs text-muted-foreground">
-                      Changes restart the current preview.
-                    </p>
-                  </CardHeader>
-                  <CardContent className="space-y-5">
-                    <NumericControl
-                      label="Timeline speed"
-                      value={settings.speed}
-                      min={0.25}
-                      max={2}
-                      step={0.25}
-                      change={(speed) => updateSettings({ speed })}
-                    />
-                    <Choice
-                      label="Motion easing"
-                      value={settings.ease}
-                      choices={[
-                        ["original", "Original choreography"],
-                        ["none", "Linear"],
-                        ["power2.inOut", "Smooth"],
-                        ["back.out", "Overshoot"],
-                      ]}
-                      change={(ease) => updateSettings({ ease })}
-                    />
-                    <p className="text-xs text-muted-foreground">
-                      Speed adjusts animation timing. Easing adjusts flips, deck motion, deals and
-                      plays. Impact curves and physics keep their original motion.
-                    </p>
-                    {study === "card" && (
+                {selected === "table-bonus" ? (
+                  <div className="min-w-0 lg:col-span-2">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="title-type font-normal">
+                          <h2>Table build bonus</h2>
+                        </CardTitle>
+                        <p className="text-sm text-muted-foreground">
+                          Slow table landings build intensity with consecutive pattern matches. A
+                          perfect table earns a larger celebration before the resolved points travel
+                          to the scoreboard.
+                        </p>
+                      </CardHeader>
+                      <CardContent>
+                        <TableBonusPreview />
+                      </CardContent>
+                    </Card>
+                  </div>
+                ) : (
+                  <div className="min-w-0">
+                    <MotionContext value={settings}>
+                      <LabViewport
+                        revision={preview.revision}
+                        lab={lab}
+                        state={state}
+                        settings={settings}
+                        study={study}
+                        experiment={preview.autoplay}
+                        footerActions={
+                          <>
+                            <Button onClick={play}>
+                              <Play /> Play / replay
+                            </Button>
+                            <Button
+                              variant="outline"
+                              onClick={() => {
+                                audio.stop();
+                                setPreview((current) =>
+                                  createPreview(audio, current.revision + 1, settings.effect),
+                                );
+                              }}
+                            >
+                              <RotateCcw /> Reset scene
+                            </Button>
+                          </>
+                        }
+                      />
+                    </MotionContext>
+                  </div>
+                )}
+                {selected !== "table-bonus" && (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="title-type font-normal">Live tuning</CardTitle>
+                      <p className="text-xs text-muted-foreground">
+                        Changes restart the current preview.
+                      </p>
+                    </CardHeader>
+                    <CardContent className="space-y-5">
                       <NumericControl
-                        label="Embers per second"
-                        value={settings.rate}
-                        min={10}
-                        max={350}
-                        step={5}
-                        change={(rate) => updateSettings({ rate })}
+                        label="Timeline speed"
+                        value={settings.speed}
+                        min={0.25}
+                        max={2}
+                        step={0.25}
+                        change={(speed) => updateSettings({ speed })}
                       />
-                    )}
-                    {study === "table" && selected === "count-cards" && (
-                      <>
-                        <NumericControl
-                          label="Captured cards"
-                          value={settings.countTotal}
-                          min={0}
-                          max={40}
-                          step={1}
-                          change={(countTotal) =>
-                            updateSettings({ countTotal: Math.round(countTotal) })
-                          }
-                        />
-                        <Choice
-                          label="Counting quota"
-                          value={String(settings.countQuota)}
-                          choices={[
-                            [String(RULES.modeQuotas.duel.quota), "20 · Duel / team"],
-                            [String(RULES.modeQuotas.ffa3.quota), "12 · Three players"],
-                            [String(RULES.modeQuotas.ffa3.dealerQuota), "13 · Three-player dealer"],
-                          ]}
-                          change={(quota) => updateSettings({ countQuota: Number(quota) })}
-                        />
-                      </>
-                    )}
-                    {study === "table" && selected === "fall-capture" && (
                       <Choice
-                        label="Capture impact"
-                        value={settings.effect}
+                        label="Motion easing"
+                        value={settings.ease}
                         choices={[
-                          ["plain", "Card drop"],
-                          ["ice", "Ice shatter"],
-                          ["heat", "Heat transfer"],
-                          ["flame", "Flame impact"],
+                          ["original", "Original choreography"],
+                          ["none", "Linear"],
+                          ["power2.inOut", "Smooth"],
+                          ["back.out", "Overshoot"],
                         ]}
-                        change={(effect) => updateSettings({ effect: effect as CardDropEffect })}
+                        change={(ease) => updateSettings({ ease })}
                       />
-                    )}
-                    <NumericControl
-                      label="Pixel ratio cap"
-                      value={settings.dpr}
-                      min={1}
-                      max={3}
-                      step={0.25}
-                      change={(dpr) => updateSettings({ dpr })}
-                    />
-                    <Label className="flex items-center gap-2">
-                      <Checkbox
-                        checked={settings.perf}
-                        onCheckedChange={(perf) => updateSettings({ perf })}
-                      />{" "}
-                      Performance HUD
-                    </Label>
-                    <Button
-                      variant="outline"
-                      className="w-full"
-                      onClick={() => updateSettings(defaults)}
-                    >
-                      Restore defaults
-                    </Button>
-                  </CardContent>
-                </Card>
+                      <p className="text-xs text-muted-foreground">
+                        Speed adjusts animation timing. Easing adjusts flips, deck motion, deals and
+                        plays. Impact curves and physics keep their original motion.
+                      </p>
+                      {study === "card" && (
+                        <NumericControl
+                          label="Embers per second"
+                          value={settings.rate}
+                          min={10}
+                          max={350}
+                          step={5}
+                          change={(rate) => updateSettings({ rate })}
+                        />
+                      )}
+                      {study === "table" && selected === "count-cards" && (
+                        <>
+                          <NumericControl
+                            label="Captured cards"
+                            value={settings.countTotal}
+                            min={0}
+                            max={40}
+                            step={1}
+                            change={(countTotal) =>
+                              updateSettings({ countTotal: Math.round(countTotal) })
+                            }
+                          />
+                          <Choice
+                            label="Counting quota"
+                            value={String(settings.countQuota)}
+                            choices={[
+                              [String(RULES.modeQuotas.duel.quota), "20 · Duel / team"],
+                              [String(RULES.modeQuotas.ffa3.quota), "12 · Three players"],
+                              [
+                                String(RULES.modeQuotas.ffa3.dealerQuota),
+                                "13 · Three-player dealer",
+                              ],
+                            ]}
+                            change={(quota) => updateSettings({ countQuota: Number(quota) })}
+                          />
+                        </>
+                      )}
+                      {study === "table" && selected === "fall-capture" && (
+                        <Choice
+                          label="Capture impact"
+                          value={settings.effect}
+                          choices={[
+                            ["plain", "Card drop"],
+                            ["ice", "Ice shatter"],
+                            ["heat", "Heat transfer"],
+                            ["flame", "Flame impact"],
+                          ]}
+                          change={(effect) => updateSettings({ effect: effect as CardDropEffect })}
+                        />
+                      )}
+                      <NumericControl
+                        label="Pixel ratio cap"
+                        value={settings.dpr}
+                        min={1}
+                        max={3}
+                        step={0.25}
+                        change={(dpr) => updateSettings({ dpr })}
+                      />
+                      <Label className="flex items-center gap-2">
+                        <Checkbox
+                          checked={settings.perf}
+                          onCheckedChange={(perf) => updateSettings({ perf })}
+                        />{" "}
+                        Performance HUD
+                      </Label>
+                      <Button
+                        variant="outline"
+                        className="w-full"
+                        onClick={() => updateSettings(defaults)}
+                      >
+                        Restore defaults
+                      </Button>
+                    </CardContent>
+                  </Card>
+                )}
               </div>
             )}
           </TabsContent>

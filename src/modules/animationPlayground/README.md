@@ -72,3 +72,47 @@ Play/replay and tuning reset the count; format selection persists through replay
 The original playground canvas stays mounted but stops rendering while the live
 count preview owns the scene. Both ordinary and extra cards enter their respective
 pocket, while the existing counter and bonus-point treatment update on arrival.
+
+## Table build bonus study (#136)
+
+Table → Table bonus embeds the match module's public `TableBonusPreview` before
+any live-match adoption. Table cards take 0.72 seconds to land, compared with
+0.14 seconds for each hand card. Consecutive qualifying cards use four distinct
+stages: a small gold glint, an emphatic double pulse, the shared card heat-transfer
+shader, then only the shared `FlameEnvelope`. Heat and flames stay on their own
+cards through the points flight; no table wave, scorch circle or impact burst is rendered.
+Each stage retains its gold halo; earlier cards keep their individual intensity. A nonmatching card
+breaks that streak and never receives a winner highlight. Four matches reveal a
+large “Perfect table!” award, followed by the existing points flight. Partial
+patterns hand off directly to that flight; no-bonus deals create no points token.
+
+Controls cover all formats, every dealer seat, both pattern directions and deal
+orders, perfect/partial/broken/no-bonus/winning cases, replay, reset and speed.
+Changes cancel the old scene. Reduced motion shows the cards, source highlights,
+recipient and final score immediately, without travel or pulsing. The winning
+fixture resolves its result before presentation begins.
+
+`tableBonusPreview` composes the authoritative deal service with a deterministic
+deck. Opening awards now carry `sourceCards` from that service; the playback
+adapter never compares ranks or calculates points. `TableBonusControls` owns
+settings, `TableBonusTable` composes the board and score handoff, and
+`tableBonusPlayback` owns cancellable GSAP choreography. No new assets are used.
+
+Verification: fixture tests cover format/pattern/order/dealer combinations and
+winning results; playback tests cover per-card intensity, escalating lift/burst/sheen, nonwinners, reduced
+motion and interruption; preview integration tests cover Strict Mode, score
+handoff, reset and unmount. Manual theme/responsive review and approval remain
+pending, as do the clean-table study and live-match integration under #136.
+
+`TableBonusFlames` is a decorative orthographic R3F overlay, aligned with live
+card rectangles each frame. GSAP owns its mutable channels alongside DOM playback,
+including speed and cancellation. It unmounts after the final points arrival and is omitted
+for reduced motion or unavailable WebGL; renderer failure leaves DOM feedback and
+the score handoff intact. `tableBonusPlayback.test.ts` checks stage gating, reset
+after gaps, persistent heat/flames, cancellation and the award handoff.
+
+The latest review reduces the halo footprint and spread behind every card. The
+final points-flight arrival clears all source halos, sheen, bursts, heat and flames,
+and unmounts the decorative canvas while leaving dealt cards and scores visible.
+Reduced motion clears decorations immediately after its immediate score arrival.
+The preview integration test checks highlights survive until arrival and then clear.
