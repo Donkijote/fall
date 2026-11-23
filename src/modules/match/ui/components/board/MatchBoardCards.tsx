@@ -7,9 +7,10 @@ import { SuitGlyph } from "@/components/cards/SuitGlyph";
 import type { Card } from "@/domain/entities/Card";
 import { toCardKey } from "@/domain/helpers/card";
 
+import { TableBonusDecoration } from "../flow/tableBonus/TableBonusDecoration";
 import { MatchHandCard } from "./MatchHandCard";
 import { MatchPlaque } from "./MatchPlaque";
-import { placeTableCards, type TableSlots } from "./tableSlots";
+import { placeTableCards, wideTableSlot, type TableSlots } from "./tableSlots";
 import { useHandReflow } from "./useHandReflow";
 
 const cardStyle =
@@ -70,40 +71,51 @@ function CardStack({
   );
 }
 
-export function MatchTableCards({ cards, landing }: { cards: readonly Card[]; landing?: Card }) {
+export function MatchTableCards({
+  cards,
+  landing,
+  opening = false,
+}: {
+  cards: readonly Card[];
+  landing?: Card;
+  opening?: boolean;
+}) {
   const [previous, setPrevious] = useState<TableSlots>(() => new Map());
   const displayed = landing ? [...cards, landing] : cards;
-  const slots = placeTableCards(previous, displayed.map(toCardKey));
+  const slots = placeTableCards(previous, displayed.map(toCardKey), opening);
   if (slots !== previous) setPrevious(slots);
 
   return (
     <ul
       aria-label="Cards on the table"
-      className="pointer-events-none absolute top-[55%] left-1/2 grid -translate-1/2 grid-cols-[repeat(var(--table-columns),var(--match-card-width))] grid-rows-[repeat(var(--table-rows),calc(var(--match-card-width)*88/63))] gap-[clamp(0.25rem,1.2cqmin,0.7rem)] [--match-card-width:clamp(1.4rem,min(12cqh,9cqw),4.65rem)] [--table-columns:6] [--table-rows:2] lg:[--match-card-width:clamp(1.55rem,9.6cqmin,5.75rem)] lg:[--table-columns:4] lg:[--table-rows:3]"
+      className="pointer-events-none absolute top-[55%] left-1/2 grid -translate-1/2 grid-cols-[repeat(var(--table-columns),var(--match-card-width))] grid-rows-[repeat(var(--table-rows),calc(var(--match-card-width)*88/63))] gap-[clamp(0.625rem,2.8cqmin,1.5rem)] [--match-card-width:clamp(1.4rem,min(12cqh,9cqw),4.65rem)] [--table-columns:6] [--table-rows:2] lg:[--match-card-width:clamp(1.55rem,9.6cqmin,5.75rem)] lg:[--table-columns:4] lg:[--table-rows:3]"
     >
       {displayed.map((card) => {
         const key = toCardKey(card);
         const slot = slots.get(key)!;
         const pending = card === landing;
+        const wideSlot = wideTableSlot(slot);
         return (
           <li
             key={key}
             data-table-card={key}
+            data-bonus-card={key}
             data-table-slot={slot}
             aria-hidden={pending || undefined}
             className={cn(
-              "[grid-area:var(--wide-row)/var(--wide-column)] lg:[grid-area:var(--table-row)/var(--table-column)]",
+              "relative isolate [grid-area:var(--wide-row)/var(--wide-column)] lg:[grid-area:var(--table-row)/var(--table-column)]",
               pending && "invisible",
             )}
             style={
               {
                 "--table-column": (slot % 4) + 1,
                 "--table-row": Math.floor(slot / 4) + 1,
-                "--wide-column": (slot % 6) + 1,
-                "--wide-row": Math.floor(slot / 6) + 1,
+                "--wide-column": (wideSlot % 6) + 1,
+                "--wide-row": Math.floor(wideSlot / 6) + 1,
               } as React.CSSProperties
             }
           >
+            <TableBonusDecoration />
             <CardImage card={card} />
           </li>
         );

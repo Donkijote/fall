@@ -23,7 +23,15 @@ describe("Deal", () => {
       ...stateWithDealer,
       dealer: stateWithDealer.players[0].id,
       scoreAwards: [
-        { id: "score:1", side: "1", player: "1", amount: 10, reason: "opening", source: "table" },
+        {
+          id: "score:1",
+          side: "1",
+          player: "1",
+          amount: 10,
+          reason: "opening",
+          source: "table",
+          sourceCards: ["coins-1", "coins-2", "coins-3", "coins-4"],
+        },
       ],
       scores: {
         type: "individual",

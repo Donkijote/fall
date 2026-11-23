@@ -7,6 +7,7 @@ import type { CaptureCue } from "@/domain/audio/captureCue";
 import { toCardKey } from "@/domain/helpers/card";
 import { useMotionAudio } from "@/infrastructure/ui/hooks/useMotionAudio";
 
+import type { OpeningTablePlayback } from "../../../adapters/three/matchCardScene";
 import { createPlaybackChannel } from "../../../adapters/three/matchCardScene";
 import { matchFallEffect } from "../../../adapters/three/matchFallEffect";
 import type { MatchFrame } from "../../../application/localMatch";
@@ -23,8 +24,10 @@ export function MatchMotionLayer({
   returning,
   complete,
   countSpeed = 1,
+  openingTable,
 }: {
   board: RefObject<HTMLDivElement | null>;
+  openingTable?: OpeningTablePlayback;
   countSpeed?: number;
   frame: MatchFrame;
   reducedMotion: boolean;
@@ -175,6 +178,21 @@ export function MatchMotionLayer({
       if (pile?.layer) pile.layer.hidden = remaining <= 1;
     };
     channel.publish({
+      openingTable: openingTable && {
+        land(timeline, key) {
+          const element = root.querySelector<HTMLElement>(`[data-table-card="${key}"]`);
+          // Each landed opening card returns to DOM ownership for the shared lift,
+          // sheen and persistent heat/flames while the next card is still in flight.
+          if (element)
+            timeline.call(() => {
+              // Visibility belongs to this DOM owner. A later R3F context revert
+              // must not restore a hidden card after fallback/unmount revealed it.
+              if (active) element.style.visibility = "visible";
+            });
+          openingTable.land(timeline, key);
+        },
+        celebrate: openingTable.celebrate,
+      },
       scene: measured.scene,
       countSpeed,
       handoff,
@@ -205,7 +223,7 @@ export function MatchMotionLayer({
       for (const [element, visibility] of original) element.style.visibility = visibility;
       window.removeEventListener("resize", remeasure);
     };
-  }, [animate, audio, board, channel, countSpeed, frame, motion, returning]);
+  }, [animate, audio, board, channel, countSpeed, frame, motion, returning, openingTable]);
 
   if (!animate || returning) return null;
   return (

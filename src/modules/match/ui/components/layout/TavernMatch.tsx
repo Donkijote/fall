@@ -48,11 +48,18 @@ export function TavernMatch({
   const connectedCount = guestCount + 1;
   const ready = connectedCount === seats.length;
   const [waitingFaded, setWaitingFaded] = useState(false);
+  const [bonusFeedbackBusy, setBonusFeedbackBusy] = useState(false);
   const [leaveOpen, setLeaveOpen] = useState(false);
   const leaveButton = useRef<HTMLButtonElement>(null);
   const waitingOverlay = useRef<HTMLDivElement>(null);
   const showWaiting = !ready || (!reducedMotion && !waitingFaded);
-  const match = useLocalMatch(mode, !showWaiting, returning, reducedMotion, leaveOpen);
+  const match = useLocalMatch(
+    mode,
+    !showWaiting,
+    returning,
+    reducedMotion,
+    leaveOpen || bonusFeedbackBusy,
+  );
 
   const hasBoard = Boolean(match.frame);
   const finished = match.frame?.state.phase === "gameOver" && !match.frame.motion;
@@ -126,7 +133,8 @@ export function TavernMatch({
             completeMotion={match.completeMotion}
             reducedMotion={reducedMotion}
             returning={returning}
-            paused={leaveOpen}
+            paused={leaveOpen || bonusFeedbackBusy}
+            bonusFeedbackBusy={setBonusFeedbackBusy}
             close={cancel}
             leaveControl={
               <ActionButton

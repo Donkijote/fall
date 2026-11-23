@@ -253,3 +253,187 @@ addresses clipping at the top scoreboard in mobile landscape without changing
 the shared PointsBadge artwork or its appearance elsewhere.
 
 The user approved the responsive points-flight validation on 2026-11-19.
+
+### Table build bonus playground proposal (#136)
+
+Requested on 2026-11-23: prototype the table build bonus before the clean-table
+animation, and review both in the animation playground before live-match adoption.
+The Table → Table bonus study slows the four table landings, highlights only resolved
+qualifying cards and strengthens feedback for consecutive matches. A perfect
+four-card pattern gets a large central award before the existing score token;
+partial patterns use the ordinary points token after source feedback. No-bonus
+patterns receive neither winner highlights nor points. A gap breaks the visual
+streak without removing any independently earned points.
+
+The study includes both directions/orders, every format and dealer seat, and
+perfect, partial, broken, absent and match-winning awards. Reduced motion keeps
+static source and recipient feedback. It reuses existing card and points artwork
+with existing semantic tokens; no new images, masters or palette tokens are introduced.
+This proposal awaits visual review. Clean-table choreography and adoption in the
+live match remain pending under #136.
+
+The 2026-11-23 highlight revision replaces the red focus-like outline with the
+existing gold decorative token. Each qualifying landing uses GSAP to lift and
+settle the card, sweep light across its face and expand a short glow around it.
+Each consecutive success has a brighter, broader halo and stronger lift, sheen
+and burst than the previous card. Earlier cards keep their individual intensity;
+a gap resets the next card’s streak. Reduced motion keeps the graduated gold
+halos without the lift, sweep or burst. This treatment remains a playground
+proposal awaiting visual review.
+
+The next 2026-11-23 playground revision follows the requested mixed progression:
+one small gold glint, one stronger double pulse, then the existing flame envelope
+and heat wave, and finally the existing overhead flame impact plus envelope.
+All four retain graduated gold highlights. A nonmatch resets the stages. The
+shared Three.js effects track card rectangles, finish before the perfect-table
+award/ordinary points handoff and are omitted with reduced motion. This is still
+a playground proposal awaiting visual approval, with no new artwork or tokens.
+
+The following 2026-11-23 revision isolates the last two stages as requested:
+the third consecutive match uses only the actual shared card heat-transfer shader,
+and the fourth uses only the flame envelope. Table waves and flame-impact circles
+are removed. Both treatments remain active through the award and points travel
+until reset/replay or leaving the preview. Reduced motion retains static halos.
+This supersedes the transient mixed effects above and awaits visual review.
+
+The latest 2026-11-23 preview revision softens the card halos with a smaller
+footprint, lower background opacity and reduced shadow spread. All source-card
+effects now clear after the rewarded points finish their scoreboard arrival,
+including persistent heat/flames; the cards remain dealt and visible. This
+supersedes persistence until reset. Reduced-motion arrival clears immediately.
+
+### Live opening-table adoption — 2026-11-23
+
+The reviewed playground treatment is now applied to the four cards in each
+opening table deal. They land individually over 0.72 seconds each and retain the
+same glint, stronger pulse, heat-transfer-only and flame-only progression for
+consecutive resolved matches. There is no flame-impact table circle. Perfect
+patterns show the shared large award before the ordinary points travel; partial
+patterns use only ordinary points. Softer halos, heat and flames clear on the
+opening bonus’s scoreboard arrival. Existing hand deals and later plays retain
+their movement, sounds and general grid allocation.
+
+The four opening cards form a centred, reading-order 2×2 block in both responsive
+grid shapes, retaining their slots when later cards arrive or captures remove
+neighbours. Browser checks exercised normal rendered deals at 568×320 and
+1440×900, and reduced-motion layouts at 844×390, 1180×820 and 1440×900, across all
+formats and both themes. Source effects, perfect award, compound opening/Sing
+points and final effect cleanup were observed without page errors. Physical
+mobile/native lifecycle verification remains separate. No artwork or palette
+tokens were added. Clean-table capture choreography is still pending under #136.
+
+The 2026-11-23 landing refinement removes a brief visibility gap in the opening
+deal. Animated cards now hand off to their DOM replacements at one explicit
+landing boundary, rather than hiding when eased progress rounds up early.
+Timing, source highlights and the 2×2 layout are unchanged.
+
+### Clean-table playground proposal — 2026-11-23
+
+The proposed clean-table treatment is available in Animation playground → Table →
+Clean table. The normal capture first removes the table cards. A narrow gold
+sweep crosses the cleared space, then “Clean table!” and the existing earned-points
+badge pop in and settle with two small brass glints. The resolved recipient is
+shown below. The celebration takes one second before the normal points flight
+moves the bonus into the scoreboard. All celebration decoration is removed at
+handoff; the table remains empty. The shared primary/gold semantic tokens and
+existing card, capture-pile and points artwork are retained. No new artwork,
+assets or palette tokens are introduced.
+
+Controls expose ordinary capture, cascade, Fall plus clean-table awards, excluded
+last-round clear, a capture leaving cards behind and a match-winning clear, across
+all formats and capturing seats. Reduced motion skips the sweep/pop and retains
+immediate recipient/score feedback. Browser checks at 568×320, 844×390, 1180×820
+and 1440×900 covered both themes and completed without page errors. The proposal
+awaits visual approval; live-match clean-table celebration integration remains
+pending under #136.
+
+The subsequent 2026-11-23 pacing review lengthens the gold sweep from 0.32 to
+0.55 seconds and delays the badge reveal to let the sweep read first. The full
+celebration now lasts one second before points travel. The subsequent width revision expands the sweep from edge to edge across the
+preview board while retaining its central vertical band. The badge stays centred,
+and the sweep remains independent of the table-slot grid.
+
+### Live clean-table adoption — 2026-11-23
+
+The user approved the wider, slower gold sweep and requested live adoption. The
+actual game now uses the same full-screen-width central sweep, “Clean table!”
+badge/recipient reveal and two brass glints as the playground. The sweep lasts
+0.55 seconds; the whole source celebration lasts one second before the existing
+points flight. It appears after capture/queued deal motion, and clean-table/Fall
+awards remain separate flights. Player and bot input waits through feedback and
+score settling; winning results appear after arrival. Final-round excluded clears
+and non-clearing captures produce no new feedback. Reduced motion retains the
+immediate points announcement. Reconnect/leave/unmount cancel decoration.
+
+Live browser checks covered 568×320, 667×375, 844×390, 932×430, 1024×768,
+1180×820 and 1440×900 across all formats, both themes, compound Fall points,
+excluded clears, winning clears, reduced motion and hand refill with a Sing.
+The sweep spanned each tested viewport; effects and input locks cleared after
+scoring, with no page errors. No new assets or palette tokens were introduced.
+
+Supplemental verification covered 1280×720, 1366×1024 and 1920×1080, completing
+the supported browser viewport targets. An explicit no-WebGL run at 844×390
+also preserved capture audio, the gold sweep and exactly one points flight.
+
+### Clean-table contrast artwork — 2026-11-23
+
+The user found that the bare heading and coin did not read clearly against the
+wooden table. The initial yellow-gold plaque draft was rejected because its
+broad hammered frame differed from Fall's shipped borders. The user approved
+the revised dark charcoal plaque with slimmer bronze/brass rails, fine corner
+leaves and a small blank-card crest, generated with the existing brass frame,
+seat plaque and primary-button artwork as direct image references.
+
+The approved [standalone master](clean-table-plaque.png) is retained at 1536×1024;
+the runtime WebP is 768×512 with alpha and is about 30 KB. The game and playground
+share the same artwork-backed celebration. Heading and recipient now use the
+existing artwork-foreground token; the Cinzel title, PointsBadge and real award
+values remain live DOM content. The coin stays anchored at the existing points
+flight source. Width and height clamps keep the plaque inside small landscape
+boards, and the image preloads before feedback starts. The full-width gold sweep,
+its 0.55-second duration, one-second handoff, reduced motion and award queue are
+unchanged. No global palette or frame token was added.
+
+Browser checks against the actual wooden table at 568×320, 844×390 dark,
+1180×820 and 1440×900 verified readable text, contained content, a decoded image
+before reveal, points-source alignment, successful arrival and effect/input-lock
+cleanup without page errors. Generation and export details are in
+[prompts.json](prompts.json), with a matching credits-inventory record. The
+rejected draft is not part of the approved design tree or shipped credits.
+
+The subsequent 2026-11-23 turn-based review removes the bottom recipient name from
+the clean-table plaque. The title and earned points remain the visual focus;
+accessible score announcements retain award ownership. The two diamonds around
+the coin are larger, with ivory cores, soft gold halos, and staggered GSAP motion:
+an outward rotating burst, rebound, second bright twinkle and fade. The gold
+sweep and one-second points handoff are unchanged. No new artwork was generated.
+
+The diamond revision was checked in the desktop playground: both bright bursts
+remain inside the plaque, and no player caption appears under the coin. Focused
+timeline tests verify both peaks, outward motion, final fade and interruption
+rollback; existing live/preview handoff and reduced-motion tests still pass.
+
+### Perfect-table artwork and progressive highlights — 2026-11-23
+
+The perfect-table award reuses the approved clean-table plaque with live title
+and points, without a recipient caption. Its distinct GSAP sequence reveals the
+plaque with an upward ease and gradual unmasking, sweeps ivory light across the
+actual artwork alpha, pulses the points coin and emits sixteen round gold motes.
+This replaces the incomplete rectangular rim trace and avoids repeating the
+clean-table diamonds. It retains the 1.55-second source window and existing
+points flight; clean-table diamonds and the full-width sweep remain unchanged.
+
+Card feedback now builds from a prominent gold-and-ivory face shine on the first
+match to an illustrated brass frame on the second, heat distortion on the third,
+and flames on the fourth. Frame artwork gradually reveals upward over half a
+second, with light masked to its illustrated rails and corners. No spreading
+card halo or CSS outline substitutes for the artwork. All card effects clear
+when the awarded points arrive, and reduced motion skips decorative movement.
+The approved standalone [matching-card frame](matching-card-frame.png) was
+generated against the shipped brass frame and bonus plaque, then exported in
+full to a transparent 504×704 runtime WebP. Exact prompts, references and export
+settings are retained in the prompt manifest and credits inventory.
+
+Automated verification passed 527 tests, lint and the production build. The
+latest browser recheck could not run because the existing port-3000 app was no
+longer reachable; a separate server was not started.

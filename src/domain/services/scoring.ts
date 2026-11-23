@@ -6,7 +6,7 @@ export function awardPoints(
   state: GameState,
   playerId: string,
   pts: number,
-  provenance: Pick<ScoreAward, "reason" | "source" | "detail"> = {
+  provenance: Pick<ScoreAward, "reason" | "source" | "detail" | "sourceCards"> = {
     reason: "other",
     source: "table",
   },

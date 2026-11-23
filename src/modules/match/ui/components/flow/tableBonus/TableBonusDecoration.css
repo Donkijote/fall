@@ -1,0 +1,5 @@
+/* The asset alpha restricts the moving light to the illustrated metalwork. */
+.table-bonus-artwork-shine {
+  mask: url("../../../../../../assets/lobby/tavern-match/matching-card-frame.webp") center / 100%
+    100% no-repeat;
+}

@@ -13,13 +13,8 @@ import { MathUtils, Plane, Vector3, type Group, type Texture } from "three";
 import emberTexture from "@/assets/effects/ember.svg";
 import { sampleCardCapture } from "@/components/cards/motion/cardCapture";
 import { countingArrival, createCountingPlayback } from "@/components/cards/motion/cardCounting";
-import {
-  cardFlights,
-  sampleDeal,
-  samplePlay,
-  type CardPose,
-} from "@/components/cards/motion/cardFlights";
-import { appendCapture, appendDeal, appendPlay } from "@/components/cards/motion/cardTimelines";
+import { sampleDeal, samplePlay, type CardPose } from "@/components/cards/motion/cardFlights";
+import { appendCapture, appendPlay } from "@/components/cards/motion/cardTimelines";
 import {
   getCascadeDuration,
   cascadeFirstPickupDuration,
@@ -52,6 +47,7 @@ import { OrthographicCamera, useTexture } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 
 import { cardPitch, viewHeight, type PlaybackChannel, type PlaybackProps } from "./matchCardScene";
+import { appendMatchDeal } from "./matchDealPlayback";
 import { matchFallEffect } from "./matchFallEffect";
 import { sampleFallCascade } from "./sampleFallCascade";
 import { samplePocketCount } from "./samplePocketCount";
@@ -80,6 +76,7 @@ function CardSequence({
   count,
   pileRemaining,
   countSpeed = 1,
+  openingTable,
   sequence,
   textures,
   shadow,
@@ -107,7 +104,10 @@ function CardSequence({
   const timelineRef = useRef<gsap.core.Timeline>(null);
   const playback = useMemo(
     () => ({
-      flights: scene.kind === "deal" ? scene.cards.map(() => ({ progress: 0, fan: 0 })) : [],
+      flights:
+        scene.kind === "deal"
+          ? scene.cards.map(() => ({ progress: 0, fan: 0, landed: false }))
+          : [],
       play: { progress: 0 },
       capture: { progress: 0, cooldown: 0, followThrough: 0 },
       count:
@@ -132,52 +132,47 @@ function CardSequence({
   }, [shadow]);
 
   useGSAP(
-    () => {
-      if (scene.kind === "count") {
-        invalidate();
-        return;
-      }
-      const timeline = gsap.timeline({ paused: true });
-      timelineRef.current = timeline;
-      if (scene.kind === "play") appendPlay(timeline, playback.play, audio);
-      if (scene.kind === "collect")
-        appendCapture(
-          timeline,
-          playback.capture,
-          scene.capture,
-          scene.targets.length,
-          audio,
-          effects.effect,
-          true,
-        );
-      if (scene.kind === "deal") {
-        for (const first of [scene.cards[0]?.center, !scene.cards[0]?.center]) {
-          const indices = scene.cards.flatMap((card, index) =>
-            card.center === first ? [index] : [],
-          );
-          const start = timeline.duration();
-          appendDeal(
-            timeline,
-            indices.map((index) => playback.flights[index]),
-            Boolean(first),
-            audio,
-            "original",
-            start,
-          );
-          indices.forEach((index, order) => {
-            if (!scene.cards[index].fan) return;
-            timeline.to(
-              playback.flights[index],
-              { fan: 1, duration: 0.2, ease: "power2.out" },
-              start + order * cardFlights.deal.stagger + cardFlights.deal.hand,
-            );
-          });
+    (context) => {
+      const build = () => {
+        if (scene.kind === "count") {
+          invalidate();
+          return;
         }
-      }
-      if (!timeline.duration()) complete();
-      invalidate();
+        const timeline = gsap.timeline({ paused: true });
+        timelineRef.current = timeline;
+        if (scene.kind === "play") appendPlay(timeline, playback.play, audio);
+        if (scene.kind === "collect")
+          appendCapture(
+            timeline,
+            playback.capture,
+            scene.capture,
+            scene.targets.length,
+            audio,
+            effects.effect,
+            true,
+          );
+        if (scene.kind === "deal")
+          appendMatchDeal(timeline, scene, playback.flights, audio, openingTable);
+        if (!timeline.duration()) complete();
+        invalidate();
+        return () => {
+          timelineRef.current = null;
+        };
+      };
+      if (!openingTable) return build();
+      // Opening-source effects outlive this canvas sequence until points arrive.
+      // Their completed styles must survive disposal; interruptions still revert.
+      let owner: gsap.Context | undefined;
+      context.ignore(() => {
+        owner = gsap.context(() => {
+          build();
+        });
+      });
       return () => {
+        const finished = timelineRef.current?.progress() === 1;
         timelineRef.current = null;
+        if (finished) owner?.kill(false);
+        else owner?.revert();
       };
     },
     { dependencies: [playback], revertOnUpdate: true },
@@ -210,6 +205,8 @@ function CardSequence({
         const growth = MathUtils.smoothstep(flight.progress, 0.2, 1);
         const size = MathUtils.lerp(scene.deckSize, card.size, growth);
         applyPose(nodes[index], sampleDeal(flight.progress, deck, target, card.center), size);
+        if (openingTable && card.center && flight.landed && nodes[index])
+          nodes[index].visible = false;
       });
     } else if (scene.kind === "play") {
       applyPose(
