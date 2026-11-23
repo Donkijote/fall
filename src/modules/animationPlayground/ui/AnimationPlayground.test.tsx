@@ -97,6 +97,19 @@ describe("Animation playground", () => {
     expect(screen.getByRole("spinbutton", { name: "Timeline speed" })).toBeVisible();
   });
 
+  it("opens the clean-table study with its own controls and clears it on leave", () => {
+    open();
+    fireEvent.click(screen.getByRole("tab", { name: /^Table\s*\d/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Clean table" }));
+    expect(screen.getByRole("heading", { name: "Clean table bonus" })).toBeVisible();
+    expect(screen.getByRole("combobox", { name: "Capturing seat" })).toBeVisible();
+    expect(screen.getByRole("checkbox", { name: "Reduce motion" })).toBeVisible();
+    expect(screen.queryByRole("spinbutton", { name: "Timeline speed" })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Deal cards" }));
+    expect(document.querySelector("[data-clean-table-stage]")).toBeNull();
+    expect(screen.getByLabelText("Scene state")).toBeVisible();
+  });
+
   it("replays from fresh state rather than toggling the previous result", () => {
     open();
     expect(scene().faceUp).toBe(true);

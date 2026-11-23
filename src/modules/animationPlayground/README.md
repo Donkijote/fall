@@ -122,3 +122,19 @@ The approved source treatment is now shared with the live match under
 perfect-table award and heat/flame renderer. The playground keeps its deterministic
 settings and DOM-deal fixture; the game uses its existing rendered-card, audio and
 input-lock owner for the opening deal. Both call the same highlight choreography.
+
+## Clean-table bonus study (#136)
+
+Table → Clean table embeds the match module's public `CleanTablePreview` with
+format, capture example, capturing seat, reduce-motion, replay and reset controls.
+It uses the live capture renderer/audio and resolved play service before a proposed
+one-second gold clearing sweep and “Clean table!” PointsBadge reveal. The ordinary
+points flight then credits the scoreboard. Fall points remain a separate queued
+award. Excluded final-round clears and captures leaving cards behind show no
+clean-table celebration. This is a playground proposal awaiting visual review;
+live-match celebration adoption remains pending.
+
+The catalog adds this composed preview without adding a command to the shared
+3D lab state machine. Its capture, reward and points owners dispose on settings
+changes or leaving the study. Tests and browser verification are recorded in the
+[match module notes](../match/README.md#clean-table-playground-prototype-136).

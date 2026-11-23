@@ -326,3 +326,29 @@ The 2026-11-23 landing refinement removes a brief visibility gap in the opening
 deal. Animated cards now hand off to their DOM replacements at one explicit
 landing boundary, rather than hiding when eased progress rounds up early.
 Timing, source highlights and the 2×2 layout are unchanged.
+
+### Clean-table playground proposal — 2026-11-23
+
+The proposed clean-table treatment is available in Animation playground → Table →
+Clean table. The normal capture first removes the table cards. A narrow gold
+sweep crosses the cleared space, then “Clean table!” and the existing earned-points
+badge pop in and settle with two small brass glints. The resolved recipient is
+shown below. The celebration takes one second before the normal points flight
+moves the bonus into the scoreboard. All celebration decoration is removed at
+handoff; the table remains empty. The shared primary/gold semantic tokens and
+existing card, capture-pile and points artwork are retained. No new artwork,
+assets or palette tokens are introduced.
+
+Controls expose ordinary capture, cascade, Fall plus clean-table awards, excluded
+last-round clear, a capture leaving cards behind and a match-winning clear, across
+all formats and capturing seats. Reduced motion skips the sweep/pop and retains
+immediate recipient/score feedback. Browser checks at 568×320, 844×390, 1180×820
+and 1440×900 covered both themes and completed without page errors. The proposal
+awaits visual approval; live-match clean-table celebration integration remains
+pending under #136.
+
+The subsequent 2026-11-23 pacing review lengthens the gold sweep from 0.32 to
+0.55 seconds and delays the badge reveal to let the sweep read first. The full
+celebration now lasts one second before points travel. The subsequent width revision expands the sweep from edge to edge across the
+preview board while retaining its central vertical band. The badge stays centred,
+and the sweep remains independent of the table-slot grid.

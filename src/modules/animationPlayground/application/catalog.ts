@@ -1,6 +1,6 @@
 import type { Experiment, Study } from "./lab";
 
-export type PlaygroundExperiment = Experiment | "table-bonus";
+export type PlaygroundExperiment = Experiment | "table-bonus" | "clean-table";
 
 type Lesson = {
   experiment: PlaygroundExperiment;
@@ -130,6 +130,13 @@ const tableLessons: Lesson[] = [
     libraries: "GSAP · React",
     description:
       "Slow table landings highlight qualifying pattern cards before the opening bonus reaches the scoreboard.",
+  },
+  {
+    experiment: "clean-table",
+    label: "Clean table",
+    libraries: "GSAP · Three.js · React",
+    description:
+      "Clear the table, reveal the earned bonus with a gold sweep, then send the points to the scoreboard.",
   },
   {
     experiment: "play-card",

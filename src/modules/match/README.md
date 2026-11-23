@@ -337,3 +337,40 @@ set at the same timeline position as the DOM reveal. It must not be inferred fro
 flight ends, which previously hid the rendered card for a frame while its DOM
 replacement was still hidden. The deal playback regression test samples that
 rounding interval, the exact landing boundary and cancellation rollback.
+
+## Clean-table playground prototype (#136)
+
+The public `CleanTablePreview` is available under Animation playground → Table →
+Clean table. `application/cleanTablePreview` constructs deterministic, complete
+40-card positions and calls `playMatchCard`; it never computes capture plans,
+bonus amounts, exclusions or winners. Examples cover single capture, cascade,
+Fall plus clear, excluded last-round clear, a capture leaving cards behind, and
+a match-winning clear, in all formats and from every seat.
+
+Supporting UI lives in `ui/components/previews/cleanTable`: controls, stage,
+celebration markup and its GSAP timeline. `CleanTableStage` mounts the existing
+`MatchMotionLayer` after its board ref is attached, preserving the live measured
+capture, card artwork and audio. Once capture finishes it displays the resolved
+empty table, holds score presentation with a motion frame, and runs a gold sweep across the full board width followed by the existing PointsBadge with “Clean table!” and recipient.
+The proposed celebration lasts one second. The existing `MatchPointsLayer` then
+owns flight and scoreboard arrival. Compound clear/Fall events remain separate
+and ordered; the preview does not invent another score-flight system.
+
+Settings changes, reset, replay and leaving the study unmount the scene and
+revert its GSAP context. The reduce-motion control combines with the persisted
+motion preference, settling source celebration immediately and retaining the
+standard recipient/score announcement. Last-round and non-clearing cases skip
+bonus decoration. This choreography is playground-only pending visual approval;
+the live game still uses its existing clean-table points feedback.
+
+Verification: `cleanTablePreview.test.ts` checks full-deck accounting, real capture
+kinds, award ownership, exclusions, simultaneous Fall points and winner resolution
+for every format/seat. `cleanTablePlayback.test.ts` checks reveal sequencing,
+one-second handoff, exclusions, reduced motion and interruption rollback.
+`CleanTablePreview.test.tsx` checks board readiness, Strict Mode, capture → reward
+→ single points handoff, reset cancellation and immediate reduced-motion feedback.
+The playground test checks catalog placement and study disposal. Browser review
+on the existing port 3000 covered a single capture at 1440×900, team Fall + clear
+at 844×390 in dark theme, free-for-all cascade at 568×320, excluded last-round
+clear at 1180×820 in dark theme, and a winning clear at 1440×900. No page errors
+were reported; every completed preview removed its celebration decoration.

@@ -15,7 +15,7 @@ describe("ported animation engine", () => {
     const commands = Object.values(lessonsByStudy)
       .flat()
       .map((lesson) => lesson.experiment)
-      .filter((experiment) => experiment !== "table-bonus");
+      .filter((experiment) => experiment !== "table-bonus" && experiment !== "clean-table");
     expect(commands).toHaveLength(21);
     expect(new Set(commands).size).toBe(commands.length);
     for (const experiment of commands) {

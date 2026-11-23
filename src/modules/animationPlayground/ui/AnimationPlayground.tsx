@@ -10,7 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RULES } from "@/domain/constants/rules";
-import { ScoreAwardsPreview, TableBonusPreview } from "@/modules/match";
+import { ScoreAwardsPreview, TableBonusPreview, CleanTablePreview } from "@/modules/match";
 import { HOME_PATH } from "@/routes/Routes";
 
 import { createHowlerAudio } from "../adapters/audio/howlerAudio";
@@ -112,7 +112,7 @@ export function AnimationPlayground() {
   }
 
   function play() {
-    if (selected === "table-bonus") return;
+    if (selected === "table-bonus" || selected === "clean-table") return;
     audio.stop();
     audio.prepare();
     setPreview((current) => createPreview(audio, current.revision + 1, settings.effect, selected));
@@ -200,21 +200,23 @@ export function AnimationPlayground() {
                     ))}
                   </CardContent>
                 </Card>
-                {selected === "table-bonus" ? (
+                {selected === "table-bonus" || selected === "clean-table" ? (
                   <div className="min-w-0 lg:col-span-2">
                     <Card>
                       <CardHeader>
                         <CardTitle className="title-type font-normal">
-                          <h2>Table build bonus</h2>
+                          <h2>
+                            {selected === "clean-table" ? "Clean table bonus" : "Table build bonus"}
+                          </h2>
                         </CardTitle>
                         <p className="text-sm text-muted-foreground">
-                          Slow table landings build intensity with consecutive pattern matches. A
-                          perfect table earns a larger celebration before the resolved points travel
-                          to the scoreboard.
+                          {selected === "clean-table"
+                            ? "Capture the last table cards, sweep the empty space with gold, then celebrate the resolved bonus before its points reach the scoreboard."
+                            : "Slow table landings build intensity with consecutive pattern matches. A perfect table earns a larger celebration before the resolved points travel to the scoreboard."}
                         </p>
                       </CardHeader>
                       <CardContent>
-                        <TableBonusPreview />
+                        {selected === "clean-table" ? <CleanTablePreview /> : <TableBonusPreview />}
                       </CardContent>
                     </Card>
                   </div>
@@ -250,7 +252,7 @@ export function AnimationPlayground() {
                     </MotionContext>
                   </div>
                 )}
-                {selected !== "table-bonus" && (
+                {selected !== "table-bonus" && selected !== "clean-table" && (
                   <Card>
                     <CardHeader>
                       <CardTitle className="title-type font-normal">Live tuning</CardTitle>
