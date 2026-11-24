@@ -3,7 +3,8 @@ import { lazy, Suspense, useEffect, useRef } from "react";
 import type { ReactNode } from "react";
 
 import emberTexture from "@/assets/effects/ember.svg";
-import { CardArtworkProvider, cardArtwork } from "@/components/cards/three/CardArtwork";
+import { CardArtworkProvider } from "@/components/cards/three/CardArtwork";
+import { getCardArtwork } from "@/infrastructure/adapters/cards/cardArtwork";
 import { CaptureCountingPreview } from "@/modules/match";
 
 import { Grid, useTexture } from "@react-three/drei";
@@ -153,7 +154,8 @@ export function LabViewport({
   }[study];
 
   useEffect(() => {
-    useTexture.preload([cardArtwork.face, cardArtwork.back]);
+    const artwork = getCardArtwork();
+    useTexture.preload([artwork.face, artwork.back]);
     useTexture.preload(emberTexture);
   }, []);
 

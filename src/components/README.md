@@ -183,3 +183,7 @@ attribute and reserves a 2.5rem native inset through `--native-titlebar-height`,
 which the global `--safe-area-top` combines with device safe areas. Traffic lights
 remain native and the strip starts after their reserved area. Its layout effect
 restores any previous inset on disable/unmount, including StrictMode replay.
+
+## Complete card skins — GHI #132
+
+Shared card components render complete generated images. SuitGlyph resolves the selected pack; DeckPicker uses the native SelectField. CardFaces and game cards preserve the image's own border and alpha without extra paper or padding. The 3D adapter rasterizes the same complete image into explicit sRGB textures and disposes its canvas textures. Generated core primitives are unchanged. The artwork adapter owns URLs/availability, preferences owns persistence, and the independent visual catalog owns pack IDs. See docs/design/card-deck for full-card masters and export provenance.

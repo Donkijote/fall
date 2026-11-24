@@ -114,7 +114,7 @@ export function TableBonusTable({
               <span className="text-xs text-muted-foreground">Needs {expected[index]}</span>
               <div
                 data-bonus-card={key}
-                className="relative isolate mx-auto aspect-[63/88] w-full max-w-24 rounded-md bg-stone-50 p-1 opacity-0 shadow-md"
+                className="relative isolate mx-auto aspect-[63/88] w-full max-w-24 rounded-md opacity-0 shadow-md"
               >
                 <TableBonusDecoration />
                 <SuitGlyph

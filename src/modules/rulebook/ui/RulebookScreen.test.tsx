@@ -8,7 +8,10 @@ import userEvent from "@testing-library/user-event";
 
 import { RulebookScreen } from "./RulebookScreen";
 
-vi.mock("@/infrastructure/ui/hooks/useGamePreferences", () => ({ useReducedMotion: () => true }));
+vi.mock(import("@/infrastructure/ui/hooks/useGamePreferences"), async (importOriginal) => ({
+  ...(await importOriginal()),
+  useReducedMotion: () => true,
+}));
 
 function Location() {
   const location = useLocation();

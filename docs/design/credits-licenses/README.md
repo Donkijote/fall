@@ -186,3 +186,12 @@ and the proprietary notice was checked at the end. Physical-device notch/PWA
 checks remain separate. The original full-content mockup is retained only for
 its approved composition; this revision’s background master and live code own
 the updated artwork, reading treatment and legal copy.
+
+## Card replacement — 2026-11-23
+
+Issue #132 replaces the former stock-reference SVG deck with three approved
+independent generated packs. The preceding stock-reference discussion records
+the historical review, not the provenance of the replacement. Current inputs,
+provider-term questions, generation/export records and the approved decision are
+owned by [card-deck](../card-deck/README.md). The active credits inventory follows
+the replacement artwork; third-party font, icon and sound notices remain separate.

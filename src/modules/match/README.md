@@ -457,3 +457,5 @@ do not change flying-card targets. The parent board owns fallback visibility;
 late motion-context cleanup cannot hide a landed card. Reduced motion restores
 static frame geometry, and score arrival clears persistent decoration. Focused
 measurement, motion, playback and interruption tests cover these boundaries.
+
+Card skins (#132): board/hand images and all Three.js flight, bonus and counting textures resolve the current visual pack through shared artwork adapters. Full generated card images already contain their paper and frames; the renderer adds no inset or replacement card face. Hidden piles share the selected pack's single back. Game rules and card keys are unchanged.

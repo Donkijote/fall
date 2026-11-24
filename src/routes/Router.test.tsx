@@ -21,8 +21,8 @@ vi.mock("@/modules/match", () => ({
 vi.mock("@/modules/credits", () => ({
   CreditsScreen: () => <div data-testid="credits">Credits</div>,
 }));
-vi.mock("@/infrastructure/ui/components/card/CardList", () => ({
-  CardList: () => <div data-testid="cards">Cards</div>,
+vi.mock("@/modules/cardCollection", () => ({
+  CardCollection: () => <div data-testid="cards">Cards</div>,
 }));
 vi.mock("@/infrastructure/ui/screens/SingsSheet", () => ({
   SingsSheetScreen: () => <div data-testid="sings">Sings</div>,
@@ -87,12 +87,27 @@ describe("AppRouter", () => {
     },
   );
 
-  it("renders CardList at CARDS_PATH", async () => {
+  it("loads the card collection under /dev in development", async () => {
+    vi.stubEnv("DEV", true);
+    expect(CARDS_PATH).toBe("/dev/cards");
     window.history.pushState({}, "", CARDS_PATH);
     const AppRouter = await importRouter();
     render(<AppRouter />);
-    expect(screen.getByTestId("cards")).toBeInTheDocument();
+    expect(await screen.findByTestId("cards")).toBeInTheDocument();
   });
+
+  it.each([CARDS_PATH, "/cards"])(
+    "does not register the collection at %s in production",
+    async (path) => {
+      vi.stubEnv("DEV", false);
+      window.history.pushState({}, "", path);
+      const AppRouter = await importRouter();
+      vi.spyOn(console, "error").mockImplementation(() => {});
+      render(<AppRouter />);
+      expect(screen.queryByTestId("cards")).not.toBeInTheDocument();
+      expect(screen.getByText("404 Not Found")).toBeInTheDocument();
+    },
+  );
 
   it("renders SingsSheetScreen at SINGS_SHEETS", async () => {
     window.history.pushState({}, "", SINGS_SHEETS);

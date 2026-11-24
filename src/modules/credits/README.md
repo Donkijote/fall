@@ -89,14 +89,14 @@ Every file under `src/assets` and public image exports has an inventory owner.
 Coverage is not proof of permission. The user's 2026-11-17 clarifications are
 recorded in each affected entry; provenance and license review are separate.
 
-- **Spanish deck:** the user redrew SVGs in Adobe Illustrator from a Shutterstock
-  reference. Permission records have not been established. Record the reference
-  as third-party input and permission as pending. Do not label this deck original,
-  public domain, generated, or MIT. The exact listing/artist is still unknown.
-  An independently generated set of faces and back is planned, not implemented.
-  Replacement work is tracked in [issue #132](https://github.com/Donkijote/fall/issues/132).
-  An attribution line or a future replacement does not establish authorization
-  for the existing adapted artwork.
+- **Spanish deck:** issue #132 replaces the former stock-reference SVGs with
+  three independently generated identities: Mountain Keep, Maritime Guild and
+  Moonlit Grove. The user approved the comparison on 2026-11-23. Standalone
+  master prompts, exact export steps, inputs and remaining provider-term review
+  are recorded in [the card-deck design](../../../docs/design/card-deck/README.md).
+  The historical redraw's reference permission was not established; replacing
+  it does not resolve that historical question. Shipped credits now describe
+  the actual replacement assets and preserve the separate font/audio notices.
 - **Card sounds:** the user supplied both individual Pixabay pages on
   2026-11-18. `deal-card.mp3` is recorded against [Taking playing card - 2,
   item 522516](https://pixabay.com/sound-effects/film-special-effects-taking-playing-card-2-522516/)

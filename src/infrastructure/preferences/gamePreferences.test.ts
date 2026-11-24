@@ -22,10 +22,28 @@ test("merges independent changes and persists reset without losing player data",
   localStorage.setItem("FALL_USER", '{"id":"traveller"}');
   updateGamePreferences({ muted: true });
   updateGamePreferences({ volume: 0.75, motion: "reduced" });
-  expect(readGamePreferences()).toEqual({ volume: 0.75, muted: true, motion: "reduced" });
+  expect(readGamePreferences()).toEqual({
+    ...defaultGamePreferences,
+    volume: 0.75,
+    muted: true,
+    motion: "reduced",
+  });
   resetGamePreferences();
   expect(readGamePreferences()).toEqual(defaultGamePreferences);
   expect(localStorage.getItem("FALL_USER")).toBe('{"id":"traveller"}');
+});
+
+test("restores only known visual decks and retains other preferences when switching", () => {
+  expect(readGamePreferences('{"cardDeck":"unknown"}').cardDeck).toBe("mountain-keep");
+  updateGamePreferences({ volume: 0.3, motion: "reduced" });
+  updateGamePreferences({ cardDeck: "maritime-guild" });
+  expect(readGamePreferences()).toMatchObject({
+    cardDeck: "maritime-guild",
+    volume: 0.3,
+    motion: "reduced",
+  });
+  resetGamePreferences();
+  expect(readGamePreferences().cardDeck).toBe("mountain-keep");
 });
 
 test("notifies live and cross-tab subscribers and releases listeners", () => {

@@ -20,6 +20,7 @@ import { rulebookGallery } from "@/modules/rulebook";
 import { singsGallery } from "@/modules/sings-reference";
 import { tavernGallery } from "@/modules/tavern";
 
+import { CardDeckPreview } from "./CardDeckPreview";
 import {
   ActionPreview,
   ActivityPreview,
@@ -131,6 +132,12 @@ export const gallerySections: { title: string; folder: string; entries: Entry[] 
     title: "Cards",
     folder: "cards",
     entries: [
+      {
+        name: "DeckPicker",
+        variants: "Mountain Keep, Maritime Guild, Moonlit Grove · faces and shared backs",
+        usage: "Hall Settings, Card collection, gameplay and guides",
+        Preview: CardDeckPreview,
+      },
       {
         name: "DeclarationBadge",
         variants: "Optional wax and mandatory brass plate",

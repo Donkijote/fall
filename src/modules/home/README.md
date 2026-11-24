@@ -86,3 +86,5 @@ and resource features. No new screen, navigation or balance mutation is wired
 by this presentation pass. Shared component notes own hover/focus behavior,
 reduced-motion rules, the global cursor/selection policy and implemented
 state-change animations. `CardHall.test.tsx` asserts the updated accessible resource action names.
+
+Card skins (#132): Settings persists Mountain Keep, Maritime Guild or Moonlit Grove and links to the development-only /dev/cards collection alongside the component gallery and animation playground. Shared DeckPicker preserves SelectField keyboard and touch behavior. Reset preferences restores Mountain Keep.

@@ -14,6 +14,7 @@ running app to check current controls and behavior.
 | Credits and licenses | [Continuous Chronicle](credits-licenses/README.md)     |
 | How to Play          | [Rulebook](how-to-play/README.md)                      |
 | Sings                | [Sings reference](sings-reference/README.md)           |
+| Card deck skins      | [Three complete card packs](card-deck/README.md)       |
 | Component gallery    | [Component gallery](component-gallery/README.md)       |
 | Action button        | [Action button skins](action-button/README.md)         |
 | Choice button        | [Choice button artwork](choice-button/README.md)       |

@@ -1,62 +1,35 @@
-import type { FC, ImgHTMLAttributes } from "react";
+import type { ImgHTMLAttributes } from "react";
 
+import type { CardDeckId } from "@/domain/artwork/decks";
 import type { Rank, Suit } from "@/domain/entities/Card";
+import { getCardFaceUrl } from "@/infrastructure/adapters/cards/cardArtwork";
 
-const images = import.meta.glob<string>("@/assets/cards/*/*.svg", {
-  eager: true,
-  query: "?url",
-  import: "default",
-});
+import { useDeckArtwork } from "./useDeckArtwork";
 
-const RANK_NAME: Record<
-  Rank,
-  "Ace" | "Two" | "Three" | "Four" | "Five" | "Six" | "Seven" | "Ten" | "Eleven" | "Twelve"
-> = {
-  1: "Ace",
-  2: "Two",
-  3: "Three",
-  4: "Four",
-  5: "Five",
-  6: "Six",
-  7: "Seven",
-  10: "Ten",
-  11: "Eleven",
-  12: "Twelve",
-};
+export { getCardFaceUrl } from "@/infrastructure/adapters/cards/cardArtwork";
 
-type SuitGlyphProps = {
+export function SuitGlyph({
+  suit,
+  rank,
+  deck,
+  className,
+  imgProps,
+}: {
   suit: Suit;
   rank: Rank;
+  deck?: CardDeckId;
   className?: string;
   imgProps?: Omit<ImgHTMLAttributes<HTMLImageElement>, "src" | "alt">;
-};
-
-export const SuitGlyph: FC<SuitGlyphProps> = ({ suit, rank, className, imgProps }) => {
-  const src = getCardFaceUrl(suit, rank);
-
-  if (!src) {
-    return null;
-  }
-
-  const alt = `${RANK_NAME[rank]}Of${capitalize(suit)}`;
-
+}) {
+  const selected = useDeckArtwork();
   return (
-    <img src={src} alt={alt} className={className} loading="lazy" draggable={false} {...imgProps} />
+    <img
+      src={getCardFaceUrl(suit, rank, deck ?? selected.deck)}
+      alt={`${rank} of ${suit}`}
+      className={className}
+      loading="lazy"
+      draggable={false}
+      {...imgProps}
+    />
   );
-};
-
-const buildImageKey = (suit: Suit, rank: Rank): string | null => {
-  const rankName = RANK_NAME[rank];
-  if (!rankName) return null;
-
-  return `/src/assets/cards/${suit}/${rankName}Of${capitalize(suit)}.svg`;
-};
-
-const capitalize = (word: string) => {
-  return word.charAt(0).toUpperCase() + word.slice(1);
-};
-
-export function getCardFaceUrl(suit: Suit, rank: Rank) {
-  const key = buildImageKey(suit, rank);
-  return key ? images[key] : undefined;
 }

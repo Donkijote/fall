@@ -10,7 +10,10 @@ const motion = vi.hoisted(() => ({
   complete: undefined as (() => void) | undefined,
   ready: false,
 }));
-vi.mock("@/infrastructure/ui/hooks/useGamePreferences", () => ({ useReducedMotion: () => false }));
+vi.mock(import("@/infrastructure/ui/hooks/useGamePreferences"), async (importOriginal) => ({
+  ...(await importOriginal()),
+  useReducedMotion: () => false,
+}));
 vi.mock("../flow/MatchMotionLayer", () => ({
   MatchMotionLayer: ({
     board,

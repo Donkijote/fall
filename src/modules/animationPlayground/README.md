@@ -147,3 +147,5 @@ The gold sweep and one-second points handoff retain the approved timing.
 The plaque omits a bottom player caption in the turn-based presentation. Its two
 diamonds now use a brighter, larger GSAP burst and second twinkle around the coin;
 recipient attribution remains available through the existing score announcement.
+
+Card skins (#132): the shared artwork provider and active-pack preloader use the selected complete card faces and back. The playground adds no paper, frame or type to those images.
