@@ -6,7 +6,8 @@ import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { TableBonusPreview } from "./TableBonusPreview";
 
 const preferences = vi.hoisted(() => ({ reduced: false }));
-vi.mock("@/infrastructure/ui/hooks/useGamePreferences", () => ({
+vi.mock(import("@/infrastructure/ui/hooks/useGamePreferences"), async (importOriginal) => ({
+  ...(await importOriginal()),
   useReducedMotion: () => preferences.reduced,
 }));
 let timelines: gsap.core.Timeline[];

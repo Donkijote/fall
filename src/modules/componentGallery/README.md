@@ -30,3 +30,5 @@ The shared inventory now exposes BrassCheckbox, GuideLink, NumberMedallion,
 EmptyCardSlot, DeclarationBadge, PointsBadge, PlayerPortrait, and ParchmentFigure
 as individual previews. ResourceReadout shows coin, capped energy, and unavailable
 diamond balances using the real HUD component.
+
+Card skins (#132): CardDeckPreview exercises DeckPicker with local preview state, four representative faces and the shared back. It uses complete runtime artwork and does not change the player's persisted pack.

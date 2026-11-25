@@ -11,7 +11,7 @@ class CardGeometry extends ExtrudeGeometry {
     const height = 2.88;
     const depth = 0.09;
     // Match the rounded silhouette of the app card while retaining the 3D mesh.
-    const radius = width * (12 / 96);
+    const radius = width * (24 / 504);
     const x = width / 2 - radius;
     const y = height / 2 - radius;
     const outline = new Shape();
@@ -92,12 +92,14 @@ export function CardMesh({
         attach="material-1"
         clippingPlanes={clippingPlanes}
         map={faceTexture ?? face}
+        alphaTest={0.5}
         {...surfaceShaders.front}
       />
       <meshBasicMaterial
         attach="material-2"
         clippingPlanes={clippingPlanes}
         map={back}
+        alphaTest={0.5}
         {...surfaceShaders.back}
       />
     </mesh>

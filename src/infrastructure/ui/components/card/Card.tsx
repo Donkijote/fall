@@ -2,8 +2,8 @@ import { cn } from "cn";
 import type { CSSProperties } from "react";
 
 import { SuitGlyph } from "@/components/cards/SuitGlyph";
+import { useDeckArtwork } from "@/components/cards/useDeckArtwork";
 import { type Rank, type Suit } from "@/domain/entities/Card";
-import { useReducedMotion } from "@/infrastructure/ui/hooks/useGamePreferences";
 
 export type CardProps = {
   rank: Rank;
@@ -34,20 +34,16 @@ export const Card = ({
   className,
   style,
 }: CardProps) => {
-  const reducedMotion = useReducedMotion();
+  const { back } = useDeckArtwork();
   return (
     <button
       type="button"
       disabled={disabled}
       onClick={onClick}
       className={cn(
-        "rounded-xl relative isolate aspect-[63/88]",
-        "bg-zinc-50 ring-zinc-200 shadow-sm ring-1",
-        "transition-transform duration-150 will-change-transform",
-        !disabled && !reducedMotion && "hover:-translate-y-0.5 active:translate-y-0",
-        reducedMotion && "transition-none",
+        "rounded-md relative isolate aspect-[63/88]",
+        "drop-shadow-sm focus-visible:outline-ring focus-visible:outline-2",
         selected && "ring-ring ring-2 ring-offset-2 ring-offset-background",
-        "overflow-hidden",
         className,
         {
           "w-14 lg:w-22": faceDown && !size,
@@ -61,21 +57,17 @@ export const Card = ({
       aria-pressed={selected}
     >
       {faceDown ? (
-        <div
-          className="absolute inset-0"
-          aria-hidden
-          style={{
-            background: "repeating-linear-gradient(135deg, #1f2937 0 6px, #111827 6px 12px)",
-          }}
+        <img
+          src={back}
+          alt=""
+          draggable={false}
+          className="absolute inset-0 size-full object-contain"
         />
       ) : (
-        <div className="h-full w-full p-1.5 lg:p-2 [&_img]:h-full">
+        <div className="h-full w-full [&_img]:size-full [&_img]:object-contain">
           <SuitGlyph suit={suit} rank={rank} />
         </div>
       )}
-
-      {/* subtle vignette */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-black/5 to-white/0" />
     </button>
   );
 };

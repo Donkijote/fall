@@ -1,7 +1,6 @@
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 
-import { CardList } from "@/infrastructure/ui/components/card/CardList";
 import { useAssetInteractions } from "@/infrastructure/ui/hooks/useAssetInteractions";
 import { useNativeOrientation } from "@/infrastructure/ui/hooks/useNativeOrientation";
 import { HomeScreen } from "@/infrastructure/ui/screens/Home";
@@ -13,6 +12,7 @@ import {
   CARDS_PATH,
   COMPONENT_GALLERY_PATH,
   CREDITS_PATH,
+  DEV_PATH,
   HOME_PATH,
   LOGIN_PATH,
   MATCH_PATH,
@@ -49,19 +49,31 @@ const router = createBrowserRouter([
   ...(import.meta.env.DEV
     ? [
         {
-          path: COMPONENT_GALLERY_PATH,
-          lazy: async () => {
-            const { ComponentGallery } = await import("@/modules/componentGallery");
-            return { Component: ComponentGallery };
-          },
-        },
-        {
-          path: ANIMATION_PLAYGROUND_PATH,
-          lazy: async () => {
-            const { AnimationPlayground } =
-              await import("@/modules/animationPlayground/ui/AnimationPlayground");
-            return { Component: AnimationPlayground };
-          },
+          path: DEV_PATH,
+          children: [
+            {
+              path: CARDS_PATH,
+              lazy: async () => {
+                const { CardCollection } = await import("@/modules/cardCollection");
+                return { Component: CardCollection };
+              },
+            },
+            {
+              path: COMPONENT_GALLERY_PATH,
+              lazy: async () => {
+                const { ComponentGallery } = await import("@/modules/componentGallery");
+                return { Component: ComponentGallery };
+              },
+            },
+            {
+              path: ANIMATION_PLAYGROUND_PATH,
+              lazy: async () => {
+                const { AnimationPlayground } =
+                  await import("@/modules/animationPlayground/ui/AnimationPlayground");
+                return { Component: AnimationPlayground };
+              },
+            },
+          ],
         },
       ]
     : []),
@@ -75,10 +87,6 @@ const router = createBrowserRouter([
       const { MatchScreen } = await import("@/modules/match");
       return { Component: MatchScreen };
     },
-  },
-  {
-    path: CARDS_PATH,
-    element: <CardList />,
   },
   {
     path: SINGS_SHEETS,

@@ -20,7 +20,7 @@ export function CardFaces({
           <div
             role="img"
             aria-label={`${card.rank} of ${card.suit}`}
-            className="aspect-[63/88] w-16 rounded-md border border-artwork-shadow/30 bg-stone-50 p-1 shadow-sm sm:w-[clamp(3rem,5vw,4.5rem)] sm:p-1.5"
+            className="aspect-[63/88] w-16 drop-shadow-sm sm:w-[clamp(3rem,5vw,4.5rem)]"
           >
             <span
               aria-hidden="true"

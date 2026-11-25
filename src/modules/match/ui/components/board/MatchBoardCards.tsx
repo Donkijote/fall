@@ -1,9 +1,9 @@
 import { cn } from "cn";
 import { useRef, useState } from "react";
 
-import cardBack from "@/assets/cards/back.svg";
 import { EmptyCardSlot } from "@/components/cards/EmptyCardSlot";
 import { SuitGlyph } from "@/components/cards/SuitGlyph";
+import { useDeckArtwork } from "@/components/cards/useDeckArtwork";
 import type { Card } from "@/domain/entities/Card";
 import { toCardKey } from "@/domain/helpers/card";
 
@@ -13,19 +13,19 @@ import { MatchPlaque } from "./MatchPlaque";
 import { placeTableCards, wideTableSlot, type TableSlots } from "./tableSlots";
 import { useHandReflow } from "./useHandReflow";
 
-const cardStyle =
-  "block aspect-[63/88] w-(--match-card-width) shrink-0 rounded-[10%] shadow-sm shadow-artwork-shadow/80";
+const cardStyle = "block aspect-[63/88] w-(--match-card-width) shrink-0 drop-shadow-sm";
 
 function CardImage({ card }: { card?: Card }) {
+  const { back } = useDeckArtwork();
   return card ? (
     <SuitGlyph
       suit={card.suit}
       rank={card.rank}
-      className={cn(cardStyle, "bg-amber-50 object-contain p-[8%] ring-1 ring-gold/45")}
+      className={cn(cardStyle, "object-contain")}
       imgProps={{ loading: "eager" }}
     />
   ) : (
-    <img src={cardBack} alt="" draggable={false} className={cardStyle} />
+    <img src={back} alt="" draggable={false} className={cardStyle} />
   );
 }
 

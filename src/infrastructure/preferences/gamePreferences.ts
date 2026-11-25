@@ -1,13 +1,17 @@
+import { defaultCardDeck, isCardDeckId, type CardDeckId } from "@/domain/artwork/decks";
+
 export type GamePreferences = {
   volume: number;
   muted: boolean;
   motion: "system" | "reduced";
+  cardDeck: CardDeckId;
 };
 
 export const defaultGamePreferences: GamePreferences = {
   volume: 0.48,
   muted: false,
   motion: "system",
+  cardDeck: defaultCardDeck,
 };
 
 const storageKey = "fall-preferences";
@@ -33,6 +37,7 @@ export function readGamePreferences(raw = getPreferencesSnapshot()): GamePrefere
           : defaultGamePreferences.volume,
       muted: typeof value?.muted === "boolean" ? value.muted : defaultGamePreferences.muted,
       motion: value?.motion === "reduced" ? "reduced" : "system",
+      cardDeck: isCardDeckId(value?.cardDeck) ? value.cardDeck : defaultCardDeck,
     };
   } catch {
     return { ...defaultGamePreferences };

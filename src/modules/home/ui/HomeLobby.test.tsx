@@ -4,7 +4,7 @@ import { MemoryRouter, Route, Routes } from "react-router";
 import { StorageKeys, StorageService } from "@/application/services/StorageService";
 import { CreditsScreen } from "@/modules/credits";
 import { MatchScreen } from "@/modules/match";
-import { MATCH_PATH } from "@/routes/Routes";
+import { CARDS_PATH, COMPONENT_GALLERY_PATH, MATCH_PATH } from "@/routes/Routes";
 
 import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -32,6 +32,8 @@ function renderLobby(entry = "/") {
           <Route path="/rules" element={<h1>Rules scene</h1>} />
           <Route path="/sings" element={<h1>Sings scene</h1>} />
           <Route path="/dev/animations" element={<h1>Animation playground scene</h1>} />
+          <Route path={CARDS_PATH} element={<h1>Card collection scene</h1>} />
+          <Route path={COMPONENT_GALLERY_PATH} element={<h1>Component gallery scene</h1>} />
         </Routes>
       </MemoryRouter>
     </ThemeProvider>,
@@ -60,6 +62,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  vi.unstubAllEnvs();
   vi.unstubAllGlobals();
   document.documentElement.classList.remove("light", "dark");
   document.documentElement.style.removeProperty("color-scheme");
@@ -203,14 +206,28 @@ test("Escape closes Help and restores focus to its trigger", async () => {
   await waitFor(() => expect(help).toHaveFocus());
 });
 
-test("Settings keeps the development playground link after moving the guides", async () => {
+test.each(["Animation playground", "Component gallery", "Card collection"])(
+  "Settings opens the development %s",
+  async (name) => {
+    vi.stubEnv("DEV", true);
+    const user = userEvent.setup();
+    renderLobby();
+    await user.click(screen.getByRole("button", { name: "Settings" }));
+    expect(screen.queryByRole("link", { name: "How to play" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Sings reference" })).not.toBeInTheDocument();
+    await user.click(screen.getByRole("link", { name }));
+    expect(await screen.findByRole("heading", { name: `${name} scene` })).toBeVisible();
+  },
+);
+
+test("production Settings keeps the deck selector without developer links", async () => {
+  vi.stubEnv("DEV", false);
   const user = userEvent.setup();
   renderLobby();
   await user.click(screen.getByRole("button", { name: "Settings" }));
-  expect(screen.queryByRole("link", { name: "How to play" })).not.toBeInTheDocument();
-  expect(screen.queryByRole("link", { name: "Sings reference" })).not.toBeInTheDocument();
-  await user.click(screen.getByRole("link", { name: "Animation playground" }));
-  expect(await screen.findByRole("heading", { name: "Animation playground scene" })).toBeVisible();
+  await waitFor(() => expect(screen.getByRole("combobox", { name: "Card deck" })).toBeVisible());
+  for (const name of ["Animation playground", "Component gallery", "Card collection"])
+    expect(screen.queryByRole("link", { name })).not.toBeInTheDocument();
 });
 
 test("Settings preserves appearance switching and returns keyboard focus on Escape", async () => {

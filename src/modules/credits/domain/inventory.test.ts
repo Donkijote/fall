@@ -46,14 +46,14 @@ test("retains third-party notices separately from the proprietary project notice
   expect(creditsInventory.project.notice).not.toContain("Permission is hereby granted");
 });
 
-test("records pending deck permission and the identified Pixabay sound sources", () => {
+test("records generated replacement decks and the identified Pixabay sound sources", () => {
   const byId = (id: string) => creditsInventory.artwork.find((entry) => entry.id === id);
   expect(byId("cards")).toMatchObject({
-    provenance: "third-party",
-    licenseStatus: "permission-pending",
-    source: "https://www.shutterstock.com/",
+    provenance: "generated",
+    licenseStatus: "provider-terms-pending",
+    source: "https://openai.com/",
   });
-  expect(byId("cards")?.modifications).toContain("Adobe Illustrator");
+  expect(byId("cards")?.modifications).toContain("No production artwork was extracted");
   for (const [id, file, assetId] of [
     ["deal-card-sound", "src/assets/cards/deal-card.mp3", "522516"],
     ["play-card-sound", "src/assets/cards/play-card.mp3", "522513"],

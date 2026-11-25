@@ -1,9 +1,11 @@
-import { FlaskConical, LayoutGrid, Monitor, Moon, Sun } from "lucide-react";
+import { FlaskConical, Layers, LayoutGrid, Monitor, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useId, useRef } from "react";
 import { Link, useLocation } from "react-router";
 
 import { ActionButton, BronzeArrow, ChoiceButton, ModalContent, SelectField } from "@/components";
+import { DeckPicker } from "@/components/cards/DeckPicker";
+import { useDeckArtwork } from "@/components/cards/useDeckArtwork";
 import { BronzeSlider } from "@/components/controls/BronzeSlider";
 import { WaxSwitch } from "@/components/controls/WaxSwitch";
 import { MotionDialog as Dialog } from "@/components/surfaces/PopupMotion";
@@ -15,7 +17,12 @@ import {
   updateGamePreferences,
 } from "@/infrastructure/preferences/gamePreferences";
 import { useGamePreferences } from "@/infrastructure/ui/hooks/useGamePreferences";
-import { ANIMATION_PLAYGROUND_PATH, COMPONENT_GALLERY_PATH, CREDITS_PATH } from "@/routes/Routes";
+import {
+  ANIMATION_PLAYGROUND_PATH,
+  CARDS_PATH,
+  COMPONENT_GALLERY_PATH,
+  CREDITS_PATH,
+} from "@/routes/Routes";
 
 type HomeSettingsProps = { open: boolean; onOpenChange: (open: boolean) => void };
 
@@ -30,6 +37,7 @@ const sectionClassName = "text-base";
 function SettingsContent({ open, onOpenChange }: HomeSettingsProps) {
   const { theme, setTheme } = useTheme();
   const { volume, muted, motion } = useGamePreferences();
+  const { deck: cardDeck } = useDeckArtwork();
   const id = useId();
   const location = useLocation();
   const creditsLink = useRef<HTMLAnchorElement>(null);
@@ -45,7 +53,7 @@ function SettingsContent({ open, onOpenChange }: HomeSettingsProps) {
       <DialogHeader className="min-h-11 justify-center pr-12">
         <DialogTitle className="text-2xl font-normal">Settings</DialogTitle>
         <DialogDescription className="sr-only">
-          Appearance, audio, and accessibility preferences.
+          Appearance, card deck, audio, and accessibility preferences.
         </DialogDescription>
       </DialogHeader>
       <div className="min-h-0 [scrollbar-width:none] overflow-y-auto overscroll-contain [&::-webkit-scrollbar]:hidden">
@@ -72,6 +80,22 @@ function SettingsContent({ open, onOpenChange }: HomeSettingsProps) {
                   </ChoiceButton>
                 ))}
               </ToggleGroup>
+            </div>
+          </section>
+          <BronzeArrow tone="faded" className="my-3 h-0.5 w-full" />
+          <section aria-labelledby={`${id}-cards`}>
+            <h2 id={`${id}-cards`} className={sectionClassName}>
+              Cards
+            </h2>
+            <div className={rowClassName}>
+              <span id={`${id}-deck`} className="font-medium">
+                Card deck
+              </span>
+              <DeckPicker
+                value={cardDeck}
+                labelledBy={`${id}-deck`}
+                onValueChange={(cardDeck) => updateGamePreferences({ cardDeck })}
+              />
             </div>
           </section>
           <BronzeArrow tone="faded" className="my-3 h-0.5 w-full" />
@@ -161,7 +185,16 @@ function SettingsContent({ open, onOpenChange }: HomeSettingsProps) {
               Reset preferences
             </ActionButton>
             {import.meta.env.DEV && (
-              <div className="flex flex-wrap gap-2">
+              <div role="group" aria-label="Development tools" className="flex flex-wrap gap-2">
+                <ActionButton
+                  tone="quiet"
+                  nativeButton={false}
+                  role="link"
+                  render={<Link to={CARDS_PATH} onClick={() => onOpenChange(false)} />}
+                >
+                  <Layers aria-hidden="true" />
+                  Card collection
+                </ActionButton>
                 <ActionButton
                   tone="quiet"
                   nativeButton={false}

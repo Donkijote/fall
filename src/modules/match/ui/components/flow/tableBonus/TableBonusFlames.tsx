@@ -6,6 +6,7 @@ import { getCardFaceUrl } from "@/components/cards/SuitGlyph";
 import { CardArtworkProvider, useCardFaceTextures } from "@/components/cards/three/CardArtwork";
 import { CardMesh } from "@/components/cards/three/CardMesh";
 import { FlameEnvelope } from "@/components/cards/three/FlameEnvelope";
+import { useDeckArtwork } from "@/components/cards/useDeckArtwork";
 import type { Card } from "@/domain/entities/Card";
 
 import { Canvas, useFrame } from "@react-three/fiber";
@@ -26,7 +27,8 @@ function CardFlames({
   const anchor = useRef<Group>(null);
   const heatCard = useRef<Group>(null);
   const flames = useRef<Group>(null);
-  const faceUrl = getCardFaceUrl(face.suit, face.rank)!;
+  const { deck } = useDeckArtwork();
+  const faceUrl = getCardFaceUrl(face.suit, face.rank, deck);
   const textures = useCardFaceTextures([faceUrl]);
   useFrame(({ clock }) => {
     const root = board.current;

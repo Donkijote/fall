@@ -25,7 +25,6 @@ import { collectAt, sampleFallCapture } from "@/components/cards/motion/tableCap
 import { getCardFaceUrl } from "@/components/cards/SuitGlyph";
 import {
   CardArtworkProvider,
-  cardArtwork,
   useCardFaceTextures,
   useCardArtwork,
 } from "@/components/cards/three/CardArtwork";
@@ -40,7 +39,8 @@ import {
   updateFallShadow,
   type FallShadowMesh,
 } from "@/components/cards/three/FallShadow";
-import { createDeck } from "@/domain/rules/deck";
+import { useDeckArtwork } from "@/components/cards/useDeckArtwork";
+import { getCardArtwork, getCardFaceUrls } from "@/infrastructure/adapters/cards/cardArtwork";
 
 import { useGSAP } from "@gsap/react";
 import { OrthographicCamera, useTexture } from "@react-three/drei";
@@ -52,11 +52,10 @@ import { matchFallEffect } from "./matchFallEffect";
 import { sampleFallCascade } from "./sampleFallCascade";
 import { samplePocketCount } from "./samplePocketCount";
 
-const faceUrls = createDeck().flatMap(({ suit, rank }) => getCardFaceUrl(suit, rank) ?? []);
-
 export function preloadMatchCardArt() {
-  useTexture.preload(faceUrls);
-  useTexture.preload([cardArtwork.face, cardArtwork.back]);
+  const artwork = getCardArtwork();
+  useTexture.preload(getCardFaceUrls());
+  useTexture.preload([artwork.face, artwork.back]);
   useTexture.preload(emberTexture);
 }
 
@@ -84,6 +83,7 @@ function CardSequence({
   textures: Map<string, Texture>;
   shadow: RefObject<FallShadowMesh | null>;
 }) {
+  const { deck } = useDeckArtwork();
   const invalidate = useThree((state) => state.invalidate);
   const cards =
     scene.kind === "deal"
@@ -405,11 +405,7 @@ function CardSequence({
                     : effects.targetHeat
                   : undefined
               }
-              faceTexture={
-                art
-                  ? textures.get(getCardFaceUrl(art.suit, art.rank) ?? cardArtwork.face)
-                  : undefined
-              }
+              faceTexture={art ? textures.get(getCardFaceUrl(art.suit, art.rank, deck)) : undefined}
             />
           </group>
           {fallTarget && index === 0 && effects.effect === "flame" && (
@@ -422,14 +418,12 @@ function CardSequence({
 }
 
 function MatchSequences({ playback }: { playback?: PlaybackProps }) {
+  const { deck } = useDeckArtwork();
   const { gl, camera, scene } = useThree();
   const [, back] = useCardArtwork();
   const warmup = useRef<Group>(null);
   const shadow = useRef<FallShadowMesh>(null);
-  const paper = getComputedStyle(document.documentElement)
-    .getPropertyValue("--color-amber-50")
-    .trim();
-  const textures = useCardFaceTextures(faceUrls, paper || undefined, 256);
+  const textures = useCardFaceTextures(getCardFaceUrls(deck), 252);
   useLayoutEffect(() => {
     gl.initTexture(back);
     for (const texture of textures.values()) gl.initTexture(texture);
